@@ -40,3 +40,12 @@ storage/
 .vscode/ 
 *.log 
 .DS_Store 
+.env 
+.env.* 
+vendor/ 
+node_modules/ 
+storage/ 
+.idea/ 
+.vscode/ 
+*.log 
+.DS_Store 
