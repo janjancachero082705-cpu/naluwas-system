@@ -1,0 +1,40 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::table('church_settings', function (Blueprint $table) {
+            // Check if church_id column exists before adding
+            if (!Schema::hasColumn('church_settings', 'church_id')) {
+                $table->unsignedBigInteger('church_id')->nullable();
+            }
+            
+            // Add website column (since that's the error)
+            if (!Schema::hasColumn('church_settings', 'website')) {
+                $table->string('website')->nullable();
+            }
+            
+            // Add address if not exists
+            if (!Schema::hasColumn('church_settings', 'address')) {
+                $table->string('address')->nullable();
+            }
+            
+            // Add phone if not exists
+            if (!Schema::hasColumn('church_settings', 'phone')) {
+                $table->string('phone')->nullable();
+            }
+        });
+    }
+
+    public function down()
+    {
+        Schema::table('church_settings', function (Blueprint $table) {
+            $table->dropColumn(['website', 'address', 'phone', 'church_id']);
+        });
+    }
+};

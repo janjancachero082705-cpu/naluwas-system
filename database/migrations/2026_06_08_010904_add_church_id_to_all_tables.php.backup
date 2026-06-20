@@ -1,0 +1,67 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        // Add church_id to money_transactions table
+        if (!Schema::hasColumn('money_transactions', 'church_id')) {
+            Schema::table('money_transactions', function (Blueprint $table) {
+                $table->foreignId('church_id')->nullable()->constrained('churches')->onDelete('cascade');
+            });
+        }
+
+        // Add church_id to members table
+        if (!Schema::hasColumn('members', 'church_id')) {
+            Schema::table('members', function (Blueprint $table) {
+                $table->foreignId('church_id')->nullable()->constrained('churches')->onDelete('cascade');
+            });
+        }
+
+        // Add church_id to attendances table
+        if (!Schema::hasColumn('attendances', 'church_id')) {
+            Schema::table('attendances', function (Blueprint $table) {
+                $table->foreignId('church_id')->nullable()->constrained('churches')->onDelete('cascade');
+            });
+        }
+
+        // Add church_id to events table
+        if (!Schema::hasColumn('events', 'church_id')) {
+            Schema::table('events', function (Blueprint $table) {
+                $table->foreignId('church_id')->nullable()->constrained('churches')->onDelete('cascade');
+            });
+        }
+
+        // Add church_id to choir_practices table
+        if (!Schema::hasColumn('choir_practices', 'church_id')) {
+            Schema::table('choir_practices', function (Blueprint $table) {
+                $table->foreignId('church_id')->nullable()->constrained('churches')->onDelete('cascade');
+            });
+        }
+
+        // Add church_id to choir_schedules table
+        if (!Schema::hasColumn('choir_schedules', 'church_id')) {
+            Schema::table('choir_schedules', function (Blueprint $table) {
+                $table->foreignId('church_id')->nullable()->constrained('churches')->onDelete('cascade');
+            });
+        }
+    }
+
+    public function down()
+    {
+        $tables = ['money_transactions', 'members', 'attendances', 'events', 'choir_practices', 'choir_schedules'];
+        
+        foreach ($tables as $tableName) {  // Changed from $table to $tableName
+            if (Schema::hasColumn($tableName, 'church_id')) {
+                Schema::table($tableName, function (Blueprint $table) use ($tableName) {  // Changed parameter name
+                    $table->dropForeign(['church_id']);
+                    $table->dropColumn('church_id');
+                });
+            }
+        }
+    }
+};
