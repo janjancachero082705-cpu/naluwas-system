@@ -9,18 +9,15 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            if (!Schema::hasColumn('users', 'is_admin')) {
-                $table->boolean('is_admin')->default(false)->after('email');
-            }
+            $table->string('profile_picture')->nullable()->after('email');
+            $table->string('avatar_color')->nullable()->after('profile_picture');
         });
     }
 
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            if (Schema::hasColumn('users', 'is_admin')) {
-                $table->dropColumn('is_admin');
-            }
+            $table->dropColumn(['profile_picture', 'avatar_color']);
         });
     }
 };

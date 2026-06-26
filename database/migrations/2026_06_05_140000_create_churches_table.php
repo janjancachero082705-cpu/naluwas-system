@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
+    public function up()
     {
         Schema::create('churches', function (Blueprint $table) {
             $table->id();
@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('subdomain')->unique();
             $table->string('denomination')->nullable();
             $table->string('location')->nullable();
+            $table->string('logo')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->boolean('is_active')->default(true);
@@ -21,7 +22,7 @@ return new class extends Migration
         });
     }
 
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('churches');
     }

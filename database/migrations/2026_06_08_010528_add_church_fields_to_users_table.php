@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -8,21 +8,20 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            if (!Schema::hasColumn('users', 'church_id')) {
-                $table->foreignId('church_id')->nullable()->constrained()->onDelete('set null');
-            }
-            if (!Schema::hasColumn('users', 'role')) {
-                $table->enum('role', ['super_admin', 'church_admin', 'staff', 'member'])->default('member');
-            }
-        });
+        // Only add the column, no foreign key constraint
+        if (Schema::hasTable('users') && !Schema::hasColumn('users', 'church_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->foreignId('church_id')->nullable()->after('email');
+            });
+        }
     }
 
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['church_id']);
-            $table->dropColumn(['church_id', 'role']);
-        });
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropColumn('church_id');
+            });
+        }
     }
 };

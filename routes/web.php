@@ -180,6 +180,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications', [DashboardController::class, 'getNotifications'])->name('notifications.get');
     Route::post('/notifications/mark-read', [DashboardController::class, 'markNotificationsAsRead'])->name('notifications.mark-read');
     
+    // Profile Picture Routes
+    Route::post('/profile/picture/upload', [ProfilePictureController::class, 'upload'])->name('profile.picture.upload');
+    Route::delete('/profile/picture/remove', [ProfilePictureController::class, 'remove'])->name('profile.picture.remove');
     // ==============================================
     // MESSAGING ROUTES FOR CHURCH COMMUNICATION
     // ==============================================

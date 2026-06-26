@@ -15,6 +15,7 @@ class FinanceController extends Controller
      */
     public function index(Request $request)
     {
+        // Get church ID from session or request
         $churchId = session('current_church_id', auth()->user()->church_id ?? 0);
         
         // Get all active churches
@@ -22,13 +23,17 @@ class FinanceController extends Controller
         
         // Get selected church for detailed view
         $selectedChurchId = $request->get('church', $churchId);
-        $selectedChurch = Church::find($selectedChurchId);
+        $selectedChurch = null;
+        if ($selectedChurchId) {
+            $selectedChurch = Church::find($selectedChurchId);
+        }
         
-        // Calculate balances for ALL churches
+        // ============================================
+        // 1. CALCULATE BALANCES FOR ALL CHURCHES
+        // ============================================
         $churchBalances = [];
         $totalIncome = 0;
         $totalExpense = 0;
-        $overallBalance = 0;
         
         foreach ($churches as $church) {
             $income = MoneyTransaction::where('church_id', $church->id)
@@ -54,31 +59,60 @@ class FinanceController extends Controller
         }
         $overallBalance = $totalIncome - $totalExpense;
         
-        // Get recent transactions (all churches or selected)
-        $recentTransactions = MoneyTransaction::with('church')
-            ->when($selectedChurchId, function($query) use ($selectedChurchId) {
-                return $query->where('church_id', $selectedChurchId);
-            })
-            ->orderBy('date', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->limit(15)
-            ->get();
+        // ============================================
+        // 2. SELECTED CHURCH DATA (Filtered by Church)
+        // ============================================
+        $churchIncome = 0;
+        $churchExpenses = 0;
+        $churchBalance = 0;
+        $incomeTypes = collect();
+        $expenseTypes = collect();
+        $monthlyData = [];
+        $recentTransactions = collect();
+        $unreadMessages = 0;
         
-        // Get monthly summary for selected church
-        $monthlyData = $this->getMonthlySummary($selectedChurchId);
-        
-        // Get income/expense by category for selected church
-        $incomeTypes = MoneyTransaction::where('church_id', $selectedChurchId)
-            ->where('type', 'income')
-            ->select('category', DB::raw('SUM(amount) as total'))
-            ->groupBy('category')
-            ->get();
-        
-        $expenseTypes = MoneyTransaction::where('church_id', $selectedChurchId)
-            ->where('type', 'expense')
-            ->select('category', DB::raw('SUM(amount) as total'))
-            ->groupBy('category')
-            ->get();
+        if ($selectedChurch) {
+            // Get church income and expenses
+            $churchIncome = MoneyTransaction::where('church_id', $selectedChurch->id)
+                ->where('type', 'income')
+                ->sum('amount') ?? 0;
+            
+            $churchExpenses = MoneyTransaction::where('church_id', $selectedChurch->id)
+                ->where('type', 'expense')
+                ->sum('amount') ?? 0;
+            
+            $churchBalance = $churchIncome - $churchExpenses;
+            
+            // Get income by category for selected church
+            $incomeTypes = MoneyTransaction::where('church_id', $selectedChurch->id)
+                ->where('type', 'income')
+                ->select('category', DB::raw('SUM(amount) as total'))
+                ->groupBy('category')
+                ->get();
+            
+            // Get expense by category for selected church
+            $expenseTypes = MoneyTransaction::where('church_id', $selectedChurch->id)
+                ->where('type', 'expense')
+                ->select('category', DB::raw('SUM(amount) as total'))
+                ->groupBy('category')
+                ->get();
+            
+            // Get monthly summary for selected church
+            $monthlyData = $this->getMonthlySummary($selectedChurch->id);
+            
+            // Get recent transactions for selected church
+            $recentTransactions = MoneyTransaction::with('church')
+                ->where('church_id', $selectedChurch->id)
+                ->orderBy('date', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->limit(15)
+                ->get();
+                
+            // Get unread messages count for selected church
+            $unreadMessages = \App\Models\Message::where('receiver_church_id', $selectedChurch->id)
+                ->where('is_read', false)
+                ->count();
+        }
         
         return view('finance.index', compact(
             'churches',
@@ -88,15 +122,19 @@ class FinanceController extends Controller
             'totalIncome',
             'totalExpense',
             'overallBalance',
-            'recentTransactions',
-            'monthlyData',
+            'churchIncome',
+            'churchExpenses',
+            'churchBalance',
             'incomeTypes',
-            'expenseTypes'
+            'expenseTypes',
+            'monthlyData',
+            'recentTransactions',
+            'unreadMessages'
         ));
     }
     
     /**
-     * Get monthly summary for a church
+     * Get monthly summary for a specific church
      */
     private function getMonthlySummary($churchId)
     {
@@ -175,7 +213,9 @@ class FinanceController extends Controller
     {
         $churchId = session('current_church_id', auth()->user()->church_id ?? 1);
         
-        // FINANCIAL DATA
+        // ============================================
+        // FINANCIAL DATA (Filtered by Church)
+        // ============================================
         $totalIncome = MoneyTransaction::where('church_id', $churchId)
             ->where('type', 'income')
             ->sum('amount') ?? 0;
@@ -192,7 +232,9 @@ class FinanceController extends Controller
             ->limit(10)
             ->get();
         
-        // MEMBER DATA
+        // ============================================
+        // MEMBER DATA (Filtered by Church)
+        // ============================================
         $totalMembers = DB::table('members')
             ->where('church_id', $churchId)
             ->count();
@@ -216,13 +258,17 @@ class FinanceController extends Controller
             ->limit(10)
             ->get();
         
-        // ATTENDANCE DATA
+        // ============================================
+        // ATTENDANCE DATA (Filtered by Church)
+        // ============================================
         $todaysAttendance = DB::table('attendances')
             ->where('church_id', $churchId)
             ->whereDate('service_date', Carbon::today())
             ->count();
         
-        // INVENTORY DATA
+        // ============================================
+        // INVENTORY DATA (Filtered by Church)
+        // ============================================
         $totalInventoryItems = DB::table('inventories')
             ->where('church_id', $churchId)
             ->count();
@@ -236,7 +282,9 @@ class FinanceController extends Controller
             ->whereColumn('quantity', '<=', 'reorder_level')
             ->count();
         
-        // CHART DATA (Last 6 Months)
+        // ============================================
+        // CHART DATA (Last 6 Months - Filtered by Church)
+        // ============================================
         $months = [];
         $incomeData = [];
         $expenseData = [];

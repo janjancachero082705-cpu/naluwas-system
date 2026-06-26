@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
+    public function up()
     {
         Schema::create('church_settings', function (Blueprint $table) {
             $table->id();
@@ -15,15 +15,14 @@ return new class extends Migration
             $table->string('tagline')->nullable();
             $table->string('address')->nullable();
             $table->string('phone')->nullable();
-            $table->string('logo_path')->nullable();
-            $table->string('favicon_path')->nullable();
+            $table->string('logo')->nullable();
             $table->timestamps();
             
             $table->foreign('church_id')->references('id')->on('churches')->onDelete('cascade');
         });
     }
 
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('church_settings');
     }

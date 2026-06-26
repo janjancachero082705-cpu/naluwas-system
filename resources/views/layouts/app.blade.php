@@ -297,7 +297,6 @@
             font-weight: 700;
         }
 
-        /* Finance Badge - Green */
         .nav-badge.finance {
             background: rgba(16,185,129,0.15);
             color: #10b981;
@@ -325,13 +324,21 @@
             width: 36px;
             height: 36px;
             border-radius: 10px;
-            background: var(--gradient-primary);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 700;
             font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .user-avatar-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid #4F46E5;
             flex-shrink: 0;
         }
 
@@ -848,13 +855,20 @@
             width: 32px;
             height: 32px;
             border-radius: 10px;
-            background: var(--gradient-primary);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
             font-size: 0.75rem;
             color: white;
+            flex-shrink: 0;
+        }
+
+        .header-avatar-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            object-fit: cover;
             flex-shrink: 0;
         }
 
@@ -1119,6 +1133,77 @@
         .content-area { 
             animation: fadeInUp 0.5s ease; 
         }
+
+        /* ===== PROFILE PICTURE UPLOAD STYLES ===== */
+        .profile-picture-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .profile-picture-wrapper .upload-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #4F46E5;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border: 3px solid var(--bg-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .profile-picture-wrapper .upload-overlay:hover {
+            transform: scale(1.1);
+            background: #7C3AED;
+        }
+
+        .profile-picture-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #4F46E5;
+            transition: all 0.3s ease;
+        }
+
+        .profile-picture-placeholder {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            border: 4px solid #4F46E5;
+            transition: all 0.3s ease;
+        }
+
+        /* Profile Picture in Header */
+        .header-profile-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .header-profile-initials {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: white;
+        }
     </style>
     @stack('styles')
 </head>
@@ -1210,7 +1295,6 @@
                     <i class="fas fa-users"></i> Members
                 </a>
 
-                <!-- Finance Button with Badge -->
                 <a href="{{ route('finance.index') }}" class="nav-item {{ request()->routeIs('finance.*') ? 'active' : '' }}">
                     <i class="fas fa-coins"></i> Finance
                     <span class="nav-badge finance">
@@ -1258,10 +1342,18 @@
             </div>
         </nav>
 
-        <!-- User Section -->
+        <!-- User Section with Profile Picture -->
         <div class="user-section">
             <div class="user-info">
-                <div class="user-avatar-sm">{{ strtoupper(substr($user->name ?? 'A', 0, 2)) }}</div>
+                @if($user && $user->profile_picture)
+                    <img src="{{ $user->profile_picture_url }}" 
+                         alt="{{ $user->name }}" 
+                         class="user-avatar-img">
+                @else
+                    <div class="user-avatar-sm" style="background: {{ $user?->avatar_color ?? '#4F46E5' }};">
+                        {{ $user?->initials ?? 'A' }}
+                    </div>
+                @endif
                 <div>
                     <div class="user-name">{{ $user->name ?? 'Administrator' }}</div>
                     <div class="user-role">{{ $user->role ?? 'Administrator' }}</div>
@@ -1294,7 +1386,6 @@
                 <div style="position: relative;">
                     <button class="header-notif" id="notificationBell" title="Notifications">
                         <i class="fas fa-bell"></i>
-                        <!-- This is the notification dot that shows unread count -->
                         <span class="notif-dot {{ $unreadMsgCount > 0 ? 'has-messages' : '' }}" id="notifCount" style="{{ $unreadMsgCount > 0 ? 'display: flex;' : 'display: none;' }}">
                             {{ $unreadMsgCount > 0 ? ($unreadMsgCount > 99 ? '99+' : $unreadMsgCount) : '0' }}
                         </span>
@@ -1307,7 +1398,6 @@
                             <span class="notif-total" id="notifTotalCount">{{ $unreadMsgCount }}</span>
                         </div>
                         <div class="dropdown-list" id="notificationList">
-                            <!-- Messages will be loaded here -->
                             <div class="dropdown-empty">
                                 <i class="fas fa-bell-slash"></i>
                                 <span>No notifications</span>
@@ -1319,9 +1409,17 @@
                     </div>
                 </div>
 
-                <!-- User Profile -->
+                <!-- User Profile with Profile Picture -->
                 <div class="header-user" id="userProfileBtn">
-                    <div class="header-avatar">{{ strtoupper(substr($user->name ?? 'A', 0, 2)) }}</div>
+                    @if($user && $user->profile_picture)
+                        <img src="{{ $user->profile_picture_url }}" 
+                             alt="{{ $user->name }}" 
+                             class="header-profile-img">
+                    @else
+                        <div class="header-profile-initials" style="background: {{ $user?->avatar_color ?? '#4F46E5' }};">
+                            {{ $user?->initials ?? 'A' }}
+                        </div>
+                    @endif
                     <div class="header-user-info">
                         <span class="header-user-name">{{ $user->name ?? 'Administrator' }}</span>
                         <span class="header-user-role">{{ $user->role ?? 'Administrator' }}</span>
@@ -1477,30 +1575,6 @@
             if (headerLeft) headerLeft.prepend(toggleBtn);
         }
 
-        // ===== USER PROFILE MODAL =====
-        const userProfileBtn = document.getElementById('userProfileBtn');
-        const userProfileModal = document.getElementById('userProfileModal');
-
-        function openUserProfile() {
-            userProfileModal.style.display = 'flex';
-        }
-
-        function closeUserProfile() {
-            userProfileModal.style.display = 'none';
-        }
-
-        if (userProfileBtn) {
-            userProfileBtn.addEventListener('click', openUserProfile);
-        }
-
-        window.addEventListener('click', (e) => {
-            if (e.target === userProfileModal) closeUserProfile();
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeUserProfile();
-        });
-
         // ===== TOAST SYSTEM =====
         const toastContainer = document.getElementById('toastContainer');
 
@@ -1587,10 +1661,7 @@
                     const data = await response.json();
                     
                     if (data.unread_count > 0) {
-                        // Update notification dot with count
                         this.updateBadge(data.unread_count);
-                        
-                        // Show toast notification for new messages
                         showToastNotification(
                             'message',
                             '📨 New Message Received',
@@ -1664,7 +1735,6 @@
             renderNotifications(notifications) {
                 if (!this.notifList) return;
 
-                // Add message notifications at the top
                 const messageNotif = {
                     icon: 'fa-envelope',
                     type: 'message',
@@ -1674,7 +1744,6 @@
                     link: '{{ route("finance.index") }}'
                 };
 
-                // Check if there are unread messages
                 const unreadCount = this.notifCount.textContent;
                 if (unreadCount > 0) {
                     notifications.unshift(messageNotif);
@@ -1703,24 +1772,9 @@
                             <div class="notification-time">
                                 <i class="fas fa-clock"></i> ${this.escapeHtml(notif.time || 'Just now')}
                             </div>
-                            ${notif.actions ? this.renderActions(notif.actions) : ''}
                         </div>
                     </div>
                 `).join('');
-            }
-
-            renderActions(actions) {
-                if (!actions || actions.length === 0) return '';
-                return `
-                    <div class="notification-actions">
-                        ${actions.map(action => `
-                            <button class="btn btn-sm btn-${action.type || 'primary'}" 
-                                    onclick="event.stopPropagation(); ${action.handler || ''}">
-                                ${action.label}
-                            </button>
-                        `).join('')}
-                    </div>
-                `;
             }
 
             escapeHtml(text) {
