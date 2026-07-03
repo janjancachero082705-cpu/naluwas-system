@@ -11,27 +11,25 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\SundayAttendanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\AttendanceViewController;
-use App\Models\Church;
-use App\Models\User;
-use App\Models\ChurchSetting;
 use App\Http\Controllers\ChurchSettingController;
 use App\Http\Controllers\ChoirPracticeController;
 use App\Http\Controllers\WeeklyScheduleController;
 use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\MessageController;
+use App\Models\Church;
+use App\Models\User;
+use App\Models\ChurchSetting;
 
 /*
 |--------------------------------------------------------------------------
-| Public Route - Redirect to Login (No more "Get Started" landing page)
+| Public Route - Redirect to Login
 |--------------------------------------------------------------------------
 */
 
 Route::get('/', function () {
-    // If user is already logged in, go to dashboard
     if (Auth::check()) {
         return redirect()->route('dashboard');
     }
-    // Otherwise, go to login page
     return redirect()->route('login');
 })->name('home');
 
@@ -75,7 +73,6 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 */
 
 Route::middleware('auth')->group(function () {
-    // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
@@ -96,56 +93,43 @@ Route::middleware('auth')->group(function () {
 */
 
 Route::middleware(['auth'])->group(function () {
-    // Inventory
+    
+    // INVENTORY
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
     Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
     Route::delete('/inventory/destroy/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
     
-    // Members
+    // MEMBERS
     Route::resource('members', MemberController::class);
-    
-    // DECEASED MEMBER ROUTES
     Route::put('/members/{member}/deceased', [MemberController::class, 'markAsDeceased'])->name('members.deceased');
     Route::put('/members/{member}/restore', [MemberController::class, 'restoreFromDeceased'])->name('members.restore');
     
-    // Attendance
+    // ATTENDANCE
     Route::resource('attendance', AttendanceController::class);
     
-    // Choir Members
+    // CHOIR MEMBERS
     Route::resource('choir-members', ChoirMemberController::class);
     
-    // ==============================================
     // CHOIR SCHEDULES & GROUPS
-    // ==============================================
-    
-    // Choir Groups Management Routes
     Route::get('/choir-schedules/groups', [ChoirScheduleController::class, 'groups'])->name('choir-schedules.groups');
     Route::post('/choir-schedules/groups', [ChoirScheduleController::class, 'storeGroup'])->name('choir-schedules.groups.store');
     Route::put('/choir-schedules/groups/{id}', [ChoirScheduleController::class, 'updateGroup'])->name('choir-schedules.groups.update');
     Route::delete('/choir-schedules/groups/{id}', [ChoirScheduleController::class, 'destroyGroup'])->name('choir-schedules.groups.destroy');
     Route::post('/choir-schedules/assign-member', [ChoirScheduleController::class, 'assignMemberToGroup'])->name('choir-schedules.assign-member');
-    Route::delete('/choir-schedules/remove-member/{memberId}', [ChoirScheduleController::class, 'removeMemberFromGroup'])->name('choir-schedules.remove-member');
-    Route::post('/choir-schedules/auto-rotate', [ChoirScheduleController::class, 'autoRotate'])->name('choir-schedules.auto-rotate');
-    Route::post('/choir-schedules/update-rotation', [ChoirScheduleController::class, 'updateRotationOrder'])->name('choir-schedules.update-rotation');
-    
-    // Choir Schedules Resource Route
+    Route::delete('/choir-schedules/remove-group-member/{memberId}', [ChoirScheduleController::class, 'removeMemberFromGroup'])->name('choir-schedules.remove-group-member');
+
     Route::resource('choir-schedules', ChoirScheduleController::class);
-    
-    // Additional schedule routes
     Route::post('/choir-schedules/auto-schedule', [ChoirScheduleController::class, 'autoSchedule'])->name('choir-schedules.auto-schedule');
     Route::post('/choir-schedules/generate-alternating', [ChoirScheduleController::class, 'generateAlternatingScheduleForAll'])->name('choir-schedules.generate-alternating');
-    
-    // ==============================================
-    // MODAL POPUP ROUTES
-    // ==============================================
+    Route::post('/choir-schedules/auto-rotate', [ChoirScheduleController::class, 'autoRotate'])->name('choir-schedules.auto-rotate');
+    Route::post('/choir-schedules/update-rotation', [ChoirScheduleController::class, 'updateRotationOrder'])->name('choir-schedules.update-rotation');
+
     Route::get('/choir-schedules/get-schedule/{date}', [ChoirScheduleController::class, 'getScheduleByDate'])->name('choir-schedules.get-schedule');
     Route::post('/choir-schedules/add-member', [ChoirScheduleController::class, 'addMemberToSchedule'])->name('choir-schedules.add-member');
-    Route::delete('/choir-schedules/remove-member', [ChoirScheduleController::class, 'removeMemberFromSchedule'])->name('choir-schedules.remove-member');
+    Route::delete('/choir-schedules/remove-schedule-member', [ChoirScheduleController::class, 'removeMemberFromSchedule'])->name('choir-schedules.remove-schedule-member');
     Route::post('/choir-schedules/store-direct', [ChoirScheduleController::class, 'storeDirect'])->name('choir-schedules.store-direct');
     
-    // ==============================================
-    // SUNDAY ATTENDANCE ROUTES
-    // ==============================================
+    // SUNDAY ATTENDANCE
     Route::get('/sunday-attendance', [SundayAttendanceController::class, 'index'])->name('sunday-attendance.index');
     Route::get('/sunday-attendance/entry/{date}', [SundayAttendanceController::class, 'create'])->name('sunday-attendance.entry');
     Route::post('/sunday-attendance', [SundayAttendanceController::class, 'store'])->name('sunday-attendance.store');
@@ -153,127 +137,48 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sunday-attendance/report', [SundayAttendanceController::class, 'report'])->name('sunday-attendance.report');
     Route::get('/sunday-attendance/records', [SundayAttendanceController::class, 'records'])->name('sunday-attendance.records');
     
-    // Church Settings Routes
+    // CHURCH SETTINGS
     Route::post('/settings/profile', [ChurchSettingController::class, 'updateProfile'])->name('settings.profile.update');
     Route::post('/settings/logo', [ChurchSettingController::class, 'updateLogo'])->name('settings.logo.update');
     Route::delete('/settings/logo', [ChurchSettingController::class, 'removeLogo'])->name('settings.logo.remove');
     
-    // Choir Practices Routes
+    // CHOIR PRACTICES
     Route::get('/choir-practices/get', [ChoirPracticeController::class, 'getPractices'])->name('choir.practices.get');
     Route::post('/choir-practices/store', [ChoirPracticeController::class, 'store'])->name('choir.practices.store');
     Route::delete('/choir-practices/{id}', [ChoirPracticeController::class, 'destroy'])->name('choir.practices.delete');
     
-    // Weekly Schedules Routes
+    // WEEKLY SCHEDULES
     Route::get('/weekly-schedules/get', [WeeklyScheduleController::class, 'getSchedules'])->name('weekly.schedules.get');
     Route::post('/weekly-schedules/store', [WeeklyScheduleController::class, 'store'])->name('weekly.schedules.store');
     Route::delete('/weekly-schedules/{id}', [WeeklyScheduleController::class, 'destroy'])->name('weekly.schedules.delete');
     
-    // Finance Routes
+    // FINANCE
     Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
     Route::post('/finance/store', [FinanceController::class, 'store'])->name('finance.store');
     Route::delete('/finance/{id}', [FinanceController::class, 'destroy'])->name('finance.destroy');
-    
-    // Reports & Analytics Route
     Route::get('/reports/analytics', [FinanceController::class, 'reportsAnalytics'])->name('reports.analytics');
     
-    // NOTIFICATION ROUTES
+    // NOTIFICATIONS
     Route::get('/notifications', [DashboardController::class, 'getNotifications'])->name('notifications.get');
     Route::post('/notifications/mark-read', [DashboardController::class, 'markNotificationsAsRead'])->name('notifications.mark-read');
     
-    // Profile Picture Routes
+    // PROFILE PICTURE
     Route::post('/profile/picture/upload', [ProfilePictureController::class, 'upload'])->name('profile.picture.upload');
     Route::delete('/profile/picture/remove', [ProfilePictureController::class, 'remove'])->name('profile.picture.remove');
-    // ==============================================
-    // MESSAGING ROUTES FOR CHURCH COMMUNICATION
-    // ==============================================
     
-    // Send a message
-    Route::post('/messages/store', function (Request $request) {
-        $user = Auth::user();
-        if (!$user || !$user->church_id) {
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
-        }
-        
-        $request->validate([
-            'receiver_church_id' => 'required|exists:churches,id',
-            'message' => 'required|string|max:1000',
-        ]);
-        
-        $message = \App\Models\Message::create([
-            'church_id' => $request->sender_church_id ?? $user->church_id,
-            'sender_id' => $user->id,
-            'receiver_church_id' => $request->receiver_church_id,
-            'message' => $request->message,
-            'is_read' => false,
-        ]);
-        
-        return response()->json([
-            'success' => true,
-            'message' => [
-                'id' => $message->id,
-                'sender_name' => $user->church->name ?? 'You',
-                'sender_church_id' => $user->church_id,
-                'message' => $message->message,
-                'is_read' => false,
-                'created_at' => 'Just now',
-                'is_own' => true,
-            ]
-        ]);
-    })->name('messages.store');
-    
-    // Mark message as read
-    Route::post('/messages/mark-read', function (Request $request) {
-        $request->validate([
-            'message_id' => 'required|exists:messages,id',
-        ]);
-        
-        $message = \App\Models\Message::find($request->message_id);
-        if ($message && ($message->receiver_church_id == auth()->user()->church_id)) {
-            $message->update([
-                'is_read' => true,
-                'read_at' => now(),
-            ]);
-            return response()->json(['success' => true]);
-        }
-        
-        return response()->json(['success' => false, 'message' => 'Message not found or unauthorized']);
-    })->name('messages.mark-read');
-    
-    // Delete a message
-    Route::delete('/messages/delete', function (Request $request) {
-        $request->validate([
-            'message_id' => 'required|exists:messages,id',
-        ]);
-        
-        $message = \App\Models\Message::find($request->message_id);
-        if ($message && ($message->church_id == auth()->user()->church_id || $message->receiver_church_id == auth()->user()->church_id)) {
-            $message->delete();
-            return response()->json(['success' => true]);
-        }
-        
-        return response()->json(['success' => false, 'message' => 'Message not found or unauthorized']);
-    })->name('messages.delete');
-    
-    // Get unread message count for notification badge
-    Route::get('/messages/unread-count', function () {
-        $user = Auth::user();
-        if (!$user || !$user->church_id) {
-            return response()->json(['unread_count' => 0]);
-        }
-        
-        try {
-            if (class_exists('App\Models\Message')) {
-                $count = \App\Models\Message::where('receiver_church_id', $user->church_id)
-                    ->where('is_read', false)
-                    ->count();
-                return response()->json(['unread_count' => $count]);
-            }
-        } catch (\Exception $e) {
-            // Silently fail if table doesn't exist
-        }
-        
-        return response()->json(['unread_count' => 0]);
-    })->name('messages.unread-count');
+    // MESSAGING SYSTEM
+    Route::prefix('messages')->name('messages.')->group(function () {
+        Route::get('/', [MessageController::class, 'index'])->name('index');
+        Route::get('/create', [MessageController::class, 'create'])->name('create');
+        Route::post('/', [MessageController::class, 'store'])->name('store');
+        Route::get('/{id}', [MessageController::class, 'show'])->name('show');
+        Route::get('/conversation/{churchId}', [MessageController::class, 'conversation'])->name('conversation');
+        Route::post('/{id}/read', [MessageController::class, 'markRead'])->name('mark-read');
+        Route::post('/mark-all-read', [MessageController::class, 'markAllRead'])->name('mark-all-read');
+        Route::get('/unread-count', [MessageController::class, 'unreadCount'])->name('unread-count');
+        Route::post('/{id}/archive', [MessageController::class, 'archive'])->name('archive');
+        Route::delete('/{id}', [MessageController::class, 'destroy'])->name('destroy');
+    });
 });
 
 /*
@@ -299,7 +204,6 @@ Route::middleware('guest')->group(function () {
             $user = Auth::user();
             if ($user->church_id) {
                 session(['current_church_id' => $user->church_id]);
-                // Get church name and store in session
                 $church = Church::find($user->church_id);
                 if ($church) {
                     session(['current_church_name' => $church->name]);
@@ -318,7 +222,6 @@ Route::middleware('guest')->group(function () {
         return view('auth.register');
     })->name('register');
 
-    // COMPLETE REGISTRATION ROUTE WITH CHURCH SETTINGS (NO EMAIL FIELD)
     Route::post('/register', function (Request $request) {
         $request->validate([
             'church_name' => 'required|string|max:255',
@@ -332,7 +235,6 @@ Route::middleware('guest')->group(function () {
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // 1. CREATE CHURCH
         $church = Church::create([
             'name' => $request->church_name,
             'subdomain' => $request->subdomain,
@@ -343,7 +245,6 @@ Route::middleware('guest')->group(function () {
             'is_active' => true,
         ]);
 
-        // 2. CREATE CHURCH SETTINGS (NO EMAIL FIELD)
         ChurchSetting::create([
             'church_id' => $church->id,
             'church_name' => $request->church_name,
@@ -352,7 +253,6 @@ Route::middleware('guest')->group(function () {
             'phone' => $request->church_phone,
         ]);
 
-        // 3. CREATE USER
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -361,16 +261,13 @@ Route::middleware('guest')->group(function () {
             'role' => 'church_admin',
         ]);
 
-        // 4. LOGIN USER
         Auth::login($user);
         
-        // 5. SET SESSION VARIABLES
         session([
             'current_church_id' => $church->id,
             'current_church_name' => $request->church_name,
         ]);
 
-        // 6. REDIRECT TO DASHBOARD
         return redirect('/dashboard')->with('success', 'Welcome to ' . $request->church_name . '! Your church has been successfully registered.');
     });
 });

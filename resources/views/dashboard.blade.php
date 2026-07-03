@@ -60,6 +60,17 @@
         font-weight: 600;
         color: var(--text-primary);
         line-height: 1;
+        transition: all 0.3s ease;
+    }
+
+    .stat-value.updated {
+        animation: statPulse 0.5s ease;
+    }
+
+    @keyframes statPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.08); color: #1D9E75; }
+        100% { transform: scale(1); }
     }
 
     .stat-sub {
@@ -67,6 +78,9 @@
         margin-top: 4px;
         color: var(--text-muted);
     }
+
+    .stat-sub.trend-up { color: #0F6E56; }
+    .stat-sub.trend-down { color: #A32D2D; }
 
     .col-3 .card-pro {
         height: 100%;
@@ -181,9 +195,19 @@
         gap: 10px;
         padding: 8px 0;
         border-bottom: 0.5px solid var(--border-color);
+        transition: all 0.2s ease;
     }
 
     .tx-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .tx-item.new-transaction {
+        animation: highlightNew 2s ease;
+    }
+
+    @keyframes highlightNew {
+        0% { background: rgba(29, 158, 117, 0.15); border-radius: 8px; }
+        100% { background: transparent; }
+    }
 
     .tx-icon {
         width: 32px;
@@ -246,9 +270,14 @@
         gap: 10px;
         padding: 8px 0;
         border-bottom: 0.5px solid var(--border-color);
+        transition: all 0.2s ease;
     }
 
     .bd-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .bd-item.new-birthday {
+        animation: highlightNew 2s ease;
+    }
 
     .bd-date-box {
         min-width: 38px;
@@ -398,6 +427,11 @@
         border-radius: 8px;
         padding: 7px 5px;
         text-align: center;
+        transition: all 0.2s ease;
+    }
+
+    .coming-item.updated {
+        animation: highlightNew 2s ease;
     }
 
     .coming-date  { font-size: 10px; color: var(--text-muted); }
@@ -467,6 +501,49 @@
         to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* ─── Real-time toast inside dashboard ─── */
+    .dashboard-toast {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        z-index: 9999;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 12px 18px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transform: translateX(120%);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        max-width: 350px;
+        border-left: 4px solid #1D9E75;
+    }
+
+    .dashboard-toast.show {
+        transform: translateX(0);
+    }
+
+    .dashboard-toast .toast-icon {
+        font-size: 18px;
+    }
+
+    .dashboard-toast .toast-content {
+        flex: 1;
+    }
+
+    .dashboard-toast .toast-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .dashboard-toast .toast-message {
+        font-size: 11px;
+        color: var(--text-muted);
+    }
+
     /* ─── Responsive ─── */
     @media (max-width: 1100px) {
         .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -478,6 +555,11 @@
         .col-3      { grid-template-columns: minmax(0, 1fr); }
         .coming-grid { grid-template-columns: repeat(2, 1fr); }
         .chart-wrap  { height: 180px; }
+        .dashboard-toast {
+            max-width: calc(100vw - 32px);
+            right: 16px;
+            bottom: 80px;
+        }
     }
 </style>
 
@@ -498,6 +580,18 @@
         </div>
     @endif
 
+    {{-- ── Dashboard Toast for Real-time Updates ── --}}
+    <div class="dashboard-toast" id="dashboardToast">
+        <span class="toast-icon">📊</span>
+        <div class="toast-content">
+            <div class="toast-title" id="toastTitle">Update received</div>
+            <div class="toast-message" id="toastMessage">Real-time data updated</div>
+        </div>
+        <button onclick="this.closest('.dashboard-toast').classList.remove('show')" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
     {{-- ── Stat Cards ── --}}
     <div class="stats-grid">
 
@@ -507,7 +601,7 @@
             </div>
             <div class="stat-info">
                 <div class="stat-label">Total members</div>
-                <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
+                <div class="stat-value" id="stat-total-members">{{ number_format($totalMembers ?? 0) }}</div>
                 <div class="stat-sub trend-up">↑ Active members</div>
             </div>
         </div>
@@ -518,7 +612,7 @@
             </div>
             <div class="stat-info">
                 <div class="stat-label">Choir members</div>
-                <div class="stat-value">{{ number_format($choirMembers ?? 0) }}</div>
+                <div class="stat-value" id="stat-choir-members">{{ number_format($choirMembers ?? 0) }}</div>
                 <div class="stat-sub trend-up">↑ Music ministry</div>
             </div>
         </div>
@@ -529,13 +623,13 @@
             </div>
             <div class="stat-info">
                 <div class="stat-label">Today's attendance</div>
-                <div class="stat-value">{{ number_format($todayAttendance ?? 0) }}</div>
+                <div class="stat-value" id="stat-today-attendance">{{ number_format($todayAttendance ?? 0) }}</div>
                 @php
                     $rate = ($totalMembers ?? 1) > 0
                         ? (($todayAttendance ?? 0) / ($totalMembers ?? 1)) * 100
                         : 0;
                 @endphp
-                <div class="stat-sub">{{ number_format($rate, 1) }}% present</div>
+                <div class="stat-sub" id="stat-attendance-rate">{{ number_format($rate, 1) }}% present</div>
             </div>
         </div>
 
@@ -545,10 +639,10 @@
             </div>
             <div class="stat-info">
                 <div class="stat-label">Monthly balance</div>
-                <div class="stat-value {{ ($monthlyBalance ?? 0) >= 0 ? 'trend-up' : 'trend-down' }}">
+                <div class="stat-value" id="stat-monthly-balance" style="color: {{ ($monthlyBalance ?? 0) >= 0 ? '#0F6E56' : '#A32D2D' }};">
                     ₱{{ number_format(abs($monthlyBalance ?? 0), 2) }}
                 </div>
-                <div class="stat-sub {{ ($monthlyBalance ?? 0) >= 0 ? 'trend-up' : 'trend-down' }}">
+                <div class="stat-sub" id="stat-balance-trend" style="color: {{ ($monthlyBalance ?? 0) >= 0 ? '#0F6E56' : '#A32D2D' }};">
                     {{ ($monthlyBalance ?? 0) >= 0 ? '↑ Surplus' : '↓ Deficit' }}
                 </div>
             </div>
@@ -563,6 +657,9 @@
                 <h6>
                     <i class="fas fa-chart-line" style="color:#1D9E75;"></i>
                     Income vs expenses
+                    <span id="chart-update-indicator" style="font-size:10px;color:var(--text-muted);font-weight:400;display:none;">
+                        <i class="fas fa-spinner fa-spin"></i> Updating...
+                    </span>
                 </h6>
                 <span class="action-link">Last 6 months</span>
             </div>
@@ -591,12 +688,12 @@
                 <h6><i class="fas fa-arrows-alt-v"></i> Transactions</h6>
                 <a href="{{ route('inventory.index') }}" class="action-link">View all →</a>
             </div>
-            <div class="card-pro-body">
+            <div class="card-pro-body" id="transactions-list">
                 @forelse(($recentActivities ?? []) as $item)
                     @php
                         $isIncome = ($item->type ?? 'expense') === 'income';
                     @endphp
-                    <div class="tx-item">
+                    <div class="tx-item" data-transaction-id="{{ $item->id ?? '' }}">
                         <div class="tx-icon {{ $isIncome ? 'tx-in' : 'tx-out' }}">
                             <i class="fas {{ $isIncome ? 'fa-arrow-down-left' : 'fa-arrow-up-right' }}"></i>
                         </div>
@@ -632,12 +729,12 @@
                 </h6>
                 <span class="action-link">This month</span>
             </div>
-            <div class="card-pro-body">
+            <div class="card-pro-body" id="birthdays-list">
                 @forelse(($upcomingBirthdays ?? []) as $birthday)
                     @php
                         $daysUntil = $birthday->days_until ?? null;
                     @endphp
-                    <div class="bd-item">
+                    <div class="bd-item" data-member-id="{{ $birthday->id ?? '' }}">
                         <div class="bd-date-box">
                             <div class="bd-day">
                                 {{ \Carbon\Carbon::parse($birthday->birthday ?? now())->format('d') }}
@@ -682,7 +779,7 @@
                 </h6>
                 <span class="action-link">Upcoming</span>
             </div>
-            <div class="card-pro-body">
+            <div class="card-pro-body" id="choir-schedule-container">
                 @if(isset($upcomingSunday) && $upcomingSunday)
                     <div class="choir-center">
                         <div class="choir-avatar">
@@ -691,14 +788,14 @@
                         <div class="choir-group-name" style="color: {{ $upcomingSunday['group_color'] ?? '#534AB7' }};">
                             {{ $upcomingSunday['group_name'] ?? 'Choir Group' }}
                         </div>
-                        <div class="choir-meta-text">
+                        <div class="choir-meta-text" id="choir-meta-text">
                             <i class="fas fa-users"></i>
                             {{ $upcomingSunday['members_count'] ?? 0 }} members ·
                             {{ \Carbon\Carbon::parse($upcomingSunday['date'] ?? now())->format('M d, Y') }}
                         </div>
                     </div>
 
-                    <div class="chips">
+                    <div class="chips" id="choir-members-chips">
                         @forelse(($upcomingSunday['members'] ?? []) as $member)
                             <span class="chip">
                                 {{ $member->first_name ?? '' }} {{ substr($member->last_name ?? '', 0, 1) }}.
@@ -718,9 +815,9 @@
                             <div class="coming-label">
                                 <i class="fas fa-calendar-week"></i> Coming Sundays
                             </div>
-                            <div class="coming-grid">
+                            <div class="coming-grid" id="coming-sundays-grid">
                                 @foreach($nextWeeks as $week)
-                                    <div class="coming-item">
+                                    <div class="coming-item" data-week-date="{{ $week['date'] ?? '' }}">
                                         <div class="coming-date">
                                             {{ \Carbon\Carbon::parse($week['date'])->format('M d') }}
                                         </div>
@@ -752,9 +849,12 @@
 
 {{-- ── Chart.js ── --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
 
+<script>
+// ============================================
+// FINANCE CHART
+// ============================================
+document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById('financeChart');
     if (!canvas) return;
 
@@ -779,7 +879,8 @@ document.addEventListener('DOMContentLoaded', function () {
     while (incomeData.length  < months.length) incomeData.push(0);
     while (expenseData.length < months.length) expenseData.push(0);
 
-    const isDark    = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark    = document.documentElement.getAttribute('data-theme') === 'dark' || 
+                      window.matchMedia('(prefers-color-scheme: dark)').matches;
     const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
     const tickColor = isDark ? 'rgba(255,255,255,0.4)'  : '#888';
     const ttBg      = isDark ? '#2a2a2a' : '#ffffff';
@@ -788,7 +889,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const ttBorder  = isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0';
     const ptBorder  = isDark ? '#1e1e1e' : '#ffffff';
 
-    new Chart(canvas, {
+    let financeChart = new Chart(canvas, {
         type: 'line',
         data: {
             labels: months,
@@ -878,6 +979,189 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+
+    // ============================================
+    // EXPOSE CHART FOR REAL-TIME UPDATES
+    // ============================================
+    window.financeChart = financeChart;
+    window.chartData = {
+        months: months,
+        income: incomeData,
+        expenses: expenseData
+    };
+});
+
+// ============================================
+// REAL-TIME DASHBOARD UPDATES
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Show dashboard toast notification
+    function showDashboardToast(title, message, icon = '📊') {
+        const toast = document.getElementById('dashboardToast');
+        if (!toast) return;
+        
+        document.getElementById('toastTitle').textContent = title;
+        document.getElementById('toastMessage').textContent = message;
+        toast.querySelector('.toast-icon').textContent = icon;
+        
+        toast.classList.add('show');
+        clearTimeout(toast._hideTimeout);
+        toast._hideTimeout = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 4000);
+    }
+
+    // ============================================
+    // LISTEN FOR ATTENDANCE UPDATES
+    // ============================================
+    if (window.Echo) {
+        window.Echo.channel('attendance')
+            .listen('attendance.updated', (e) => {
+                console.log('📊 Dashboard: Attendance updated', e);
+                
+                // Update stats
+                const present = e.present || e.presentCount || 0;
+                const total = e.total || e.totalMembers || 0;
+                const absent = e.absent || e.absentCount || 0;
+                
+                const todayEl = document.getElementById('stat-today-attendance');
+                if (todayEl) {
+                    todayEl.textContent = present;
+                    todayEl.classList.add('updated');
+                    setTimeout(() => todayEl.classList.remove('updated'), 500);
+                }
+                
+                const rateEl = document.getElementById('stat-attendance-rate');
+                if (rateEl) {
+                    const rate = total > 0 ? Math.round((present / total) * 100 * 10) / 10 : 0;
+                    rateEl.textContent = rate + '% present';
+                }
+                
+                // Show toast
+                showDashboardToast(
+                    '📊 Attendance Updated',
+                    `${present} present, ${absent} absent`,
+                    '📊'
+                );
+            });
+
+        // ============================================
+        // LISTEN FOR FINANCIAL UPDATES
+        // ============================================
+        window.Echo.channel('finances')
+            .listen('balance.updated', (e) => {
+                console.log('💰 Dashboard: Balance updated', e);
+                
+                const balance = e.balance || 0;
+                const balanceEl = document.getElementById('stat-monthly-balance');
+                const trendEl = document.getElementById('stat-balance-trend');
+                
+                if (balanceEl) {
+                    const isPositive = balance >= 0;
+                    balanceEl.textContent = '₱' + Math.abs(balance).toLocaleString();
+                    balanceEl.style.color = isPositive ? '#0F6E56' : '#A32D2D';
+                    balanceEl.classList.add('updated');
+                    setTimeout(() => balanceEl.classList.remove('updated'), 500);
+                }
+                
+                if (trendEl) {
+                    const isPositive = balance >= 0;
+                    trendEl.textContent = isPositive ? '↑ Surplus' : '↓ Deficit';
+                    trendEl.style.color = isPositive ? '#0F6E56' : '#A32D2D';
+                }
+                
+                // Update chart if data is provided
+                if (e.chart_data && window.financeChart) {
+                    const chart = window.financeChart;
+                    chart.data.datasets[0].data = e.chart_data.income || window.chartData?.income || [];
+                    chart.data.datasets[1].data = e.chart_data.expenses || window.chartData?.expenses || [];
+                    chart.update();
+                    
+                    document.getElementById('chart-update-indicator').style.display = 'inline';
+                    setTimeout(() => {
+                        document.getElementById('chart-update-indicator').style.display = 'none';
+                    }, 2000);
+                }
+                
+                showDashboardToast(
+                    '💰 Balance Updated',
+                    `${e.eglesia_name || 'Church'}: ₱${Math.abs(balance).toLocaleString()}`,
+                    '💰'
+                );
+            });
+
+        // ============================================
+        // LISTEN FOR CHOIR SCHEDULE UPDATES
+        // ============================================
+        window.Echo.channel('choir')
+            .listen('schedule.updated', (e) => {
+                console.log('🎵 Dashboard: Choir schedule updated', e);
+                
+                // Update choir stats if data is provided
+                if (e.members_count !== undefined) {
+                    const choirEl = document.getElementById('stat-choir-members');
+                    if (choirEl) {
+                        choirEl.textContent = e.members_count;
+                        choirEl.classList.add('updated');
+                        setTimeout(() => choirEl.classList.remove('updated'), 500);
+                    }
+                }
+                
+                // Update choir schedule display
+                const metaText = document.getElementById('choir-meta-text');
+                if (metaText && e.event_name) {
+                    metaText.innerHTML = `
+                        <i class="fas fa-users"></i>
+                        ${e.members_count || 0} members ·
+                        ${e.date || 'Scheduled'}
+                    `;
+                }
+                
+                // Update coming Sundays if data is provided
+                if (e.next_weeks && Array.isArray(e.next_weeks)) {
+                    const grid = document.getElementById('coming-sundays-grid');
+                    if (grid) {
+                        grid.innerHTML = e.next_weeks.map(week => `
+                            <div class="coming-item updated">
+                                <div class="coming-date">${week.date || ''}</div>
+                                <div class="coming-name">${week.group_name || 'Choir'}</div>
+                                <div class="coming-count">
+                                    <i class="fas fa-users"></i> ${week.members_count || 0}
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+                
+                showDashboardToast(
+                    '🎵 Choir Schedule',
+                    e.message || 'Schedule updated',
+                    '🎵'
+                );
+            });
+    }
+});
+
+// ============================================
+// THEME CHANGE DETECTION FOR CHART
+// ============================================
+const observer = new MutationObserver(() => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const chart = window.financeChart;
+    if (chart) {
+        const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+        const tickColor = isDark ? 'rgba(255,255,255,0.4)' : '#888';
+        chart.options.scales.y.grid.color = gridColor;
+        chart.options.scales.y.ticks.color = tickColor;
+        chart.options.scales.x.ticks.color = tickColor;
+        chart.update();
+    }
+});
+
+observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme']
 });
 </script>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Member;
 use App\Models\Attendance;
 use App\Traits\ChurchScopeTrait;
+use App\Events\AttendanceUpdated;  // ← ADD THIS LINE
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -49,6 +50,7 @@ class AttendanceController extends Controller
             'attendances' => 'array',
         ]);
         
+        // Save all attendance records
         foreach ($request->attendances as $memberId => $data) {
             Attendance::updateOrCreate(
                 [
@@ -62,6 +64,30 @@ class AttendanceController extends Controller
                 ]
             );
         }
+        
+        // 🔥 BROADCAST THE EVENT - ADD THIS CODE HERE!
+        // Calculate updated statistics after saving
+        $attendances = Attendance::where('church_id', $churchId)
+            ->where('service_date', $request->service_date)
+            ->get();
+        
+        $presentCount = $attendances->where('status', 'Present')->count();
+        $lateCount = $attendances->where('status', 'Late')->count();
+        $totalMembers = Member::where('church_id', $churchId)->count();
+        $absentCount = $totalMembers - $presentCount - $lateCount;
+        
+        // Get the church name (you may need to adjust this based on your Church model)
+        $churchName = $this->getCurrentChurchName(); // You might need to create this method
+        
+        // Broadcast the attendance update
+        event(new AttendanceUpdated(
+            $request->service_date,
+            $presentCount,
+            $lateCount,
+            $absentCount,
+            $totalMembers,
+            $churchName
+        ));
         
         return redirect()->route('attendance.index', ['date' => $request->service_date])
             ->with('success', 'Attendance saved successfully!');

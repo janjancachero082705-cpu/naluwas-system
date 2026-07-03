@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="user-id" content="{{ Auth::user()?->id ?? 0 }}">
 
     <title>{{ config('app.name', 'TINC Church System') }}</title>
 
@@ -302,6 +303,16 @@
             color: #10b981;
         }
 
+        .nav-badge.message-badge {
+            background: #ef4444;
+            color: white;
+            padding: 0px 8px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            animation: pulse-dot 2s infinite;
+        }
+
         /* ===== USER SECTION ===== */
         .user-section {
             margin-top: auto;
@@ -434,6 +445,100 @@
             position: relative;
         }
 
+        /* ===== LIVE INDICATOR ===== */
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .live-indicator .pulse {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse-dot 1.5s infinite;
+        }
+        
+        .live-indicator.disconnected {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+        
+        .live-indicator.disconnected .pulse {
+            background: #ef4444;
+            animation: none;
+        }
+        
+        .live-indicator.connecting {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+        
+        .live-indicator.connecting .pulse {
+            background: #f59e0b;
+            animation: pulse-dot 0.8s infinite;
+        }
+        
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* ===== MESSAGE BUTTON IN HEADER ===== */
+        .header-message-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--hover-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .header-message-btn:hover {
+            background: rgba(79,70,229,0.08);
+            color: #4F46E5;
+            border-color: #4F46E5;
+            transform: scale(1.05);
+        }
+
+        .header-message-btn .msg-dot {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ef4444;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: white;
+            font-weight: 700;
+            border: 2px solid var(--header-bg);
+            animation: pulse-dot 2s infinite;
+        }
+
         /* ===== NOTIFICATION BUTTON ===== */
         .header-notif {
             width: 40px;
@@ -479,11 +584,6 @@
         .notif-dot.has-messages {
             background: #D97706;
             animation: pulse-dot 1s infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.3); }
         }
 
         /* ===== NOTIFICATION DROPDOWN ===== */
@@ -681,11 +781,24 @@
             font-size: 0.78rem;
             font-weight: 600;
             transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .dropdown-footer a:hover {
             color: #7C3AED;
             text-decoration: underline;
+        }
+
+        .dropdown-footer a .msg-count-badge {
+            background: #ef4444;
+            color: white;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
         }
 
         .dropdown-empty {
@@ -726,6 +839,7 @@
             transform-origin: right;
             min-width: 300px;
             border-left: 4px solid #4F46E5;
+            cursor: default;
         }
 
         .toast-notification.hiding {
@@ -1123,6 +1237,9 @@
                 max-width: calc(100vw - 32px);
                 right: 16px;
             }
+            .live-indicator span {
+                display: none;
+            }
         }
 
         @keyframes fadeInUp {
@@ -1204,6 +1321,64 @@
             font-size: 0.75rem;
             color: white;
         }
+
+        /* Pulse animation for updated elements */
+        .updated {
+            animation: updated-pulse 0.5s ease;
+        }
+
+        @keyframes updated-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); background: rgba(16, 185, 129, 0.15); }
+            100% { transform: scale(1); }
+        }
+
+        .new-item {
+            animation: highlight-new 2s ease;
+        }
+
+        @keyframes highlight-new {
+            0% { background: rgba(59, 130, 246, 0.2); }
+            100% { background: transparent; }
+        }
+
+        /* Connection status badge in header */
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+
+        .connection-status.connected {
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .connection-status.disconnected {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .connection-status .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .connection-status.connected .dot {
+            background: #10b981;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        .connection-status.disconnected .dot {
+            background: #ef4444;
+            animation: none;
+        }
     </style>
     @stack('styles')
 </head>
@@ -1269,9 +1444,6 @@
                             <i class="fas fa-church"></i>
                         </div>
                     @endif
-                    <div class="logo-upload-overlay">
-                        <i class="fas fa-camera" id="logoOverlayIcon"></i>
-                    </div>
                 </div>
                 <div class="logo-text">
                     <h2>{{ $churchName }}</h2>
@@ -1308,6 +1480,22 @@
 
                 <a href="{{ route('inventory.index') }}" class="nav-item {{ request()->routeIs('inventory.*') ? 'active' : '' }}">
                     <i class="fas fa-boxes"></i> Inventory
+                </a>
+            </div>
+
+            <!-- ===== COMMUNICATION SECTION - MESSAGES ===== -->
+            <div class="nav-section">
+                <div class="nav-section-title">
+                    <i class="fas fa-comment-dots"></i> Communication
+                </div>
+
+                <a href="{{ route('messages.index') }}" class="nav-item {{ request()->routeIs('messages.*') ? 'active' : '' }}">
+                    <i class="fas fa-envelope"></i> Messages
+                    @if($unreadMsgCount > 0)
+                        <span class="nav-badge message-badge">
+                            {{ $unreadMsgCount > 99 ? '99+' : $unreadMsgCount }}
+                        </span>
+                    @endif
                 </a>
             </div>
 
@@ -1382,6 +1570,20 @@
             </div>
 
             <div class="header-right">
+                <!-- Live Connection Status -->
+                <div class="live-indicator connected" id="liveIndicator">
+                    <span class="pulse"></span>
+                    <span>Live</span>
+                </div>
+
+                <!-- Message Button -->
+                <a href="{{ route('messages.index') }}" class="header-message-btn" title="Messages">
+                    <i class="fas fa-envelope"></i>
+                    @if($unreadMsgCount > 0)
+                        <span class="msg-dot">{{ $unreadMsgCount > 99 ? '99+' : $unreadMsgCount }}</span>
+                    @endif
+                </a>
+
                 <!-- Notifications -->
                 <div style="position: relative;">
                     <button class="header-notif" id="notificationBell" title="Notifications">
@@ -1404,7 +1606,12 @@
                             </div>
                         </div>
                         <div class="dropdown-footer">
-                            <a href="{{ route('finance.index') }}">📨 Go to Messages</a>
+                            <a href="{{ route('messages.index') }}">
+                                <i class="fas fa-envelope"></i> Go to Messages
+                                @if($unreadMsgCount > 0)
+                                    <span class="msg-count-badge">{{ $unreadMsgCount }}</span>
+                                @endif
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -1458,7 +1665,269 @@
         </div>
     </div>
 
-    <!-- ===== SCRIPTS ===== -->
+    <!-- ============================================
+         REVERB REAL-TIME BROADCASTING SETUP
+         ============================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.0/dist/echo.iife.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pusher-js@8.0.2/dist/web/pusher.min.js"></script>
+
+    <script>
+        // ============================================
+        // LARAVEL ECHO CONFIGURATION
+        // ============================================
+        window.Pusher = Pusher;
+
+        const echoConfig = {
+            broadcaster: 'reverb',
+            key: '{{ env("REVERB_APP_KEY") }}',
+            wsHost: '{{ env("REVERB_HOST", "127.0.0.1") }}',
+            wsPort: {{ env("REVERB_PORT", 8080) }},
+            wssPort: {{ env("REVERB_PORT", 8080) }},
+            forceTLS: false,
+            enabledTransports: ['ws', 'wss'],
+        };
+
+        window.Echo = new Echo(echoConfig);
+
+        // ============================================
+        // CONNECTION STATUS MANAGEMENT
+        // ============================================
+        const liveIndicator = document.getElementById('liveIndicator');
+
+        function updateConnectionStatus(status) {
+            if (!liveIndicator) return;
+            
+            liveIndicator.classList.remove('connected', 'disconnected', 'connecting');
+            
+            if (status === 'connected') {
+                liveIndicator.classList.add('connected');
+                liveIndicator.innerHTML = '<span class="pulse"></span><span>Live</span>';
+            } else if (status === 'connecting') {
+                liveIndicator.classList.add('connecting');
+                liveIndicator.innerHTML = '<span class="pulse"></span><span>Connecting...</span>';
+            } else {
+                liveIndicator.classList.add('disconnected');
+                liveIndicator.innerHTML = '<span class="pulse"></span><span>Offline</span>';
+            }
+        }
+
+        updateConnectionStatus('connecting');
+
+        // ============================================
+        // REAL-TIME EVENT LISTENERS
+        // ============================================
+        
+        if (window.Echo) {
+            // 🔔 Attendance Updates
+            window.Echo.channel('attendance')
+                .listen('attendance.updated', (e) => {
+                    console.log('📊 Attendance updated:', e);
+                    showToastNotification('success', '📊 Attendance Updated', 
+                        `${e.church || 'Church'}: ${e.present || 0} present, ${e.absent || 0} absent`);
+                    updateAttendanceStats(e);
+                });
+
+            // 💰 Financial Updates
+            window.Echo.channel('finances')
+                .listen('balance.updated', (e) => {
+                    console.log('💰 Financial update:', e);
+                    const amount = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(e.balance || 0);
+                    showToastNotification('success', '💰 Balance Updated', 
+                        `${e.eglesia_name || 'Church'}: ${amount}`);
+                    updateBalanceStats(e);
+                });
+
+            // 🎵 Choir Schedule Updates
+            window.Echo.channel('choir')
+                .listen('schedule.updated', (e) => {
+                    console.log('🎵 Choir schedule update:', e);
+                    showToastNotification('info', '🎵 Choir Schedule', e.message || 'Schedule updated');
+                    updateChoirSchedule(e);
+                });
+
+            // 📨 Listen for New Messages
+            const userId = document.querySelector('meta[name="user-id"]')?.content || '{{ Auth::user()?->id ?? 0 }}';
+            
+            if (userId && userId !== '0') {
+                window.Echo.channel(`messages.{{ Auth::user()->church_id }}`)
+                    .listen('message.new', (e) => {
+                        console.log('📨 New message received:', e);
+                        
+                        // Update message badge
+                        const msgDot = document.querySelector('.header-message-btn .msg-dot');
+                        const sidebarBadge = document.querySelector('.nav-item.active .message-badge, .nav-item .message-badge');
+                        
+                        if (msgDot) {
+                            const current = parseInt(msgDot.textContent) || 0;
+                            msgDot.textContent = current + 1;
+                            msgDot.style.display = 'flex';
+                        }
+                        
+                        if (sidebarBadge) {
+                            const current = parseInt(sidebarBadge.textContent) || 0;
+                            sidebarBadge.textContent = current + 1;
+                        }
+                        
+                        // Update notification badge
+                        const badge = document.getElementById('notifCount');
+                        if (badge) {
+                            const current = parseInt(badge.textContent) || 0;
+                            badge.textContent = current + 1;
+                            badge.style.display = 'flex';
+                            badge.classList.add('has-messages');
+                        }
+                        
+                        // Show toast notification
+                        showToastNotification(
+                            'message',
+                            `📨 New Message from ${e.sender_name}`,
+                            e.subject + ': ' + e.body.substring(0, 100),
+                            6000
+                        );
+                    });
+            }
+
+            // Connection handlers
+            if (window.Echo.connector && window.Echo.connector.socket) {
+                window.Echo.connector.socket.on('connect', () => {
+                    console.log('✅ Connected to Reverb');
+                    updateConnectionStatus('connected');
+                });
+
+                window.Echo.connector.socket.on('disconnect', () => {
+                    console.log('❌ Disconnected from Reverb');
+                    updateConnectionStatus('disconnected');
+                });
+            }
+        }
+
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+
+        function updateAttendanceStats(e) {
+            const present = e.present || e.presentCount || 0;
+            const absent = e.absent || e.absentCount || 0;
+            const total = e.total || e.totalMembers || 0;
+            const visitors = e.visitors || e.visitorCount || 0;
+            
+            ['stat-present', 'stat-absent', 'stat-total', 'stat-visitors'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const val = id === 'stat-present' ? present : 
+                               id === 'stat-absent' ? absent :
+                               id === 'stat-total' ? total : visitors;
+                    el.textContent = val;
+                    el.classList.add('updated');
+                    setTimeout(() => el.classList.remove('updated'), 2000);
+                }
+            });
+            
+            const percentEl = document.getElementById('stat-present-percent');
+            if (percentEl) {
+                const percent = total > 0 ? Math.round((present / total) * 100) : 0;
+                percentEl.textContent = percent + '% attendance rate';
+            }
+        }
+
+        function updateBalanceStats(e) {
+            const balanceEl = document.getElementById(`balance-${e.eglesia_id}`);
+            if (balanceEl) {
+                const amount = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(e.balance || 0);
+                balanceEl.textContent = amount;
+                balanceEl.classList.add('updated');
+                setTimeout(() => balanceEl.classList.remove('updated'), 2000);
+            }
+        }
+
+        function updateChoirSchedule(e) {
+            if (e.action === 'created') {
+                const list = document.getElementById('choir-schedule-list');
+                if (list) {
+                    const item = document.createElement('li');
+                    item.className = 'list-group-item new-item';
+                    item.innerHTML = `
+                        <strong>${e.event_name || 'New Event'}</strong><br>
+                        📅 ${e.date || 'TBD'} at ${e.time || 'TBD'}<br>
+                        📍 ${e.location || 'Location TBD'}
+                        <span class="badge bg-success float-end">New!</span>
+                    `;
+                    list.prepend(item);
+                    setTimeout(() => item.classList.remove('new-item'), 5000);
+                }
+            }
+        }
+
+        // ============================================
+        // TOAST NOTIFICATION SYSTEM
+        // ============================================
+        const toastContainer = document.getElementById('toastContainer');
+
+        function showToastNotification(type, title, message, duration = 5000) {
+            if (!toastContainer) return;
+            
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-times-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle',
+                message: 'fa-envelope'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `toast-notification ${type}`;
+            toast.innerHTML = `
+                <div class="toast-icon ${type}">
+                    <i class="fas ${icons[type] || 'fa-bell'}"></i>
+                </div>
+                <div class="toast-body">
+                    <div class="toast-title">${escapeHtml(title)}</div>
+                    <div class="toast-message">${escapeHtml(message)}</div>
+                </div>
+                <button class="toast-close" onclick="this.closest('.toast-notification').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            const timeoutId = setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.classList.add('hiding');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, duration);
+            
+            toast.addEventListener('click', (e) => {
+                if (e.target.closest('.toast-close')) return;
+                clearTimeout(timeoutId);
+                toast.classList.add('hiding');
+                setTimeout(() => toast.remove(), 300);
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+
+        // ============================================
+        // EXPOSE FUNCTIONS
+        // ============================================
+        window.showToastNotification = showToastNotification;
+        window.updateAttendanceStats = updateAttendanceStats;
+        window.updateBalanceStats = updateBalanceStats;
+        window.updateChoirSchedule = updateChoirSchedule;
+        window.updateConnectionStatus = updateConnectionStatus;
+
+        console.log('🔌 Reverb real-time system initialized!');
+        console.log('📡 Listening on channels: attendance, finances, choir, messages.*');
+    </script>
+
+    <!-- ============================================
+     ADDITIONAL SCRIPTS
+     ============================================ -->
     <script>
         // ===== THEME TOGGLE =====
         const fabToggle = document.getElementById('fabThemeToggle');
@@ -1502,7 +1971,6 @@
         const logoToast = document.getElementById('logoToast');
         const logoToastMsg = document.getElementById('logoToastMsg');
         const logoToastIcon = document.getElementById('logoToastIcon');
-        const logoOverlayIcon = document.getElementById('logoOverlayIcon');
 
         if (logoTrigger) {
             logoTrigger.addEventListener('click', () => logoFileInput.click());
@@ -1512,9 +1980,6 @@
             logoFileInput.addEventListener('change', function () {
                 const file = this.files[0];
                 if (!file) return;
-
-                logoTrigger.classList.add('uploading');
-                logoOverlayIcon.className = 'fas fa-spinner';
 
                 const formData = new FormData();
                 formData.append('logo', file);
@@ -1526,9 +1991,6 @@
                 })
                 .then(res => res.json())
                 .then(data => {
-                    logoTrigger.classList.remove('uploading');
-                    logoOverlayIcon.className = 'fas fa-camera';
-
                     if (data.success) {
                         const wrap = document.getElementById('logoImg');
                         if (wrap.tagName === 'IMG') {
@@ -1541,24 +2003,22 @@
                             img.alt = 'Logo';
                             wrap.replaceWith(img);
                         }
-                        showToast('success', '<i class="fas fa-check-circle"></i>', 'Logo updated successfully!');
+                        showLogoToast('success', '<i class="fas fa-check-circle"></i>', 'Logo updated successfully!');
                     } else {
-                        showToast('error', '<i class="fas fa-times-circle"></i>', data.message || 'Upload failed.');
+                        showLogoToast('error', '<i class="fas fa-times-circle"></i>', data.message || 'Upload failed.');
                     }
                 })
                 .catch(() => {
-                    logoTrigger.classList.remove('uploading');
-                    logoOverlayIcon.className = 'fas fa-camera';
-                    showToast('error', '<i class="fas fa-times-circle"></i>', 'Something went wrong.');
+                    showLogoToast('error', '<i class="fas fa-times-circle"></i>', 'Something went wrong.');
                 });
 
                 this.value = '';
             });
         }
 
-        function showToast(type, iconHtml, message) {
+        function showLogoToast(type, iconHtml, message) {
             logoToast.className = 'logo-toast ' + type;
-            logoToastIcon.outerHTML = '<span id="logoToastIcon">' + iconHtml + '</span>';
+            document.getElementById('logoToastIcon').outerHTML = '<span id="logoToastIcon">' + iconHtml + '</span>';
             logoToastMsg.textContent = message;
             logoToast.classList.add('show');
             setTimeout(() => logoToast.classList.remove('show'), 3500);
@@ -1575,41 +2035,6 @@
             if (headerLeft) headerLeft.prepend(toggleBtn);
         }
 
-        // ===== TOAST SYSTEM =====
-        const toastContainer = document.getElementById('toastContainer');
-
-        function showToastNotification(type, title, message, duration = 4000) {
-            const icons = {
-                success: 'fa-check-circle',
-                error: 'fa-times-circle',
-                warning: 'fa-exclamation-triangle',
-                info: 'fa-info-circle',
-                message: 'fa-envelope'
-            };
-
-            const toast = document.createElement('div');
-            toast.className = `toast-notification ${type}`;
-            toast.innerHTML = `
-                <div class="toast-icon ${type}">
-                    <i class="fas ${icons[type] || 'fa-bell'}"></i>
-                </div>
-                <div class="toast-body">
-                    <div class="toast-title">${title}</div>
-                    <div class="toast-message">${message}</div>
-                </div>
-                <button class="toast-close" onclick="this.closest('.toast-notification').remove()">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-
-            toastContainer.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.add('hiding');
-                setTimeout(() => toast.remove(), 300);
-            }, duration);
-        }
-
         // ===== NOTIFICATION MANAGER =====
         class NotificationManager {
             constructor() {
@@ -1624,10 +2049,8 @@
 
             init() {
                 this.fetchNotifications();
-                this.fetchMessages();
                 this.setupEventListeners();
                 setInterval(() => this.fetchNotifications(), 60000);
-                setInterval(() => this.fetchMessages(), 30000);
             }
 
             async fetchNotifications() {
@@ -1652,25 +2075,6 @@
                     }
                 } catch (error) {
                     console.log('Failed to fetch notifications:', error);
-                }
-            }
-
-            async fetchMessages() {
-                try {
-                    const response = await fetch('{{ route("messages.unread-count") }}');
-                    const data = await response.json();
-                    
-                    if (data.unread_count > 0) {
-                        this.updateBadge(data.unread_count);
-                        showToastNotification(
-                            'message',
-                            '📨 New Message Received',
-                            `You have ${data.unread_count} unread message${data.unread_count > 1 ? 's' : ''}`,
-                            5000
-                        );
-                    }
-                } catch (error) {
-                    console.log('Failed to fetch messages:', error);
                 }
             }
 
@@ -1735,21 +2139,9 @@
             renderNotifications(notifications) {
                 if (!this.notifList) return;
 
-                const messageNotif = {
-                    icon: 'fa-envelope',
-                    type: 'message',
-                    title: '📨 Messages',
-                    message: `You have unread messages`,
-                    time: 'Just now',
-                    link: '{{ route("finance.index") }}'
-                };
-
                 const unreadCount = this.notifCount.textContent;
-                if (unreadCount > 0) {
-                    notifications.unshift(messageNotif);
-                }
-
-                if (notifications.length === 0) {
+                
+                if (notifications.length === 0 && (unreadCount === '0' || unreadCount === '')) {
                     this.notifList.innerHTML = `
                         <div class="dropdown-empty">
                             <i class="fas fa-bell-slash"></i>
@@ -1762,25 +2154,19 @@
 
                 this.notifList.innerHTML = notifications.map(notif => `
                     <div class="notification-item ${notif.read ? '' : 'unread'}" 
-                         onclick="location.href='${notif.link || '#'}'">
+                         onclick="window.location.href='${notif.link || '#'}'">
                         <div class="notification-icon ${notif.type || 'info'}">
                             <i class="fas ${notif.icon || 'fa-bell'}"></i>
                         </div>
                         <div class="notification-content">
-                            <div class="notification-title">${this.escapeHtml(notif.title)}</div>
-                            <div class="notification-message">${this.escapeHtml(notif.message)}</div>
+                            <div class="notification-title">${escapeHtml(notif.title)}</div>
+                            <div class="notification-message">${escapeHtml(notif.message)}</div>
                             <div class="notification-time">
-                                <i class="fas fa-clock"></i> ${this.escapeHtml(notif.time || 'Just now')}
+                                <i class="fas fa-clock"></i> ${escapeHtml(notif.time || 'Just now')}
                             </div>
                         </div>
                     </div>
                 `).join('');
-            }
-
-            escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text || '';
-                return div.innerHTML;
             }
 
             updateBadge(count) {
@@ -1809,6 +2195,7 @@
             new NotificationManager();
         });
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
 </body>

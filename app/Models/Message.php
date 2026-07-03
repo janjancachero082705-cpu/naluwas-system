@@ -10,49 +10,47 @@ class Message extends Model
     use HasFactory;
 
     protected $fillable = [
-        'church_id',
-        'sender_id',
+        'sender_church_id',
         'receiver_church_id',
-        'message',
+        'subject',
+        'body',
         'is_read',
         'read_at',
+        'is_archived',
+        'attachments'
     ];
 
     protected $casts = [
+        'attachments' => 'array',
         'is_read' => 'boolean',
+        'is_archived' => 'boolean',
         'read_at' => 'datetime',
     ];
 
-    public function church()
+    // Relationships
+    public function sender()
     {
-        return $this->belongsTo(Church::class, 'church_id');
+        return $this->belongsTo(Church::class, 'sender_church_id');
     }
 
-    public function receiverChurch()
+    public function receiver()
     {
         return $this->belongsTo(Church::class, 'receiver_church_id');
     }
 
-    public function sender()
+    // Scope for unread messages
+    public function scopeUnread($query, $churchId)
     {
-        return $this->belongsTo(User::class, 'sender_id');
+        return $query->where('receiver_church_id', $churchId)
+                    ->where('is_read', false);
     }
 
-    public function scopeUnread($query)
-    {
-        return $query->where('is_read', false);
-    }
-
-    public function scopeForChurch($query, $churchId)
-    {
-        return $query->where('receiver_church_id', $churchId);
-    }
-
+    // Mark as read
     public function markAsRead()
     {
         $this->update([
             'is_read' => true,
-            'read_at' => now(),
+            'read_at' => now()
         ]);
     }
 }

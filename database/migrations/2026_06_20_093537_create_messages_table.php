@@ -6,29 +6,27 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
+    public function up()
     {
-        if (!Schema::hasTable('messages')) {
-            Schema::create('messages', function (Blueprint $table) {
-                $table->id();
-                $table->unsignedBigInteger('church_id');
-                $table->unsignedBigInteger('sender_id');
-                $table->unsignedBigInteger('receiver_church_id');
-                $table->text('message');
-                $table->boolean('is_read')->default(false);
-                $table->timestamp('read_at')->nullable();
-                $table->timestamps();
-                
-                // Remove foreign keys - add indexes only
-                $table->index('church_id');
-                $table->index('sender_id');
-                $table->index('receiver_church_id');
-                $table->index('is_read');
-            });
-        }
+        Schema::create('messages', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('sender_church_id')->constrained('churches')->onDelete('cascade');
+            $table->foreignId('receiver_church_id')->constrained('churches')->onDelete('cascade');
+            $table->string('subject')->nullable();
+            $table->text('body');
+            $table->boolean('is_read')->default(false);
+            $table->timestamp('read_at')->nullable();
+            $table->boolean('is_archived')->default(false);
+            $table->json('attachments')->nullable();
+            $table->timestamps();
+            
+            // Indexes for performance
+            $table->index(['sender_church_id', 'receiver_church_id']);
+            $table->index(['receiver_church_id', 'is_read']);
+        });
     }
 
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('messages');
     }

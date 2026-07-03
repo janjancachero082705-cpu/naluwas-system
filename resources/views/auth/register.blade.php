@@ -128,10 +128,10 @@
             to   { opacity:1; transform: translateY(0); }
         }
 
-        /* Left Panel - Form (Now on the LEFT) */
+        /* Left Panel - Form */
         .left-panel {
             background: var(--bg-panel);
-            padding: 2rem 2.5rem;
+            padding: 1.5rem 2rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -154,7 +154,7 @@
             border-radius: 10px;
         }
 
-        /* Right Panel - Logo (Now on the RIGHT) */
+        /* Right Panel - Logo */
         .right-panel {
             background: linear-gradient(160deg, #0a0918 0%, #14102a 40%, #1a1230 70%, #0d0c20 100%);
             padding: 2.5rem 2rem;
@@ -370,14 +370,14 @@
             text-transform: uppercase;
         }
 
-        /* Form Styles (Left Panel) */
+        /* Form Styles */
         .form-head {
-            margin-bottom: 1.2rem;
+            margin-bottom: 0.8rem;
         }
 
         .form-head h2 {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: var(--text-h);
             margin-bottom: 0.2rem;
@@ -389,7 +389,7 @@
         }
 
         .form-head p {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-m);
         }
 
@@ -398,10 +398,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 0.6rem 1rem;
-            border-radius: 12px;
-            font-size: 0.78rem;
-            margin-bottom: 1rem;
+            padding: 0.5rem 0.8rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            margin-bottom: 0.8rem;
             animation: shake 0.4s ease;
         }
 
@@ -425,30 +425,31 @@
 
         /* Section Label */
         .section-label {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--primary);
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.4rem;
+            margin-top: 0.4rem;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
         .section-label i {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
 
         /* Field */
-        .field { margin-bottom: 0.8rem; }
+        .field { margin-bottom: 0.5rem; }
 
         .field label {
             display: block;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 600;
             color: var(--text-label);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
@@ -463,11 +464,11 @@
 
         .input-wrap .input-icon {
             position: absolute;
-            left: 0.9rem;
+            left: 0.8rem;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-m);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             pointer-events: none;
             transition: color 0.3s;
             z-index: 2;
@@ -475,12 +476,12 @@
 
         .input-wrap input {
             width: 100%;
-            padding: 0.6rem 2.5rem 0.6rem 2.3rem;
+            padding: 0.5rem 2.2rem 0.5rem 2rem;
             background: var(--bg-input);
             border: 1.5px solid var(--border-input);
-            border-radius: 12px;
+            border-radius: 10px;
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             color: var(--text-input);
             transition: all 0.3s ease;
             outline: none;
@@ -500,15 +501,20 @@
         .input-wrap:focus-within .input-icon { color: var(--primary); }
 
         .input-hint {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             color: var(--text-m);
-            margin-top: 3px;
+            margin-top: 2px;
         }
 
-        /* Eye button INSIDE the input */
+        .input-hint span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Eye button */
         .eye-btn-inside {
             position: absolute;
-            right: 0.7rem;
+            right: 0.6rem;
             top: 50%;
             transform: translateY(-50%);
             background: transparent;
@@ -516,8 +522,8 @@
             color: var(--text-m);
             cursor: pointer;
             z-index: 3;
-            font-size: 0.85rem;
-            padding: 5px;
+            font-size: 0.8rem;
+            padding: 4px;
             border-radius: 50%;
             transition: all 0.3s ease;
             display: flex;
@@ -535,17 +541,17 @@
         }
 
         .input-wrap input.has-eye {
-            padding-right: 2.5rem;
+            padding-right: 2.2rem;
         }
 
         .btn-submit {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.6rem;
             border-radius: 40px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             font-weight: 700;
             border: none;
             cursor: pointer;
@@ -556,6 +562,7 @@
             gap: 8px;
             position: relative;
             overflow: hidden;
+            margin-top: 0.5rem;
         }
 
         .btn-submit::after {
@@ -580,8 +587,8 @@
 
         .form-footer {
             text-align: center;
-            margin-top: 1rem;
-            font-size: 0.78rem;
+            margin-top: 0.6rem;
+            font-size: 0.75rem;
             color: var(--text-m);
         }
 
@@ -598,8 +605,8 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            margin-top: 0.6rem;
-            font-size: 0.6rem;
+            margin-top: 0.4rem;
+            font-size: 0.55rem;
             color: var(--text-m);
             opacity: 0.6;
         }
@@ -625,7 +632,7 @@
 
         .back-link:hover { color: var(--gold); }
 
-        /* Theme Toggle Button */
+        /* Theme Toggle */
         .fab-theme {
             position: fixed;
             bottom: 1.5rem;
@@ -664,49 +671,54 @@
                 margin-top: 3rem;
             }
             .left-panel { 
-                padding: 1.5rem; 
+                padding: 1.2rem; 
                 order: 2;
-                max-height: 60vh; 
+                max-height: 55vh; 
                 overflow-y: auto; 
             }
             .right-panel { 
-                padding: 1.5rem 1.5rem; 
+                padding: 1.2rem; 
                 order: 1;
             }
             .logo-wrapper {
-                width: 90px;
-                height: 90px;
+                width: 80px;
+                height: 80px;
             }
             .logo-image, .logo-fallback {
-                width: 90px;
-                height: 90px;
-                font-size: 2rem;
+                width: 80px;
+                height: 80px;
+                font-size: 1.5rem;
             }
             .logo-wrapper .logo-ring { display: none; }
-            .church-name { font-size: 1.5rem; }
+            .church-name { font-size: 1.3rem; }
             .back-link { top: 0.5rem; left: 0.5rem; padding: 6px 12px; font-size: 0.7rem; }
             .particles { display: none; }
-            .form-head h2 { font-size: 1.3rem; }
+            .form-head h2 { font-size: 1.2rem; }
         }
 
         @media (max-width: 480px) {
-            .left-panel { padding: 1rem; }
-            .right-panel { padding: 1rem; }
+            .left-panel { padding: 0.8rem; }
+            .right-panel { padding: 0.8rem; }
             .logo-wrapper {
-                width: 70px;
-                height: 70px;
+                width: 60px;
+                height: 60px;
             }
             .logo-image, .logo-fallback {
-                width: 70px;
-                height: 70px;
-                font-size: 1.5rem;
+                width: 60px;
+                height: 60px;
+                font-size: 1.2rem;
             }
-            .church-name { font-size: 1.2rem; }
+            .church-name { font-size: 1rem; }
             .panel-verse { max-width: 100%; }
             .verse-text { font-size: 0.7rem; }
-            .field { margin-bottom: 0.6rem; }
-            .input-wrap input { padding: 0.5rem 2.2rem 0.5rem 2rem; font-size: 0.75rem; }
-            .btn-submit { padding: 0.6rem; font-size: 0.75rem; }
+            .field { margin-bottom: 0.4rem; }
+            .input-wrap input { 
+                padding: 0.4rem 2rem 0.4rem 1.8rem; 
+                font-size: 0.7rem; 
+            }
+            .btn-submit { padding: 0.5rem; font-size: 0.7rem; }
+            .section-label { font-size: 0.5rem; }
+            .field label { font-size: 0.55rem; }
         }
     </style>
 </head>
@@ -750,7 +762,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('register') }}">
+        <form method="POST" action="{{ route('register') }}" id="registerForm">
             @csrf
 
             <!-- Church Information -->
@@ -767,14 +779,23 @@
                 </div>
             </div>
 
-            <!-- Subdomain - ADDED THIS FIELD -->
+            <!-- Subdomain -->
             <div class="field">
                 <label>Subdomain <span class="required">*</span></label>
                 <div class="input-wrap">
-                    <input type="text" name="subdomain" value="{{ old('subdomain') }}" required placeholder="yourchurch">
+                    <input type="text" name="subdomain" value="{{ old('subdomain') }}" required placeholder="yourchurch" id="subdomainInput">
                     <span class="input-icon"><i class="fas fa-globe"></i></span>
                 </div>
-                <div class="input-hint">This will be your church's unique URL: <span style="color: var(--primary);">yourchurch</span>.churchsystem.com</div>
+                <div class="input-hint">This will be your church's unique URL: <span id="subdomainPreview">yourchurch</span>.churchsystem.com</div>
+            </div>
+
+            <!-- Denomination -->
+            <div class="field">
+                <label>Denomination</label>
+                <div class="input-wrap">
+                    <input type="text" name="denomination" value="{{ old('denomination') }}" placeholder="e.g., Iglesia Ni Cristo">
+                    <span class="input-icon"><i class="fas fa-tag"></i></span>
+                </div>
             </div>
 
             <!-- Church Location -->
@@ -786,8 +807,17 @@
                 </div>
             </div>
 
+            <!-- Church Phone -->
+            <div class="field">
+                <label>Church Phone</label>
+                <div class="input-wrap">
+                    <input type="text" name="church_phone" value="{{ old('church_phone') }}" placeholder="0912-345-6789">
+                    <span class="input-icon"><i class="fas fa-phone"></i></span>
+                </div>
+            </div>
+
             <!-- Administrator Account -->
-            <div class="section-label" style="margin-top: 0.8rem;">
+            <div class="section-label" style="margin-top: 0.6rem;">
                 <i class="fas fa-user-shield"></i> Administrator Account
             </div>
 
@@ -834,7 +864,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-submit">
+            <button type="submit" class="btn-submit" id="registerBtn">
                 <i class="fas fa-check-circle"></i> Create Account
             </button>
 
@@ -948,6 +978,40 @@
             inp.type = 'password';
             ico.className = 'fas fa-eye';
             this.style.color = '';
+        }
+    });
+
+    // ============================================
+    // SUBDOMAIN LIVE PREVIEW
+    // ============================================
+    const subdomainInput = document.getElementById('subdomainInput');
+    const subdomainPreview = document.getElementById('subdomainPreview');
+
+    if (subdomainInput && subdomainPreview) {
+        subdomainInput.addEventListener('input', function() {
+            const value = this.value.trim().toLowerCase();
+            const cleanValue = value.replace(/[^a-z0-9-]/g, '');
+            this.value = cleanValue;
+            subdomainPreview.textContent = cleanValue || 'yourchurch';
+        });
+    }
+
+    // ============================================
+    // FORM SUBMIT DISABLE BUTTON
+    // ============================================
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        const btn = document.getElementById('registerBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+    });
+
+    // ============================================
+    // AUTO-SCROLL TO ERROR
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        const errorAlert = document.querySelector('.alert-box.error');
+        if (errorAlert) {
+            errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     });
 </script>

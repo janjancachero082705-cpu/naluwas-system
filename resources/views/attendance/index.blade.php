@@ -515,6 +515,32 @@
         padding: 0.5rem 0.75rem;
     }
     
+    /* Real-time notification toast */
+    .realtime-toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        transform: translateX(400px);
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 9999;
+        max-width: 350px;
+        font-size: 0.9rem;
+    }
+    
+    .realtime-toast.show {
+        transform: translateX(0);
+    }
+    
+    .realtime-toast .toast-icon {
+        margin-right: 10px;
+        font-size: 1.2rem;
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
         .stats-grid {
@@ -553,6 +579,14 @@
             padding: 6px 8px;
             font-size: 0.65rem;
         }
+        .realtime-toast {
+            top: 10px;
+            right: 10px;
+            left: 10px;
+            max-width: none;
+            font-size: 0.8rem;
+            padding: 12px 16px;
+        }
     }
 </style>
 
@@ -565,6 +599,11 @@
             <strong>{{ \Carbon\Carbon::parse($selectedDate)->format('l, F d, Y') }}</strong>
             <span class="ms-2 opacity-75">| Manage attendance for this service</span>
         </div>
+        <div>
+            <span class="badge bg-light text-dark px-3 py-2">
+                <i class="fas fa-sync-alt me-1" id="live-indicator"></i> Live
+            </span>
+        </div>
     </div>
 
     <!-- Statistics Cards -->
@@ -573,7 +612,7 @@
             <div class="stat-icon primary"><i class="fas fa-users"></i></div>
             <div class="stat-info">
                 <h4>Total Members</h4>
-                <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
+                <div class="stat-value" id="stat-total">{{ number_format($totalMembers ?? 0) }}</div>
                 <div class="stat-trend">Registered members</div>
             </div>
         </div>
@@ -581,15 +620,15 @@
             <div class="stat-icon success"><i class="fas fa-check-circle"></i></div>
             <div class="stat-info">
                 <h4>Present</h4>
-                <div class="stat-value">{{ number_format($presentCount ?? 0) }}</div>
-                <div class="stat-trend">{{ $totalMembers > 0 ? round(($presentCount / $totalMembers) * 100, 1) : 0 }}% attendance rate</div>
+                <div class="stat-value" id="stat-present">{{ number_format($presentCount ?? 0) }}</div>
+                <div class="stat-trend" id="stat-present-percent">{{ $totalMembers > 0 ? round(($presentCount / $totalMembers) * 100, 1) : 0 }}% attendance rate</div>
             </div>
         </div>
         <div class="stat-card">
             <div class="stat-icon danger"><i class="fas fa-times-circle"></i></div>
             <div class="stat-info">
                 <h4>Absent</h4>
-                <div class="stat-value">{{ number_format($absentCount ?? 0) }}</div>
+                <div class="stat-value" id="stat-absent">{{ number_format($absentCount ?? 0) }}</div>
                 <div class="stat-trend">Not attended</div>
             </div>
         </div>
@@ -597,7 +636,7 @@
             <div class="stat-icon warning"><i class="fas fa-user-plus"></i></div>
             <div class="stat-info">
                 <h4>Visitors</h4>
-                <div class="stat-value">{{ number_format($visitorCount ?? 0) }}</div>
+                <div class="stat-value" id="stat-visitors">{{ number_format($visitorCount ?? 0) }}</div>
                 <div class="stat-trend">Guest attendees</div>
             </div>
         </div>
@@ -685,13 +724,13 @@
                             <th>Notes</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="attendance-table-body">
                         @forelse($members ?? [] as $index => $member)
                         @php
                             $attendance = ($attendances ?? collect())->get($member->id);
                             $status = $attendance ? $attendance->status : 'Absent';
                         @endphp
-                        <tr>
+                        <tr data-member-id="{{ $member->id }}">
                             <td class="text-center text-muted">{{ $index + 1 }}</td>
                             <td>
                                 <div class="d-flex align-items-center gap-3">
@@ -708,8 +747,8 @@
                             </td>
                             <td>
                                 <select name="attendances[{{ $member->id }}][status]" class="status-select">
-                                    <option value="Present" {{ $status == 'Present' ? 'selected' : '' }}><i class="fas fa-check-circle"></i> ✅ Present</option>
-                                    <option value="Absent" {{ $status == 'Absent' ? 'selected' : '' }}><i class="fas fa-times-circle"></i> ❌ Absent</option>
+                                    <option value="Present" {{ $status == 'Present' ? 'selected' : '' }}>✅ Present</option>
+                                    <option value="Absent" {{ $status == 'Absent' ? 'selected' : '' }}>❌ Absent</option>
                                 </select>
                             </td>
                             <td>
@@ -732,7 +771,7 @@
         <!-- Visitors Section -->
         <div class="table-container">
             <div class="card-header-custom">
-                <h6><i class="fas fa-user-plus text-primary me-2"></i>Visitors ({{ $visitorCount ?? 0 }})</h6>
+                <h6><i class="fas fa-user-plus text-primary me-2"></i>Visitors ( <span id="visitor-count-display">{{ $visitorCount ?? 0 }}</span> )</h6>
             </div>
             <div class="p-3" id="visitors-container">
                 @forelse($visitors ?? [] as $index => $visitor)
@@ -752,7 +791,7 @@
                     </div>
                 </div>
                 @empty
-                <div class="text-center text-muted py-4">
+                <div class="text-center text-muted py-4" id="no-visitors-message">
                     <i class="fas fa-user-plus fa-2x mb-2 d-block opacity-50"></i>
                     <p class="mb-0">No visitors added yet</p>
                     <small class="text-muted">Click the button below to add visitors</small>
@@ -794,90 +833,228 @@
     </div>
 </div>
 
+<!-- Real-time Toast Notification -->
+<div id="realtime-toast" class="realtime-toast">
+    <i class="fas fa-bell toast-icon"></i>
+    <span id="toast-message">Attendance updated!</span>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- ============================================
+     LARAVEL ECHO SETUP - REAL-TIME BROADCASTING
+     ============================================ -->
+<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.0/dist/echo.iife.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pusher-js@8.0.2/dist/web/pusher.min.js"></script>
+
 <script>
-    // Pie Chart - Attendance Distribution
-    const pieCtx = document.getElementById('attendancePieChart');
-    if (pieCtx) {
-        new Chart(pieCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Present', 'Absent', 'Visitors'],
-                datasets: [{
-                    data: [{{ $presentCount ?? 0 }}, {{ $absentCount ?? 0 }}, {{ $visitorCount ?? 0 }}],
-                    backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
-                    borderWidth: 0,
-                    hoverOffset: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { font: { size: 11 }, usePointStyle: true, boxWidth: 8, color: 'var(--text-primary)' }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const value = context.raw || 0;
-                                const total = {{ ($presentCount ?? 0) + ($absentCount ?? 0) + ($visitorCount ?? 0) }};
-                                const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                                return `${context.label}: ${value} (${percentage}%)`;
+    // ============================================
+    // CONFIGURE LARAVEL ECHO FOR REVERB
+    // ============================================
+    window.Pusher = Pusher;
+
+    window.Echo = new Echo({
+        broadcaster: 'reverb',
+        key: '{{ env("REVERB_APP_KEY") }}',
+        wsHost: '{{ env("REVERB_HOST", "127.0.0.1") }}',
+        wsPort: {{ env("REVERB_PORT", 8080) }},
+        wssPort: {{ env("REVERB_PORT", 8080) }},
+        forceTLS: false,
+        enabledTransports: ['ws', 'wss'],
+    });
+
+    // ============================================
+    // LISTEN FOR ATTENDANCE UPDATES
+    // ============================================
+    let pieChart = null;
+    let trendChart = null;
+
+    // Initialize charts
+    function initCharts() {
+        // Pie Chart
+        const pieCtx = document.getElementById('attendancePieChart');
+        if (pieCtx && !pieChart) {
+            pieChart = new Chart(pieCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Present', 'Absent', 'Visitors'],
+                    datasets: [{
+                        data: [
+                            {{ $presentCount ?? 0 }}, 
+                            {{ $absentCount ?? 0 }}, 
+                            {{ $visitorCount ?? 0 }}
+                        ],
+                        backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+                        borderWidth: 0,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { 
+                                font: { size: 11 }, 
+                                usePointStyle: true, 
+                                boxWidth: 8, 
+                                color: 'var(--text-primary)' 
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw || 0;
+                                    const total = {{ ($presentCount ?? 0) + ($absentCount ?? 0) + ($visitorCount ?? 0) }};
+                                    const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                                    return `${context.label}: ${value} (${percentage}%)`;
+                                }
                             }
                         }
-                    }
-                },
-                cutout: '60%'
-            }
-        });
-    }
-
-    // Line Chart - Weekly Attendance Trend
-    const lineCtx = document.getElementById('attendanceTrendChart');
-    if (lineCtx) {
-        const weeklyData = @json($weeklyAttendance ?? []);
-        new Chart(lineCtx, {
-            type: 'line',
-            data: {
-                labels: weeklyData.map(w => w.week),
-                datasets: [{
-                    label: 'Attendance',
-                    data: weeklyData.map(w => w.count),
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.05)',
-                    fill: true,
-                    tension: 0.3,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#3b82f6',
-                    pointBorderColor: '#ffffff',
-                    pointBorderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { callbacks: { label: (ctx) => `Attendance: ${ctx.raw}` } }
-                },
-                scales: {
-                    y: { 
-                        beginAtZero: true, 
-                        grid: { color: 'var(--border-color)' }, 
-                        ticks: { stepSize: 5, font: { size: 10 }, color: 'var(--text-primary)' } 
                     },
-                    x: { 
-                        ticks: { font: { size: 10 }, color: 'var(--text-primary)' }, 
-                        grid: { display: false } 
+                    cutout: '60%'
+                }
+            });
+        }
+
+        // Line Chart
+        const lineCtx = document.getElementById('attendanceTrendChart');
+        if (lineCtx && !trendChart) {
+            const weeklyData = @json($weeklyAttendance ?? []);
+            trendChart = new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: weeklyData.map(w => w.week),
+                    datasets: [{
+                        label: 'Attendance',
+                        data: weeklyData.map(w => w.count),
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: (ctx) => `Attendance: ${ctx.raw}` } }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: 'var(--border-color)' }, 
+                            ticks: { stepSize: 5, font: { size: 10 }, color: 'var(--text-primary)' } 
+                        },
+                        x: { 
+                            ticks: { font: { size: 10 }, color: 'var(--text-primary)' }, 
+                            grid: { display: false } 
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
-    // Calendar Functions
+    // Update charts with new data
+    function updateCharts(present, absent, visitors, weeklyData) {
+        if (pieChart) {
+            pieChart.data.datasets[0].data = [present, absent, visitors];
+            pieChart.update();
+        }
+
+        if (trendChart && weeklyData) {
+            trendChart.data.labels = weeklyData.map(w => w.week);
+            trendChart.data.datasets[0].data = weeklyData.map(w => w.count);
+            trendChart.update();
+        }
+    }
+
+    // Show real-time notification
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('realtime-toast');
+        const toastMessage = document.getElementById('toast-message');
+        
+        const colors = {
+            success: 'linear-gradient(135deg, #10b981, #059669)',
+            info: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+            warning: 'linear-gradient(135deg, #f59e0b, #d97706)'
+        };
+        
+        toast.style.background = colors[type] || colors.success;
+        toastMessage.textContent = message;
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 4000);
+    }
+
+    // Update live indicator
+    function flashLiveIndicator() {
+        const indicator = document.getElementById('live-indicator');
+        if (indicator) {
+            indicator.style.color = '#10b981';
+            setTimeout(() => {
+                indicator.style.color = '';
+            }, 500);
+        }
+    }
+
+    // ============================================
+    // LISTEN FOR ATTENDANCE UPDATES
+    // ============================================
+    window.Echo.channel('attendance')
+        .listen('attendance.updated', (e) => {
+            console.log('📊 Attendance updated in real-time:', e);
+            
+            // Update statistics
+            const present = e.present || e.presentCount || 0;
+            const absent = e.absent || e.absentCount || 0;
+            const total = e.total || e.totalMembers || 0;
+            const visitors = e.visitors || e.visitorCount || 0;
+            
+            // Update stat cards
+            document.getElementById('stat-present').textContent = present;
+            document.getElementById('stat-absent').textContent = absent;
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-visitors').textContent = visitors;
+            
+            // Update percentage
+            const percent = total > 0 ? Math.round((present / total) * 100, 1) : 0;
+            document.getElementById('stat-present-percent').textContent = percent + '% attendance rate';
+            
+            // Update visitor count display
+            const visitorDisplay = document.getElementById('visitor-count-display');
+            if (visitorDisplay) {
+                visitorDisplay.textContent = visitors;
+            }
+            
+            // Update charts if we have weekly data
+            if (e.weekly_data) {
+                updateCharts(present, absent, visitors, e.weekly_data);
+            } else {
+                // Just update pie chart
+                updateCharts(present, absent, visitors, null);
+            }
+            
+            // Show notification
+            const church = e.church || e.churchName || 'Church';
+            showToast(`📊 ${church}: ${present} present, ${absent} absent`);
+            
+            // Flash the live indicator
+            flashLiveIndicator();
+        });
+
+    // ============================================
+    // CALENDAR FUNCTIONS
+    // ============================================
     let visitorCounter = {{ ($visitors ?? collect())->count() }};
     
     function selectDate(date) {
@@ -892,11 +1069,18 @@
         window.location.href = "{{ route('sunday-attendance.index') }}?year=" + date.getFullYear() + "&month=" + (date.getMonth() + 1);
     }
     
-    // Add Visitor
+    // ============================================
+    // ADD VISITOR
+    // ============================================
     const addVisitorBtn = document.getElementById('add-visitor');
     if (addVisitorBtn) {
         addVisitorBtn.addEventListener('click', function() {
             const container = document.getElementById('visitors-container');
+            const noVisitorMsg = document.getElementById('no-visitors-message');
+            if (noVisitorMsg) {
+                noVisitorMsg.remove();
+            }
+            
             const template = document.getElementById('new-visitor-template');
             const newRow = template.cloneNode(true);
             newRow.id = '';
@@ -913,16 +1097,37 @@
             if (removeBtn) {
                 removeBtn.addEventListener('click', function() {
                     newRow.remove();
+                    // Update visitor count
+                    const rows = document.querySelectorAll('.visitor-row');
+                    document.getElementById('visitor-count-display').textContent = rows.length;
                 });
             }
         });
     }
     
-    // Remove Visitor Buttons
+    // ============================================
+    // REMOVE VISITOR BUTTONS
+    // ============================================
     document.querySelectorAll('.remove-visitor').forEach(btn => {
         btn.addEventListener('click', function() {
-            this.closest('.visitor-row').remove();
+            const row = this.closest('.visitor-row');
+            row.remove();
+            // Update visitor count
+            const rows = document.querySelectorAll('.visitor-row');
+            document.getElementById('visitor-count-display').textContent = rows.length;
         });
+    });
+
+    // ============================================
+    // INITIALIZE CHARTS
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        initCharts();
+        
+        // Show a welcome toast
+        setTimeout(() => {
+            showToast('🔄 Real-time attendance updates active!', 'info');
+        }, 2000);
     });
 </script>
 @endsection
