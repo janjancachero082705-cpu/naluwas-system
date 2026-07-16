@@ -790,16 +790,6 @@
 {{-- MAIN CONTENT --}}
 {{-- ============================================= --}}
 <div class="container-fluid px-0">
-    
-    {{-- HEADER SECTION --}}
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div>
-            <h1 class="h2 mb-1 fw-bold" style="color: var(--text-primary);">
-                <i class="fas fa-users me-2" style="color: var(--text-muted);"></i>Church Members
-            </h1>
-            <p class="mb-0" style="color: var(--text-muted);">Manage your church family and their ministries</p>
-        </div>
-    </div>
 
     {{-- STATISTICS CARDS --}}
     <div class="stats-grid">

@@ -9,759 +9,838 @@ use Carbon\Carbon;
 @section('content')
 <style>
     /* ============================================
-       CLEAN UI - SAME STYLE AS OTHER PAGES
+       MODERN ANALYTICS DESIGN - V2
     ============================================ */
     
-    /* Stats Grid */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 1rem;
-        margin-bottom: 1.5rem;
+    /* Import Google Fonts for better typography */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    
+    :root {
+        --analytics-primary: #4F46E5;
+        --analytics-primary-light: #818CF8;
+        --analytics-success: #10B981;
+        --analytics-danger: #EF4444;
+        --analytics-warning: #F59E0B;
+        --analytics-info: #3B82F6;
+        --analytics-purple: #8B5CF6;
+        --analytics-pink: #EC4899;
+        --analytics-orange: #F97316;
+        --analytics-teal: #14B8A6;
+        --gradient-blue: linear-gradient(135deg, #4F46E5, #7C3AED);
+        --gradient-green: linear-gradient(135deg, #10B981, #34D399);
+        --gradient-red: linear-gradient(135deg, #EF4444, #F87171);
+        --gradient-purple: linear-gradient(135deg, #8B5CF6, #A78BFA);
+        --gradient-orange: linear-gradient(135deg, #F59E0B, #FBBF24);
+        --gradient-pink: linear-gradient(135deg, #EC4899, #F472B6);
+        --shadow-card-lg: 0 20px 60px rgba(0,0,0,0.08);
+        --shadow-card-hover: 0 24px 80px rgba(0,0,0,0.12);
+        --glass-bg: rgba(255,255,255,0.7);
+        --glass-border: rgba(255,255,255,0.2);
+        --backdrop-blur: blur(20px);
     }
     
-    .stat-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 1rem 1.2rem;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        transition: all 0.2s ease;
+    [data-theme="dark"] {
+        --glass-bg: rgba(22,32,50,0.7);
+        --glass-border: rgba(255,255,255,0.05);
+    }
+    
+    /* Hero Section - Modern Gradient */
+    .analytics-hero {
+        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+        border-radius: 20px;
+        padding: 2rem 2.5rem;
+        margin-bottom: 2rem;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 20px 60px rgba(79, 70, 229, 0.3);
     }
     
-    .stat-card::before {
+    .analytics-hero::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 4px;
-        height: 100%;
-        border-radius: 0 4px 4px 0;
+        top: -50%;
+        right: -30%;
+        width: 80%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        pointer-events: none;
+        animation: pulseGlow 8s ease-in-out infinite;
     }
     
-    .stat-card.income::before { background: #10b981; }
-    .stat-card.expense::before { background: #ef4444; }
-    .stat-card.balance::before { background: #4F46E5; }
-    .stat-card.members::before { background: #8b5cf6; }
-    .stat-card.choir::before { background: #f59e0b; }
-    
-    .stat-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    .analytics-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -50%;
+        left: -20%;
+        width: 60%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+        pointer-events: none;
+        animation: pulseGlow 10s ease-in-out infinite reverse;
     }
     
-    .stat-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        color: white;
-        flex-shrink: 0;
+    @keyframes pulseGlow {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.2); opacity: 1; }
     }
     
-    .stat-icon.green { background: linear-gradient(135deg, #10b981, #34d399); }
-    .stat-icon.red { background: linear-gradient(135deg, #ef4444, #f87171); }
-    .stat-icon.blue { background: linear-gradient(135deg, #4F46E5, #6366F1); }
-    .stat-icon.purple { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
-    .stat-icon.yellow { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
-    
-    .stat-info {
-        flex: 1;
-    }
-    
-    .stat-info h4 {
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        color: var(--text-muted);
-        margin: 0 0 3px 0;
-        font-weight: 600;
-    }
-    
-    .stat-value {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        line-height: 1.2;
-    }
-    
-    .stat-trend {
-        font-size: 0.6rem;
-        color: var(--text-muted);
-        margin-top: 2px;
-    }
-    
-    .amount-positive { color: #10b981 !important; }
-    .amount-negative { color: #ef4444 !important; }
-    
-    /* Hero Section - Green */
-    .reports-hero {
-        background: linear-gradient(135deg, #10b981, #059669);
-        border-radius: 12px;
-        padding: 1.2rem 1.5rem;
-        margin-bottom: 1.5rem;
+    .analytics-hero .hero-content {
+        position: relative;
+        z-index: 1;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: 1rem;
-        position: relative;
-        overflow: hidden;
+        gap: 1.5rem;
     }
     
-    .reports-hero::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-        pointer-events: none;
-    }
-    
-    .reports-hero h1 {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin: 0;
-        color: white;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .reports-hero h1 i {
-        margin-right: 8px;
-    }
-    
-    .reports-hero p {
-        color: rgba(255,255,255,0.85);
-        margin: 0;
-        font-size: 0.75rem;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .hero-left {
+    .analytics-hero .hero-left {
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        gap: 0.3rem;
     }
     
-    .hero-right {
-        display: flex;
+    .analytics-hero h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: white;
+        margin: 0;
+        letter-spacing: -0.5px;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .analytics-hero h1 i {
+        margin-right: 12px;
+        opacity: 0.8;
+    }
+    
+    .analytics-hero p {
+        color: rgba(255,255,255,0.85);
+        margin: 0;
+        font-size: 0.9rem;
+        font-weight: 400;
+    }
+    
+    .analytics-hero .hero-badge {
+        display: inline-flex;
         align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: var(--backdrop-blur);
+        padding: 0.5rem 1.2rem;
+        border-radius: 50px;
+        border: 1px solid rgba(255,255,255,0.2);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .analytics-hero .hero-actions {
+        display: flex;
         gap: 0.75rem;
         flex-wrap: wrap;
         position: relative;
         z-index: 1;
     }
     
-    .btn-export {
+    .btn-hero-primary {
         background: white;
-        color: #059669;
-        border-radius: 8px;
-        padding: 0.4rem 1.2rem;
-        font-weight: 600;
-        font-size: 0.75rem;
-        transition: all 0.2s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
+        color: #4F46E5;
         border: none;
-        cursor: pointer;
-    }
-    
-    .btn-export:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        color: #059669;
-        text-decoration: none;
-    }
-    
-    .btn-back-system {
-        background: rgba(255,255,255,0.2);
-        color: white;
-        border-radius: 8px;
-        padding: 0.4rem 1.2rem;
-        font-weight: 600;
-        font-size: 0.75rem;
-        transition: all 0.2s ease;
-        text-decoration: none;
+        padding: 0.6rem 1.8rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        border: 1px solid rgba(255,255,255,0.2);
+        gap: 8px;
         cursor: pointer;
+        text-decoration: none;
     }
     
-    .btn-back-system:hover {
-        background: rgba(255,255,255,0.3);
+    .btn-hero-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        color: #4F46E5;
+        text-decoration: none;
+    }
+    
+    .btn-hero-secondary {
+        background: rgba(255,255,255,0.15);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.3);
+        padding: 0.6rem 1.8rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        backdrop-filter: var(--backdrop-blur);
+    }
+    
+    .btn-hero-secondary:hover {
+        background: rgba(255,255,255,0.25);
         transform: translateY(-2px);
         color: white;
         text-decoration: none;
     }
     
-    /* Table Container */
-    .table-container {
+    /* Stats Grid - Modern Cards */
+    .analytics-stats {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1.2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card-modern {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
-        border-radius: 12px;
+        border-radius: 16px;
+        padding: 1.2rem 1.5rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
         overflow: hidden;
-        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-card);
     }
     
-    .table-container .card-header-custom {
-        padding: 0.8rem 1.2rem;
-        border-bottom: 1px solid var(--border-color);
-        background: var(--bg-tertiary);
-    }
-    
-    .table-container .card-header-custom h6 {
-        color: var(--text-primary);
-        margin: 0;
-        font-size: 0.8rem;
-        font-weight: 700;
-    }
-    
-    .table-container .card-header-custom h6 i {
-        color: #10b981;
-        margin-right: 6px;
-    }
-    
-    .table {
-        margin-bottom: 0;
+    .stat-card-modern::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-        background: var(--card-bg);
-        border-collapse: collapse;
+        height: 3px;
+        background: var(--gradient-blue);
     }
     
-    .table thead th {
-        background: var(--bg-tertiary);
-        border-bottom: 1px solid var(--border-color);
-        color: var(--text-muted) !important;
-        font-size: 0.6rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        padding: 0.6rem 1rem;
-        white-space: nowrap;
+    .stat-card-modern:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-card-hover);
+        border-color: transparent;
     }
     
-    .table thead th i {
-        margin-right: 4px;
-        font-size: 0.6rem;
-    }
-    
-    .table tbody td {
-        padding: 0.5rem 1rem;
-        vertical-align: middle;
-        color: var(--text-primary) !important;
-        background: var(--card-bg);
-        border-bottom: 1px solid var(--border-color);
-        font-size: 0.75rem;
-    }
-    
-    .table tbody tr {
-        transition: all 0.15s ease;
-    }
-    
-    .table tbody tr:hover {
-        background: var(--bg-tertiary) !important;
-    }
-    
-    .table tbody tr:hover td {
-        background: var(--bg-tertiary) !important;
-    }
-    
-    /* Badges */
-    .badge-income {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 2px 10px;
-        border-radius: 20px;
-        font-size: 0.6rem;
-        font-weight: 600;
-        background: rgba(16, 185, 129, 0.12);
-        color: #10b981;
-    }
-    
-    .badge-expense {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 2px 10px;
-        border-radius: 20px;
-        font-size: 0.6rem;
-        font-weight: 600;
-        background: rgba(239, 68, 68, 0.12);
-        color: #ef4444;
-    }
-    
-    /* Member Items */
-    .member-item {
+    .stat-card-modern .stat-top {
         display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid var(--border-color);
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
     }
     
-    .member-item:last-child {
-        border-bottom: none;
+    .stat-card-modern .stat-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--text-muted);
+        font-weight: 700;
+        margin: 0;
     }
     
-    .member-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: var(--bg-tertiary);
-        border: 1.5px solid var(--border-color);
+    .stat-card-modern .stat-icon-wrap {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.65rem;
-        color: var(--text-muted);
+        font-size: 1rem;
+        color: white;
         flex-shrink: 0;
     }
     
-    .member-avatar i {
+    .stat-card-modern .stat-value {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+    }
+    
+    .stat-card-modern .stat-change {
         font-size: 0.65rem;
-    }
-    
-    .member-item .fw-semibold {
-        color: var(--text-primary);
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
-    
-    .member-item .text-muted {
         color: var(--text-muted);
-        font-size: 0.6rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 2px;
     }
     
-    /* Chart Container */
-    .chart-container {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 1.2rem;
-        margin-bottom: 1.5rem;
+    .stat-card-modern .stat-change.positive { color: var(--analytics-success); }
+    .stat-card-modern .stat-change.negative { color: var(--analytics-danger); }
+    
+    /* Gradient variants for stat cards */
+    .stat-card-modern.green::before { background: var(--gradient-green); }
+    .stat-card-modern.red::before { background: var(--gradient-red); }
+    .stat-card-modern.blue::before { background: var(--gradient-blue); }
+    .stat-card-modern.purple::before { background: var(--gradient-purple); }
+    .stat-card-modern.orange::before { background: var(--gradient-orange); }
+    
+    .stat-card-modern.green .stat-icon-wrap { background: var(--gradient-green); }
+    .stat-card-modern.red .stat-icon-wrap { background: var(--gradient-red); }
+    .stat-card-modern.blue .stat-icon-wrap { background: var(--gradient-blue); }
+    .stat-card-modern.purple .stat-icon-wrap { background: var(--gradient-purple); }
+    .stat-card-modern.orange .stat-icon-wrap { background: var(--gradient-orange); }
+    
+    /* Section Headers */
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.2rem;
+        flex-wrap: wrap;
+        gap: 0.8rem;
     }
     
-    .chart-container h6 {
-        color: var(--text-primary);
-        font-size: 0.85rem;
+    .section-header h3 {
+        font-size: 1.1rem;
         font-weight: 700;
-        margin-bottom: 0.8rem;
+        margin: 0;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Inter', sans-serif;
     }
     
-    .chart-container h6 i {
-        color: #10b981;
-        margin-right: 6px;
+    .section-header h3 i {
+        color: var(--analytics-primary);
+        font-size: 1rem;
     }
     
-    .chart-box {
-        height: 250px;
-        position: relative;
+    .section-header .section-actions {
+        display: flex;
+        gap: 0.5rem;
     }
     
-    /* Upcoming Schedule Card */
-    .schedule-card {
-        background: var(--bg-tertiary);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 1rem;
-        text-align: center;
-    }
-    
-    .schedule-card .group-badge {
-        display: inline-block;
-        padding: 0.3rem 1.2rem;
-        border-radius: 20px;
-        color: white;
-        font-weight: 600;
-        font-size: 0.8rem;
-    }
-    
-    .schedule-card .schedule-detail {
-        margin-top: 0.5rem;
-        font-size: 0.7rem;
-        color: var(--text-muted);
-    }
-    
-    /* Modal Styles */
-    .modal-content {
+    /* Card Containers */
+    .card-modern {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
         border-radius: 16px;
         overflow: hidden;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-card);
+        transition: all 0.3s ease;
     }
     
-    .modal-header {
+    .card-modern:hover {
+        box-shadow: var(--shadow-card-hover);
+    }
+    
+    .card-modern .card-header-custom {
         padding: 1rem 1.5rem;
         border-bottom: 1px solid var(--border-color);
         background: var(--bg-tertiary);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
     
-    .modal-header .modal-title {
-        font-size: 1rem;
+    .card-modern .card-header-custom h6 {
+        margin: 0;
         font-weight: 700;
+        font-size: 0.85rem;
         color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
     }
     
-    .modal-header .modal-title i {
-        color: #10b981;
-        margin-right: 6px;
+    .card-modern .card-header-custom h6 i {
+        margin-right: 8px;
+        color: var(--analytics-primary);
     }
     
-    .modal-body {
+    .card-modern .card-body {
         padding: 1.5rem;
     }
     
-    .modal-footer {
-        padding: 1rem 1.5rem;
-        border-top: 1px solid var(--border-color);
-        background: var(--bg-tertiary);
+    /* Table - Modern Style */
+    .table-modern {
+        width: 100%;
+        border-collapse: collapse;
     }
     
-    .btn-close-modal {
-        background: none;
-        border: none;
-        color: var(--text-muted);
-        font-size: 1.2rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        padding: 0.2rem 0.4rem;
-    }
-    
-    .btn-close-modal:hover {
-        color: var(--text-primary);
-        transform: rotate(90deg);
-    }
-    
-    .btn-secondary {
-        background: var(--bg-tertiary);
-        border: 1px solid var(--border-color);
-        padding: 0.4rem 1.2rem;
-        border-radius: 8px;
-        color: var(--text-secondary);
-        font-size: 0.7rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-    }
-    
-    .btn-secondary:hover {
-        background: var(--hover-bg);
-        transform: translateY(-1px);
-    }
-    
-    .btn-primary-modal {
-        background: linear-gradient(135deg, #10b981, #059669);
-        border: none;
-        padding: 0.4rem 1.5rem;
-        border-radius: 8px;
-        color: white;
-        font-size: 0.75rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-    }
-    
-    .btn-primary-modal:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(16,185,129,0.3);
-    }
-    
-    .form-label {
-        font-size: 0.65rem;
+    .table-modern thead th {
+        padding: 0.75rem 1rem;
+        font-size: 0.6rem;
         text-transform: uppercase;
-        letter-spacing: 0.6px;
-        font-weight: 600;
+        letter-spacing: 0.8px;
+        font-weight: 700;
         color: var(--text-muted);
-        margin-bottom: 0.3rem;
-        display: flex;
+        border-bottom: 2px solid var(--border-color);
+        text-align: left;
+    }
+    
+    .table-modern tbody td {
+        padding: 0.75rem 1rem;
+        font-size: 0.8rem;
+        color: var(--text-primary);
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: middle;
+    }
+    
+    .table-modern tbody tr {
+        transition: all 0.2s ease;
+    }
+    
+    .table-modern tbody tr:hover {
+        background: var(--bg-tertiary);
+    }
+    
+    .table-modern tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    /* Badges */
+    .badge-modern {
+        display: inline-flex;
         align-items: center;
         gap: 4px;
+        padding: 0.25rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.65rem;
+        font-weight: 700;
     }
     
-    .form-control, .form-select {
-        width: 100%;
-        padding: 0.4rem 0.8rem;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        background: var(--input-bg);
-        color: var(--text-primary);
-        font-size: 0.8rem;
+    .badge-modern.income {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10B981;
+    }
+    
+    .badge-modern.expense {
+        background: rgba(239, 68, 68, 0.12);
+        color: #EF4444;
+    }
+    
+    .badge-modern.choir {
+        background: rgba(245, 158, 11, 0.12);
+        color: #F59E0B;
+    }
+    
+    .badge-modern.member {
+        background: rgba(79, 70, 229, 0.12);
+        color: #4F46E5;
+    }
+    
+    /* Member List Items */
+    .member-item-modern {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0.7rem 0;
+        border-bottom: 1px solid var(--border-color);
         transition: all 0.2s ease;
     }
     
-    .form-control:focus, .form-select:focus {
-        outline: none;
-        border-color: #10b981;
-        box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
+    .member-item-modern:last-child {
+        border-bottom: none;
     }
     
-    /* Format Selector */
-    .format-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 0.5rem;
-        margin-bottom: 1rem;
-    }
-    
-    .format-card {
-        background: var(--bg-tertiary);
-        border: 2px solid var(--border-color);
+    .member-item-modern .member-avatar {
+        width: 36px;
+        height: 36px;
         border-radius: 10px;
-        padding: 0.8rem 0.5rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
+        background: var(--gradient-blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.7rem;
+        flex-shrink: 0;
+        font-weight: 700;
+    }
+    
+    .member-item-modern .member-info {
+        flex: 1;
+    }
+    
+    .member-item-modern .member-name {
+        font-weight: 600;
+        font-size: 0.85rem;
         color: var(--text-primary);
     }
     
-    .format-card:hover {
-        border-color: #10b981;
+    .member-item-modern .member-meta {
+        font-size: 0.65rem;
+        color: var(--text-muted);
     }
     
-    .format-card.selected {
-        border-color: #10b981;
-        background: rgba(16, 185, 129, 0.08);
+    /* Schedule Card */
+    .schedule-card-modern {
+        background: var(--bg-tertiary);
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
     }
     
-    .format-card i {
-        font-size: 1.3rem;
-        display: block;
-        margin-bottom: 4px;
+    .schedule-card-modern .schedule-info {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
     }
     
-    .format-card span {
-        font-size: 0.6rem;
-        font-weight: 600;
+    .schedule-card-modern .schedule-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.5rem 1.2rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: white;
+        background: var(--gradient-purple);
+    }
+    
+    .schedule-card-modern .schedule-detail {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+    
+    .schedule-card-modern .schedule-detail i {
+        color: var(--analytics-primary);
+        width: 16px;
+    }
+    
+    /* Chart Container */
+    .chart-modern {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-card);
+    }
+    
+    .chart-modern .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.2rem;
+    }
+    
+    .chart-modern .chart-header h5 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 0;
+        color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .chart-modern .chart-header h5 i {
+        color: var(--analytics-primary);
+        margin-right: 8px;
+    }
+    
+    .chart-modern .chart-body {
+        height: 280px;
+        position: relative;
+    }
+    
+    /* Two Column Grid */
+    .analytics-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
     }
     
     /* Responsive */
-    @media (max-width: 768px) {
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-        }
-        .stat-value {
-            font-size: 1.1rem;
-        }
-        .stat-icon {
-            width: 40px;
-            height: 40px;
-            font-size: 1rem;
-        }
-        .reports-hero {
-            text-align: center;
-            padding: 1rem 1.2rem;
-            flex-direction: column;
-        }
-        .reports-hero h1 {
-            font-size: 1rem;
-        }
-        .hero-left {
-            align-items: center;
-        }
-        .hero-right {
-            width: 100%;
-            justify-content: center;
-            flex-direction: column;
-        }
-        .btn-export, .btn-back-system {
-            width: 100%;
-            justify-content: center;
-        }
-        .table thead th,
-        .table tbody td {
-            padding: 0.3rem 0.5rem;
-            font-size: 0.6rem;
-        }
-        .member-avatar {
-            width: 28px;
-            height: 28px;
-            font-size: 0.55rem;
-        }
-        .format-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        .chart-box {
-            height: 180px;
+    @media (max-width: 1200px) {
+        .analytics-stats {
+            grid-template-columns: repeat(3, 1fr);
         }
     }
     
+    @media (max-width: 992px) {
+        .analytics-grid-2 {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .analytics-hero {
+            padding: 1.5rem;
+            border-radius: 16px;
+        }
+        
+        .analytics-hero h1 {
+            font-size: 1.4rem;
+        }
+        
+        .analytics-hero .hero-content {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .analytics-hero .hero-left {
+            align-items: center;
+        }
+        
+        .analytics-hero .hero-actions {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .analytics-stats {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+        }
+        
+        .stat-card-modern {
+            padding: 1rem;
+        }
+        
+        .stat-card-modern .stat-value {
+            font-size: 1.3rem;
+        }
+        
+        .schedule-card-modern {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .schedule-card-modern .schedule-info {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .btn-hero-primary,
+        .btn-hero-secondary {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .analytics-stats {
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+        }
+        
+        .stat-card-modern .stat-value {
+            font-size: 1.1rem;
+        }
+        
+        .stat-card-modern .stat-icon-wrap {
+            width: 32px;
+            height: 32px;
+            font-size: 0.8rem;
+        }
+    }
+    
+    /* Print Styles */
     @media print {
         .no-print { display: none !important; }
-        body { background: white; }
-        .stat-card { border: 1px solid #ddd; }
-        .table-container { border: 1px solid #ddd; }
-        @page { margin: 0.5cm; }
+        .analytics-hero { background: #4F46E5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .stat-card-modern { border: 1px solid #ddd !important; }
+        .stat-card-modern .stat-icon-wrap { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .badge-modern { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .schedule-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
 </style>
 
 <div class="container-fluid px-0">
-    <!-- Hero Section - Green -->
-    <div class="reports-hero no-print">
-        <div class="hero-left">
-            <h1><i class="fas fa-chart-line"></i> Reports & Analytics</h1>
-            <p>Complete church financial and ministry analytics dashboard</p>
-        </div>
-        <div class="hero-right">
-            <a href="{{ route('dashboard') }}" class="btn-back-system">
-                <i class="fas fa-arrow-left"></i> Back to System
-            </a>
-            <button class="btn-export" onclick="openExportModal()">
-                <i class="fas fa-download"></i> Export / Print
-            </button>
-        </div>
-    </div>
-
-    <!-- Statistics Cards - Removed Today's Attendance -->
-    <div class="stats-grid">
-        <div class="stat-card income">
-            <div class="stat-icon green"><i class="fas fa-arrow-down"></i></div>
-            <div class="stat-info">
-                <h4>Total Income</h4>
-                <div class="stat-value amount-positive">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
-                <div class="stat-trend">Money received</div>
-            </div>
-        </div>
-        <div class="stat-card expense">
-            <div class="stat-icon red"><i class="fas fa-arrow-up"></i></div>
-            <div class="stat-info">
-                <h4>Total Expenses</h4>
-                <div class="stat-value amount-negative">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
-                <div class="stat-trend">Money spent</div>
-            </div>
-        </div>
-        <div class="stat-card balance">
-            <div class="stat-icon blue"><i class="fas fa-scale-balanced"></i></div>
-            <div class="stat-info">
-                <h4>Net Balance</h4>
-                <div class="stat-value {{ ($balance ?? 0) >= 0 ? 'amount-positive' : 'amount-negative' }}">
-                    {{ ($balance ?? 0) >= 0 ? '₱' : '-₱' }}{{ number_format(abs($balance ?? 0), 2) }}
+    <!-- Hero Section -->
+    <div class="analytics-hero no-print">
+        <div class="hero-content">
+            <div class="hero-left">
+                <h1><i class="fas fa-chart-line"></i> Reports & Analytics</h1>
+                <p>Complete church financial and ministry analytics dashboard</p>
+                <div class="hero-badge">
+                    <i class="fas fa-circle" style="color: #34D399; font-size: 0.5rem;"></i>
+                    Live Data • Updated in Real-Time
                 </div>
-                <div class="stat-trend">{{ ($balance ?? 0) >= 0 ? 'Surplus' : 'Deficit' }}</div>
             </div>
-        </div>
-        <div class="stat-card members">
-            <div class="stat-icon purple"><i class="fas fa-users"></i></div>
-            <div class="stat-info">
-                <h4>Total Members</h4>
-                <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
-                <div class="stat-trend">Church family</div>
-            </div>
-        </div>
-        <div class="stat-card choir">
-            <div class="stat-icon yellow"><i class="fas fa-music"></i></div>
-            <div class="stat-info">
-                <h4>Choir Members</h4>
-                <div class="stat-value">{{ number_format($choirMembers ?? 0) }}</div>
-                <div class="stat-trend">Voices of praise</div>
+            <div class="hero-actions">
+                <a href="{{ route('dashboard') }}" class="btn-hero-secondary">
+                    <i class="fas fa-arrow-left"></i> Dashboard
+                </a>
+                <button class="btn-hero-primary" onclick="openExportModal()">
+                    <i class="fas fa-download"></i> Export Report
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Recent Transactions -->
-    <div class="table-container">
-        <div class="card-header-custom">
-            <h6><i class="fas fa-history"></i> Recent Transactions</h6>
+    <!-- Stats Cards -->
+    <div class="analytics-stats">
+        <div class="stat-card-modern green">
+            <div class="stat-top">
+                <span class="stat-label">Total Income</span>
+                <div class="stat-icon-wrap"><i class="fas fa-arrow-down"></i></div>
+            </div>
+            <div class="stat-value">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i> Money received
+            </div>
         </div>
-        <div class="table-responsive">
-            <table class="table" id="transactionsTable">
-                <thead>
-                    <tr>
-                        <th><i class="fas fa-calendar"></i> Date</th>
-                        <th><i class="fas fa-tag"></i> Description</th>
-                        <th><i class="fas fa-folder"></i> Category</th>
-                        <th><i class="fas fa-exchange-alt"></i> Type</th>
-                        <th class="text-end"><i class="fas fa-money-bill-wave"></i> Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse(($recentTransactions ?? []) as $transaction)
-                    <tr>
-                        <td>{{ Carbon::parse($transaction->date ?? $transaction->created_at)->format('M d, Y') }}</td>
-                        <td>{{ $transaction->description ?? 'N/A' }}</td>
-                        <td>{{ $transaction->category ?? 'General' }}</td>
-                        <td><span class="{{ $transaction->type == 'income' ? 'badge-income' : 'badge-expense' }}">{{ ucfirst($transaction->type ?? 'expense') }}</span></td>
-                        <td class="text-end fw-bold {{ $transaction->type == 'income' ? 'amount-positive' : 'amount-negative' }}">
-                            {{ $transaction->type == 'income' ? '+' : '-' }} ₱{{ number_format($transaction->amount ?? 0, 2) }}
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="text-center py-4" style="color: var(--text-muted);">
-                            <i class="fas fa-receipt text-muted mb-2 d-block" style="font-size: 1.5rem; opacity: 0.3;"></i>
-                            No transactions found
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+        
+        <div class="stat-card-modern red">
+            <div class="stat-top">
+                <span class="stat-label">Total Expenses</span>
+                <div class="stat-icon-wrap"><i class="fas fa-arrow-up"></i></div>
+            </div>
+            <div class="stat-value">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
+            <div class="stat-change negative">
+                <i class="fas fa-arrow-down"></i> Money spent
+            </div>
+        </div>
+        
+        <div class="stat-card-modern blue">
+            <div class="stat-top">
+                <span class="stat-label">Net Balance</span>
+                <div class="stat-icon-wrap"><i class="fas fa-scale-balanced"></i></div>
+            </div>
+            <div class="stat-value {{ ($balance ?? 0) >= 0 ? '' : 'text-danger' }}">
+                {{ ($balance ?? 0) >= 0 ? '₱' : '-₱' }}{{ number_format(abs($balance ?? 0), 2) }}
+            </div>
+            <div class="stat-change {{ ($balance ?? 0) >= 0 ? 'positive' : 'negative' }}">
+                <i class="fas fa-{{ ($balance ?? 0) >= 0 ? 'arrow-up' : 'arrow-down' }}"></i>
+                {{ ($balance ?? 0) >= 0 ? 'Surplus' : 'Deficit' }}
+            </div>
+        </div>
+        
+        <div class="stat-card-modern purple">
+            <div class="stat-top">
+                <span class="stat-label">Total Members</span>
+                <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
+            </div>
+            <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
+            <div class="stat-change positive">
+                <i class="fas fa-users"></i> Church family
+            </div>
+        </div>
+        
+        <div class="stat-card-modern orange">
+            <div class="stat-top">
+                <span class="stat-label">Choir Members</span>
+                <div class="stat-icon-wrap"><i class="fas fa-music"></i></div>
+            </div>
+            <div class="stat-value">{{ number_format($choirMembers ?? 0) }}</div>
+            <div class="stat-change positive">
+                <i class="fas fa-microphone"></i> Voices of praise
+            </div>
         </div>
     </div>
 
-    <!-- Recent Members and Birthdays -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-6">
-            <div class="table-container">
+    <!-- Chart Section -->
+    <div class="chart-modern">
+        <div class="chart-header">
+            <h5><i class="fas fa-chart-line"></i> Income vs Expenses (Last 6 Months)</h5>
+            <span class="badge-modern member"><i class="fas fa-calendar"></i> 6 Months</span>
+        </div>
+        <div class="chart-body">
+            <canvas id="financeChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Two Column Grid -->
+    <div class="analytics-grid-2">
+        <!-- Recent Transactions -->
+        <div class="card-modern">
+            <div class="card-header-custom">
+                <h6><i class="fas fa-history"></i> Recent Transactions</h6>
+                <span class="badge-modern member">{{ count($recentTransactions ?? []) }} entries</span>
+            </div>
+            <div class="card-body" style="padding: 0;">
+                <div style="max-height: 350px; overflow-y: auto;">
+                    <table class="table-modern">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th style="text-align: right;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse(($recentTransactions ?? []) as $transaction)
+                            <tr>
+                                <td>{{ Carbon::parse($transaction->date ?? $transaction->created_at)->format('M d') }}</td>
+                                <td>{{ $transaction->description ?? 'N/A' }}</td>
+                                <td>
+                                    <span class="badge-modern {{ $transaction->type == 'income' ? 'income' : 'expense' }}">
+                                        {{ ucfirst($transaction->type ?? 'expense') }}
+                                    </span>
+                                </td>
+                                <td style="text-align: right; font-weight: 700; color: {{ $transaction->type == 'income' ? '#10B981' : '#EF4444' }};">
+                                    {{ $transaction->type == 'income' ? '+' : '-' }} ₱{{ number_format($transaction->amount ?? 0, 2) }}
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                    <i class="fas fa-receipt" style="font-size: 1.5rem; display: block; opacity: 0.3; margin-bottom: 0.5rem;"></i>
+                                    No transactions found
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Members & Birthdays -->
+        <div>
+            <div class="card-modern">
                 <div class="card-header-custom">
                     <h6><i class="fas fa-users"></i> Recent Members</h6>
+                    <span class="badge-modern member">{{ count($recentMembers ?? []) }} new</span>
                 </div>
-                <div class="p-3" id="membersList">
+                <div class="card-body">
                     @forelse(($recentMembers ?? []) as $member)
-                    <div class="member-item">
-                        <div class="member-avatar"><i class="fas fa-user"></i></div>
-                        <div class="flex-grow-1">
-                            <div class="fw-semibold">{{ $member->first_name ?? '' }} {{ $member->last_name ?? '' }}</div>
-                            <small class="text-muted">Joined {{ Carbon::parse($member->created_at)->diffForHumans() }}</small>
+                    <div class="member-item-modern">
+                        <div class="member-avatar">
+                            {{ strtoupper(substr($member->first_name ?? '', 0, 1)) }}{{ strtoupper(substr($member->last_name ?? '', 0, 1)) }}
+                        </div>
+                        <div class="member-info">
+                            <div class="member-name">{{ $member->first_name ?? '' }} {{ $member->last_name ?? '' }}</div>
+                            <div class="member-meta">Joined {{ Carbon::parse($member->created_at)->diffForHumans() }}</div>
                         </div>
                     </div>
                     @empty
-                    <div class="text-center py-4" style="color: var(--text-muted);">
-                        <i class="fas fa-users text-muted mb-2 d-block" style="font-size: 1.5rem; opacity: 0.3;"></i>
+                    <div style="text-align: center; padding: 1.5rem; color: var(--text-muted);">
+                        <i class="fas fa-users" style="font-size: 1.5rem; display: block; opacity: 0.3; margin-bottom: 0.5rem;"></i>
                         No members found
                     </div>
                     @endforelse
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="table-container">
+
+            <div class="card-modern" style="margin-bottom: 0;">
                 <div class="card-header-custom">
                     <h6><i class="fas fa-birthday-cake"></i> Upcoming Birthdays</h6>
+                    <span class="badge-modern choir">{{ count($upcomingBirthdays ?? []) }} celebrating</span>
                 </div>
-                <div class="p-3" id="birthdaysList">
+                <div class="card-body">
                     @forelse(($upcomingBirthdays ?? []) as $birthday)
-                    <div class="member-item">
-                        <div class="member-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; border: none;">🎂</div>
-                        <div class="flex-grow-1">
-                            <div class="fw-semibold">{{ $birthday->first_name ?? '' }} {{ $birthday->last_name ?? '' }}</div>
-                            <small class="text-muted">{{ Carbon::parse($birthday->birthday)->format('F d') }}</small>
+                    <div class="member-item-modern">
+                        <div class="member-avatar" style="background: var(--gradient-orange);">
+                            <i class="fas fa-cake-candles"></i>
+                        </div>
+                        <div class="member-info">
+                            <div class="member-name">{{ $birthday->first_name ?? '' }} {{ $birthday->last_name ?? '' }}</div>
+                            <div class="member-meta">{{ Carbon::parse($birthday->birthday)->format('F d') }}</div>
                         </div>
                     </div>
                     @empty
-                    <div class="text-center py-4" style="color: var(--text-muted);">
-                        <i class="fas fa-birthday-cake text-muted mb-2 d-block" style="font-size: 1.5rem; opacity: 0.3;"></i>
+                    <div style="text-align: center; padding: 1.5rem; color: var(--text-muted);">
+                        <i class="fas fa-birthday-cake" style="font-size: 1.5rem; display: block; opacity: 0.3; margin-bottom: 0.5rem;"></i>
                         No upcoming birthdays
                     </div>
                     @endforelse
@@ -770,139 +849,124 @@ use Carbon\Carbon;
         </div>
     </div>
 
-    <!-- Upcoming Choir Schedule -->
-    <div class="table-container">
+    <!-- Choir Schedule -->
+    <div class="card-modern">
         <div class="card-header-custom">
             <h6><i class="fas fa-music"></i> Upcoming Choir Schedule</h6>
+            <span class="badge-modern choir"><i class="fas fa-clock"></i> This Week</span>
         </div>
-        <div class="p-3">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <div class="schedule-card">
-                        <span class="group-badge" style="background: {{ $choirGroupColor ?? '#10b981' }};">
-                            <i class="fas fa-layer-group me-1"></i> {{ $choirGroupName ?? 'No schedule yet' }}
-                        </span>
-                        <div class="schedule-detail">
-                            <i class="fas fa-users me-1"></i> {{ $choirMembersCount ?? 0 }} members scheduled
-                        </div>
-                        <div class="schedule-detail">
-                            <i class="fas fa-calendar-alt me-1"></i> 
-                            @php $nextSun = Carbon::now(); if ($nextSun->dayOfWeek != Carbon::SUNDAY) $nextSun = $nextSun->next(Carbon::SUNDAY); @endphp
-                            {{ $nextSun->format('F d, Y') }}
-                        </div>
+        <div class="card-body">
+            <div class="schedule-card-modern">
+                <div class="schedule-info">
+                    <div class="schedule-badge" style="background: var(--gradient-purple);">
+                        <i class="fas fa-layer-group"></i> {{ $choirGroupName ?? 'Worship Team' }}
+                    </div>
+                    <div class="schedule-detail">
+                        <i class="fas fa-users"></i> {{ $choirMembersCount ?? 0 }} members
+                    </div>
+                    <div class="schedule-detail">
+                        <i class="fas fa-calendar-alt"></i> 
+                        @php 
+                            $nextSun = Carbon::now(); 
+                            if ($nextSun->dayOfWeek != Carbon::SUNDAY) $nextSun = $nextSun->next(Carbon::SUNDAY); 
+                        @endphp
+                        {{ $nextSun->format('F d, Y') }}
                     </div>
                 </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                    <a href="{{ route('choir-schedules.index') }}" class="btn-primary-modal">
-                        <i class="fas fa-arrow-right me-1"></i> View Schedule
-                    </a>
-                </div>
+                <a href="{{ route('choir-schedules.index') }}" class="btn-hero-primary" style="background: var(--gradient-purple); color: white; padding: 0.5rem 1.5rem;">
+                    <i class="fas fa-arrow-right"></i> View Schedule
+                </a>
             </div>
-        </div>
-    </div>
-
-    <!-- Financial Chart -->
-    <div class="chart-container">
-        <h6><i class="fas fa-chart-line"></i> Income vs Expenses (Last 6 Months)</h6>
-        <div class="chart-box">
-            <canvas id="financeChart"></canvas>
         </div>
     </div>
 </div>
 
 <!-- Export Modal -->
 <div id="exportModal" class="modal fade" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-magic"></i> Customize Your Report</h5>
-                <button type="button" class="btn-close-modal" data-bs-dismiss="modal">&times;</button>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="border-radius: 20px; overflow: hidden;">
+            <div class="modal-header" style="background: var(--gradient-blue); border: none; padding: 1.5rem;">
+                <h5 class="modal-title" style="color: white; font-weight: 700;">
+                    <i class="fas fa-magic" style="margin-right: 8px;"></i> Customize Your Report
+                </h5>
+                <button type="button" class="btn-close-modal" data-bs-dismiss="modal" style="color: white; opacity: 0.8; background: none; border: none; font-size: 1.5rem;">&times;</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding: 2rem;">
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">
+                    Select the sections you want to include in your report.
+                </p>
+                
                 <!-- Format Selection -->
-                <div class="format-grid">
-                    <div class="format-card selected" data-format="pdf" onclick="selectFormat(this)">
-                        <i class="fas fa-file-pdf" style="color: #ef4444;"></i>
-                        <span>PDF</span>
+                <label style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700; color: var(--text-muted); margin-bottom: 0.5rem; display: block;">
+                    <i class="fas fa-file"></i> Choose Format
+                </label>
+                <div class="format-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-bottom: 1.5rem;">
+                    <div class="format-card selected" data-format="pdf" onclick="selectFormat(this)" style="background: var(--bg-tertiary); border: 2px solid var(--border-color); border-radius: 12px; padding: 0.8rem; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+                        <i class="fas fa-file-pdf" style="color: #EF4444; font-size: 1.3rem; display: block; margin-bottom: 4px;"></i>
+                        <span style="font-size: 0.6rem; font-weight: 600;">PDF</span>
                     </div>
-                    <div class="format-card" data-format="excel" onclick="selectFormat(this)">
-                        <i class="fas fa-file-excel" style="color: #10b981;"></i>
-                        <span>Excel</span>
+                    <div class="format-card" data-format="excel" onclick="selectFormat(this)" style="background: var(--bg-tertiary); border: 2px solid var(--border-color); border-radius: 12px; padding: 0.8rem; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+                        <i class="fas fa-file-excel" style="color: #10B981; font-size: 1.3rem; display: block; margin-bottom: 4px;"></i>
+                        <span style="font-size: 0.6rem; font-weight: 600;">Excel</span>
                     </div>
-                    <div class="format-card" data-format="csv" onclick="selectFormat(this)">
-                        <i class="fas fa-file-csv" style="color: #3b82f6;"></i>
-                        <span>CSV</span>
+                    <div class="format-card" data-format="csv" onclick="selectFormat(this)" style="background: var(--bg-tertiary); border: 2px solid var(--border-color); border-radius: 12px; padding: 0.8rem; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+                        <i class="fas fa-file-csv" style="color: #3B82F6; font-size: 1.3rem; display: block; margin-bottom: 4px;"></i>
+                        <span style="font-size: 0.6rem; font-weight: 600;">CSV</span>
                     </div>
-                    <div class="format-card" data-format="print" onclick="selectFormat(this)">
-                        <i class="fas fa-print" style="color: #8b5cf6;"></i>
-                        <span>Print</span>
+                    <div class="format-card" data-format="print" onclick="selectFormat(this)" style="background: var(--bg-tertiary); border: 2px solid var(--border-color); border-radius: 12px; padding: 0.8rem; text-align: center; cursor: pointer; transition: all 0.2s ease;">
+                        <i class="fas fa-print" style="color: #8B5CF6; font-size: 1.3rem; display: block; margin-bottom: 4px;"></i>
+                        <span style="font-size: 0.6rem; font-weight: 600;">Print</span>
                     </div>
                 </div>
 
-                <div class="mb-3">
+                <div style="margin-bottom: 1rem;">
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="selectAllCheckbox" checked onchange="toggleSelectAll()">
-                        <label class="form-check-label" for="selectAllCheckbox" style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">
+                        <input type="checkbox" class="form-check-input" id="selectAllCheckbox" checked onchange="toggleSelectAll()" style="width: 18px; height: 18px; cursor: pointer;">
+                        <label class="form-check-label" for="selectAllCheckbox" style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary); cursor: pointer;">
                             ✓ Select All Sections
                         </label>
                     </div>
                 </div>
 
-                <div class="row g-2">
-                    <div class="col-6">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input section-cb" value="income" checked>
-                            <label class="form-check-label" style="font-size: 0.75rem;">💰 Income</label>
-                        </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input section-cb" value="income" checked style="width: 16px; height: 16px; cursor: pointer;">
+                        <label class="form-check-label" style="font-size: 0.8rem; color: var(--text-secondary); cursor: pointer;">💰 Income</label>
                     </div>
-                    <div class="col-6">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input section-cb" value="expenses" checked>
-                            <label class="form-check-label" style="font-size: 0.75rem;">💸 Expenses</label>
-                        </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input section-cb" value="expenses" checked style="width: 16px; height: 16px; cursor: pointer;">
+                        <label class="form-check-label" style="font-size: 0.8rem; color: var(--text-secondary); cursor: pointer;">💸 Expenses</label>
                     </div>
-                    <div class="col-6">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input section-cb" value="balance" checked>
-                            <label class="form-check-label" style="font-size: 0.75rem;">⚖️ Balance</label>
-                        </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input section-cb" value="balance" checked style="width: 16px; height: 16px; cursor: pointer;">
+                        <label class="form-check-label" style="font-size: 0.8rem; color: var(--text-secondary); cursor: pointer;">⚖️ Balance</label>
                     </div>
-                    <div class="col-6">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input section-cb" value="transactions" checked>
-                            <label class="form-check-label" style="font-size: 0.75rem;">📋 Transactions</label>
-                        </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input section-cb" value="transactions" checked style="width: 16px; height: 16px; cursor: pointer;">
+                        <label class="form-check-label" style="font-size: 0.8rem; color: var(--text-secondary); cursor: pointer;">📋 Transactions</label>
                     </div>
-                    <div class="col-6">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input section-cb" value="members" checked>
-                            <label class="form-check-label" style="font-size: 0.75rem;">👥 Members</label>
-                        </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input section-cb" value="members" checked style="width: 16px; height: 16px; cursor: pointer;">
+                        <label class="form-check-label" style="font-size: 0.8rem; color: var(--text-secondary); cursor: pointer;">👥 Members</label>
                     </div>
-                    <div class="col-6">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input section-cb" value="birthdays" checked>
-                            <label class="form-check-label" style="font-size: 0.75rem;">🎂 Birthdays</label>
-                        </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input section-cb" value="birthdays" checked style="width: 16px; height: 16px; cursor: pointer;">
+                        <label class="form-check-label" style="font-size: 0.8rem; color: var(--text-secondary); cursor: pointer;">🎂 Birthdays</label>
                     </div>
-                    <div class="col-6">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input section-cb" value="choir" checked>
-                            <label class="form-check-label" style="font-size: 0.75rem;">🎵 Choir</label>
-                        </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input section-cb" value="choir" checked style="width: 16px; height: 16px; cursor: pointer;">
+                        <label class="form-check-label" style="font-size: 0.8rem; color: var(--text-secondary); cursor: pointer;">🎵 Choir</label>
                     </div>
-                    <div class="col-6">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input section-cb" value="chart" checked>
-                            <label class="form-check-label" style="font-size: 0.75rem;">📈 Chart</label>
-                        </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input section-cb" value="chart" checked style="width: 16px; height: 16px; cursor: pointer;">
+                        <label class="form-check-label" style="font-size: 0.8rem; color: var(--text-secondary); cursor: pointer;">📈 Chart</label>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn-primary-modal" onclick="generateReport()">
-                    <i class="fas fa-file-export me-1"></i> Generate Report
+            <div class="modal-footer" style="border-top: 1px solid var(--border-color); padding: 1rem 1.5rem; background: var(--bg-tertiary);">
+                <button type="button" class="btn-secondary" data-bs-dismiss="modal" style="padding: 0.5rem 1.5rem; border-radius: 12px; font-weight: 600;">Cancel</button>
+                <button type="button" class="btn-primary-modal" onclick="generateReport()" style="background: var(--gradient-blue); border: none; padding: 0.5rem 2rem; border-radius: 12px; color: white; font-weight: 700; transition: all 0.3s ease; cursor: pointer;">
+                    <i class="fas fa-file-export me-2"></i> Generate Report
                 </button>
             </div>
         </div>
@@ -912,39 +976,7 @@ use Carbon\Carbon;
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    let selectedFormat = 'pdf';
-    let currentReportHTML = '';
-    let churchLogoUrl = '{{ $churchLogo ?? "" }}';
-    let churchNameText = '{{ $churchName ?? "TINC Church" }}';
-
-    function getSystemLogo() {
-        if (churchLogoUrl && churchLogoUrl !== '') {
-            return churchLogoUrl;
-        }
-        let logoImg = document.getElementById('logoImg');
-        if (logoImg && logoImg.tagName === 'IMG' && logoImg.src) {
-            return logoImg.src;
-        }
-        let anyLogo = document.querySelector('.logo-section img, .logo-img');
-        if (anyLogo && anyLogo.src) {
-            return anyLogo.src;
-        }
-        return '{{ asset("images/default-church-logo.png") }}';
-    }
-
-    function getChurchNameText() {
-        if (churchNameText && churchNameText !== '') {
-            return churchNameText;
-        }
-        let nameEl = document.querySelector('.logo-text h2');
-        return nameEl ? nameEl.innerText : 'TINC Church';
-    }
-
-    function openExportModal() {
-        const modal = new bootstrap.Modal(document.getElementById('exportModal'));
-        modal.show();
-    }
-
+    // Format card selection
     function selectFormat(element) {
         document.querySelectorAll('.format-card').forEach(c => c.classList.remove('selected'));
         element.classList.add('selected');
@@ -956,22 +988,15 @@ use Carbon\Carbon;
         document.querySelectorAll('.section-cb').forEach(cb => cb.checked = isChecked);
     }
 
+    function openExportModal() {
+        const modal = new bootstrap.Modal(document.getElementById('exportModal'));
+        modal.show();
+    }
+
     function getSelectedSections() {
         let selected = [];
         document.querySelectorAll('.section-cb:checked').forEach(cb => selected.push(cb.value));
         return selected;
-    }
-
-    function getPageData() {
-        return {
-            totalIncome: document.querySelector('.stat-card.income .stat-value')?.innerText || '₱0',
-            totalExpense: document.querySelector('.stat-card.expense .stat-value')?.innerText || '₱0',
-            balance: document.querySelector('.stat-card.balance .stat-value')?.innerText || '₱0',
-            totalMembers: document.querySelector('.stat-card.members .stat-value')?.innerText || '0',
-            choirMembers: document.querySelector('.stat-card.choir .stat-value')?.innerText || '0',
-            choirGroup: document.querySelector('.group-badge')?.innerText || 'No schedule',
-            choirMembersCount: document.querySelector('.schedule-detail:first-child')?.innerText?.replace(' members scheduled', '') || '0'
-        };
     }
 
     function generateReport() {
@@ -981,7 +1006,7 @@ use Carbon\Carbon;
                 icon: 'warning',
                 title: 'No Selection',
                 text: 'Please select at least one section.',
-                confirmButtonColor: '#10b981',
+                confirmButtonColor: '#4F46E5',
                 background: 'var(--card-bg)',
                 color: 'var(--text-primary)'
             });
@@ -998,117 +1023,54 @@ use Carbon\Carbon;
         });
 
         setTimeout(() => {
-            let data = getPageData();
-            let logoUrl = getSystemLogo();
-            let churchName = getChurchNameText();
-            let transactions = [];
-            let members = [];
-            let birthdays = [];
+            // Get data
+            let data = {
+                totalIncome: document.querySelector('.stat-card-modern.green .stat-value')?.innerText || '₱0',
+                totalExpense: document.querySelector('.stat-card-modern.red .stat-value')?.innerText || '₱0',
+                balance: document.querySelector('.stat-card-modern.blue .stat-value')?.innerText || '₱0',
+                totalMembers: document.querySelector('.stat-card-modern.purple .stat-value')?.innerText || '0',
+                choirMembers: document.querySelector('.stat-card-modern.orange .stat-value')?.innerText || '0'
+            };
 
-            document.querySelectorAll('#transactionsTable tbody tr').forEach(row => {
-                if (row.querySelector('td') && !row.innerText.includes('No transactions')) {
-                    let cells = row.querySelectorAll('td');
-                    transactions.push({
-                        date: cells[0]?.innerText || '',
-                        desc: cells[1]?.innerText || '',
-                        category: cells[2]?.innerText || '',
-                        type: cells[3]?.innerText || '',
-                        amount: cells[4]?.innerText || ''
-                    });
-                }
-            });
-
-            document.querySelectorAll('#membersList .member-item').forEach(item => {
-                let name = item.querySelector('.fw-semibold')?.innerText || '';
-                let joined = item.querySelector('small')?.innerText || '';
-                members.push({ name: name, joined: joined });
-            });
-
-            document.querySelectorAll('#birthdaysList .member-item').forEach(item => {
-                let name = item.querySelector('.fw-semibold')?.innerText || '';
-                let date = item.querySelector('small')?.innerText || '';
-                birthdays.push({ name: name, date: date });
-            });
-
-            let html = `
-                <div style="font-family: 'Segoe UI', Arial, sans-serif; padding: 20px;">
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <img src="${logoUrl}" style="max-width: 70px; max-height: 70px; object-fit: contain; margin-bottom: 10px; border-radius: 10px;" onerror="this.src='{{ asset("images/default-church-logo.png") }}'">
-                        <h1 style="color: #10b981; margin: 10px 0 5px; font-size: 1.5rem;">${churchName}</h1>
-                        <h2 style="font-size: 1rem; color: #666; margin: 0;">Comprehensive Church Report</h2>
-                        <p style="color: #999; margin-top: 10px; font-size: 0.7rem;">Generated: ${new Date().toLocaleString()}</p>
-                        <hr style="margin: 15px 0;">
-                    </div>
-            `;
-
-            if (sections.includes('income')) html += `<div style="margin-bottom: 8px;"><strong>💰 Total Income:</strong> ${data.totalIncome}</div>`;
-            if (sections.includes('expenses')) html += `<div style="margin-bottom: 8px;"><strong>💸 Total Expenses:</strong> ${data.totalExpense}</div>`;
-            if (sections.includes('balance')) html += `<div style="margin-bottom: 8px;"><strong>⚖️ Net Balance:</strong> ${data.balance}</div>`;
-
-            if (sections.includes('transactions') && transactions.length > 0) {
-                html += `<h3 style="margin: 20px 0 10px; font-size: 1rem;">📋 Recent Transactions</h3>
-                         <table style="width:100%; border-collapse: collapse; font-size: 0.7rem;">
-                            <thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ddd;padding:6px;">Date</th><th style="border:1px solid #ddd;padding:6px;">Description</th><th style="border:1px solid #ddd;padding:6px;">Category</th><th style="border:1px solid #ddd;padding:6px;">Type</th><th style="border:1px solid #ddd;padding:6px;">Amount</th></tr></thead>
-                            <tbody>`;
-                transactions.forEach(t => {
-                    let badgeColor = t.type.includes('Income') ? '#10b981' : '#ef4444';
-                    html += `<tr><td style="border:1px solid #ddd;padding:5px;">${t.date}</td>
-                            <td style="border:1px solid #ddd;padding:5px;">${t.desc}</td>
-                            <td style="border:1px solid #ddd;padding:5px;">${t.category}</td>
-                            <td style="border:1px solid #ddd;padding:5px;"><span style="background:${badgeColor};color:white;padding:2px 8px;border-radius:10px;font-size:0.6rem;">${t.type}</span></td>
-                            <td style="border:1px solid #ddd;padding:5px;">${t.amount}</td></tr>`;
-                });
-                html += `</tbody></table>`;
-            }
-
-            if (sections.includes('members') && members.length > 0) {
-                html += `<h3 style="margin: 20px 0 10px; font-size: 1rem;">👥 Recent Members</h3>
-                         <table style="width:100%; border-collapse: collapse; font-size: 0.7rem;">
-                            <thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ddd;padding:6px;">Name</th><th style="border:1px solid #ddd;padding:6px;">Joined</th></tr></thead>
-                            <tbody>`;
-                members.forEach(m => html += `<tr><td style="border:1px solid #ddd;padding:5px;">${m.name}</td><td style="border:1px solid #ddd;padding:5px;">${m.joined}</td></tr>`);
-                html += `</tbody></table>`;
-            }
-
-            if (sections.includes('birthdays') && birthdays.length > 0) {
-                html += `<h3 style="margin: 20px 0 10px; font-size: 1rem;">🎂 Upcoming Birthdays</h3>
-                         <table style="width:100%; border-collapse: collapse; font-size: 0.7rem;">
-                            <thead><tr style="background:#f5f5f5;"><th style="border:1px solid #ddd;padding:6px;">Name</th><th style="border:1px solid #ddd;padding:6px;">Birthday</th></tr></thead>
-                            <tbody>`;
-                birthdays.forEach(b => html += `<tr><td style="border:1px solid #ddd;padding:5px;">${b.name}</td><td style="border:1px solid #ddd;padding:5px;">${b.date}</td></tr>`);
-                html += `</tbody></table>`;
-            }
-
-            if (sections.includes('choir')) {
-                html += `<div style="margin-top: 20px;"><strong>🎵 Upcoming Choir Schedule:</strong> ${data.choirGroup} (${data.choirMembersCount} members)</div>`;
-            }
-
-            if (sections.includes('members')) {
-                html += `<div style="margin-top: 10px;"><strong>👥 Total Members:</strong> ${data.totalMembers}</div>`;
-                html += `<div><strong>🎵 Choir Members:</strong> ${data.choirMembers}</div>`;
-            }
-
-            html += `<div style="text-align: center; margin-top: 30px; padding-top: 10px; border-top: 1px solid #eee; font-size: 0.6rem; color: #999;">© ${churchName} • ${new Date().getFullYear()}</div></div>`;
-
-            currentReportHTML = html;
+            let churchName = document.querySelector('.logo-text h2')?.innerText || 'TINC Church';
+            let html = generateReportHTML(data, sections, churchName);
 
             if (selectedFormat === 'pdf' || selectedFormat === 'print') {
                 let printWindow = window.open('', '_blank');
-                printWindow.document.write(`<html><head><title>${churchName} Report</title>
-                    <style>
-                        body{font-family:'Segoe UI',Arial;padding:20px;}
-                        table{border-collapse:collapse;width:100%;}
-                        th,td{border:1px solid #ddd;padding:6px;text-align:left;}
-                        th{background:#f5f5f5;}
-                        @media print{body{padding:0;}}
-                    </style>
-                </head><body>${html}</body></html>`);
+                printWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>${churchName} - Report</title>
+                            <style>
+                                body { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; padding: 30px; max-width: 1200px; margin: 0 auto; }
+                                .report-header { text-align: center; margin-bottom: 30px; }
+                                .report-header h1 { color: #4F46E5; font-size: 24px; }
+                                .report-header p { color: #666; }
+                                .report-section { margin-bottom: 25px; }
+                                .report-section h3 { color: #4F46E5; font-size: 16px; margin-bottom: 10px; }
+                                table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+                                th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; font-size: 13px; }
+                                th { background: #f5f5f5; font-weight: 600; }
+                                .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+                                .badge.income { background: #d1fae5; color: #065f46; }
+                                .badge.expense { background: #fee2e2; color: #991b1b; }
+                                .text-right { text-align: right; }
+                                .amount-positive { color: #10b981; }
+                                .amount-negative { color: #ef4444; }
+                                .report-footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #999; }
+                                @media print { body { padding: 0; } }
+                            </style>
+                        </head>
+                        <body>${html}</body>
+                    </html>
+                `);
                 printWindow.document.close();
                 printWindow.print();
                 Swal.close();
                 const modal = bootstrap.Modal.getInstance(document.getElementById('exportModal'));
                 if (modal) modal.hide();
             } else {
+                // CSV/Excel download
                 let plainText = html.replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ').replace(/\n\s*\n/g, '\n\n');
                 let blob = new Blob(["\uFEFF" + plainText], { type: "text/csv;charset=utf-8;" });
                 let link = document.createElement("a");
@@ -1137,6 +1099,129 @@ use Carbon\Carbon;
         }, 500);
     }
 
+    function generateReportHTML(data, sections, churchName) {
+        let html = `
+            <div class="report-header">
+                <h1>${churchName}</h1>
+                <h2 style="font-size: 18px; color: #666; margin: 5px 0;">Comprehensive Church Report</h2>
+                <p>Generated: ${new Date().toLocaleString()}</p>
+                <hr>
+            </div>
+        `;
+
+        if (sections.includes('income')) {
+            html += `<div class="report-section">
+                <h3>💰 Total Income</h3>
+                <p style="font-size: 20px; font-weight: 700; color: #10b981;">${data.totalIncome}</p>
+            </div>`;
+        }
+
+        if (sections.includes('expenses')) {
+            html += `<div class="report-section">
+                <h3>💸 Total Expenses</h3>
+                <p style="font-size: 20px; font-weight: 700; color: #ef4444;">${data.totalExpense}</p>
+            </div>`;
+        }
+
+        if (sections.includes('balance')) {
+            html += `<div class="report-section">
+                <h3>⚖️ Net Balance</h3>
+                <p style="font-size: 20px; font-weight: 700; color: #4F46E5;">${data.balance}</p>
+            </div>`;
+        }
+
+        // Get transactions
+        if (sections.includes('transactions')) {
+            let transactions = [];
+            document.querySelectorAll('#transactionsTable tbody tr').forEach(row => {
+                if (row.querySelector('td') && !row.innerText.includes('No transactions')) {
+                    let cells = row.querySelectorAll('td');
+                    transactions.push({
+                        date: cells[0]?.innerText || '',
+                        desc: cells[1]?.innerText || '',
+                        category: cells[2]?.innerText || '',
+                        type: cells[3]?.innerText || '',
+                        amount: cells[4]?.innerText || ''
+                    });
+                }
+            });
+
+            if (transactions.length > 0) {
+                html += `<div class="report-section">
+                    <h3>📋 Recent Transactions</h3>
+                    <table>
+                        <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th class="text-right">Amount</th></tr></thead>
+                        <tbody>`;
+                transactions.forEach(t => {
+                    let badgeClass = t.type.includes('Income') ? 'income' : 'expense';
+                    html += `<tr>
+                        <td>${t.date}</td>
+                        <td>${t.desc}</td>
+                        <td>${t.category}</td>
+                        <td><span class="badge ${badgeClass}">${t.type}</span></td>
+                        <td class="text-right ${t.type.includes('Income') ? 'amount-positive' : 'amount-negative'}">${t.amount}</td>
+                    </tr>`;
+                });
+                html += `</tbody></table></div>`;
+            }
+        }
+
+        // Get members
+        if (sections.includes('members')) {
+            let members = [];
+            document.querySelectorAll('#membersList .member-item-modern').forEach(item => {
+                let name = item.querySelector('.member-name')?.innerText || '';
+                let joined = item.querySelector('.member-meta')?.innerText || '';
+                members.push({ name: name, joined: joined });
+            });
+
+            if (members.length > 0) {
+                html += `<div class="report-section">
+                    <h3>👥 Recent Members</h3>
+                    <table>
+                        <thead><tr><th>Name</th><th>Joined</th></tr></thead>
+                        <tbody>`;
+                members.forEach(m => html += `<tr><td>${m.name}</td><td>${m.joined}</td></tr>`);
+                html += `</tbody></table></div>`;
+            }
+            html += `<div class="report-section"><p><strong>Total Members:</strong> ${data.totalMembers}</p></div>`;
+        }
+
+        // Get birthdays
+        if (sections.includes('birthdays')) {
+            let birthdays = [];
+            document.querySelectorAll('#birthdaysList .member-item-modern').forEach(item => {
+                let name = item.querySelector('.member-name')?.innerText || '';
+                let date = item.querySelector('.member-meta')?.innerText || '';
+                birthdays.push({ name: name, date: date });
+            });
+
+            if (birthdays.length > 0) {
+                html += `<div class="report-section">
+                    <h3>🎂 Upcoming Birthdays</h3>
+                    <table>
+                        <thead><tr><th>Name</th><th>Birthday</th></tr></thead>
+                        <tbody>`;
+                birthdays.forEach(b => html += `<tr><td>${b.name}</td><td>${b.date}</td></tr>`);
+                html += `</tbody></table></div>`;
+            }
+        }
+
+        // Choir
+        if (sections.includes('choir')) {
+            html += `<div class="report-section">
+                <h3>🎵 Choir Members</h3>
+                <p><strong>Total Choir Members:</strong> ${data.choirMembers}</p>
+                <p><strong>Upcoming Schedule:</strong> ${document.querySelector('.schedule-badge')?.innerText?.trim() || 'Worship Team'}</p>
+            </div>`;
+        }
+
+        html += `<div class="report-footer">© ${churchName} • ${new Date().getFullYear()}</div>`;
+        return html;
+    }
+
+    let selectedFormat = 'pdf';
+
     // Chart
     document.addEventListener('DOMContentLoaded', function() {
         const canvas = document.getElementById('financeChart');
@@ -1144,6 +1229,7 @@ use Carbon\Carbon;
             const months = @json($months ?? []);
             const incomeData = @json($incomeData ?? []);
             const expenseData = @json($expenseData ?? []);
+            
             if (months.length > 0) {
                 new Chart(canvas, {
                     type: 'line',
@@ -1153,24 +1239,28 @@ use Carbon\Carbon;
                             {
                                 label: 'Income',
                                 data: incomeData,
-                                borderColor: '#10b981',
-                                backgroundColor: 'rgba(16,185,129,0.05)',
-                                borderWidth: 2,
+                                borderColor: '#10B981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                                borderWidth: 3,
                                 fill: true,
                                 tension: 0.4,
-                                pointRadius: 3,
-                                pointBackgroundColor: '#10b981'
+                                pointRadius: 4,
+                                pointBackgroundColor: '#10B981',
+                                pointBorderColor: 'white',
+                                pointBorderWidth: 2
                             },
                             {
                                 label: 'Expenses',
                                 data: expenseData,
-                                borderColor: '#ef4444',
-                                backgroundColor: 'rgba(239,68,68,0.05)',
-                                borderWidth: 2,
+                                borderColor: '#EF4444',
+                                backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                                borderWidth: 3,
                                 fill: true,
                                 tension: 0.4,
-                                pointRadius: 3,
-                                pointBackgroundColor: '#ef4444'
+                                pointRadius: 4,
+                                pointBackgroundColor: '#EF4444',
+                                pointBorderColor: 'white',
+                                pointBorderWidth: 2
                             }
                         ]
                     },
@@ -1181,11 +1271,21 @@ use Carbon\Carbon;
                             legend: {
                                 position: 'top',
                                 labels: {
-                                    font: { size: 10 },
-                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim()
+                                    font: { 
+                                        size: 11,
+                                        weight: '600'
+                                    },
+                                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim(),
+                                    usePointStyle: true,
+                                    pointStyle: 'circle'
                                 }
                             },
                             tooltip: {
+                                backgroundColor: 'rgba(0,0,0,0.8)',
+                                titleColor: 'white',
+                                bodyColor: 'white',
+                                padding: 12,
+                                cornerRadius: 8,
                                 callbacks: {
                                     label: (ctx) => `${ctx.dataset.label}: ₱${ctx.parsed.y.toLocaleString()}`
                                 }
@@ -1210,6 +1310,10 @@ use Carbon\Carbon;
                                     color: getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim()
                                 }
                             }
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
                         }
                     }
                 });

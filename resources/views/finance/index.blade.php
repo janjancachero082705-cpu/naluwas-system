@@ -469,21 +469,7 @@
 </style>
 
 <div class="container-fluid px-0">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div>
-            <h1 class="h2 mb-1 fw-bold" style="color: var(--text-primary); font-size: 1.3rem;">
-                <i class="fas fa-coins" style="color: #534AB7; margin-right: 10px;"></i>Finance Dashboard
-            </h1>
-            <p class="mb-0" style="color: var(--text-muted); font-size: 0.8rem;">
-                @if($selectedChurch)
-                    Viewing <strong>{{ $selectedChurch->name }}</strong> financial details
-                @else
-                    Select a church to view its financial details
-                @endif
-            </p>
-        </div>
-    </div>
+ 
 
     <!-- ============================================ -->
     <!-- STATS CARDS - ALWAYS SHOW ALL CHURCHES (Global) -->

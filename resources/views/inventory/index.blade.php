@@ -722,15 +722,7 @@
 
 <div class="container-fluid px-0">
 
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div>
-            <h1 class="h2 mb-1 fw-bold" style="color: var(--text-primary); font-size: 1.3rem;">
-                <i class="fas fa-coins me-2" style="color: #10b981;"></i>Financial Management
-            </h1>
-            <p class="mb-0" style="color: var(--text-muted); font-size: 0.8rem;">Track income, expenses, and church finances</p>
-        </div>
-    </div>
+  
 
     <!-- Statistics Cards -->
     <div class="stats-grid">

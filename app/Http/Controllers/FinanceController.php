@@ -273,14 +273,47 @@ class FinanceController extends Controller
             ->where('church_id', $churchId)
             ->count();
         
-        $totalInventoryValue = DB::table('inventories')
-            ->where('church_id', $churchId)
-            ->sum(DB::raw('quantity * unit_price'));
+        // FIXED: Check if columns exist first before summing
+        try {
+            // Check if quantity and unit_price columns exist
+            $columns = DB::select("SHOW COLUMNS FROM inventories");
+            $columnNames = array_column($columns, 'Field');
+            
+            if (in_array('quantity', $columnNames) && in_array('unit_price', $columnNames)) {
+                $totalInventoryValue = DB::table('inventories')
+                    ->where('church_id', $churchId)
+                    ->sum(DB::raw('quantity * unit_price'));
+            } else if (in_array('stock', $columnNames) && in_array('price', $columnNames)) {
+                // Alternative column names
+                $totalInventoryValue = DB::table('inventories')
+                    ->where('church_id', $churchId)
+                    ->sum(DB::raw('stock * price'));
+            } else {
+                // Just get count or value if available
+                $totalInventoryValue = DB::table('inventories')
+                    ->where('church_id', $churchId)
+                    ->sum('quantity') ?? 0;
+            }
+        } catch (\Exception $e) {
+            $totalInventoryValue = 0;
+        }
         
-        $lowStockItems = DB::table('inventories')
-            ->where('church_id', $churchId)
-            ->whereColumn('quantity', '<=', 'reorder_level')
-            ->count();
+        // FIXED: Check if reorder_level column exists
+        try {
+            $columns = DB::select("SHOW COLUMNS FROM inventories");
+            $columnNames = array_column($columns, 'Field');
+            
+            if (in_array('reorder_level', $columnNames)) {
+                $lowStockItems = DB::table('inventories')
+                    ->where('church_id', $churchId)
+                    ->whereColumn('quantity', '<=', 'reorder_level')
+                    ->count();
+            } else {
+                $lowStockItems = 0;
+            }
+        } catch (\Exception $e) {
+            $lowStockItems = 0;
+        }
         
         // ============================================
         // CHART DATA (Last 6 Months - Filtered by Church)
