@@ -269,6 +269,11 @@
             color: #b8942e;
         }
 
+        .nav-badge.success {
+            background: rgba(45, 156, 108, 0.12);
+            color: #2d9c6c;
+        }
+
         /* --- USER SECTION - FIXED (never scrolls) --- */
         .user-section {
             border-top: 1px solid var(--sidebar-border);
@@ -725,6 +730,10 @@
 
     <!-- NAVIGATION - ONLY THIS SCROLLS -->
     <div class="nav-scroll" id="navScroll">
+        
+        <!-- =============================== -->
+        <!-- MAIN MENU -->
+        <!-- =============================== -->
         <div class="nav-group">
             <div class="nav-group-title"><i class="fas fa-th-large"></i> Main</div>
             <a href="#" class="nav-item active">
@@ -739,46 +748,74 @@
                 <span class="nav-badge gold"><i class="fas fa-arrow-up" style="font-size:0.4rem;"></i> 12%</span>
             </a>
             <a href="#" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-place-of-worship"></i></span> Services
+                <span class="nav-icon"><i class="fas fa-place-of-worship"></i></span> Sunday Service
+                <span class="nav-badge success">Live</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-boxes"></i></span> Inventory
             </a>
         </div>
 
+        <!-- =============================== -->
+        <!-- COMMUNICATION -->
+        <!-- =============================== -->
         <div class="nav-group">
-            <div class="nav-group-title"><i class="fas fa-comment"></i> Connect</div>
+            <div class="nav-group-title"><i class="fas fa-comment-dots"></i> Communication</div>
             <a href="#" class="nav-item">
                 <span class="nav-icon"><i class="fas fa-inbox"></i></span> Messages
                 <span class="nav-badge danger">8</span>
             </a>
             <a href="#" class="nav-item">
                 <span class="nav-icon"><i class="fas fa-bullhorn"></i></span> Announcements
+                <span class="nav-badge">3</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-envelope"></i></span> Email
             </a>
         </div>
 
+        <!-- =============================== -->
+        <!-- CHOIR MINISTRY -->
+        <!-- =============================== -->
         <div class="nav-group">
-            <div class="nav-group-title"><i class="fas fa-music"></i> Worship</div>
+            <div class="nav-group-title"><i class="fas fa-music"></i> Choir Ministry</div>
             <a href="#" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-microphone-alt"></i></span> Choir
+                <span class="nav-icon"><i class="fas fa-users"></i></span> Choir Members
                 <span class="nav-badge">24</span>
             </a>
             <a href="#" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-calendar-alt"></i></span> Schedule
+                <span class="nav-icon"><i class="fas fa-calendar-alt"></i></span> Schedules
             </a>
             <a href="#" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-hands"></i></span> Events
+                <span class="nav-icon"><i class="fas fa-microphone-alt"></i></span> Practice
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-chart-line"></i></span> Rotation
             </a>
         </div>
 
+        <!-- =============================== -->
+        <!-- REPORTS & ANALYTICS -->
+        <!-- =============================== -->
         <div class="nav-group">
-            <div class="nav-group-title"><i class="fas fa-chart-bar"></i> Insights</div>
+            <div class="nav-group-title"><i class="fas fa-chart-pie"></i> Reports</div>
             <a href="#" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-chart-pie"></i></span> Analytics
+                <span class="nav-icon"><i class="fas fa-file-alt"></i></span> Attendance Reports
             </a>
             <a href="#" class="nav-item">
-                <span class="nav-icon"><i class="fas fa-file-export"></i></span> Reports
+                <span class="nav-icon"><i class="fas fa-file-invoice-dollar"></i></span> Financial Reports
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-chart-bar"></i></span> Analytics
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-download"></i></span> Export Data
             </a>
         </div>
 
-        <!-- Extra items to demonstrate scrolling -->
+        <!-- =============================== -->
+        <!-- SETTINGS -->
+        <!-- =============================== -->
         <div class="nav-group">
             <div class="nav-group-title"><i class="fas fa-cog"></i> Settings</div>
             <a href="#" class="nav-item">
@@ -790,17 +827,27 @@
             <a href="#" class="nav-item">
                 <span class="nav-icon"><i class="fas fa-palette"></i></span> Appearance
             </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-church"></i></span> Church Settings
+            </a>
         </div>
 
+        <!-- =============================== -->
+        <!-- SUPPORT -->
+        <!-- =============================== -->
         <div class="nav-group">
-            <div class="nav-group-title"><i class="fas fa-question-circle"></i> Support</div>
+            <div class="nav-group-title"><i class="fas fa-headset"></i> Support</div>
             <a href="#" class="nav-item">
                 <span class="nav-icon"><i class="fas fa-life-ring"></i></span> Help Center
             </a>
             <a href="#" class="nav-item">
                 <span class="nav-icon"><i class="fas fa-comment-dots"></i></span> Feedback
             </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon"><i class="fas fa-info-circle"></i></span> About
+            </a>
         </div>
+
     </div>
 
     <!-- USER - FIXED (never scrolls) -->

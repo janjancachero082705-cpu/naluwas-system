@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfilePictureController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InventoryController;
@@ -99,13 +100,17 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
     Route::delete('/inventory/destroy/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
     
-    // MEMBERS
+    // MEMBERS - Full Resource with additional routes
     Route::resource('members', MemberController::class);
     Route::put('/members/{member}/deceased', [MemberController::class, 'markAsDeceased'])->name('members.deceased');
     Route::put('/members/{member}/restore', [MemberController::class, 'restoreFromDeceased'])->name('members.restore');
+    Route::post('/members/{member}/assign-group', [MemberController::class, 'assignToGroup'])->name('members.assign-group');
+    Route::delete('/members/{member}/remove-group', [MemberController::class, 'removeFromGroup'])->name('members.remove-group');
     
-    // ATTENDANCE
+    // ATTENDANCE - Full Resource
     Route::resource('attendance', AttendanceController::class);
+    // Additional attendance routes if needed
+    Route::get('/attendance/create/{member_id?}', [AttendanceController::class, 'create'])->name('attendance.create');
     
     // CHOIR MEMBERS
     Route::resource('choir-members', ChoirMemberController::class);
@@ -152,10 +157,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/weekly-schedules/store', [WeeklyScheduleController::class, 'store'])->name('weekly.schedules.store');
     Route::delete('/weekly-schedules/{id}', [WeeklyScheduleController::class, 'destroy'])->name('weekly.schedules.delete');
     
-    // FINANCE
+    // FINANCE - Full CRUD with additional routes
     Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
+    Route::get('/finance/create', [FinanceController::class, 'create'])->name('finance.create');
     Route::post('/finance/store', [FinanceController::class, 'store'])->name('finance.store');
+    Route::get('/finance/{id}', [FinanceController::class, 'show'])->name('finance.show');
+    Route::get('/finance/{id}/edit', [FinanceController::class, 'edit'])->name('finance.edit');
+    Route::put('/finance/{id}', [FinanceController::class, 'update'])->name('finance.update');
     Route::delete('/finance/{id}', [FinanceController::class, 'destroy'])->name('finance.destroy');
+    
     Route::get('/reports/analytics', [FinanceController::class, 'reportsAnalytics'])->name('reports.analytics');
     
     // NOTIFICATIONS
@@ -363,3 +373,13 @@ Route::get('/test-member-controller', function() {
 Route::get('/simple-members', function() {
     return "Simple test working!";
 });
+
+/*
+|--------------------------------------------------------------------------
+| FALLBACK ROUTE - Catch all undefined routes (Optional)
+|--------------------------------------------------------------------------
+*/
+// Uncomment this if you want to handle 404 errors gracefully
+// Route::fallback(function () {
+//     return redirect()->route('dashboard');
+// });

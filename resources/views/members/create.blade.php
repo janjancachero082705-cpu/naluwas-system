@@ -4,9 +4,6 @@
 
 @section('content')
 <style>
-    /* ============================================
-       FORM STYLES WITH GREEN ACCENTS
-    ============================================ */
     .form-card {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
@@ -90,7 +87,6 @@
         font-size: 0.6rem;
     }
     
-    /* Role Checkbox Group */
     .role-checkbox-group {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -160,7 +156,6 @@
         color: #10b981;
     }
     
-    /* Choir Note */
     .choir-note {
         background: linear-gradient(135deg, #ecfdf5, #d1fae5);
         border: 1px solid #6ee7b7;
@@ -199,7 +194,6 @@
         color: #34d399;
     }
     
-    /* Form Actions */
     .form-actions {
         display: flex;
         gap: 0.8rem;
@@ -275,7 +269,6 @@
         transform: translateY(0);
     }
     
-    /* Input with icon wrapper */
     .input-icon-wrapper {
         position: relative;
     }
@@ -300,7 +293,6 @@
         color: #10b981;
     }
     
-    /* Error messages */
     .invalid-feedback {
         font-size: 0.7rem;
         color: #ef4444;
@@ -314,7 +306,6 @@
         font-size: 0.6rem;
     }
     
-    /* Header icon */
     .header-icon {
         display: inline-flex;
         align-items: center;
@@ -331,24 +322,6 @@
         margin-right: 10px;
     }
     
-    /* Validation Styles */
-    .form-control.is-valid {
-        border-color: #10b981;
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2310b981' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right calc(0.375em + 0.1875rem) center;
-        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-    }
-    
-    .form-control.is-invalid {
-        border-color: #ef4444;
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23ef4444'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23ef4444' stroke='none'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right calc(0.375em + 0.1875rem) center;
-        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-    }
-    
-    /* Responsive */
     @media (max-width: 768px) {
         .role-checkbox-group {
             grid-template-columns: 1fr 1fr;
@@ -440,6 +413,31 @@
                     @enderror
                 </div>
                 
+                {{-- ============================================ --}}
+                {{-- GENDER - COMPLETELY REWRITTEN --}}
+                {{-- ============================================ --}}
+                <div class="col-md-6">
+                    <label for="gender" class="form-label">
+                        <i class="fas fa-venus-mars"></i> Gender
+                    </label>
+                    <div class="input-icon-wrapper">
+                        <select class="form-control @error('gender') is-invalid @enderror" 
+                                id="gender" name="gender">
+                            <option value="">Select Gender</option>
+                            <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>👨 Male</option>
+                            <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>👩 Female</option>
+                        </select>
+                        <i class="fas fa-venus-mars input-icon"></i>
+                    </div>
+                    @error('gender')
+                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
+                    @enderror
+                    {{-- Debug: Show selected value --}}
+                    <div style="font-size: 0.7rem; color: #10B981; margin-top: 4px; padding: 4px 8px; background: rgba(16, 185, 129, 0.08); border-radius: 6px;">
+                        <i class="fas fa-info-circle"></i> Selected: <strong id="genderDisplay">Not selected</strong>
+                    </div>
+                </div>
+                
                 {{-- Birthday --}}
                 <div class="col-md-6">
                     <label for="birthday" class="form-label">
@@ -455,23 +453,7 @@
                     @enderror
                 </div>
                 
-                {{-- Address --}}
-                <div class="col-md-6">
-                    <label for="address" class="form-label">
-                        <i class="fas fa-map-marker-alt"></i> Address
-                    </label>
-                    <div class="input-icon-wrapper">
-                        <input type="text" class="form-control @error('address') is-invalid @enderror" 
-                               id="address" name="address" placeholder="Complete address of the member" 
-                               value="{{ old('address') }}">
-                        <i class="fas fa-home input-icon"></i>
-                    </div>
-                    @error('address')
-                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
-                    @enderror
-                </div>
-                
-                {{-- Phone (Optional) --}}
+                {{-- Phone --}}
                 <div class="col-md-6">
                     <label for="phone" class="form-label">
                         <i class="fas fa-phone"></i> Phone <span style="color: var(--text-muted); font-weight: 400; text-transform: lowercase;">(Optional)</span>
@@ -483,6 +465,38 @@
                         <i class="fas fa-phone input-icon"></i>
                     </div>
                     @error('phone')
+                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
+                    @enderror
+                </div>
+                
+                {{-- Email --}}
+                <div class="col-md-6">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i> Email <span style="color: var(--text-muted); font-weight: 400; text-transform: lowercase;">(Optional)</span>
+                    </label>
+                    <div class="input-icon-wrapper">
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                               id="email" name="email" placeholder="Enter email address (optional)" 
+                               value="{{ old('email') }}">
+                        <i class="fas fa-envelope input-icon"></i>
+                    </div>
+                    @error('email')
+                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
+                    @enderror
+                </div>
+                
+                {{-- Address --}}
+                <div class="col-12">
+                    <label for="address" class="form-label">
+                        <i class="fas fa-map-marker-alt"></i> Address
+                    </label>
+                    <div class="input-icon-wrapper">
+                        <input type="text" class="form-control @error('address') is-invalid @enderror" 
+                               id="address" name="address" placeholder="Complete address of the member" 
+                               value="{{ old('address') }}">
+                        <i class="fas fa-home input-icon"></i>
+                    </div>
+                    @error('address')
                         <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
                     @enderror
                 </div>
@@ -516,7 +530,6 @@
                         @endif
                     </div>
                     
-                    {{-- Choir Note --}}
                     <div class="choir-note">
                         <i class="fas fa-info-circle"></i>
                         <div>
@@ -542,4 +555,28 @@
         </form>
     </div>
 </div>
+
+<script>
+    // Debug: Show selected gender value
+    document.addEventListener('DOMContentLoaded', function() {
+        const genderSelect = document.getElementById('gender');
+        const genderDisplay = document.getElementById('genderDisplay');
+        
+        if (genderSelect && genderDisplay) {
+            genderSelect.addEventListener('change', function() {
+                const value = this.value;
+                if (value === 'male') {
+                    genderDisplay.textContent = 'Male 👨';
+                    genderDisplay.style.color = '#3B82F6';
+                } else if (value === 'female') {
+                    genderDisplay.textContent = 'Female 👩';
+                    genderDisplay.style.color = '#EC4899';
+                } else {
+                    genderDisplay.textContent = 'Not selected';
+                    genderDisplay.style.color = '#10B981';
+                }
+            });
+        }
+    });
+</script>
 @endsection

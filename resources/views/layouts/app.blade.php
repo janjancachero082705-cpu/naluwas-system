@@ -1162,15 +1162,10 @@
 
     <!-- ===== MAIN CONTENT ===== -->
     <div class="main-content">
-        <!-- Top Header - FIXED -->
+        <!-- Top Header - FIXED (Breadcrumb removed) -->
         <header class="top-header">
             <div class="header-left">
                 <h1>@yield('header', 'Dashboard')</h1>
-                <div class="header-breadcrumb">
-                    <i class="fas fa-home"></i>
-                    <span>/</span>
-                    <span>@yield('header', 'Dashboard')</span>
-                </div>
             </div>
 
             <div class="header-right">
