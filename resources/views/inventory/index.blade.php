@@ -1,41 +1,259 @@
 @extends('layouts.app')
 
-@section('header', 'Financial Management')
+@section('header', 'Inventory Management')
 
 @section('content')
+
+{{-- ============================================= --}}
+{{-- STYLES SECTION --}}
+{{-- ============================================= --}}
 <style>
     /* ============================================
-       CLEAN UI - SAME STYLE AS MEMBER PAGE
+       MODERN DESIGN - WITH GRADIENT COLORS
     ============================================ */
     
-    /* Stats Grid */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-bottom: 1.5rem;
+    /* Import Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    
+    :root {
+        --profile-primary: #4F46E5;
+        --profile-primary-light: #818CF8;
+        --profile-primary-dark: #4338CA;
+        --profile-success: #10B981;
+        --profile-warning: #F59E0B;
+        --profile-danger: #EF4444;
+        --profile-purple: #8B5CF6;
+        --profile-pink: #EC4899;
+        --gradient-primary: linear-gradient(135deg, #4F46E5, #7C3AED);
+        --gradient-success: linear-gradient(135deg, #10B981, #34D399);
+        --gradient-danger: linear-gradient(135deg, #EF4444, #F87171);
+        --gradient-info: linear-gradient(135deg, #3B82F6, #60A5FA);
+        --gradient-multi: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+        --shadow-profile-lg: 0 20px 60px rgba(0,0,0,0.08);
+        --shadow-profile-hover: 0 24px 80px rgba(0,0,0,0.12);
+        --shadow-glow: 0 8px 32px rgba(79, 70, 229, 0.3);
+        --shadow-success: 0 8px 32px rgba(16, 185, 129, 0.3);
+        --shadow-danger: 0 8px 32px rgba(239, 68, 68, 0.3);
+        --shadow-info: 0 8px 32px rgba(59, 130, 246, 0.3);
     }
     
-    .stat-card {
+    /* Hero Section - MULTI-COLOR GRADIENT */
+    .finance-hero {
+        background: var(--gradient-multi);
+        border-radius: 24px;
+        padding: 2rem 2.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(79, 70, 229, 0.3);
+    }
+    
+    .finance-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -30%;
+        width: 80%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        pointer-events: none;
+        animation: heroPulse 8s ease-in-out infinite;
+    }
+    
+    .finance-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -50%;
+        left: -20%;
+        width: 60%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+        pointer-events: none;
+        animation: heroPulse 10s ease-in-out infinite reverse;
+    }
+    
+    @keyframes heroPulse {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.2); opacity: 1; }
+    }
+    
+    .finance-hero .hero-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .finance-hero .hero-left {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .finance-hero h1 {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: white;
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        letter-spacing: -0.5px;
+    }
+    
+    .finance-hero h1 i {
+        margin-right: 12px;
+        opacity: 0.8;
+    }
+    
+    .finance-hero .hero-sub {
+        color: rgba(255,255,255,0.85);
+        font-size: 0.85rem;
+        margin: 0;
+    }
+    
+    .finance-hero .hero-actions {
+        display: flex;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Hero Buttons - Premium Design with GRADIENTS */
+    .btn-hero {
+        padding: 0.6rem 1.6rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+        font-family: 'Inter', sans-serif;
+        letter-spacing: 0.3px;
+        position: relative;
+        overflow: hidden;
+        color: white;
+    }
+    
+    .btn-hero::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        transition: width 0.6s ease, height 0.6s ease, top 0.6s ease, left 0.6s ease;
+    }
+    
+    .btn-hero:active::after {
+        width: 300px;
+        height: 300px;
+        top: -100px;
+        left: -100px;
+    }
+    
+    /* Income Button - GREEN GRADIENT */
+    .btn-hero-income {
+        background: var(--gradient-success);
+        box-shadow: var(--shadow-success);
+        color: white;
+    }
+    
+    .btn-hero-income:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4);
+        color: white;
+    }
+    
+    /* Expense Button - RED GRADIENT */
+    .btn-hero-expense {
+        background: var(--gradient-danger);
+        box-shadow: var(--shadow-danger);
+        color: white;
+    }
+    
+    .btn-hero-expense:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(239, 68, 68, 0.4);
+        color: white;
+    }
+    
+    /* Transactions Button - WHITE */
+    .btn-hero-transactions {
+        background: #ffffff;
+        color: #4F46E5;
+        box-shadow: 0 8px 32px rgba(255, 255, 255, 0.3);
+    }
+    
+    .btn-hero-transactions:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(255, 255, 255, 0.5);
+        color: #4F46E5;
+        background: #f1f5f9;
+    }
+    
+    /* Stats Grid - Premium Cards */
+    .stats-grid-premium {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card-premium {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 1rem 1.2rem;
+        border-radius: 16px;
+        padding: 1.2rem 1.5rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-profile-lg);
+    }
+    
+    .stat-card-premium::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+    }
+    
+    .stat-card-premium:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-profile-hover);
+        border-color: transparent;
+    }
+    
+    .stat-card-premium .stat-top {
         display: flex;
-        align-items: center;
-        gap: 12px;
-        transition: all 0.2s ease;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
     }
     
-    .stat-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    .stat-card-premium .stat-label {
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--text-muted);
+        font-weight: 700;
+        margin: 0;
     }
     
-    .stat-icon {
+    .stat-card-premium .stat-icon-wrap {
         width: 44px;
         height: 44px;
-        border-radius: 10px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -44,244 +262,243 @@
         flex-shrink: 0;
     }
     
-    .stat-icon.income { background: linear-gradient(135deg, #10b981, #34d399); }
-    .stat-icon.expense { background: linear-gradient(135deg, #ef4444, #f87171); }
-    .stat-icon.balance { background: linear-gradient(135deg, #4F46E5, #6366F1); }
-    .stat-icon.church { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
-    
-    .stat-info {
-        flex: 1;
-    }
-    
-    .stat-info h4 {
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        color: var(--text-muted);
-        margin: 0 0 3px 0;
-        font-weight: 600;
-    }
-    
-    .stat-value {
-        font-size: 1.3rem;
-        font-weight: 700;
+    .stat-card-premium .stat-value {
+        font-size: 1.8rem;
+        font-weight: 800;
         color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
+        letter-spacing: -0.5px;
         line-height: 1.2;
     }
     
-    .stat-trend {
-        font-size: 0.6rem;
+    .stat-card-premium .stat-change {
+        font-size: 0.65rem;
         color: var(--text-muted);
-        margin-top: 2px;
-    }
-    
-    .amount-positive { color: #10b981 !important; }
-    .amount-negative { color: #ef4444 !important; }
-    
-    /* Action Buttons */
-    .action-buttons {
-        display: flex;
-        gap: 0.75rem;
-        margin-bottom: 1.5rem;
-        flex-wrap: wrap;
-    }
-    
-    .action-btn {
-        padding: 0.5rem 1.2rem;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 0.75rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        border: 1px solid var(--border-color);
-        background: var(--card-bg);
-        color: var(--text-primary);
-        text-decoration: none;
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-    }
-    
-    .action-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    
-    .action-btn.income:hover {
-        border-color: #10b981;
-    }
-    
-    .action-btn.income i {
-        color: #10b981;
-    }
-    
-    .action-btn.expense:hover {
-        border-color: #ef4444;
-    }
-    
-    .action-btn.expense i {
-        color: #ef4444;
-    }
-    
-    .action-btn.history:hover {
-        border-color: #4F46E5;
-    }
-    
-    .action-btn.history i {
-        color: #4F46E5;
-    }
-    
-    /* Summary Banner */
-    .summary-banner {
+        gap: 4px;
+        margin-top: 2px;
+        padding: 2px 8px;
+        border-radius: 20px;
         background: var(--bg-tertiary);
+    }
+    
+    .stat-card-premium .stat-change.positive { color: #10B981; }
+    .stat-card-premium .stat-change.negative { color: #EF4444; }
+    
+    /* Gradient variants for stat cards */
+    .stat-card-premium.green::before { background: var(--gradient-success); }
+    .stat-card-premium.blue::before { background: var(--gradient-primary); }
+    .stat-card-premium.purple::before { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
+    .stat-card-premium.orange::before { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
+    .stat-card-premium.red::before { background: var(--gradient-danger); }
+    
+    .stat-card-premium.green .stat-icon-wrap { background: var(--gradient-success); box-shadow: var(--shadow-success); }
+    .stat-card-premium.blue .stat-icon-wrap { background: var(--gradient-primary); box-shadow: var(--shadow-glow); }
+    .stat-card-premium.purple .stat-icon-wrap { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
+    .stat-card-premium.orange .stat-icon-wrap { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
+    .stat-card-premium.red .stat-icon-wrap { background: var(--gradient-danger); box-shadow: var(--shadow-danger); }
+    
+    /* Summary Banner - Premium */
+    .summary-banner-premium {
+        background: var(--card-bg);
         border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 1rem 1.2rem;
+        border-radius: 16px;
+        padding: 1.2rem 1.8rem;
         margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-profile-lg);
+        transition: all 0.3s ease;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
         gap: 1rem;
+        position: relative;
+        overflow: hidden;
     }
     
-    .summary-banner h4 {
-        margin: 0 0 2px 0;
+    .summary-banner-premium::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--gradient-primary);
+    }
+    
+    .summary-banner-premium:hover {
+        box-shadow: var(--shadow-profile-hover);
+        border-color: transparent;
+    }
+    
+    .summary-banner-premium h4 {
+        margin: 0 0 4px 0;
         font-size: 0.65rem;
         text-transform: uppercase;
         letter-spacing: 0.8px;
         color: var(--text-muted);
-        font-weight: 600;
-    }
-    
-    .summary-banner .amount {
-        font-size: 1.5rem;
         font-weight: 700;
-        color: var(--text-primary);
     }
     
-    .summary-banner .small {
+    .summary-banner-premium .amount {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
+        letter-spacing: -0.5px;
+    }
+    
+    .summary-banner-premium .small {
         font-size: 0.7rem;
         color: var(--text-muted);
     }
     
-    /* Category Grid */
-    .category-grid {
+    /* Category Grid - Premium */
+    .category-grid-premium {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 1.5rem;
         margin-bottom: 1.5rem;
     }
     
-    .category-card {
+    .category-card-premium {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
-        border-radius: 12px;
+        border-radius: 16px;
         overflow: hidden;
+        box-shadow: var(--shadow-profile-lg);
+        transition: all 0.3s ease;
     }
     
-    .category-header {
-        padding: 0.8rem 1.2rem;
+    .category-card-premium:hover {
+        box-shadow: var(--shadow-profile-hover);
+        border-color: transparent;
+    }
+    
+    .category-header-premium {
+        padding: 0.8rem 1.5rem;
         border-bottom: 1px solid var(--border-color);
         background: var(--bg-tertiary);
     }
     
-    .category-header h6 {
+    .category-header-premium h6 {
         margin: 0;
         font-size: 0.8rem;
         font-weight: 700;
         color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
     }
     
-    .category-header h6 i {
-        margin-right: 6px;
+    .category-header-premium h6 i {
+        margin-right: 8px;
     }
     
-    .category-header h6 .text-success { color: #10b981 !important; }
-    .category-header h6 .text-danger { color: #ef4444 !important; }
+    .category-header-premium h6 .text-success { color: #10B981 !important; }
+    .category-header-premium h6 .text-danger { color: #EF4444 !important; }
     
-    .category-item {
+    .category-item-premium {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.6rem 1.2rem;
+        padding: 0.7rem 1.5rem;
         border-bottom: 1px solid var(--border-color);
-        transition: all 0.15s ease;
+        transition: all 0.2s ease;
     }
     
-    .category-item:hover {
+    .category-item-premium:hover {
         background: var(--bg-tertiary);
-        transform: translateX(3px);
+        transform: translateX(4px);
     }
     
-    .category-name {
-        font-size: 0.75rem;
+    .category-name-premium {
+        font-size: 0.8rem;
         font-weight: 500;
         color: var(--text-primary);
     }
     
-    .category-amount {
-        font-weight: 600;
-        font-size: 0.8rem;
+    .category-amount-premium {
+        font-weight: 700;
+        font-size: 0.85rem;
+        font-family: 'Inter', sans-serif;
     }
     
-    .category-amount.income { color: #10b981; }
-    .category-amount.expense { color: #ef4444; }
+    .category-amount-premium.income { color: #10B981; }
+    .category-amount-premium.expense { color: #EF4444; }
     
-    .summary-row {
-        padding: 0.6rem 1.2rem;
+    .summary-row-premium {
+        padding: 0.7rem 1.5rem;
         background: var(--bg-tertiary);
         display: flex;
         justify-content: space-between;
         font-weight: 700;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         border-top: 2px solid var(--border-color);
         color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
     }
     
-    /* Table Container */
-    .table-container {
+    /* Table Container - Premium */
+    .table-container-premium {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
-        border-radius: 12px;
+        border-radius: 16px;
         overflow: hidden;
         margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-profile-lg);
+        transition: all 0.3s ease;
     }
     
-    .table-container .card-header-custom {
-        padding: 0.8rem 1.2rem;
+    .table-container-premium:hover {
+        box-shadow: var(--shadow-profile-hover);
+    }
+    
+    .table-header-premium {
+        padding: 0.8rem 1.5rem;
         border-bottom: 1px solid var(--border-color);
         background: var(--bg-tertiary);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
     }
     
-    .table-container .card-header-custom h6 {
+    .table-header-premium h6 {
         color: var(--text-primary);
         margin: 0;
         font-size: 0.8rem;
         font-weight: 700;
+        font-family: 'Inter', sans-serif;
     }
     
-    .table {
+    .table-header-premium h6 i {
+        margin-right: 8px;
+        color: #10B981;
+    }
+    
+    .table-premium {
         margin-bottom: 0;
         width: 100%;
         background: var(--card-bg);
         border-collapse: collapse;
     }
     
-    .table thead th {
+    .table-premium thead th {
         background: var(--bg-tertiary);
         border-bottom: 1px solid var(--border-color);
         color: var(--text-muted) !important;
         font-size: 0.6rem;
-        font-weight: 600;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.6px;
-        padding: 0.7rem 1rem;
+        padding: 0.7rem 1.2rem;
         white-space: nowrap;
+        font-family: 'Inter', sans-serif;
     }
     
-    .table tbody td {
-        padding: 0.6rem 1rem;
+    .table-premium tbody td {
+        padding: 0.7rem 1.2rem;
         vertical-align: middle;
         color: var(--text-primary) !important;
         background: var(--card-bg);
@@ -289,348 +506,148 @@
         font-size: 0.8rem;
     }
     
-    .table tbody tr {
+    .table-premium tbody tr {
         transition: all 0.15s ease;
     }
     
-    .table tbody tr:hover {
+    .table-premium tbody tr:hover {
         background: var(--bg-tertiary) !important;
     }
     
-    .table tbody tr:hover td {
+    .table-premium tbody tr:hover td {
         background: var(--bg-tertiary) !important;
     }
     
-    .type-badge {
+    .type-badge-premium {
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        padding: 3px 10px;
+        padding: 3px 12px;
         border-radius: 20px;
         font-size: 0.6rem;
         font-weight: 600;
     }
     
-    .badge-income {
+    .badge-income-premium {
         background: rgba(16, 185, 129, 0.12);
-        color: #10b981 !important;
+        color: #10B981 !important;
     }
     
-    .badge-expense {
+    .badge-expense-premium {
         background: rgba(239, 68, 68, 0.12);
-        color: #ef4444 !important;
+        color: #EF4444 !important;
     }
     
-    .table tbody td strong {
-        color: var(--text-primary);
-        font-weight: 600;
-    }
-    
-    /* Modal Styles */
-    .modal-content {
+    /* Modal Styles - Premium */
+    .modal-content-premium {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
         border-radius: 16px;
         overflow: hidden;
+        box-shadow: var(--shadow-profile-hover);
     }
     
-    .modal-header {
-        padding: 1rem 1.5rem;
+    .modal-header-premium {
+        padding: 1.2rem 1.5rem;
         border-bottom: 1px solid var(--border-color);
         background: var(--bg-tertiary);
     }
     
-    .modal-header .modal-title {
+    .modal-header-premium .modal-title {
         font-size: 1rem;
         font-weight: 700;
         color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
     }
     
-    .modal-header p {
+    .modal-header-premium p {
         color: var(--text-muted);
         font-size: 0.75rem;
         margin: 0;
     }
     
-    .modal-body {
-        padding: 1.5rem;
-    }
-    
-    .modal-footer {
-        padding: 1rem 1.5rem;
-        border-top: 1px solid var(--border-color);
-        background: var(--bg-tertiary);
-    }
-    
-    /* Form Styles */
-    .form-label {
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        font-weight: 600;
-        color: var(--text-muted);
-        margin-bottom: 0.3rem;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-    
-    .form-label i {
-        font-size: 0.65rem;
-    }
-    
-    .form-control, .form-select, textarea {
-        width: 100%;
-        padding: 0.5rem 0.8rem;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        background: var(--input-bg);
-        color: var(--text-primary);
-        font-size: 0.8rem;
-        transition: all 0.2s ease;
-    }
-    
-    .form-control:focus, .form-select:focus, textarea:focus {
-        outline: none;
-        border-color: #10b981;
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-    }
-    
-    .form-control::placeholder, textarea::placeholder {
-        color: var(--text-muted);
-    }
-    
-    textarea {
-        resize: vertical;
-        min-height: 60px;
-    }
-    
-    /* Category Pills */
-    .category-pills {
+    /* Category Pills - Premium */
+    .category-pills-premium {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.4rem;
+        gap: 0.5rem;
     }
     
-    .category-pill {
-        padding: 0.4rem 0.8rem;
+    .category-pill-premium {
+        padding: 0.4rem 1rem;
         border-radius: 20px;
-        font-size: 0.65rem;
+        font-size: 0.7rem;
         font-weight: 500;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         background: var(--bg-tertiary);
         border: 1px solid var(--border-color);
         color: var(--text-secondary);
         text-align: center;
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: 6px;
+        font-family: 'Inter', sans-serif;
     }
     
-    .category-pill i {
+    .category-pill-premium i {
         font-size: 0.6rem;
     }
     
-    .category-pill:hover {
-        background: var(--hover-bg);
-        border-color: #10b981;
+    .category-pill-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-color: #10B981;
     }
     
-    .category-pill.selected {
-        background: #10b981;
-        border-color: #10b981;
+    .category-pill-premium.selected {
+        background: #10B981;
+        border-color: #10B981;
         color: white;
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
     }
     
-    /* Amount Preview */
-    .amount-preview {
+    /* Amount Preview - Premium */
+    .amount-preview-premium {
         background: var(--bg-tertiary);
-        border-radius: 10px;
-        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        padding: 0.8rem 1.2rem;
         margin-top: 1rem;
         border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
     }
     
-    .alert-success {
-        background: rgba(16, 185, 129, 0.08);
-        color: #10b981;
-        border: 1px solid rgba(16, 185, 129, 0.15);
+    .amount-preview-premium:hover {
+        border-color: #10B981;
     }
     
-    .alert-info {
-        background: rgba(59, 130, 246, 0.08);
-        color: var(--text-primary);
-        border: 1px solid rgba(59, 130, 246, 0.15);
-    }
-    
-    .alert-danger {
-        background: rgba(239, 68, 68, 0.08);
-        color: #ef4444;
-        border: 1px solid rgba(239, 68, 68, 0.15);
-    }
-    
-    .input-group-text {
-        background: var(--bg-tertiary);
-        border: 1px solid var(--border-color);
-        color: var(--text-primary);
-        font-size: 0.8rem;
-    }
-    
-    /* Modal Filters */
-    .filter-tabs {
-        display: flex;
-        gap: 0.4rem;
-        flex-wrap: wrap;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 0.5rem;
-    }
-    
-    .filter-tab {
-        padding: 0.4rem 1rem;
-        border-radius: 20px;
-        border: 1px solid var(--border-color);
-        background: transparent;
-        color: var(--text-secondary);
-        font-size: 0.7rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-    
-    .filter-tab:hover {
-        background: var(--hover-bg);
-        color: var(--text-primary);
-    }
-    
-    .filter-tab.active {
-        background: #10b981;
-        color: white;
-        border-color: #10b981;
-    }
-    
-    /* Search Bar */
-    .search-bar {
-        max-width: 300px;
-    }
-    
-    .search-bar .input-group-text {
-        background: var(--input-bg);
-        border: 1px solid var(--border-color);
-        border-right: none;
-    }
-    
-    .search-bar .form-control {
-        background: var(--input-bg);
-        border-left: none;
-    }
-    
-    /* Buttons */
-    .btn-secondary {
-        background: var(--bg-tertiary);
-        color: var(--text-primary);
-        border: 1px solid var(--border-color);
-        padding: 0.4rem 1rem;
-        border-radius: 8px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
-    }
-    
-    .btn-secondary:hover {
-        background: var(--hover-bg);
-        transform: translateY(-1px);
-    }
-    
-    .btn-primary {
-        background: #10b981;
-        color: white;
-        border: none;
-        padding: 0.4rem 1.2rem;
-        border-radius: 8px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
-    }
-    
-    .btn-primary:hover {
-        background: #059669;
-        transform: translateY(-1px);
-    }
-    
-    .btn-success {
-        background: #10b981;
-        color: white;
-        border: none;
-        padding: 0.5rem 1.5rem;
-        border-radius: 8px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
-    }
-    
-    .btn-success:hover {
-        background: #059669;
-        transform: translateY(-1px);
-    }
-    
-    .btn-danger {
-        background: #ef4444;
-        color: white;
-        border: none;
-        padding: 0.5rem 1.5rem;
-        border-radius: 8px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
-    }
-    
-    .btn-danger:hover {
-        background: #dc2626;
-        transform: translateY(-1px);
-    }
-    
-    .btn-danger:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-    
-    .btn-close {
-        color: var(--text-muted);
-        opacity: 0.5;
-        transition: all 0.2s ease;
-    }
-    
-    .btn-close:hover {
-        opacity: 1;
-    }
-    
-    /* Transaction Summary */
-    .transaction-summary {
+    /* Transaction Summary - Premium */
+    .transaction-summary-premium {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 0.75rem;
     }
     
-    .summary-item {
+    .summary-item-premium {
         background: var(--bg-tertiary);
-        border-radius: 10px;
-        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        padding: 0.8rem 1.2rem;
         display: flex;
         align-items: center;
         gap: 0.8rem;
         border: 1px solid var(--border-color);
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
     }
     
-    .summary-item:hover {
+    .summary-item-premium:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        box-shadow: var(--shadow-profile-hover);
+        border-color: transparent;
     }
     
-    .summary-icon {
-        width: 40px;
-        height: 40px;
+    .summary-icon-premium {
+        width: 42px;
+        height: 42px;
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -640,204 +657,503 @@
         flex-shrink: 0;
     }
     
-    .summary-icon.income-bg { background: linear-gradient(135deg, #10b981, #34d399); }
-    .summary-icon.expense-bg { background: linear-gradient(135deg, #ef4444, #f87171); }
-    .summary-icon.balance-bg { background: linear-gradient(135deg, #4F46E5, #6366F1); }
-    .summary-icon.total-bg { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+    .summary-icon-premium.income-bg { background: var(--gradient-success); }
+    .summary-icon-premium.expense-bg { background: var(--gradient-danger); }
+    .summary-icon-premium.balance-bg { background: var(--gradient-primary); }
+    .summary-icon-premium.total-bg { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
     
-    .summary-info {
-        flex: 1;
+    /* Filter Tabs - Premium */
+    .filter-tabs-premium {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 0.75rem;
     }
     
-    .summary-label {
-        font-size: 0.6rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--text-muted);
-        display: block;
+    .filter-tab-premium {
+        padding: 0.4rem 1.2rem;
+        border-radius: 20px;
+        border: 1px solid var(--border-color);
+        background: transparent;
+        color: var(--text-secondary);
+        font-size: 0.7rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
     }
     
-    .summary-value {
-        font-size: 1rem;
-        font-weight: 700;
+    .filter-tab-premium:hover {
+        background: var(--bg-tertiary);
         color: var(--text-primary);
+        transform: translateY(-2px);
     }
     
-    .summary-value.amount-positive { color: #10b981; }
-    .summary-value.amount-negative { color: #ef4444; }
+    .filter-tab-premium.active {
+        background: #10B981;
+        color: white;
+        border-color: #10B981;
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    }
+    
+    /* Search Bar - Premium */
+    .search-bar-premium {
+        max-width: 320px;
+    }
+    
+    .search-bar-premium .input-group-text {
+        background: var(--input-bg);
+        border: 1px solid var(--border-color);
+        border-right: none;
+        border-radius: 10px 0 0 10px;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+    }
+    
+    .search-bar-premium .form-control {
+        background: var(--input-bg);
+        border-left: none;
+        border-radius: 0 10px 10px 0;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+    }
+    
+    .search-bar-premium .form-control:focus {
+        border-color: #10B981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    
+    /* Buttons - Premium with Gradients */
+    .btn-secondary-premium {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        padding: 0.4rem 1.2rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .btn-secondary-premium:hover {
+        background: var(--hover-bg);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    
+    .btn-primary-premium {
+        background: var(--gradient-primary);
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        box-shadow: var(--shadow-glow);
+    }
+    
+    .btn-primary-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(79, 70, 229, 0.4);
+        color: white;
+    }
+    
+    .btn-success-premium {
+        background: var(--gradient-success);
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        box-shadow: var(--shadow-success);
+    }
+    
+    .btn-success-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4);
+        color: white;
+    }
+    
+    .btn-danger-premium {
+        background: var(--gradient-danger);
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+        box-shadow: var(--shadow-danger);
+    }
+    
+    .btn-danger-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(239, 68, 68, 0.4);
+        color: white;
+    }
+    
+    .btn-danger-premium:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Form Styles - Premium */
+    .form-label-premium {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        font-weight: 700;
+        color: var(--text-muted);
+        margin-bottom: 0.3rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .form-label-premium i {
+        font-size: 0.65rem;
+    }
+    
+    .form-control-premium {
+        width: 100%;
+        padding: 0.5rem 0.8rem;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        background: var(--input-bg);
+        color: var(--text-primary);
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+    }
+    
+    .form-control-premium:focus {
+        outline: none;
+        border-color: #10B981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    
+    .form-control-premium::placeholder {
+        color: var(--text-muted);
+    }
+    
+    .input-group-text-premium {
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        font-size: 0.8rem;
+        border-radius: 10px 0 0 10px;
+    }
+    
+    /* Alert Styles */
+    .alert-success-premium {
+        background: rgba(16, 185, 129, 0.08);
+        color: #10B981;
+        border: 1px solid rgba(16, 185, 129, 0.15);
+        border-radius: 10px;
+        padding: 0.6rem 1rem;
+    }
+    
+    .alert-info-premium {
+        background: rgba(59, 130, 246, 0.08);
+        color: var(--text-primary);
+        border: 1px solid rgba(59, 130, 246, 0.15);
+        border-radius: 10px;
+        padding: 0.6rem 1rem;
+    }
+    
+    .alert-danger-premium {
+        background: rgba(239, 68, 68, 0.08);
+        color: #EF4444;
+        border: 1px solid rgba(239, 68, 68, 0.15);
+        border-radius: 10px;
+        padding: 0.6rem 1rem;
+    }
+    
+    /* Badge */
+    .category-badge-premium {
+        background: var(--bg-tertiary);
+        padding: 2px 12px;
+        border-radius: 20px;
+        font-size: 0.65rem;
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+    }
+    
+    /* Amount Styles */
+    .amount-positive-premium { color: #10B981 !important; }
+    .amount-negative-premium { color: #EF4444 !important; }
     
     /* Responsive */
-    @media (max-width: 768px) {
-        .stats-grid {
+    @media (max-width: 1200px) {
+        .stats-grid-premium {
             grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
         }
-        .stat-value {
-            font-size: 1.1rem;
-        }
-        .stat-icon {
-            width: 40px;
-            height: 40px;
-            font-size: 1rem;
-        }
-        .action-buttons {
+    }
+    
+    @media (max-width: 992px) {
+        .finance-hero .hero-content {
             flex-direction: column;
+            align-items: flex-start;
         }
-        .action-btn {
+        
+        .finance-hero .hero-actions {
             width: 100%;
+        }
+        
+        .btn-hero {
+            flex: 1;
             justify-content: center;
         }
-        .category-grid {
+    }
+    
+    @media (max-width: 768px) {
+        .finance-hero {
+            padding: 1.5rem;
+            border-radius: 16px;
+        }
+        
+        .finance-hero h1 {
+            font-size: 1.3rem;
+        }
+        
+        .stats-grid-premium {
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+        
+        .stat-card-premium {
+            padding: 1rem;
+        }
+        
+        .stat-card-premium .stat-value {
+            font-size: 1.3rem;
+        }
+        
+        .stat-card-premium .stat-icon-wrap {
+            width: 36px;
+            height: 36px;
+            font-size: 0.9rem;
+        }
+        
+        .category-grid-premium {
             grid-template-columns: 1fr;
         }
-        .summary-banner {
+        
+        .summary-banner-premium {
             flex-direction: column;
             text-align: center;
+            padding: 1rem 1.2rem;
         }
-        .transaction-summary {
+        
+        .transaction-summary-premium {
             grid-template-columns: repeat(2, 1fr);
         }
-        .summary-item {
-            padding: 0.6rem;
+        
+        .summary-item-premium {
+            padding: 0.6rem 0.8rem;
         }
-        .summary-value {
-            font-size: 0.85rem;
-        }
-        .table thead th,
-        .table tbody td {
+        
+        .table-premium thead th,
+        .table-premium tbody td {
             padding: 0.4rem 0.6rem;
             font-size: 0.65rem;
         }
-        .modal-header {
+        
+        .modal-header-premium {
             padding: 0.8rem 1rem;
         }
-        .modal-body {
+        
+        .modal-body-premium {
             padding: 1rem;
         }
-        .search-bar {
+        
+        .search-bar-premium {
             max-width: 100%;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .stats-grid-premium {
+            grid-template-columns: 1fr;
+        }
+        
+        .transaction-summary-premium {
+            grid-template-columns: 1fr;
+        }
+        
+        .btn-hero {
+            width: 100%;
+            justify-content: center;
         }
     }
 </style>
 
+{{-- ============================================= --}}
+{{-- MAIN CONTENT --}}
+{{-- ============================================= --}}
 <div class="container-fluid px-0">
 
-  
-
-    <!-- Statistics Cards -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon income"><i class="fas fa-arrow-down"></i></div>
-            <div class="stat-info">
-                <h4>Total Income</h4>
-                <div class="stat-value amount-positive">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
+    {{-- ============================================ --}}
+    {{-- HERO SECTION - MULTI-COLOR GRADIENT --}}
+    {{-- ============================================ --}}
+    <div class="finance-hero">
+        <div class="hero-content">
+            <div class="hero-left">
+                <h1><i class="fas fa-boxes"></i> Inventory Management</h1>
+                <p class="hero-sub">
+                    <i class="fas fa-circle" style="color: #34D399; font-size: 0.4rem; vertical-align: middle;"></i>
+                    Track church finances, income, expenses, and donations
+                </p>
             </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon expense"><i class="fas fa-arrow-up"></i></div>
-            <div class="stat-info">
-                <h4>Total Expenses</h4>
-                <div class="stat-value amount-negative">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon balance"><i class="fas fa-calculator"></i></div>
-            <div class="stat-info">
-                <h4>Net Balance</h4>
-                <div class="stat-value {{ ($balance ?? 0) >= 0 ? 'amount-positive' : 'amount-negative' }}">
-                    {{ ($balance ?? 0) >= 0 ? '₱' : '-₱' }}{{ number_format(abs($balance ?? 0), 2) }}
-                </div>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon church"><i class="fas fa-church"></i></div>
-            <div class="stat-info">
-                <h4>Church Balance</h4>
-                <div class="stat-value {{ ($allTimeBalance ?? 0) >= 0 ? 'amount-positive' : 'amount-negative' }}">
-                    {{ ($allTimeBalance ?? 0) >= 0 ? '₱' : '-₱' }}{{ number_format(abs($allTimeBalance ?? 0), 2) }}
-                </div>
+            <div class="hero-actions">
+                <button class="btn-hero btn-hero-income" data-bs-toggle="modal" data-bs-target="#incomeModal">
+                    <i class="fas fa-plus-circle"></i> Income
+                </button>
+                <button class="btn-hero btn-hero-expense" data-bs-toggle="modal" data-bs-target="#expenseModal">
+                    <i class="fas fa-minus-circle"></i> Expense
+                </button>
+                <button class="btn-hero btn-hero-transactions" data-bs-toggle="modal" data-bs-target="#transactionsModal">
+                    <i class="fas fa-list"></i> All Transactions
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-        <button class="action-btn income" data-bs-toggle="modal" data-bs-target="#incomeModal">
-            <i class="fas fa-plus-circle"></i> Record Income
-        </button>
-        <button class="action-btn expense" data-bs-toggle="modal" data-bs-target="#expenseModal">
-            <i class="fas fa-minus-circle"></i> Record Expense
-        </button>
-        <button class="action-btn history" data-bs-toggle="modal" data-bs-target="#transactionsModal">
-            <i class="fas fa-list"></i> View All Transactions
-        </button>
+    {{-- ============================================ --}}
+    {{-- STATS CARDS - PREMIUM --}}
+    {{-- ============================================ --}}
+    <div class="stats-grid-premium">
+        <div class="stat-card-premium green">
+            <div class="stat-top">
+                <span class="stat-label">Total Income</span>
+                <div class="stat-icon-wrap"><i class="fas fa-arrow-down"></i></div>
+            </div>
+            <div class="stat-value amount-positive-premium">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> All time</div>
+        </div>
+        
+        <div class="stat-card-premium red">
+            <div class="stat-top">
+                <span class="stat-label">Total Expenses</span>
+                <div class="stat-icon-wrap"><i class="fas fa-arrow-up"></i></div>
+            </div>
+            <div class="stat-value amount-negative-premium">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
+            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> All time</div>
+        </div>
+        
+        <div class="stat-card-premium blue">
+            <div class="stat-top">
+                <span class="stat-label">Net Balance</span>
+                <div class="stat-icon-wrap"><i class="fas fa-calculator"></i></div>
+            </div>
+            <div class="stat-value {{ ($balance ?? 0) >= 0 ? 'amount-positive-premium' : 'amount-negative-premium' }}">
+                {{ ($balance ?? 0) >= 0 ? '₱' : '-₱' }}{{ number_format(abs($balance ?? 0), 2) }}
+            </div>
+            <div class="stat-change {{ ($balance ?? 0) >= 0 ? 'positive' : 'negative' }}">
+                {{ ($balance ?? 0) >= 0 ? '↑ Surplus' : '↓ Deficit' }}
+            </div>
+        </div>
+        
+        <div class="stat-card-premium purple">
+            <div class="stat-top">
+                <span class="stat-label">Church Balance</span>
+                <div class="stat-icon-wrap"><i class="fas fa-church"></i></div>
+            </div>
+            <div class="stat-value {{ ($allTimeBalance ?? 0) >= 0 ? 'amount-positive-premium' : 'amount-negative-premium' }}">
+                {{ ($allTimeBalance ?? 0) >= 0 ? '₱' : '-₱' }}{{ number_format(abs($allTimeBalance ?? 0), 2) }}
+            </div>
+            <div class="stat-change {{ ($allTimeBalance ?? 0) >= 0 ? 'positive' : 'negative' }}">
+                {{ ($allTimeBalance ?? 0) >= 0 ? '↑ Available' : '↓ Shortfall' }}
+            </div>
+        </div>
     </div>
 
-    <!-- Summary Banner -->
-    <div class="summary-banner">
+    {{-- ============================================ --}}
+    {{-- SUMMARY BANNER - PREMIUM --}}
+    {{-- ============================================ --}}
+    <div class="summary-banner-premium">
         <div>
-            <h4><i class="fas fa-chart-line me-1" style="color: #10b981;"></i> Financial Summary</h4>
+            <h4><i class="fas fa-chart-line me-1" style="color: #10B981;"></i> Financial Summary</h4>
             <div class="amount">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
             <div class="small">Total Income</div>
         </div>
-        <div>
+        <div style="text-align: right;">
             <div class="small">Expenses: ₱{{ number_format($totalExpense ?? 0, 2) }}</div>
-            <div class="small">Net: ₱{{ number_format($balance ?? 0, 2) }}</div>
+            <div class="small" style="font-weight: 700; color: {{ ($balance ?? 0) >= 0 ? '#10B981' : '#EF4444' }};">
+                Net: {{ ($balance ?? 0) >= 0 ? '+' : '' }}₱{{ number_format($balance ?? 0, 2) }}
+            </div>
         </div>
     </div>
 
-    <!-- Category Breakdown -->
-    <div class="category-grid">
-        <div class="category-card">
-            <div class="category-header">
+    {{-- ============================================ --}}
+    {{-- CATEGORY GRID - PREMIUM --}}
+    {{-- ============================================ --}}
+    <div class="category-grid-premium">
+        <div class="category-card-premium">
+            <div class="category-header-premium">
                 <h6><i class="fas fa-chart-pie text-success"></i> Income Breakdown</h6>
             </div>
             @forelse(($incomeByCategory ?? []) as $category => $amount)
-                <div class="category-item">
-                    <span class="category-name">{{ $category }}</span>
-                    <span class="category-amount income">₱{{ number_format($amount, 2) }}</span>
+                <div class="category-item-premium">
+                    <span class="category-name-premium">{{ $category }}</span>
+                    <span class="category-amount-premium income">₱{{ number_format($amount, 2) }}</span>
                 </div>
             @empty
-                <div class="category-item">
-                    <span class="category-name">No income records yet</span>
-                    <span class="category-amount income">₱0.00</span>
+                <div class="category-item-premium">
+                    <span class="category-name-premium">No income records yet</span>
+                    <span class="category-amount-premium income">₱0.00</span>
                 </div>
             @endforelse
-            <div class="summary-row">
+            <div class="summary-row-premium">
                 <span>Total Income</span>
-                <span class="amount-positive">₱{{ number_format($allTimeIncome ?? 0, 2) }}</span>
+                <span class="amount-positive-premium">₱{{ number_format($allTimeIncome ?? 0, 2) }}</span>
             </div>
         </div>
 
-        <div class="category-card">
-            <div class="category-header">
+        <div class="category-card-premium">
+            <div class="category-header-premium">
                 <h6><i class="fas fa-chart-pie text-danger"></i> Expense Breakdown</h6>
             </div>
             @forelse(($expenseByCategory ?? []) as $category => $amount)
-                <div class="category-item">
-                    <span class="category-name">{{ $category }}</span>
-                    <span class="category-amount expense">₱{{ number_format($amount, 2) }}</span>
+                <div class="category-item-premium">
+                    <span class="category-name-premium">{{ $category }}</span>
+                    <span class="category-amount-premium expense">₱{{ number_format($amount, 2) }}</span>
                 </div>
             @empty
-                <div class="category-item">
-                    <span class="category-name">No expense records yet</span>
-                    <span class="category-amount expense">₱0.00</span>
+                <div class="category-item-premium">
+                    <span class="category-name-premium">No expense records yet</span>
+                    <span class="category-amount-premium expense">₱0.00</span>
                 </div>
             @endforelse
-            <div class="summary-row">
+            <div class="summary-row-premium">
                 <span>Total Expenses</span>
-                <span class="amount-negative">₱{{ number_format($allTimeExpense ?? 0, 2) }}</span>
+                <span class="amount-negative-premium">₱{{ number_format($allTimeExpense ?? 0, 2) }}</span>
             </div>
         </div>
     </div>
 
-    <!-- Recent Transactions Table -->
-    <div class="table-container">
-        <div class="card-header-custom">
-            <h6><i class="fas fa-history me-2" style="color: #10b981;"></i>Recent Transactions</h6>
+    {{-- ============================================ --}}
+    {{-- RECENT TRANSACTIONS TABLE - PREMIUM --}}
+    {{-- ============================================ --}}
+    <div class="table-container-premium">
+        <div class="table-header-premium">
+            <h6><i class="fas fa-history"></i> Recent Transactions</h6>
+            <span style="font-size: 0.65rem; color: var(--text-muted);">
+                Showing latest {{ count($recentTransactions ?? []) }} entries
+            </span>
         </div>
         <div class="table-responsive">
-            <table class="table">
+            <table class="table-premium table">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -856,18 +1172,23 @@
                         </td>
                         <td style="color: var(--text-primary);">
                             <strong>{{ $transaction->description }}</strong>
+                            @if($transaction->type == 'income' && $transaction->donor_name)
+                                <div class="small text-muted"><i class="fas fa-user me-1"></i> Donor: {{ $transaction->donor_name }}</div>
+                            @elseif($transaction->type == 'expense' && $transaction->recipient)
+                                <div class="small text-muted"><i class="fas fa-user me-1"></i> Recipient: {{ $transaction->recipient }}</div>
+                            @endif
                         </td>
                         <td style="color: var(--text-primary);">
-                            {{ $transaction->category ?? '-' }}
+                            <span class="category-badge-premium">{{ $transaction->category ?? '-' }}</span>
                         </td>
                         <td>
-                            <span class="type-badge {{ $transaction->type == 'income' ? 'badge-income' : 'badge-expense' }}">
+                            <span class="type-badge-premium {{ $transaction->type == 'income' ? 'badge-income-premium' : 'badge-expense-premium' }}">
                                 <i class="fas {{ $transaction->type == 'income' ? 'fa-arrow-down' : 'fa-arrow-up' }} me-1"></i>
                                 {{ $transaction->type == 'income' ? 'Income' : 'Expense' }}
                             </span>
                         </td>
                         <td>
-                            <strong class="{{ $transaction->type == 'income' ? 'amount-positive' : 'amount-negative' }}">
+                            <strong class="{{ $transaction->type == 'income' ? 'amount-positive-premium' : 'amount-negative-premium' }}">
                                 {{ $transaction->type == 'income' ? '+' : '-' }} ₱{{ number_format($transaction->amount, 2) }}
                             </strong>
                         </td>
@@ -878,8 +1199,9 @@
                     @empty
                     <tr>
                         <td colspan="6" class="text-center py-4" style="color: var(--text-muted);">
-                            <i class="fas fa-receipt fa-2x text-muted mb-2 d-block" style="color: var(--text-muted);"></i>
-                            <p class="text-muted mb-0" style="color: var(--text-muted);">No transactions yet</p>
+                            <i class="fas fa-receipt fa-2x mb-2 d-block" style="color: var(--text-muted);"></i>
+                            <p class="mb-0" style="color: var(--text-muted);">No transactions yet</p>
+                            <small style="color: var(--text-muted);">Click "Income" or "Expense" to get started</small>
                         </td>
                     </tr>
                     @endforelse
@@ -889,16 +1211,16 @@
     </div>
 </div>
 
-<!-- ============================================ -->
-<!-- INCOME MODAL -->
-<!-- ============================================ -->
+{{-- ============================================ --}}
+{{-- INCOME MODAL - PREMIUM --}}
+{{-- ============================================ --}}
 <div class="modal fade" id="incomeModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content modal-content-premium">
+            <div class="modal-header modal-header-premium">
                 <div>
                     <h5 class="modal-title">
-                        <i class="fas fa-arrow-down me-2" style="color: #10b981;"></i>
+                        <i class="fas fa-arrow-down me-2" style="color: #10B981;"></i>
                         Record Income
                     </h5>
                     <p>Add money received by the church</p>
@@ -907,31 +1229,43 @@
             </div>
             <form action="{{ route('inventory.store') }}" method="POST">
                 @csrf
-                <div class="modal-body">
+                <div class="modal-body" style="padding: 1.5rem;">
                     <input type="hidden" name="type" value="income">
                     
                     <div class="mb-3">
-                        <label class="form-label"><i class="fas fa-tag"></i> Description <span class="text-danger">*</span></label>
-                        <input type="text" name="description" class="form-control" required 
+                        <label class="form-label-premium"><i class="fas fa-tag"></i> Description <span class="text-danger">*</span></label>
+                        <input type="text" name="description" class="form-control-premium" required 
                                placeholder="e.g., Sunday Offering, Tithes, Special Donation">
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label"><i class="fas fa-folder"></i> Category <span class="text-danger">*</span></label>
-                        <div class="category-pills">
-                            <div class="category-pill selected" data-category="Sunday Offering" onclick="selectIncomeCategory(this, 'Sunday Offering')">
+                        <label class="form-label-premium"><i class="fas fa-folder"></i> Category <span class="text-danger">*</span></label>
+                        <div class="category-pills-premium">
+                            <div class="category-pill-premium selected" data-category="Sunday Offering" onclick="selectIncomeCategory(this, 'Sunday Offering')">
                                 <i class="fas fa-church"></i> Sunday Offering
                             </div>
-                            <div class="category-pill" data-category="Tithe" onclick="selectIncomeCategory(this, 'Tithe')">
-                                <i class="fas fa-hand-holding-heart"></i> Tithe
+                            <div class="category-pill-premium" data-category="Tithes" onclick="selectIncomeCategory(this, 'Tithes')">
+                                <i class="fas fa-hand-holding-heart"></i> Tithes
                             </div>
-                            <div class="category-pill" data-category="Special Donation" onclick="selectIncomeCategory(this, 'Special Donation')">
+                            <div class="category-pill-premium" data-category="Special Donation" onclick="selectIncomeCategory(this, 'Special Donation')">
                                 <i class="fas fa-gift"></i> Special Donation
                             </div>
-                            <div class="category-pill" data-category="Building Fund" onclick="selectIncomeCategory(this, 'Building Fund')">
+                            <div class="category-pill-premium" data-category="Building Fund" onclick="selectIncomeCategory(this, 'Building Fund')">
                                 <i class="fas fa-building"></i> Building Fund
                             </div>
-                            <div class="category-pill" data-category="Other Income" onclick="selectIncomeCategory(this, 'Other Income')">
+                            <div class="category-pill-premium" data-category="Missions" onclick="selectIncomeCategory(this, 'Missions')">
+                                <i class="fas fa-globe"></i> Missions
+                            </div>
+                            <div class="category-pill-premium" data-category="Benevolence" onclick="selectIncomeCategory(this, 'Benevolence')">
+                                <i class="fas fa-hands-helping"></i> Benevolence
+                            </div>
+                            <div class="category-pill-premium" data-category="Thanksgiving" onclick="selectIncomeCategory(this, 'Thanksgiving')">
+                                <i class="fas fa-hands-praying"></i> Thanksgiving
+                            </div>
+                            <div class="category-pill-premium" data-category="Rental Income" onclick="selectIncomeCategory(this, 'Rental Income')">
+                                <i class="fas fa-home"></i> Rental Income
+                            </div>
+                            <div class="category-pill-premium" data-category="Other Income" onclick="selectIncomeCategory(this, 'Other Income')">
                                 <i class="fas fa-ellipsis-h"></i> Other Income
                             </div>
                         </div>
@@ -940,16 +1274,17 @@
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fas fa-money-bill-wave"></i> Amount (₱) <span class="text-danger">*</span></label>
+                            <label class="form-label-premium"><i class="fas fa-money-bill-wave"></i> Amount (₱) <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <span class="input-group-text">₱</span>
-                                <input type="number" name="amount" step="0.01" class="form-control" required 
-                                       placeholder="0.00" id="incomeAmount" oninput="updateIncomePreview()">
+                                <span class="input-group-text-premium">₱</span>
+                                <input type="number" name="amount" step="0.01" class="form-control-premium" required 
+                                       placeholder="0.00" id="incomeAmount" oninput="updateIncomePreview()" 
+                                       style="border-radius: 0 10px 10px 0;">
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fas fa-calendar"></i> Date <span class="text-danger">*</span></label>
-                            <input type="date" name="date" class="form-control" value="{{ date('Y-m-d') }}" 
+                            <label class="form-label-premium"><i class="fas fa-calendar"></i> Date <span class="text-danger">*</span></label>
+                            <input type="date" name="date" class="form-control-premium" value="{{ date('Y-m-d') }}" 
                                    max="{{ date('Y-m-d') }}" required>
                             <small class="text-muted" style="font-size: 0.6rem; display: block; margin-top: 3px;">
                                 <i class="fas fa-info-circle"></i> Only past or today's date allowed
@@ -958,27 +1293,27 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label"><i class="fas fa-user"></i> Donor Name</label>
-                        <input type="text" name="donor_name" class="form-control" placeholder="Optional - Name of the donor">
+                        <label class="form-label-premium"><i class="fas fa-user"></i> Donor Name</label>
+                        <input type="text" name="donor_name" class="form-control-premium" placeholder="Optional - Name of the donor">
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label"><i class="fas fa-pen"></i> Remarks / Notes</label>
-                        <textarea name="remarks" class="form-control" rows="2" placeholder="Additional notes about this income..."></textarea>
+                        <label class="form-label-premium"><i class="fas fa-pen"></i> Remarks / Notes</label>
+                        <textarea name="remarks" class="form-control-premium" rows="2" placeholder="Additional notes about this income..." style="min-height: 50px;"></textarea>
                     </div>
                     
-                    <div class="amount-preview alert-success">
+                    <div class="amount-preview-premium alert-success-premium">
                         <div class="d-flex justify-content-between align-items-center">
                             <span><i class="fas fa-calculator me-2"></i> Amount to Record:</span>
-                            <strong id="incomePreviewAmount" class="fs-5" style="color: #10b981;">₱0.00</strong>
+                            <strong id="incomePreviewAmount" class="fs-5" style="color: #10B981;">₱0.00</strong>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-secondary" data-bs-dismiss="modal">
+                <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); background: var(--bg-tertiary);">
+                    <button type="button" class="btn-secondary-premium" data-bs-dismiss="modal">
                         <i class="fas fa-times me-1"></i> Cancel
                     </button>
-                    <button type="submit" class="btn-success">
+                    <button type="submit" class="btn-success-premium">
                         <i class="fas fa-save me-1"></i> Save Income
                     </button>
                 </div>
@@ -987,16 +1322,16 @@
     </div>
 </div>
 
-<!-- ============================================ -->
-<!-- EXPENSE MODAL -->
-<!-- ============================================ -->
+{{-- ============================================ --}}
+{{-- EXPENSE MODAL - PREMIUM --}}
+{{-- ============================================ --}}
 <div class="modal fade" id="expenseModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content modal-content-premium">
+            <div class="modal-header modal-header-premium">
                 <div>
                     <h5 class="modal-title">
-                        <i class="fas fa-arrow-up me-2" style="color: #ef4444;"></i>
+                        <i class="fas fa-arrow-up me-2" style="color: #EF4444;"></i>
                         Record Expense
                     </h5>
                     <p>Record money spent by the church</p>
@@ -1005,31 +1340,43 @@
             </div>
             <form action="{{ route('inventory.store') }}" method="POST">
                 @csrf
-                <div class="modal-body">
+                <div class="modal-body" style="padding: 1.5rem;">
                     <input type="hidden" name="type" value="expense">
                     
                     <div class="mb-3">
-                        <label class="form-label"><i class="fas fa-tag"></i> Description <span class="text-danger">*</span></label>
-                        <input type="text" name="description" class="form-control" required 
+                        <label class="form-label-premium"><i class="fas fa-tag"></i> Description <span class="text-danger">*</span></label>
+                        <input type="text" name="description" class="form-control-premium" required 
                                placeholder="e.g., Outreach Program, Church Supplies">
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label"><i class="fas fa-folder"></i> Category <span class="text-danger">*</span></label>
-                        <div class="category-pills">
-                            <div class="category-pill selected" data-category="Church Help" onclick="selectExpenseCategory(this, 'Church Help')">
+                        <label class="form-label-premium"><i class="fas fa-folder"></i> Category <span class="text-danger">*</span></label>
+                        <div class="category-pills-premium">
+                            <div class="category-pill-premium selected" data-category="Church Help" onclick="selectExpenseCategory(this, 'Church Help')">
                                 <i class="fas fa-hands-helping"></i> Church Help
                             </div>
-                            <div class="category-pill" data-category="Outreach" onclick="selectExpenseCategory(this, 'Outreach')">
+                            <div class="category-pill-premium" data-category="Outreach" onclick="selectExpenseCategory(this, 'Outreach')">
                                 <i class="fas fa-hand-holding-heart"></i> Outreach
                             </div>
-                            <div class="category-pill" data-category="Donation to Others" onclick="selectExpenseCategory(this, 'Donation to Others')">
+                            <div class="category-pill-premium" data-category="Donation to Others" onclick="selectExpenseCategory(this, 'Donation to Others')">
                                 <i class="fas fa-gift"></i> Donation
                             </div>
-                            <div class="category-pill" data-category="Maintenance" onclick="selectExpenseCategory(this, 'Maintenance')">
+                            <div class="category-pill-premium" data-category="Maintenance" onclick="selectExpenseCategory(this, 'Maintenance')">
                                 <i class="fas fa-tools"></i> Maintenance
                             </div>
-                            <div class="category-pill" data-category="Other Expense" onclick="selectExpenseCategory(this, 'Other Expense')">
+                            <div class="category-pill-premium" data-category="Utilities" onclick="selectExpenseCategory(this, 'Utilities')">
+                                <i class="fas fa-bolt"></i> Utilities
+                            </div>
+                            <div class="category-pill-premium" data-category="Staff Salary" onclick="selectExpenseCategory(this, 'Staff Salary')">
+                                <i class="fas fa-user-tie"></i> Staff Salary
+                            </div>
+                            <div class="category-pill-premium" data-category="Equipment" onclick="selectExpenseCategory(this, 'Equipment')">
+                                <i class="fas fa-microphone"></i> Equipment
+                            </div>
+                            <div class="category-pill-premium" data-category="Events" onclick="selectExpenseCategory(this, 'Events')">
+                                <i class="fas fa-calendar-check"></i> Events
+                            </div>
+                            <div class="category-pill-premium" data-category="Other Expense" onclick="selectExpenseCategory(this, 'Other Expense')">
                                 <i class="fas fa-ellipsis-h"></i> Other Expense
                             </div>
                         </div>
@@ -1038,16 +1385,17 @@
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fas fa-money-bill-wave"></i> Amount (₱) <span class="text-danger">*</span></label>
+                            <label class="form-label-premium"><i class="fas fa-money-bill-wave"></i> Amount (₱) <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <span class="input-group-text">₱</span>
-                                <input type="number" name="amount" step="0.01" class="form-control" required 
-                                       placeholder="0.00" id="expenseAmount" oninput="updateExpensePreview()">
+                                <span class="input-group-text-premium">₱</span>
+                                <input type="number" name="amount" step="0.01" class="form-control-premium" required 
+                                       placeholder="0.00" id="expenseAmount" oninput="updateExpensePreview()"
+                                       style="border-radius: 0 10px 10px 0;">
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label"><i class="fas fa-calendar"></i> Date <span class="text-danger">*</span></label>
-                            <input type="date" name="date" class="form-control" value="{{ date('Y-m-d') }}" 
+                            <label class="form-label-premium"><i class="fas fa-calendar"></i> Date <span class="text-danger">*</span></label>
+                            <input type="date" name="date" class="form-control-premium" value="{{ date('Y-m-d') }}" 
                                    max="{{ date('Y-m-d') }}" required>
                             <small class="text-muted" style="font-size: 0.6rem; display: block; margin-top: 3px;">
                                 <i class="fas fa-info-circle"></i> Only past or today's date allowed
@@ -1056,42 +1404,42 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label"><i class="fas fa-user"></i> Recipient / Beneficiary</label>
-                        <input type="text" name="recipient" class="form-control" placeholder="Optional - Who received this amount?">
+                        <label class="form-label-premium"><i class="fas fa-user"></i> Recipient / Beneficiary</label>
+                        <input type="text" name="recipient" class="form-control-premium" placeholder="Optional - Who received this amount?">
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label"><i class="fas fa-pen"></i> Remarks / Notes</label>
-                        <textarea name="remarks" class="form-control" rows="2" placeholder="Additional notes about this expense..."></textarea>
+                        <label class="form-label-premium"><i class="fas fa-pen"></i> Remarks / Notes</label>
+                        <textarea name="remarks" class="form-control-premium" rows="2" placeholder="Additional notes about this expense..." style="min-height: 50px;"></textarea>
                     </div>
                     
-                    <div class="amount-preview alert-info">
+                    <div class="amount-preview-premium alert-info-premium">
                         <div class="d-flex justify-content-between mb-2">
                             <span><i class="fas fa-wallet me-2"></i> Current Balance:</span>
-                            <strong id="currentBalance">₱{{ number_format($allTimeBalance ?? 0, 2) }}</strong>
+                            <strong id="currentBalance" style="font-family: 'Inter', sans-serif;">₱{{ number_format($allTimeBalance ?? 0, 2) }}</strong>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
-                            <span><i class="fas fa-minus-circle me-2" style="color: #ef4444;"></i> Amount to Deduct:</span>
-                            <strong id="expensePreviewAmount" style="color: #ef4444;">₱0.00</strong>
+                            <span><i class="fas fa-minus-circle me-2" style="color: #EF4444;"></i> Amount to Deduct:</span>
+                            <strong id="expensePreviewAmount" style="color: #EF4444; font-family: 'Inter', sans-serif;">₱0.00</strong>
                         </div>
                         <div class="d-flex justify-content-between pt-2 border-top" style="border-top-color: var(--border-color);">
                             <span><i class="fas fa-calculator me-2"></i> Remaining Balance:</span>
-                            <strong id="remainingBalance" class="fs-5" style="color: #10b981;">₱{{ number_format($allTimeBalance ?? 0, 2) }}</strong>
+                            <strong id="remainingBalance" class="fs-5" style="color: #10B981; font-family: 'Inter', sans-serif;">₱{{ number_format($allTimeBalance ?? 0, 2) }}</strong>
                         </div>
                     </div>
                     
                     @if(($allTimeBalance ?? 0) <= 0)
-                        <div class="alert-danger" style="padding: 0.6rem 1rem; border-radius: 8px; margin-top: 0.8rem;">
+                        <div class="alert-danger-premium" style="margin-top: 0.8rem;">
                             <i class="fas fa-exclamation-triangle me-2"></i>
                             Insufficient balance! Current balance: ₱{{ number_format($allTimeBalance ?? 0, 2) }}
                         </div>
                     @endif
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-secondary" data-bs-dismiss="modal">
+                <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); background: var(--bg-tertiary);">
+                    <button type="button" class="btn-secondary-premium" data-bs-dismiss="modal">
                         <i class="fas fa-times me-1"></i> Cancel
                     </button>
-                    <button type="submit" class="btn-danger" id="expenseSubmitBtn" {{ ($allTimeBalance ?? 0) <= 0 ? 'disabled' : '' }}>
+                    <button type="submit" class="btn-danger-premium" id="expenseSubmitBtn" {{ ($allTimeBalance ?? 0) <= 0 ? 'disabled' : '' }}>
                         <i class="fas fa-save me-1"></i> Save Expense
                     </button>
                 </div>
@@ -1100,57 +1448,57 @@
     </div>
 </div>
 
-<!-- ============================================ -->
-<!-- ALL TRANSACTIONS MODAL -->
-<!-- ============================================ -->
+{{-- ============================================ --}}
+{{-- ALL TRANSACTIONS MODAL - PREMIUM --}}
+{{-- ============================================ --}}
 <div class="modal fade" id="transactionsModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content modal-content-premium">
+            <div class="modal-header modal-header-premium">
                 <div>
                     <h5 class="modal-title">
-                        <i class="fas fa-list me-2" style="color: #10b981;"></i>
+                        <i class="fas fa-list me-2" style="color: #10B981;"></i>
                         All Transactions
                     </h5>
                     <p>Complete financial history of your church</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding: 1.5rem;">
                 <!-- Filter Tabs -->
-                <div class="filter-tabs mb-3">
-                    <button class="filter-tab active" onclick="filterTransactions('all', event)">All Transactions</button>
-                    <button class="filter-tab" onclick="filterTransactions('income', event)"><i class="fas fa-arrow-down me-1" style="color: #10b981;"></i> Income</button>
-                    <button class="filter-tab" onclick="filterTransactions('expense', event)"><i class="fas fa-arrow-up me-1" style="color: #ef4444;"></i> Expense</button>
+                <div class="filter-tabs-premium mb-3">
+                    <button class="filter-tab-premium active" onclick="filterTransactions('all', event)">All Transactions</button>
+                    <button class="filter-tab-premium" onclick="filterTransactions('income', event)"><i class="fas fa-arrow-down me-1" style="color: #10B981;"></i> Income</button>
+                    <button class="filter-tab-premium" onclick="filterTransactions('expense', event)"><i class="fas fa-arrow-up me-1" style="color: #EF4444;"></i> Expense</button>
                 </div>
                 
                 <!-- Summary Stats -->
-                <div class="transaction-summary mb-3">
-                    <div class="summary-item">
-                        <div class="summary-icon income-bg"><i class="fas fa-arrow-down"></i></div>
+                <div class="transaction-summary-premium mb-3">
+                    <div class="summary-item-premium">
+                        <div class="summary-icon-premium income-bg"><i class="fas fa-arrow-down"></i></div>
                         <div class="summary-info">
                             <span class="summary-label">Total Income</span>
-                            <span class="summary-value amount-positive">₱{{ number_format($allTimeIncome ?? 0, 2) }}</span>
+                            <span class="summary-value amount-positive-premium">₱{{ number_format($allTimeIncome ?? 0, 2) }}</span>
                         </div>
                     </div>
-                    <div class="summary-item">
-                        <div class="summary-icon expense-bg"><i class="fas fa-arrow-up"></i></div>
+                    <div class="summary-item-premium">
+                        <div class="summary-icon-premium expense-bg"><i class="fas fa-arrow-up"></i></div>
                         <div class="summary-info">
                             <span class="summary-label">Total Expenses</span>
-                            <span class="summary-value amount-negative">₱{{ number_format($allTimeExpense ?? 0, 2) }}</span>
+                            <span class="summary-value amount-negative-premium">₱{{ number_format($allTimeExpense ?? 0, 2) }}</span>
                         </div>
                     </div>
-                    <div class="summary-item">
-                        <div class="summary-icon balance-bg"><i class="fas fa-calculator"></i></div>
+                    <div class="summary-item-premium">
+                        <div class="summary-icon-premium balance-bg"><i class="fas fa-calculator"></i></div>
                         <div class="summary-info">
                             <span class="summary-label">Net Balance</span>
-                            <span class="summary-value {{ ($allTimeBalance ?? 0) >= 0 ? 'amount-positive' : 'amount-negative' }}">
+                            <span class="summary-value {{ ($allTimeBalance ?? 0) >= 0 ? 'amount-positive-premium' : 'amount-negative-premium' }}">
                                 {{ ($allTimeBalance ?? 0) >= 0 ? '+' : '-' }} ₱{{ number_format(abs($allTimeBalance ?? 0), 2) }}
                             </span>
                         </div>
                     </div>
-                    <div class="summary-item">
-                        <div class="summary-icon total-bg"><i class="fas fa-receipt"></i></div>
+                    <div class="summary-item-premium">
+                        <div class="summary-icon-premium total-bg"><i class="fas fa-receipt"></i></div>
                         <div class="summary-info">
                             <span class="summary-label">Total Transactions</span>
                             <span class="summary-value" id="totalTransactions">{{ count($transactions ?? []) }}</span>
@@ -1159,18 +1507,19 @@
                 </div>
                 
                 <!-- Search Bar -->
-                <div class="search-bar mb-3">
+                <div class="search-bar-premium mb-3">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-search"></i></span>
-                        <input type="text" id="transactionSearch" class="form-control" 
+                        <input type="text" id="transactionSearch" class="form-control-premium" 
                                placeholder="Search transactions..." 
-                               onkeyup="searchTransactions()">
+                               onkeyup="searchTransactions()"
+                               style="border-left: none; border-radius: 0 10px 10px 0;">
                     </div>
                 </div>
                 
                 <!-- Transactions Table -->
                 <div class="table-responsive">
-                    <table class="table" id="transactionsTable">
+                    <table class="table-premium table" id="transactionsTable">
                         <thead>
                             <tr>
                                 <th>Date</th>
@@ -1196,18 +1545,16 @@
                                     @endif
                                 </td>
                                 <td style="color: var(--text-primary);">
-                                    <span class="category-badge" style="background: var(--bg-tertiary); padding: 2px 10px; border-radius: 20px; font-size: 0.65rem;">
-                                        {{ $transaction->category ?? 'Uncategorized' }}
-                                    </span>
+                                    <span class="category-badge-premium">{{ $transaction->category ?? 'Uncategorized' }}</span>
                                 </td>
                                 <td>
-                                    <span class="type-badge {{ $transaction->type == 'income' ? 'badge-income' : 'badge-expense' }}">
+                                    <span class="type-badge-premium {{ $transaction->type == 'income' ? 'badge-income-premium' : 'badge-expense-premium' }}">
                                         <i class="fas {{ $transaction->type == 'income' ? 'fa-arrow-down' : 'fa-arrow-up' }} me-1"></i>
                                         {{ $transaction->type == 'income' ? 'Income' : 'Expense' }}
                                     </span>
                                 </td>
                                 <td>
-                                    <strong class="{{ $transaction->type == 'income' ? 'amount-positive' : 'amount-negative' }}">
+                                    <strong class="{{ $transaction->type == 'income' ? 'amount-positive-premium' : 'amount-negative-premium' }}">
                                         {{ $transaction->type == 'income' ? '+' : '-' }} ₱{{ number_format($transaction->amount, 2) }}
                                     </strong>
                                 </td>
@@ -1225,14 +1572,14 @@
                     </table>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn-secondary btn-sm" onclick="exportToCSV()" style="padding: 0.3rem 0.8rem;">
+            <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); background: var(--bg-tertiary);">
+                <button class="btn-secondary-premium btn-sm" onclick="exportToCSV()" style="padding: 0.3rem 0.8rem;">
                     <i class="fas fa-file-excel me-1"></i> Export CSV
                 </button>
-                <button class="btn-secondary btn-sm" onclick="window.print()" style="padding: 0.3rem 0.8rem;">
+                <button class="btn-secondary-premium btn-sm" onclick="window.print()" style="padding: 0.3rem 0.8rem;">
                     <i class="fas fa-print me-1"></i> Print
                 </button>
-                <button type="button" class="btn-primary" data-bs-dismiss="modal">
+                <button type="button" class="btn-primary-premium" data-bs-dismiss="modal">
                     <i class="fas fa-times me-1"></i> Close
                 </button>
             </div>
@@ -1240,10 +1587,13 @@
     </div>
 </div>
 
+{{-- ============================================= --}}
+{{-- SCRIPTS SECTION --}}
+{{-- ============================================= --}}
 <script>
     // Income Category Selection
     function selectIncomeCategory(element, category) {
-        document.querySelectorAll('#incomeModal .category-pill').forEach(pill => {
+        document.querySelectorAll('#incomeModal .category-pill-premium').forEach(pill => {
             pill.classList.remove('selected');
         });
         element.classList.add('selected');
@@ -1252,7 +1602,7 @@
     
     // Expense Category Selection
     function selectExpenseCategory(element, category) {
-        document.querySelectorAll('#expenseModal .category-pill').forEach(pill => {
+        document.querySelectorAll('#expenseModal .category-pill-premium').forEach(pill => {
             pill.classList.remove('selected');
         });
         element.classList.add('selected');
@@ -1284,7 +1634,7 @@
         
         if (remainingSpan) {
             remainingSpan.textContent = (remainingBalance >= 0 ? '₱' : '-₱') + Math.abs(remainingBalance).toFixed(2);
-            remainingSpan.style.color = remainingBalance >= 0 ? '#10b981' : '#ef4444';
+            remainingSpan.style.color = remainingBalance >= 0 ? '#10B981' : '#EF4444';
         }
         
         if (submitBtn) {
@@ -1301,7 +1651,7 @@
     // Filter Transactions
     function filterTransactions(type, event) {
         if (event) {
-            document.querySelectorAll('.filter-tab').forEach(tab => {
+            document.querySelectorAll('.filter-tab-premium').forEach(tab => {
                 tab.classList.remove('active');
             });
             event.target.classList.add('active');
