@@ -832,7 +832,7 @@
                     <i class="fas fa-user-plus"></i> Add Member
                 </a>
                 <a href="{{ route('members.index', ['role' => 'all']) }}" class="btn-hero btn-hero-ghost">
-                    <i class="fas fa-sync-alt"></i> Reset Filters
+                    <i class="fas fa-sync-alt"></i> Refresh
                 </a>
             </div>
         </div>

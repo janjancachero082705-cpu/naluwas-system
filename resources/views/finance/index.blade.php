@@ -880,7 +880,7 @@
                     <i class="fas fa-chart-simple"></i> View All
                 </a>
                 <a href="{{ route('finance.index') }}" class="btn-hero btn-hero-ghost">
-                    <i class="fas fa-sync-alt"></i> Reset Filters
+                    <i class="fas fa-sync-alt"></i> Refresh
                 </a>
             </div>
         </div>

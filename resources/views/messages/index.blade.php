@@ -3,68 +3,45 @@
 @section('header', 'Messages')
 
 @section('content')
+
+{{-- ============================================= --}}
+{{-- STYLES SECTION --}}
+{{-- ============================================= --}}
 <style>
     /* ============================================
-       PREMIUM MESSENGER DESIGN - WITH ANIMATIONS
-       ============================================ */
+       PREMIUM MESSENGER DESIGN - MATCHING FINANCIAL MANAGEMENT
+    ============================================ */
 
-    /* ─── Import Google Fonts ─── */
+    /* Import Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-    /* ─── Enhanced Color Variables ─── */
+    /* ─── Color Variables ─── */
     :root {
         --msg-primary: #4F46E5;
         --msg-primary-light: #818CF8;
         --msg-primary-dark: #3730A3;
-        --msg-primary-gradient: linear-gradient(135deg, #4F46E5, #7C3AED, #6D28D9);
-        --msg-secondary: #7C3AED;
-        --msg-secondary-light: #A78BFA;
-        --msg-success: #10B981;
-        --msg-success-light: #34D399;
-        --msg-danger: #EF4444;
-        --msg-warning: #F59E0B;
-        --msg-info: #3B82F6;
-        --msg-purple: #8B5CF6;
-        --msg-pink: #EC4899;
-        --msg-teal: #14B8A6;
-        
-        /* Gradients */
+        --gradient-primary: linear-gradient(135deg, #4F46E5, #7C3AED);
+        --gradient-success: linear-gradient(135deg, #10B981, #34D399);
+        --gradient-danger: linear-gradient(135deg, #EF4444, #F87171);
+        --gradient-info: linear-gradient(135deg, #3B82F6, #60A5FA);
+        --gradient-multi: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
         --gradient-sent: linear-gradient(135deg, #4F46E5, #7C3AED);
-        --gradient-sent-hover: linear-gradient(135deg, #4338CA, #6D28D9);
-        --gradient-header: linear-gradient(135deg, #4F46E5, #7C3AED, #6D28D9);
-        --gradient-hero: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #6D28D9 100%);
-        --gradient-btn: linear-gradient(135deg, #4F46E5, #7C3AED);
-        --gradient-btn-hover: linear-gradient(135deg, #4338CA, #6D28D9);
-        --gradient-unread: linear-gradient(135deg, #EF4444, #F87171);
-        --gradient-online: linear-gradient(135deg, #10B981, #34D399);
         --gradient-avatar: linear-gradient(135deg, #4F46E5, #8B5CF6);
         --gradient-avatar-2: linear-gradient(135deg, #7C3AED, #EC4899);
         --gradient-avatar-3: linear-gradient(135deg, #3B82F6, #14B8A6);
         --gradient-avatar-4: linear-gradient(135deg, #F59E0B, #EF4444);
-        
-        /* Shadows */
-        --shadow-msg-lg: 0 20px 60px rgba(79, 70, 229, 0.12);
-        --shadow-msg-hover: 0 24px 80px rgba(79, 70, 229, 0.18);
-        --shadow-glow: 0 8px 32px rgba(79, 70, 229, 0.25);
+        --shadow-msg-lg: 0 20px 60px rgba(0,0,0,0.08);
+        --shadow-msg-hover: 0 24px 80px rgba(0,0,0,0.12);
         --shadow-sent: 0 4px 20px rgba(79, 70, 229, 0.25);
         --shadow-btn: 0 4px 16px rgba(79, 70, 229, 0.3);
         --shadow-btn-hover: 0 8px 32px rgba(79, 70, 229, 0.4);
         --shadow-toast: 0 12px 48px rgba(79, 70, 229, 0.15);
-        
-        /* Borders */
-        --border-glow: 1px solid rgba(79, 70, 229, 0.15);
-        --border-primary: 2px solid rgba(79, 70, 229, 0.2);
     }
 
     /* ─── Global Animations ─── */
     @keyframes float {
         0%, 100% { transform: translateY(0px); }
         50% { transform: translateY(-8px); }
-    }
-
-    @keyframes shimmer {
-        0% { background-position: -200% center; }
-        100% { background-position: 200% center; }
     }
 
     @keyframes slideInLeft {
@@ -87,11 +64,6 @@
         to { opacity: 1; transform: rotate(0) scale(1); }
     }
 
-    @keyframes ripple {
-        0% { transform: scale(0); opacity: 0.5; }
-        100% { transform: scale(2); opacity: 0; }
-    }
-
     @keyframes glowPulse {
         0%, 100% { box-shadow: 0 0 20px rgba(79, 70, 229, 0.2); }
         50% { box-shadow: 0 0 40px rgba(79, 70, 229, 0.4); }
@@ -103,15 +75,20 @@
         100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    @keyframes typingBounce {
-        0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
-        30% { transform: translateY(-8px); opacity: 1; }
+    @keyframes pulse-dot {
+        0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 12px rgba(16, 185, 129, 0.3); }
+        50% { opacity: 0.8; transform: scale(0.9); box-shadow: 0 0 8px rgba(16, 185, 129, 0.15); }
     }
 
-    @keyframes wave {
-        0%, 100% { transform: rotate(0deg); }
-        25% { transform: rotate(20deg); }
-        75% { transform: rotate(-20deg); }
+    @keyframes pop-in {
+        0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+        60% { transform: scale(1.2) rotate(5deg); }
+        100% { transform: scale(1) rotate(0); opacity: 1; }
+    }
+
+    @keyframes pulse-badge {
+        0%, 100% { transform: scale(1); box-shadow: 0 2px 12px rgba(79, 70, 229, 0.35); }
+        50% { transform: scale(1.05); box-shadow: 0 4px 20px rgba(79, 70, 229, 0.5); }
     }
 
     @keyframes shimmerEffect {
@@ -119,10 +96,174 @@
         100% { background-position: 200% 0; }
     }
 
-    /* ─── Container ─── */
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-15px) scale(0.95); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes slideInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+
+    /* ─── Hero Section - GRADIENT ─── */
+    .msg-hero {
+        background: var(--gradient-multi);
+        border-radius: 20px;
+        padding: 2rem 2.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(79, 70, 229, 0.3);
+    }
+
+    .msg-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -30%;
+        width: 80%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        pointer-events: none;
+        animation: pulseGlow 8s ease-in-out infinite;
+    }
+
+    .msg-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -50%;
+        left: -20%;
+        width: 60%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+        pointer-events: none;
+        animation: pulseGlow 10s ease-in-out infinite reverse;
+    }
+
+    @keyframes pulseGlow {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    .msg-hero .hero-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .msg-hero .hero-left {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .msg-hero h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        color: white;
+        margin: 0;
+        letter-spacing: -0.5px;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .msg-hero h1 i {
+        margin-right: 12px;
+        opacity: 0.8;
+    }
+
+    .msg-hero p {
+        color: rgba(255,255,255,0.85);
+        margin: 0;
+        font-size: 0.9rem;
+        font-weight: 400;
+    }
+
+    .msg-hero .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(20px);
+        padding: 0.5rem 1.2rem;
+        border-radius: 50px;
+        border: 1px solid rgba(255,255,255,0.2);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .msg-hero .hero-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-hero-primary {
+        background: white;
+        color: #4F46E5;
+        border: none;
+        padding: 0.6rem 1.8rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .btn-hero-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        color: #4F46E5;
+        text-decoration: none;
+    }
+
+    .btn-hero-secondary {
+        background: rgba(255,255,255,0.15);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.3);
+        padding: 0.6rem 1.8rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        backdrop-filter: blur(20px);
+        font-family: 'Inter', sans-serif;
+    }
+
+    .btn-hero-secondary:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+
+    /* ─── Messenger Container ─── */
     .messenger-container {
         display: flex;
-        height: calc(100vh - 180px);
+        height: calc(100vh - 260px);
         min-height: 550px;
         max-height: 750px;
         border-radius: 20px;
@@ -143,7 +284,7 @@
         left: -2px;
         right: -2px;
         bottom: -2px;
-        background: var(--gradient-hero);
+        background: var(--gradient-multi);
         border-radius: 22px;
         z-index: -1;
         opacity: 0.05;
@@ -175,11 +316,10 @@
     .msg-sidebar-header {
         padding: 18px 20px 14px;
         border-bottom: 1px solid rgba(79, 70, 229, 0.08);
-        background: linear-gradient(135deg, rgba(79, 70, 229, 0.04), rgba(124, 58, 237, 0.04));
+        background: var(--bg-tertiary);
         position: sticky;
         top: 0;
         z-index: 10;
-        backdrop-filter: blur(10px);
     }
 
     .msg-sidebar-header .header-top {
@@ -202,22 +342,23 @@
     .msg-sidebar-header h5 i {
         color: var(--msg-primary);
         font-size: 22px;
-        background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1));
+        background: var(--gradient-primary);
         padding: 8px;
         border-radius: 12px;
-        border: 1px solid rgba(79, 70, 229, 0.08);
+        color: white;
+        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
         animation: float 3s ease-in-out infinite;
     }
 
     .msg-sidebar-header .badge-total {
         font-size: 11px;
-        background: var(--gradient-hero);
+        background: var(--gradient-danger);
         color: white;
         padding: 2px 14px;
         border-radius: 20px;
         font-weight: 700;
         margin-left: 8px;
-        box-shadow: 0 2px 12px rgba(79, 70, 229, 0.35);
+        box-shadow: 0 2px 12px rgba(239, 68, 68, 0.35);
         animation: pulse-badge 2s infinite;
         border: 1px solid rgba(255,255,255,0.1);
         transition: all 0.3s ease;
@@ -227,16 +368,11 @@
         transform: scale(1.1);
     }
 
-    @keyframes pulse-badge {
-        0%, 100% { transform: scale(1); box-shadow: 0 2px 12px rgba(79, 70, 229, 0.35); }
-        50% { transform: scale(1.05); box-shadow: 0 4px 20px rgba(79, 70, 229, 0.5); }
-    }
-
     .msg-sidebar-header .header-actions button {
         width: 36px;
         height: 36px;
         border-radius: 50%;
-        border: 1px solid rgba(79, 70, 229, 0.08);
+        border: 1px solid var(--border-color);
         background: transparent;
         color: var(--text-muted);
         cursor: pointer;
@@ -245,35 +381,20 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .msg-sidebar-header .header-actions button::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: var(--gradient-btn);
-        opacity: 0;
-        transition: opacity 0.3s ease;
     }
 
     .msg-sidebar-header .header-actions button:hover {
-        background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(124, 58, 237, 0.08));
-        color: var(--msg-primary);
+        background: var(--gradient-primary);
+        color: white;
         transform: rotate(180deg) scale(1.1);
-        border-color: rgba(79, 70, 229, 0.2);
-    }
-
-    .msg-sidebar-header .header-actions button:active {
-        transform: rotate(180deg) scale(0.95);
+        border-color: transparent;
+        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
     }
 
     /* ─── Search ─── */
     .msg-sidebar-search {
         padding: 10px 16px 14px;
-        border-bottom: 1px solid rgba(79, 70, 229, 0.06);
+        border-bottom: 1px solid var(--border-color);
         background: var(--card-bg);
     }
 
@@ -286,7 +407,7 @@
     .msg-sidebar-search .search-icon {
         position: absolute;
         left: 14px;
-        color: var(--msg-primary-light);
+        color: var(--text-muted);
         font-size: 14px;
         pointer-events: none;
         opacity: 0.6;
@@ -296,13 +417,14 @@
     .msg-sidebar-search input {
         width: 100%;
         padding: 10px 16px 10px 44px;
-        border-radius: 30px;
-        border: 1px solid rgba(79, 70, 229, 0.1);
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
         background: var(--bg-tertiary);
         color: var(--text-primary);
         font-size: 13px;
         outline: none;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: 'Inter', sans-serif;
     }
 
     .msg-sidebar-search input:focus {
@@ -310,11 +432,6 @@
         background: var(--card-bg);
         box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.06);
         transform: scale(1.02);
-    }
-
-    .msg-sidebar-search input:focus + .search-icon {
-        opacity: 1;
-        transform: scale(1.1);
     }
 
     .msg-sidebar-search input::placeholder {
@@ -339,7 +456,6 @@
     .msg-church-list::-webkit-scrollbar-thumb {
         background: rgba(79, 70, 229, 0.15);
         border-radius: 10px;
-        transition: all 0.3s ease;
     }
     .msg-church-list::-webkit-scrollbar-thumb:hover {
         background: rgba(79, 70, 229, 0.25);
@@ -353,7 +469,7 @@
         cursor: pointer;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
-        border-bottom: 1px solid rgba(79, 70, 229, 0.04);
+        border-bottom: 1px solid var(--border-color);
         background: var(--card-bg);
         animation: slideInLeft 0.5s ease both;
     }
@@ -369,31 +485,16 @@
     .msg-church-item:nth-child(9) { animation-delay: 0.45s; }
     .msg-church-item:nth-child(10) { animation-delay: 0.5s; }
 
-    .msg-church-item::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, rgba(79, 70, 229, 0.04), rgba(124, 58, 237, 0.04));
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        pointer-events: none;
-    }
-
     .msg-church-item:hover {
-        background: linear-gradient(135deg, rgba(79, 70, 229, 0.04), rgba(124, 58, 237, 0.04));
-        transform: translateX(6px) scale(1.01);
+        background: var(--bg-tertiary);
+        transform: translateX(6px);
         box-shadow: 0 2px 12px rgba(79, 70, 229, 0.05);
     }
 
-    .msg-church-item:hover::before {
-        opacity: 1;
-    }
-
     .msg-church-item.active {
-        background: linear-gradient(135deg, rgba(79, 70, 229, 0.06), rgba(124, 58, 237, 0.06));
+        background: var(--bg-tertiary);
         border-left: 4px solid var(--msg-primary);
         box-shadow: inset 0 1px 0 rgba(79, 70, 229, 0.05);
-        animation: glowPulse 2s ease-in-out infinite;
     }
 
     .msg-church-item .avatar {
@@ -418,11 +519,6 @@
         box-shadow: 0 4px 20px rgba(79, 70, 229, 0.25);
     }
 
-    .msg-church-item.active .avatar {
-        box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
-        animation: glowPulse 2s ease-in-out infinite;
-    }
-
     .msg-church-item .avatar .online-dot {
         position: absolute;
         bottom: 1px;
@@ -430,15 +526,10 @@
         width: 14px;
         height: 14px;
         border-radius: 50%;
-        background: var(--gradient-online);
+        background: var(--gradient-success);
         border: 3px solid var(--card-bg);
         animation: pulse-dot 2s infinite;
         box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
-    }
-
-    @keyframes pulse-dot {
-        0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 12px rgba(16, 185, 129, 0.3); }
-        50% { opacity: 0.8; transform: scale(0.9); box-shadow: 0 0 8px rgba(16, 185, 129, 0.15); }
     }
 
     .msg-church-item .info {
@@ -466,7 +557,6 @@
         text-overflow: ellipsis;
         margin-top: 2px;
         opacity: 0.8;
-        transition: all 0.3s ease;
     }
 
     .msg-church-item .last-msg.has-unread {
@@ -488,15 +578,10 @@
         color: var(--text-muted);
         opacity: 0.6;
         font-weight: 500;
-        transition: all 0.3s ease;
-    }
-
-    .msg-church-item:hover .time {
-        opacity: 1;
     }
 
     .msg-church-item .unread-count {
-        background: var(--gradient-unread);
+        background: var(--gradient-danger);
         color: white;
         font-size: 11px;
         font-weight: 700;
@@ -515,12 +600,6 @@
 
     .msg-church-item .unread-count:hover {
         transform: scale(1.1);
-    }
-
-    @keyframes pop-in {
-        0% { transform: scale(0) rotate(-30deg); opacity: 0; }
-        60% { transform: scale(1.2) rotate(5deg); }
-        100% { transform: scale(1) rotate(0); opacity: 1; }
     }
 
     .msg-empty-state {
@@ -576,7 +655,7 @@
     .msg-main-header {
         padding: 14px 24px;
         background: var(--card-bg);
-        border-bottom: 1px solid rgba(79, 70, 229, 0.06);
+        border-bottom: 1px solid var(--border-color);
         display: flex;
         align-items: center;
         gap: 16px;
@@ -656,7 +735,7 @@
     }
 
     .msg-main-header .chat-status.online {
-        color: var(--msg-success);
+        color: var(--gradient-success);
     }
 
     .msg-main-header .chat-status .status-dot {
@@ -664,11 +743,12 @@
         height: 8px;
         border-radius: 50%;
         display: inline-block;
+        background: var(--text-muted);
         transition: all 0.3s ease;
     }
 
     .msg-main-header .chat-status.online .status-dot {
-        background: var(--gradient-online);
+        background: var(--gradient-success);
         animation: pulse-dot 2s infinite;
         box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
     }
@@ -677,7 +757,7 @@
         width: 38px;
         height: 38px;
         border-radius: 50%;
-        border: 1px solid rgba(79, 70, 229, 0.08);
+        border: 1px solid var(--border-color);
         background: transparent;
         color: var(--text-muted);
         cursor: pointer;
@@ -686,30 +766,14 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .msg-main-header .chat-actions button::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: var(--gradient-btn);
-        opacity: 0;
-        transition: opacity 0.3s ease;
     }
 
     .msg-main-header .chat-actions button:hover {
-        background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(124, 58, 237, 0.08));
-        color: var(--msg-primary);
+        background: var(--gradient-primary);
+        color: white;
         transform: translateY(-3px) scale(1.05);
-        border-color: rgba(79, 70, 229, 0.15);
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
-    }
-
-    .msg-main-header .chat-actions button:active {
-        transform: translateY(0) scale(0.95);
+        border-color: transparent;
+        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
     }
 
     /* ─── Messages List ─── */
@@ -734,7 +798,6 @@
     .msg-messages::-webkit-scrollbar-thumb {
         background: rgba(79, 70, 229, 0.12);
         border-radius: 10px;
-        transition: all 0.3s ease;
     }
     .msg-messages::-webkit-scrollbar-thumb:hover {
         background: rgba(79, 70, 229, 0.2);
@@ -760,7 +823,6 @@
         text-transform: uppercase;
         letter-spacing: 0.8px;
         opacity: 0.7;
-        transition: all 0.3s ease;
     }
 
     .msg-date-divider span:hover {
@@ -817,7 +879,7 @@
         background: var(--card-bg);
         color: var(--text-primary);
         border-bottom-left-radius: 4px;
-        border: 1px solid rgba(79, 70, 229, 0.06);
+        border: 1px solid var(--border-color);
         box-shadow: 0 1px 4px rgba(0,0,0,0.02);
         animation: messageAppear 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -847,7 +909,6 @@
         font-size: 11px;
         opacity: 0.7;
         color: var(--msg-secondary-light);
-        animation: wave 2s ease-in-out infinite;
     }
 
     .msg-bubble .body {
@@ -963,7 +1024,7 @@
         padding: 12px 36px;
         border-radius: 40px;
         border: none;
-        background: var(--gradient-btn);
+        background: var(--gradient-primary);
         color: white;
         font-weight: 600;
         font-size: 14px;
@@ -973,27 +1034,11 @@
         box-shadow: var(--shadow-btn);
         border: 1px solid rgba(255,255,255,0.05);
         animation: scaleIn 0.6s ease 0.3s both;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .msg-empty-state-main .btn-compose-empty::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-        opacity: 0;
-        transition: opacity 0.3s ease;
     }
 
     .msg-empty-state-main .btn-compose-empty:hover {
         transform: translateY(-4px) scale(1.03);
         box-shadow: var(--shadow-btn-hover);
-        background: var(--gradient-btn-hover);
-    }
-
-    .msg-empty-state-main .btn-compose-empty:hover::after {
-        opacity: 1;
     }
 
     .msg-empty-state-main .btn-compose-empty:active {
@@ -1004,18 +1049,13 @@
     .msg-compose {
         padding: 12px 20px 16px;
         background: var(--card-bg);
-        border-top: 1px solid rgba(79, 70, 229, 0.06);
+        border-top: 1px solid var(--border-color);
         flex-shrink: 0;
         display: block !important;
         box-shadow: 0 -1px 4px rgba(0,0,0,0.02);
         position: relative;
         z-index: 2;
         animation: slideInUp 0.5s ease;
-    }
-
-    @keyframes slideInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
     }
 
     .msg-compose::before {
@@ -1035,8 +1075,8 @@
         gap: 10px;
         align-items: flex-end;
         background: var(--bg-tertiary);
-        border-radius: 24px;
-        border: 2px solid rgba(79, 70, 229, 0.06);
+        border-radius: 16px;
+        border: 2px solid var(--border-color);
         padding: 4px 6px 4px 18px;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -1054,7 +1094,7 @@
     }
 
     .msg-compose .compose-inputs .subject-input {
-        border-bottom: 1px solid rgba(79, 70, 229, 0.06);
+        border-bottom: 1px solid var(--border-color);
         padding-bottom: 4px;
         margin-bottom: 4px;
         display: none;
@@ -1064,11 +1104,6 @@
     .msg-compose .compose-inputs .subject-input.show {
         display: block;
         animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    @keyframes slideDown {
-        from { opacity: 0; transform: translateY(-15px) scale(0.95); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .msg-compose .compose-inputs input {
@@ -1124,24 +1159,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .msg-compose .compose-actions button::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 50%;
-        background: var(--gradient-btn);
-        opacity: 0;
-        transition: opacity 0.3s ease;
     }
 
     .msg-compose .compose-actions button:hover {
-        background: linear-gradient(135deg, rgba(79, 70, 229, 0.06), rgba(124, 58, 237, 0.06));
-        color: var(--msg-primary);
+        background: var(--gradient-primary);
+        color: white;
         transform: rotate(20deg) scale(1.1);
+        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
     }
 
     .msg-compose .compose-actions button:active {
@@ -1149,7 +1173,7 @@
     }
 
     .msg-compose .btn-send-msg {
-        background: var(--gradient-btn);
+        background: var(--gradient-primary);
         color: white;
         width: 48px;
         height: 48px;
@@ -1164,27 +1188,11 @@
         flex-shrink: 0;
         box-shadow: var(--shadow-btn);
         border: 1px solid rgba(255,255,255,0.05);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .msg-compose .btn-send-msg::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-        opacity: 0;
-        transition: opacity 0.3s ease;
     }
 
     .msg-compose .btn-send-msg:hover {
         transform: scale(1.08) translateY(-3px);
         box-shadow: var(--shadow-btn-hover);
-        background: var(--gradient-btn-hover);
-    }
-
-    .msg-compose .btn-send-msg:hover::after {
-        opacity: 1;
     }
 
     .msg-compose .btn-send-msg:active {
@@ -1206,7 +1214,7 @@
         right: 24px;
         z-index: 99999;
         background: var(--card-bg);
-        border: 1px solid rgba(79, 70, 229, 0.08);
+        border: 1px solid var(--border-color);
         border-radius: 16px;
         padding: 14px 20px;
         box-shadow: var(--shadow-toast);
@@ -1218,7 +1226,6 @@
         max-width: 380px;
         border-left: 4px solid var(--msg-primary);
         font-family: 'Inter', sans-serif;
-        animation: none;
     }
 
     .msg-toast.show {
@@ -1241,8 +1248,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(124, 58, 237, 0.08));
-        color: var(--msg-primary);
+        background: var(--gradient-primary);
+        color: white;
         animation: rotateIn 0.5s ease;
     }
 
@@ -1288,9 +1295,33 @@
     }
 
     @media (max-width: 768px) {
+        .msg-hero {
+            padding: 1.5rem;
+            border-radius: 16px;
+        }
+
+        .msg-hero h1 {
+            font-size: 1.3rem;
+        }
+
+        .msg-hero .hero-content {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .msg-hero .hero-actions {
+            width: 100%;
+        }
+
+        .btn-hero-primary,
+        .btn-hero-secondary {
+            width: 100%;
+            justify-content: center;
+        }
+
         .messenger-container {
             flex-direction: column;
-            height: calc(100vh - 160px);
+            height: calc(100vh - 200px);
             min-height: 400px;
             border-radius: 12px;
         }
@@ -1299,7 +1330,7 @@
             width: 100%;
             max-height: 250px;
             border-right: none;
-            border-bottom: 1px solid rgba(79, 70, 229, 0.06);
+            border-bottom: 1px solid var(--border-color);
             animation: slideInDown 0.5s ease;
         }
 
@@ -1328,7 +1359,8 @@
     }
 
     @media (max-width: 480px) {
-        .messenger-container { height: calc(100vh - 140px); }
+        .msg-hero h1 { font-size: 1.1rem; }
+        .messenger-container { height: calc(100vh - 180px); }
         .msg-sidebar { max-height: 180px; }
         .msg-sidebar-header { padding: 10px 14px; }
         .msg-sidebar-header h5 { font-size: 14px; }
@@ -1342,6 +1374,33 @@
     }
 </style>
 
+{{-- ============================================= --}}
+{{-- HERO SECTION - GRADIENT --}}
+{{-- ============================================= --}}
+<div class="msg-hero">
+    <div class="hero-content">
+        <div class="hero-left">
+            <h1><i class="fas fa-comment-dots"></i> Messages</h1>
+            <p>Communicate with other churches in your network</p>
+            <div class="hero-badge">
+                <i class="fas fa-circle" style="color: #34D399; font-size: 0.5rem;"></i>
+                <span id="heroUnreadBadge">{{ $unreadCount ?? 0 }} unread messages</span>
+            </div>
+        </div>
+        <div class="hero-actions">
+            <button class="btn-hero-primary" onclick="toggleCompose()">
+                <i class="fas fa-pen"></i> New Message
+            </button>
+            <button class="btn-hero-secondary" onclick="refreshMessages()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+    </div>
+</div>
+
+{{-- ============================================= --}}
+{{-- MESSENGER CONTAINER --}}
+{{-- ============================================= --}}
 <div class="messenger-container">
     <!-- ============================================
     SIDEBAR - CHAT LIST
@@ -1350,7 +1409,7 @@
         <div class="msg-sidebar-header">
             <div class="header-top">
                 <h5>
-                    <i class="fas fa-comment-dots"></i> Messages
+                    <i class="fas fa-comment-dots"></i> Conversations
                     <span class="badge-total" id="totalUnreadBadge">{{ $unreadCount ?? 0 }}</span>
                 </h5>
                 <div class="header-actions">
@@ -1404,7 +1463,7 @@
     <div class="msg-main">
         <!-- Chat Header -->
         <div class="msg-main-header" id="chatHeader">
-            <div class="chat-avatar" id="chatAvatar" style="background: linear-gradient(135deg, #4F46E5, #8B5CF6);">
+            <div class="chat-avatar" id="chatAvatar" style="background: var(--gradient-avatar);">
                 <i class="fas fa-church"></i>
             </div>
             <div class="chat-info">
@@ -1454,9 +1513,9 @@
     </div>
 </div>
 
-<!-- ============================================
-TOAST NOTIFICATION
-============================================ -->
+{{-- ============================================= --}}
+{{-- TOAST NOTIFICATION --}}
+{{-- ============================================= --}}
 <div class="msg-toast" id="msgToast">
     <div class="toast-icon" id="toastIcon">📨</div>
     <div class="toast-content">
@@ -1468,6 +1527,9 @@ TOAST NOTIFICATION
     </button>
 </div>
 
+{{-- ============================================= --}}
+{{-- SCRIPTS SECTION --}}
+{{-- ============================================= --}}
 <script>
     // ============================================
     // STATE
@@ -1489,9 +1551,8 @@ TOAST NOTIFICATION
         document.getElementById('toastMessage').textContent = message;
         document.getElementById('toastIcon').textContent = icon;
         
-        // Reset animation
         toast.classList.remove('show');
-        void toast.offsetWidth; // Trigger reflow
+        void toast.offsetWidth;
         toast.classList.add('show');
         
         clearTimeout(toastTimeout);
@@ -1535,40 +1596,35 @@ TOAST NOTIFICATION
         input.focus();
         input.scrollIntoView({ behavior: 'smooth', block: 'center' });
         
-        // Add animation
         input.style.animation = 'none';
         void input.offsetWidth;
         input.style.animation = 'scaleIn 0.5s ease';
     }
 
     // ============================================
-    // LOAD CONVERSATION - AUTO DISPLAY MESSAGES
+    // LOAD CONVERSATION
     // ============================================
     function loadConversation(churchId) {
         currentChurchId = churchId;
 
-        // Update active state with animation
         document.querySelectorAll('.msg-church-item').forEach(el => {
             el.classList.remove('active');
             if (el.dataset.churchId == churchId) {
                 el.classList.add('active');
                 currentChurchName = el.querySelector('.name').textContent;
-                
-                // Add highlight animation
                 el.style.animation = 'none';
                 void el.offsetWidth;
                 el.style.animation = 'slideInLeft 0.5s ease';
             }
         });
 
-        // Update header
         const church = document.querySelector(`.msg-church-item[data-church-id="${churchId}"]`);
         if (church) {
             const avatar = church.querySelector('.avatar');
             const avatarBg = avatar.style.background;
             const avatarText = avatar.textContent.trim();
 
-            document.getElementById('chatAvatar').style.background = avatarBg || 'linear-gradient(135deg, #4F46E5, #8B5CF6)';
+            document.getElementById('chatAvatar').style.background = avatarBg || 'var(--gradient-avatar)';
             document.getElementById('chatAvatar').textContent = avatarText || '?';
             document.getElementById('chatName').textContent = currentChurchName;
             document.getElementById('chatStatus').innerHTML = `
@@ -1576,16 +1632,13 @@ TOAST NOTIFICATION
             `;
             document.getElementById('chatStatus').className = 'chat-status';
             
-            // Add animation to header
             document.getElementById('chatHeader').style.animation = 'none';
             void document.getElementById('chatHeader').offsetWidth;
             document.getElementById('chatHeader').style.animation = 'slideInDown 0.5s ease';
         }
 
-        // Set receiver for compose
         document.getElementById('receiverId').value = churchId;
 
-        // Show loading
         const list = document.getElementById('messageList');
         list.innerHTML = `
             <div class="msg-empty-state-main">
@@ -1594,7 +1647,6 @@ TOAST NOTIFICATION
             </div>
         `;
 
-        // Fetch messages
         fetch(`/messages/conversation/${churchId}`)
             .then(response => response.json())
             .then(data => {
@@ -1606,7 +1658,6 @@ TOAST NOTIFICATION
                     `;
                     document.getElementById('chatStatus').className = 'chat-status online';
 
-                    // Update last message in sidebar
                     if (data.messages && data.messages.length > 0) {
                         const lastMsg = data.messages[data.messages.length - 1];
                         const lastMsgEl = document.getElementById(`lastMsg-${churchId}`);
@@ -1621,7 +1672,6 @@ TOAST NOTIFICATION
                         }
                     }
 
-                    // Remove unread badge
                     const badge = document.getElementById(`unreadBadge-${churchId}`);
                     if (badge) {
                         badge.style.animation = 'scaleIn 0.3s ease reverse';
@@ -1629,6 +1679,7 @@ TOAST NOTIFICATION
                     }
 
                     updateTotalUnread();
+                    updateHeroBadge();
                 }
             })
             .catch(error => {
@@ -1680,7 +1731,7 @@ TOAST NOTIFICATION
             }
 
             const timeStr = msgDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            const delay = index * 50; // Stagger animation
+            const delay = index * 50;
 
             html += `
                 <div class="msg-bubble ${isSent ? 'sent' : 'received'}" data-msg-id="${msg.id}" style="animation-delay: ${delay}ms;">
@@ -1704,7 +1755,7 @@ TOAST NOTIFICATION
     }
 
     // ============================================
-    // APPEND NEW MESSAGE (REAL-TIME)
+    // APPEND NEW MESSAGE
     // ============================================
     function appendNewMessage(msg) {
         const list = document.getElementById('messageList');
@@ -1747,9 +1798,7 @@ TOAST NOTIFICATION
 
         list.appendChild(bubble);
 
-        // Add sound effect (optional)
         if (!isSent) {
-            // Play notification sound if available
             try {
                 const audio = new Audio('/sounds/notification.mp3');
                 audio.play().catch(() => {});
@@ -1760,7 +1809,6 @@ TOAST NOTIFICATION
             list.scrollTop = list.scrollHeight;
         }, 100);
 
-        // Update sidebar
         const senderId = msg.sender_church_id == churchId ? msg.receiver_church_id : msg.sender_church_id;
         const lastMsgEl = document.getElementById(`lastMsg-${senderId}`);
         if (lastMsgEl) {
@@ -1773,7 +1821,6 @@ TOAST NOTIFICATION
             lastTimeEl.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }
 
-        // Update unread badge if not currently viewing
         if (currentChurchId != senderId) {
             const item = document.querySelector(`.msg-church-item[data-church-id="${senderId}"]`);
             if (item) {
@@ -1795,6 +1842,7 @@ TOAST NOTIFICATION
                     badge.style.animation = 'pop-in 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
                 }
                 updateTotalUnread();
+                updateHeroBadge();
             }
         }
     }
@@ -1828,13 +1876,11 @@ TOAST NOTIFICATION
         sendBtn.disabled = true;
         sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
-        // Clear input immediately
         document.getElementById('messageInput').value = '';
         document.getElementById('subjectInput').value = '';
         document.getElementById('subjectContainer').classList.remove('show');
         subjectVisible = false;
 
-        // Optimistic UI - add message immediately
         const optimisticMsg = {
             id: 'temp_' + Date.now(),
             sender_church_id: '{{ Auth::user()->church_id }}',
@@ -1865,7 +1911,6 @@ TOAST NOTIFICATION
 
             if (data.success) {
                 showToast('Message sent! ✅', 'Your message was delivered successfully', '✅');
-                // Update the temp message with real ID if needed
             } else {
                 showToast('Failed to send ❌', data.message || 'Something went wrong', '❌');
                 if (currentChurchId) {
@@ -1927,13 +1972,22 @@ TOAST NOTIFICATION
             }
             
             badge.style.display = total > 0 ? 'inline-block' : 'none';
-            
-            // Update header notification count
-            const notifBadge = document.querySelector('.notification-count');
-            if (notifBadge) {
-                notifBadge.textContent = total;
-                notifBadge.style.display = total > 0 ? 'flex' : 'none';
-            }
+        }
+    }
+
+    // ============================================
+    // UPDATE HERO BADGE
+    // ============================================
+    function updateHeroBadge() {
+        const badges = document.querySelectorAll('.unread-count');
+        let total = 0;
+        badges.forEach(b => {
+            total += parseInt(b.textContent) || 0;
+        });
+
+        const heroBadge = document.getElementById('heroUnreadBadge');
+        if (heroBadge) {
+            heroBadge.textContent = total + ' unread messages';
         }
     }
 
@@ -1980,7 +2034,6 @@ TOAST NOTIFICATION
                     '📨'
                 );
 
-                // Auto-display new message
                 if (currentChurchId == e.sender_id || currentChurchId == e.receiver_id) {
                     const msgData = {
                         id: e.id,
@@ -1994,7 +2047,6 @@ TOAST NOTIFICATION
                     appendNewMessage(msgData);
                 }
 
-                // Update sidebar
                 const item = document.querySelector(`.msg-church-item[data-church-id="${e.sender_id}"]`);
                 if (item) {
                     const lastMsg = document.getElementById(`lastMsg-${e.sender_id}`);
@@ -2029,10 +2081,10 @@ TOAST NOTIFICATION
                         }
                     }
 
-                    // Highlight sidebar item
                     item.classList.add('updated');
                     setTimeout(() => item.classList.remove('updated'), 1000);
                     updateTotalUnread();
+                    updateHeroBadge();
                 }
             });
     }
@@ -2069,7 +2121,6 @@ TOAST NOTIFICATION
     document.addEventListener('DOMContentLoaded', function() {
         console.log('💬 Messenger loading...');
         
-        // Check if there's a church with messages
         const items = document.querySelectorAll('.msg-church-item');
         let foundWithMessages = false;
 
@@ -2085,7 +2136,6 @@ TOAST NOTIFICATION
             }
         }
 
-        // If no church with messages, load the first one
         if (!foundWithMessages && items.length > 0) {
             const firstItem = items[0];
             const churchId = firstItem.dataset.churchId;
@@ -2094,10 +2144,9 @@ TOAST NOTIFICATION
             }
         }
 
-        // Update total unread count
         updateTotalUnread();
+        updateHeroBadge();
 
-        // Add welcome toast after load
         setTimeout(() => {
             showToast('💬 Messenger Ready', 'Click a church to start chatting', '💬');
         }, 1000);

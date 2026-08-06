@@ -200,6 +200,19 @@
         background: #f1f5f9;
     }
     
+    /* Export PDF Button - PRIMARY GRADIENT */
+    .btn-hero-export {
+        background: var(--gradient-primary);
+        box-shadow: var(--shadow-glow);
+        color: white;
+    }
+    
+    .btn-hero-export:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(79, 70, 229, 0.4);
+        color: white;
+    }
+    
     /* Stats Grid - Premium Cards */
     .stats-grid-premium {
         display: grid;
@@ -380,6 +393,10 @@
         padding: 0.8rem 1.5rem;
         border-bottom: 1px solid var(--border-color);
         background: var(--bg-tertiary);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
     }
     
     .category-header-premium h6 {
@@ -396,6 +413,23 @@
     
     .category-header-premium h6 .text-success { color: #10B981 !important; }
     .category-header-premium h6 .text-danger { color: #EF4444 !important; }
+    
+    .category-header-premium .date-range-badge {
+        font-size: 0.6rem;
+        color: var(--text-muted);
+        background: var(--bg-tertiary);
+        padding: 2px 10px;
+        border-radius: 20px;
+        border: 1px solid var(--border-color);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    .category-header-premium .date-range-badge i {
+        font-size: 0.55rem;
+        color: #4F46E5;
+    }
     
     .category-item-premium {
         display: flex;
@@ -538,6 +572,386 @@
         color: #EF4444 !important;
     }
     
+    /* ============================================
+       EXPORT MODAL STYLES
+    ============================================ */
+    .export-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(4px);
+        z-index: 99999;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .export-modal-overlay.active {
+        display: flex;
+    }
+    
+    .export-modal-content {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        border: 1px solid var(--border-color);
+    }
+    
+    .export-modal-content .modal-header-custom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .export-modal-content .modal-header-custom h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .export-modal-content .modal-header-custom h3 i {
+        color: #4F46E5;
+        margin-right: 8px;
+    }
+    
+    .export-modal-content .modal-header-custom .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .export-modal-content .modal-header-custom .close-btn:hover {
+        color: var(--text-primary);
+        transform: rotate(90deg);
+    }
+    
+    .export-section-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .export-section-group label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        font-weight: 700;
+        color: var(--text-muted);
+        display: block;
+        margin-bottom: 0.5rem;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .export-section-group .checkbox-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+    
+    .export-section-group .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.5rem 0.8rem;
+        border-radius: 10px;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    
+    .export-section-group .checkbox-item:hover {
+        border-color: #4F46E5;
+        background: rgba(79,70,229,0.05);
+    }
+    
+    .export-section-group .checkbox-item input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #4F46E5;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+    
+    .export-section-group .checkbox-item label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin: 0;
+        cursor: pointer;
+        text-transform: none;
+        letter-spacing: 0;
+    }
+    
+    .export-section-group .checkbox-item label i {
+        margin-right: 6px;
+        font-size: 0.8rem;
+    }
+    
+    .export-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    .export-actions .btn-export {
+        flex: 1;
+        padding: 0.7rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .btn-export-pdf {
+        background: var(--gradient-primary);
+        color: white;
+        box-shadow: 0 4px 16px rgba(79,70,229,0.3);
+    }
+    
+    .btn-export-pdf:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(79,70,229,0.4);
+    }
+    
+    .btn-export-print {
+        background: var(--gradient-success);
+        color: white;
+        box-shadow: 0 4px 16px rgba(16,185,129,0.3);
+    }
+    
+    .btn-export-print:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(16,185,129,0.4);
+    }
+    
+    .btn-export-cancel {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+    
+    .btn-export-cancel:hover {
+        background: var(--hover-bg);
+        transform: translateY(-2px);
+    }
+    
+    .select-all-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.5rem 0.8rem;
+        border-radius: 10px;
+        background: rgba(79,70,229,0.05);
+        border: 1px solid rgba(79,70,229,0.15);
+        margin-bottom: 1rem;
+        cursor: pointer;
+    }
+    
+    .select-all-row input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #4F46E5;
+        cursor: pointer;
+    }
+    
+    .select-all-row label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+        cursor: pointer;
+    }
+    
+    /* ============================================
+       PDF EXPORT CONTENT STYLES
+    ============================================ */
+    .pdf-export-wrapper {
+        display: none;
+        background: white;
+        padding: 30px;
+        max-width: 1100px;
+        margin: 0 auto;
+        font-family: 'Inter', Arial, sans-serif;
+    }
+    
+    .pdf-export-wrapper .pdf-header {
+        text-align: center;
+        padding-bottom: 20px;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #4F46E5;
+    }
+    
+    .pdf-export-wrapper .pdf-header h1 {
+        font-size: 24px;
+        font-weight: 800;
+        color: #4F46E5;
+        margin: 0 0 5px 0;
+    }
+    
+    .pdf-export-wrapper .pdf-header p {
+        color: #666;
+        margin: 0;
+        font-size: 14px;
+    }
+    
+    .pdf-export-wrapper .pdf-header .pdf-date {
+        font-size: 12px;
+        color: #999;
+        margin-top: 5px;
+    }
+    
+    .pdf-export-wrapper .pdf-section {
+        margin-bottom: 25px;
+        page-break-inside: avoid;
+    }
+    
+    .pdf-export-wrapper .pdf-section .pdf-section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #4F46E5;
+        padding-bottom: 8px;
+        margin-bottom: 12px;
+        border-bottom: 2px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .pdf-export-wrapper .pdf-section .pdf-section-title i {
+        color: #4F46E5;
+    }
+    
+    .pdf-export-wrapper .pdf-section .pdf-section-title .pdf-date-badge {
+        font-size: 11px;
+        font-weight: 600;
+        color: #6b7280;
+        background: #f9fafb;
+        padding: 2px 12px;
+        border-radius: 20px;
+        border: 1px solid #e5e7eb;
+    }
+    
+    .pdf-export-wrapper .pdf-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+    
+    .pdf-export-wrapper .pdf-stat-card {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 15px 20px;
+        text-align: center;
+    }
+    
+    .pdf-export-wrapper .pdf-stat-card .pdf-stat-value {
+        font-size: 22px;
+        font-weight: 800;
+        color: #1a1a2e;
+    }
+    
+    .pdf-export-wrapper .pdf-stat-card .pdf-stat-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #6b7280;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    
+    .pdf-export-wrapper .pdf-stat-card .pdf-stat-change {
+        font-size: 11px;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+    
+    .pdf-export-wrapper .pdf-stat-card .pdf-stat-change.positive { color: #10B981; }
+    .pdf-export-wrapper .pdf-stat-card .pdf-stat-change.negative { color: #EF4444; }
+    
+    .pdf-export-wrapper .pdf-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+    
+    .pdf-export-wrapper .pdf-table thead th {
+        background: #f9fafb;
+        border-bottom: 2px solid #e5e7eb;
+        padding: 8px 12px;
+        text-align: left;
+        font-weight: 700;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #6b7280;
+        letter-spacing: 0.5px;
+    }
+    
+    .pdf-export-wrapper .pdf-table tbody td {
+        padding: 8px 12px;
+        border-bottom: 1px solid #f0f0f0;
+        color: #1a1a2e;
+    }
+    
+    .pdf-export-wrapper .pdf-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .pdf-export-wrapper .pdf-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+    
+    .pdf-export-wrapper .pdf-badge.income {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    
+    .pdf-export-wrapper .pdf-badge.expense {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    
+    .pdf-export-wrapper .pdf-footer {
+        text-align: center;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+        font-size: 12px;
+        color: #999;
+    }
+    
+    .pdf-export-wrapper .pdf-footer strong {
+        color: #4F46E5;
+    }
+    
     /* Modal Styles - Premium */
     .modal-content-premium {
         background: var(--card-bg);
@@ -564,6 +978,16 @@
         color: var(--text-muted);
         font-size: 0.75rem;
         margin: 0;
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .modal-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid var(--border-color);
+        background: var(--bg-tertiary);
     }
     
     /* Category Pills - Premium */
@@ -973,12 +1397,20 @@
             padding: 0.8rem 1rem;
         }
         
-        .modal-body-premium {
+        .modal-body {
             padding: 1rem;
         }
         
         .search-bar-premium {
             max-width: 100%;
+        }
+        
+        .export-section-group .checkbox-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .export-actions {
+            flex-direction: column;
         }
     }
     
@@ -1001,8 +1433,7 @@
 {{-- ============================================= --}}
 {{-- MAIN CONTENT --}}
 {{-- ============================================= --}}
-<div class="container-fluid px-0">
-
+<div class="container-fluid px-0" id="reportContent">
     {{-- ============================================ --}}
     {{-- HERO SECTION - MULTI-COLOR GRADIENT --}}
     {{-- ============================================ --}}
@@ -1025,6 +1456,9 @@
                 <button class="btn-hero btn-hero-transactions" data-bs-toggle="modal" data-bs-target="#transactionsModal">
                     <i class="fas fa-list"></i> All Transactions
                 </button>
+                <button class="btn-hero btn-hero-export" onclick="openExportModal()">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </button>
             </div>
         </div>
     </div>
@@ -1032,13 +1466,13 @@
     {{-- ============================================ --}}
     {{-- STATS CARDS - PREMIUM --}}
     {{-- ============================================ --}}
-    <div class="stats-grid-premium">
+    <div class="stats-grid-premium" id="statsSection">
         <div class="stat-card-premium green">
             <div class="stat-top">
                 <span class="stat-label">Total Income</span>
                 <div class="stat-icon-wrap"><i class="fas fa-arrow-down"></i></div>
             </div>
-            <div class="stat-value amount-positive-premium">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
+            <div class="stat-value amount-positive-premium" id="totalIncome">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
             <div class="stat-change positive"><i class="fas fa-arrow-up"></i> All time</div>
         </div>
         
@@ -1047,7 +1481,7 @@
                 <span class="stat-label">Total Expenses</span>
                 <div class="stat-icon-wrap"><i class="fas fa-arrow-up"></i></div>
             </div>
-            <div class="stat-value amount-negative-premium">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
+            <div class="stat-value amount-negative-premium" id="totalExpense">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
             <div class="stat-change negative"><i class="fas fa-arrow-down"></i> All time</div>
         </div>
         
@@ -1056,7 +1490,7 @@
                 <span class="stat-label">Net Balance</span>
                 <div class="stat-icon-wrap"><i class="fas fa-calculator"></i></div>
             </div>
-            <div class="stat-value {{ ($balance ?? 0) >= 0 ? 'amount-positive-premium' : 'amount-negative-premium' }}">
+            <div class="stat-value {{ ($balance ?? 0) >= 0 ? 'amount-positive-premium' : 'amount-negative-premium' }}" id="netBalance">
                 {{ ($balance ?? 0) >= 0 ? '₱' : '-₱' }}{{ number_format(abs($balance ?? 0), 2) }}
             </div>
             <div class="stat-change {{ ($balance ?? 0) >= 0 ? 'positive' : 'negative' }}">
@@ -1069,7 +1503,7 @@
                 <span class="stat-label">Church Balance</span>
                 <div class="stat-icon-wrap"><i class="fas fa-church"></i></div>
             </div>
-            <div class="stat-value {{ ($allTimeBalance ?? 0) >= 0 ? 'amount-positive-premium' : 'amount-negative-premium' }}">
+            <div class="stat-value {{ ($allTimeBalance ?? 0) >= 0 ? 'amount-positive-premium' : 'amount-negative-premium' }}" id="churchBalance">
                 {{ ($allTimeBalance ?? 0) >= 0 ? '₱' : '-₱' }}{{ number_format(abs($allTimeBalance ?? 0), 2) }}
             </div>
             <div class="stat-change {{ ($allTimeBalance ?? 0) >= 0 ? 'positive' : 'negative' }}">
@@ -1081,7 +1515,7 @@
     {{-- ============================================ --}}
     {{-- SUMMARY BANNER - PREMIUM --}}
     {{-- ============================================ --}}
-    <div class="summary-banner-premium">
+    <div class="summary-banner-premium" id="summarySection">
         <div>
             <h4><i class="fas fa-chart-line me-1" style="color: #10B981;"></i> Financial Summary</h4>
             <div class="amount">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
@@ -1096,12 +1530,37 @@
     </div>
 
     {{-- ============================================ --}}
-    {{-- CATEGORY GRID - PREMIUM --}}
+    {{-- CATEGORY GRID - PREMIUM WITH DATE RANGE --}}
     {{-- ============================================ --}}
-    <div class="category-grid-premium">
-        <div class="category-card-premium">
+    <div class="category-grid-premium" id="categorySection">
+        <div class="category-card-premium" id="incomeCategoryCard">
             <div class="category-header-premium">
                 <h6><i class="fas fa-chart-pie text-success"></i> Income Breakdown</h6>
+                <span class="date-range-badge">
+                    <i class="fas fa-calendar-alt"></i>
+                    @php
+                        // Get date range from the transactions data passed from controller
+                        $incomeDates = [];
+                        if(isset($incomeByCategory) && !empty($incomeByCategory)) {
+                            // Try to get from recent transactions
+                            if(isset($recentTransactions)) {
+                                foreach($recentTransactions as $t) {
+                                    if($t->type == 'income' && $t->date) {
+                                        $incomeDates[] = $t->date;
+                                    }
+                                }
+                            }
+                        }
+                        if(!empty($incomeDates)) {
+                            sort($incomeDates);
+                            $firstIncome = $incomeDates[0];
+                            $lastIncome = end($incomeDates);
+                            echo \Carbon\Carbon::parse($firstIncome)->format('M d, Y') . ' - ' . \Carbon\Carbon::parse($lastIncome)->format('M d, Y');
+                        } else {
+                            echo 'No records yet';
+                        }
+                    @endphp
+                </span>
             </div>
             @forelse(($incomeByCategory ?? []) as $category => $amount)
                 <div class="category-item-premium">
@@ -1120,9 +1579,34 @@
             </div>
         </div>
 
-        <div class="category-card-premium">
+        <div class="category-card-premium" id="expenseCategoryCard">
             <div class="category-header-premium">
                 <h6><i class="fas fa-chart-pie text-danger"></i> Expense Breakdown</h6>
+                <span class="date-range-badge">
+                    <i class="fas fa-calendar-alt"></i>
+                    @php
+                        // Get date range from the transactions data passed from controller
+                        $expenseDates = [];
+                        if(isset($expenseByCategory) && !empty($expenseByCategory)) {
+                            // Try to get from recent transactions
+                            if(isset($recentTransactions)) {
+                                foreach($recentTransactions as $t) {
+                                    if($t->type == 'expense' && $t->date) {
+                                        $expenseDates[] = $t->date;
+                                    }
+                                }
+                            }
+                        }
+                        if(!empty($expenseDates)) {
+                            sort($expenseDates);
+                            $firstExpense = $expenseDates[0];
+                            $lastExpense = end($expenseDates);
+                            echo \Carbon\Carbon::parse($firstExpense)->format('M d, Y') . ' - ' . \Carbon\Carbon::parse($lastExpense)->format('M d, Y');
+                        } else {
+                            echo 'No records yet';
+                        }
+                    @endphp
+                </span>
             </div>
             @forelse(($expenseByCategory ?? []) as $category => $amount)
                 <div class="category-item-premium">
@@ -1145,7 +1629,7 @@
     {{-- ============================================ --}}
     {{-- RECENT TRANSACTIONS TABLE - PREMIUM --}}
     {{-- ============================================ --}}
-    <div class="table-container-premium">
+    <div class="table-container-premium" id="transactionsSection">
         <div class="table-header-premium">
             <h6><i class="fas fa-history"></i> Recent Transactions</h6>
             <span style="font-size: 0.65rem; color: var(--text-muted);">
@@ -1153,7 +1637,7 @@
             </span>
         </div>
         <div class="table-responsive">
-            <table class="table-premium table">
+            <table class="table-premium table" id="recentTransactionsTable">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -1212,6 +1696,150 @@
 </div>
 
 {{-- ============================================ --}}
+{{-- EXPORT MODAL --}}
+{{-- ============================================ --}}
+<div class="export-modal-overlay" id="exportModal">
+    <div class="export-modal-content">
+        <div class="modal-header-custom">
+            <h3><i class="fas fa-file-export"></i> Export Inventory Report</h3>
+            <button class="close-btn" onclick="closeExportModal()">&times;</button>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">
+                Select the sections you want to include in your inventory report.
+            </p>
+        </div>
+        
+        <div class="export-section-group">
+            <div class="select-all-row" onclick="toggleAllSections()">
+                <input type="checkbox" id="selectAll" checked>
+                <label for="selectAll"><i class="fas fa-check-circle"></i> Select All Sections</label>
+            </div>
+            
+            <div class="checkbox-grid">
+                <div class="checkbox-item">
+                    <input type="checkbox" class="section-checkbox" value="stats" checked>
+                    <label><i class="fas fa-chart-pie"></i> Stats Cards</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" class="section-checkbox" value="summary" checked>
+                    <label><i class="fas fa-chart-line"></i> Summary</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" class="section-checkbox" value="categories" checked>
+                    <label><i class="fas fa-tags"></i> Categories</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" class="section-checkbox" value="transactions" checked>
+                    <label><i class="fas fa-list"></i> Recent Transactions</label>
+                </div>
+            </div>
+        </div>
+        
+        <div style="padding: 0.8rem 1rem; background: rgba(79,70,229,0.05); border-radius: 10px; border: 1px solid rgba(79,70,229,0.1); margin-bottom: 1.5rem;">
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">
+                <i class="fas fa-info-circle" style="color: #4F46E5;"></i> 
+                Only the sections you select will appear in the exported PDF.
+            </p>
+        </div>
+        
+        <div class="export-actions">
+            <button class="btn-export btn-export-cancel" onclick="closeExportModal()">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+            <button class="btn-export btn-export-print" onclick="exportPrint()">
+                <i class="fas fa-print"></i> Print
+            </button>
+            <button class="btn-export btn-export-pdf" onclick="exportPDF()">
+                <i class="fas fa-file-pdf"></i> Export PDF
+            </button>
+        </div>
+    </div>
+</div>
+
+{{-- ============================================ --}}
+{{-- PDF EXPORT CONTAINER (Hidden, used for generation) --}}
+{{-- ============================================ --}}
+<div class="pdf-export-wrapper" id="pdfExportContainer">
+    <div class="pdf-header">
+        <h1>Inventory Management Report</h1>
+        <p>Church financial overview - Income, Expenses, and Transactions</p>
+        <div class="pdf-date">Generated: {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}</div>
+    </div>
+    
+    <div id="pdfContent">
+        <!-- Stats Section -->
+        <div class="pdf-section" id="pdf-stats">
+            <div class="pdf-section-title"><i class="fas fa-chart-pie"></i> Financial Overview</div>
+            <div class="pdf-stats-grid" id="pdfStatsGrid">
+                <!-- Filled by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Summary Section -->
+        <div class="pdf-section" id="pdf-summary" style="display:none;">
+            <div class="pdf-section-title"><i class="fas fa-chart-line"></i> Summary</div>
+            <div id="pdfSummaryContent">
+                <!-- Filled by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Categories Section -->
+        <div class="pdf-section" id="pdf-categories" style="display:none;">
+            <div class="pdf-section-title">
+                <i class="fas fa-tags"></i> Category Breakdown
+                <span class="pdf-date-badge" id="pdfCategoryDateRange">
+                    @php
+                        $allDates = [];
+                        if(isset($recentTransactions)) {
+                            foreach($recentTransactions as $t) {
+                                if($t->date) {
+                                    $allDates[] = $t->date;
+                                }
+                            }
+                        }
+                        if(!empty($allDates)) {
+                            sort($allDates);
+                            echo \Carbon\Carbon::parse($allDates[0])->format('M d, Y') . ' - ' . \Carbon\Carbon::parse(end($allDates))->format('M d, Y');
+                        } else {
+                            echo 'No records yet';
+                        }
+                    @endphp
+                </span>
+            </div>
+            <div id="pdfCategoriesContent">
+                <!-- Filled by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Transactions Section -->
+        <div class="pdf-section" id="pdf-transactions" style="display:none;">
+            <div class="pdf-section-title"><i class="fas fa-list"></i> Recent Transactions</div>
+            <table class="pdf-table" id="pdfTransactionsTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th style="text-align:right;">Amount</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="pdfTransactionsBody">
+                    <!-- Filled by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="pdf-footer">
+        Generated by <strong>TINC Church Management System</strong> • {{ \Carbon\Carbon::now()->format('Y') }}
+    </div>
+</div>
+
+{{-- ============================================ --}}
 {{-- INCOME MODAL - PREMIUM --}}
 {{-- ============================================ --}}
 <div class="modal fade" id="incomeModal" tabindex="-1">
@@ -1229,7 +1857,7 @@
             </div>
             <form action="{{ route('inventory.store') }}" method="POST">
                 @csrf
-                <div class="modal-body" style="padding: 1.5rem;">
+                <div class="modal-body">
                     <input type="hidden" name="type" value="income">
                     
                     <div class="mb-3">
@@ -1309,7 +1937,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); background: var(--bg-tertiary);">
+                <div class="modal-footer">
                     <button type="button" class="btn-secondary-premium" data-bs-dismiss="modal">
                         <i class="fas fa-times me-1"></i> Cancel
                     </button>
@@ -1340,7 +1968,7 @@
             </div>
             <form action="{{ route('inventory.store') }}" method="POST">
                 @csrf
-                <div class="modal-body" style="padding: 1.5rem;">
+                <div class="modal-body">
                     <input type="hidden" name="type" value="expense">
                     
                     <div class="mb-3">
@@ -1435,7 +2063,7 @@
                         </div>
                     @endif
                 </div>
-                <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); background: var(--bg-tertiary);">
+                <div class="modal-footer">
                     <button type="button" class="btn-secondary-premium" data-bs-dismiss="modal">
                         <i class="fas fa-times me-1"></i> Cancel
                     </button>
@@ -1573,12 +2201,6 @@
                 </div>
             </div>
             <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); background: var(--bg-tertiary);">
-                <button class="btn-secondary-premium btn-sm" onclick="exportToCSV()" style="padding: 0.3rem 0.8rem;">
-                    <i class="fas fa-file-excel me-1"></i> Export CSV
-                </button>
-                <button class="btn-secondary-premium btn-sm" onclick="window.print()" style="padding: 0.3rem 0.8rem;">
-                    <i class="fas fa-print me-1"></i> Print
-                </button>
                 <button type="button" class="btn-primary-premium" data-bs-dismiss="modal">
                     <i class="fas fa-times me-1"></i> Close
                 </button>
@@ -1590,8 +2212,12 @@
 {{-- ============================================= --}}
 {{-- SCRIPTS SECTION --}}
 {{-- ============================================= --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // Income Category Selection
+    // ============================================
+    // INVENTORY CATEGORY SELECTION
+    // ============================================
     function selectIncomeCategory(element, category) {
         document.querySelectorAll('#incomeModal .category-pill-premium').forEach(pill => {
             pill.classList.remove('selected');
@@ -1600,7 +2226,6 @@
         document.getElementById('incomeCategory').value = category;
     }
     
-    // Expense Category Selection
     function selectExpenseCategory(element, category) {
         document.querySelectorAll('#expenseModal .category-pill-premium').forEach(pill => {
             pill.classList.remove('selected');
@@ -1609,7 +2234,9 @@
         document.getElementById('expenseCategory').value = category;
     }
     
-    // Update Income Preview
+    // ============================================
+    // UPDATE PREVIEWS
+    // ============================================
     function updateIncomePreview() {
         let amount = parseFloat(document.getElementById('incomeAmount')?.value) || 0;
         let preview = document.getElementById('incomePreviewAmount');
@@ -1618,7 +2245,6 @@
         }
     }
     
-    // Update Expense Preview
     function updateExpensePreview() {
         let amount = parseFloat(document.getElementById('expenseAmount')?.value) || 0;
         let currentBalance = {{ $allTimeBalance ?? 0 }};
@@ -1648,7 +2274,303 @@
         }
     }
     
-    // Filter Transactions
+    // ============================================
+    // EXPORT MODAL FUNCTIONS
+    // ============================================
+    function openExportModal() {
+        document.getElementById('exportModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeExportModal() {
+        document.getElementById('exportModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    function toggleAllSections() {
+        const selectAll = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.section-checkbox');
+        checkboxes.forEach(cb => cb.checked = selectAll.checked);
+    }
+    
+    document.querySelectorAll('.section-checkbox').forEach(cb => {
+        cb.addEventListener('change', function() {
+            const allChecked = document.querySelectorAll('.section-checkbox:checked').length === document.querySelectorAll('.section-checkbox').length;
+            document.getElementById('selectAll').checked = allChecked;
+        });
+    });
+    
+    function getSelectedSections() {
+        const selected = [];
+        document.querySelectorAll('.section-checkbox:checked').forEach(cb => {
+            selected.push(cb.value);
+        });
+        return selected;
+    }
+    
+    // ============================================
+    // BUILD PDF CONTENT
+    // ============================================
+    function buildPDFContent(sections) {
+        // Stats
+        if (sections.includes('stats')) {
+            document.getElementById('pdf-stats').style.display = 'block';
+            const grid = document.getElementById('pdfStatsGrid');
+            const stats = [
+                { label: 'Total Income', value: document.getElementById('totalIncome')?.innerText || '₱0', change: 'Money received', positive: true },
+                { label: 'Total Expenses', value: document.getElementById('totalExpense')?.innerText || '₱0', change: 'Money spent', positive: false },
+                { label: 'Net Balance', value: document.getElementById('netBalance')?.innerText || '₱0', change: 'Surplus', positive: true },
+                { label: 'Church Balance', value: document.getElementById('churchBalance')?.innerText || '₱0', change: 'Available', positive: true }
+            ];
+            grid.innerHTML = stats.map(s => `
+                <div class="pdf-stat-card">
+                    <div class="pdf-stat-label">${s.label}</div>
+                    <div class="pdf-stat-value">${s.value}</div>
+                    <div class="pdf-stat-change ${s.positive ? 'positive' : 'negative'}">${s.change}</div>
+                </div>
+            `).join('');
+        } else {
+            document.getElementById('pdf-stats').style.display = 'none';
+        }
+        
+        // Summary
+        if (sections.includes('summary')) {
+            document.getElementById('pdf-summary').style.display = 'block';
+            const summary = document.getElementById('pdfSummaryContent');
+            const income = document.getElementById('totalIncome')?.innerText || '₱0';
+            const expense = document.getElementById('totalExpense')?.innerText || '₱0';
+            const balance = document.getElementById('netBalance')?.innerText || '₱0';
+            summary.innerHTML = `
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:15px;">
+                    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:15px 20px;text-align:center;">
+                        <div style="font-size:11px;text-transform:uppercase;color:#6b7280;font-weight:600;">Total Income</div>
+                        <div style="font-size:22px;font-weight:800;color:#10B981;">${income}</div>
+                    </div>
+                    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:15px 20px;text-align:center;">
+                        <div style="font-size:11px;text-transform:uppercase;color:#6b7280;font-weight:600;">Total Expenses</div>
+                        <div style="font-size:22px;font-weight:800;color:#EF4444;">${expense}</div>
+                    </div>
+                    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:15px 20px;text-align:center;">
+                        <div style="font-size:11px;text-transform:uppercase;color:#6b7280;font-weight:600;">Net Balance</div>
+                        <div style="font-size:22px;font-weight:800;color:#4F46E5;">${balance}</div>
+                    </div>
+                </div>
+            `;
+        } else {
+            document.getElementById('pdf-summary').style.display = 'none';
+        }
+        
+        // Categories
+        if (sections.includes('categories')) {
+            document.getElementById('pdf-categories').style.display = 'block';
+            const content = document.getElementById('pdfCategoriesContent');
+            
+            // Income Categories
+            let incomeHtml = '<div style="margin-bottom:15px;"><h4 style="font-size:14px;color:#10B981;margin:0 0 10px 0;">Income Categories</h4>';
+            const incomeItems = document.querySelectorAll('#incomeCategoryCard .category-item-premium');
+            if (incomeItems.length > 0) {
+                incomeHtml += '<table class="pdf-table"><thead><tr><th>Category</th><th style="text-align:right;">Amount</th></tr></thead><tbody>';
+                incomeItems.forEach(item => {
+                    const name = item.querySelector('.category-name-premium')?.innerText || '';
+                    const amount = item.querySelector('.category-amount-premium')?.innerText || '₱0.00';
+                    if (!name.includes('No income')) {
+                        incomeHtml += `<tr><td>${name}</td><td style="text-align:right;color:#10B981;">${amount}</td></tr>`;
+                    }
+                });
+                const total = document.querySelector('#incomeCategoryCard .summary-row-premium .amount-positive-premium')?.innerText || '₱0.00';
+                incomeHtml += `<tr style="font-weight:700;border-top:2px solid #e5e7eb;"><td>Total Income</td><td style="text-align:right;color:#10B981;">${total}</td></tr>`;
+                incomeHtml += '</tbody></table>';
+            } else {
+                incomeHtml += '<p style="color:#999;">No income records yet</p>';
+            }
+            incomeHtml += '</div>';
+            
+            // Expense Categories
+            let expenseHtml = '<div><h4 style="font-size:14px;color:#EF4444;margin:0 0 10px 0;">Expense Categories</h4>';
+            const expenseItems = document.querySelectorAll('#expenseCategoryCard .category-item-premium');
+            if (expenseItems.length > 0) {
+                expenseHtml += '<table class="pdf-table"><thead><tr><th>Category</th><th style="text-align:right;">Amount</th></tr></thead><tbody>';
+                expenseItems.forEach(item => {
+                    const name = item.querySelector('.category-name-premium')?.innerText || '';
+                    const amount = item.querySelector('.category-amount-premium')?.innerText || '₱0.00';
+                    if (!name.includes('No expense')) {
+                        expenseHtml += `<tr><td>${name}</td><td style="text-align:right;color:#EF4444;">${amount}</td></tr>`;
+                    }
+                });
+                const total = document.querySelector('#expenseCategoryCard .summary-row-premium .amount-negative-premium')?.innerText || '₱0.00';
+                expenseHtml += `<tr style="font-weight:700;border-top:2px solid #e5e7eb;"><td>Total Expenses</td><td style="text-align:right;color:#EF4444;">${total}</td></tr>`;
+                expenseHtml += '</tbody></table>';
+            } else {
+                expenseHtml += '<p style="color:#999;">No expense records yet</p>';
+            }
+            expenseHtml += '</div>';
+            
+            content.innerHTML = incomeHtml + expenseHtml;
+        } else {
+            document.getElementById('pdf-categories').style.display = 'none';
+        }
+        
+        // Transactions
+        if (sections.includes('transactions')) {
+            document.getElementById('pdf-transactions').style.display = 'block';
+            const body = document.getElementById('pdfTransactionsBody');
+            const rows = document.querySelectorAll('#recentTransactionsTable tbody tr');
+            let html = '';
+            rows.forEach(row => {
+                if (row.querySelector('td') && !row.innerText.includes('No transactions')) {
+                    const cells = row.querySelectorAll('td');
+                    const type = cells[3]?.innerText.trim() || '';
+                    const isIncome = type.includes('Income');
+                    html += `
+                        <tr>
+                            <td>${cells[0]?.innerText || ''}</td>
+                            <td>${cells[1]?.innerText || ''}</td>
+                            <td>${cells[2]?.innerText || ''}</td>
+                            <td><span class="pdf-badge ${isIncome ? 'income' : 'expense'}">${isIncome ? 'Income' : 'Expense'}</span></td>
+                            <td style="text-align:right; font-weight:700; color:${isIncome ? '#10B981' : '#EF4444'};">${cells[4]?.innerText || ''}</td>
+                            <td>${cells[5]?.innerText || ''}</td>
+                        </tr>
+                    `;
+                }
+            });
+            body.innerHTML = html || '<tr><td colspan="6" style="text-align:center; color:#999; padding:20px;">No transactions found</td></tr>';
+        } else {
+            document.getElementById('pdf-transactions').style.display = 'none';
+        }
+    }
+    
+    // ============================================
+    // EXPORT FUNCTIONS
+    // ============================================
+    function exportPrint() {
+        const sections = getSelectedSections();
+        if (sections.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Selection',
+                text: 'Please select at least one section to export.',
+                confirmButtonColor: '#4F46E5',
+                background: 'var(--card-bg)',
+                color: 'var(--text-primary)'
+            });
+            return;
+        }
+        
+        closeExportModal();
+        
+        buildPDFContent(sections);
+        const container = document.getElementById('pdfExportContainer');
+        container.style.display = 'block';
+        
+        Swal.fire({
+            title: 'Preparing Print...',
+            text: 'Please wait...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); },
+            background: 'var(--card-bg)',
+            color: 'var(--text-primary)'
+        });
+        
+        setTimeout(() => {
+            Swal.close();
+            window.print();
+            setTimeout(() => {
+                container.style.display = 'none';
+            }, 1000);
+        }, 500);
+    }
+    
+    function exportPDF() {
+        const sections = getSelectedSections();
+        if (sections.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Selection',
+                text: 'Please select at least one section to export.',
+                confirmButtonColor: '#4F46E5',
+                background: 'var(--card-bg)',
+                color: 'var(--text-primary)'
+            });
+            return;
+        }
+        
+        closeExportModal();
+        
+        buildPDFContent(sections);
+        const container = document.getElementById('pdfExportContainer');
+        container.style.display = 'block';
+        
+        Swal.fire({
+            title: 'Generating PDF...',
+            text: 'Please wait...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); },
+            background: 'var(--card-bg)',
+            color: 'var(--text-primary)'
+        });
+        
+        const opt = {
+            margin:        [10, 10, 10, 10],
+            filename:     'Inventory_Report_' + new Date().toISOString().slice(0,10) + '.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { 
+                scale: 2, 
+                useCORS: true,
+                letterRendering: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            },
+            jsPDF:        { 
+                unit: 'mm', 
+                format: 'a4', 
+                orientation: 'portrait' 
+            }
+        };
+        
+        html2pdf().set(opt).from(container).save().then(function() {
+            container.style.display = 'none';
+            Swal.close();
+            Swal.fire({
+                icon: 'success',
+                title: 'PDF Exported!',
+                text: 'Your inventory report has been downloaded successfully.',
+                timer: 2000,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end',
+                background: 'var(--card-bg)',
+                color: 'var(--text-primary)'
+            });
+        }).catch(function(err) {
+            container.style.display = 'none';
+            Swal.close();
+            Swal.fire({
+                icon: 'error',
+                title: 'Export Failed',
+                text: err.message || 'Something went wrong. Please try again.',
+                confirmButtonColor: '#EF4444',
+                background: 'var(--card-bg)',
+                color: 'var(--text-primary)'
+            });
+        });
+    }
+    
+    // Close modal on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeExportModal();
+        }
+    });
+    
+    document.getElementById('exportModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeExportModal();
+        }
+    });
+    
+    // ============================================
+    // FILTER TRANSACTIONS
+    // ============================================
     function filterTransactions(type, event) {
         if (event) {
             document.querySelectorAll('.filter-tab-premium').forEach(tab => {
@@ -1678,7 +2600,9 @@
         }
     }
     
-    // Search Transactions
+    // ============================================
+    // SEARCH TRANSACTIONS
+    // ============================================
     function searchTransactions() {
         const searchTerm = document.getElementById('transactionSearch').value.toLowerCase();
         const rows = document.querySelectorAll('#transactionsTableBody tr');
@@ -1700,33 +2624,9 @@
         }
     }
     
-    // Export to CSV
-    function exportToCSV() {
-        const rows = document.querySelectorAll('#transactionsTableBody tr');
-        let csvContent = "Date,Description,Category,Type,Amount,Notes\n";
-        
-        rows.forEach(row => {
-            if (row.style.display !== 'none') {
-                const cells = row.querySelectorAll('td');
-                const rowData = [];
-                cells.forEach(cell => {
-                    let text = cell.innerText.replace(/,/g, ';');
-                    rowData.push(text);
-                });
-                csvContent += rowData.join(',') + "\n";
-            }
-        });
-        
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.href = url;
-        link.download = 'transactions_export.csv';
-        link.click();
-        URL.revokeObjectURL(url);
-    }
-    
-    // Initialize on modal open
+    // ============================================
+    // INITIALIZE ON MODAL OPEN
+    // ============================================
     document.getElementById('incomeModal')?.addEventListener('shown.bs.modal', function() {
         updateIncomePreview();
     });
