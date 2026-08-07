@@ -831,9 +831,15 @@
                 <a href="{{ route('members.create') }}" class="btn-hero btn-hero-white">
                     <i class="fas fa-user-plus"></i> Add Member
                 </a>
-                <a href="{{ route('members.index', ['role' => 'all']) }}" class="btn-hero btn-hero-ghost">
-                    <i class="fas fa-sync-alt"></i> Refresh
-                </a>
+                @if($isDeceasedFilter)
+                    <a href="{{ route('members.index') }}" class="btn-hero btn-hero-ghost">
+                        <i class="fas fa-arrow-left"></i> Back to Active
+                    </a>
+                @else
+                    <a href="{{ route('members.index', ['filter' => 'deceased']) }}" class="btn-hero btn-hero-ghost">
+                        <i class="fas fa-cross"></i> View Deceased
+                    </a>
+                @endif
             </div>
         </div>
     </div>
@@ -847,7 +853,7 @@
                 <span class="stat-label">Active Members</span>
                 <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
             </div>
-            <div class="stat-value">{{ number_format($totalMembers ?? $members->total() ?? 0) }}</div>
+            <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
             <div class="stat-change positive"><i class="fas fa-arrow-up"></i> Active members</div>
         </div>
         
@@ -903,7 +909,11 @@
             <div class="col-md-6 text-md-end mt-3 mt-md-0">
                 <span class="total-badge-modern">
                     <i class="fas fa-church"></i>
-                    Total Active: {{ number_format($members->total() ?? 0) }}
+                    @if($isDeceasedFilter)
+                        Total Deceased: {{ number_format($deceasedMembers->total() ?? 0) }}
+                    @else
+                        Total Active: {{ number_format($members->total() ?? 0) }}
+                    @endif
                 </span>
             </div>
         </div>
@@ -913,11 +923,11 @@
     {{-- TABS NAVIGATION - SAME AS PROFILE --}}
     {{-- ============================================ --}}
     <div class="member-tabs-modern">
-        <button class="member-tab-modern active" onclick="switchTable('active')">
+        <button class="member-tab-modern {{ !$isDeceasedFilter ? 'active' : '' }}" onclick="window.location.href='{{ route('members.index') }}'">
             <i class="fas fa-user-friends me-2"></i>Active
-            <span class="badge-modern">{{ number_format($members->total() ?? 0) }}</span>
+            <span class="badge-modern">{{ number_format($totalMembers ?? 0) }}</span>
         </button>
-        <button class="member-tab-modern" onclick="switchTable('deceased')">
+        <button class="member-tab-modern {{ $isDeceasedFilter ? 'active' : '' }}" onclick="window.location.href='{{ route('members.index', ['filter' => 'deceased']) }}'">
             <i class="fas fa-cross me-2"></i>Deceased
             <span class="badge-modern">{{ number_format($deceasedCount ?? 0) }}</span>
         </button>
@@ -926,7 +936,7 @@
     {{-- ============================================ --}}
     {{-- ACTIVE MEMBERS TABLE --}}
     {{-- ============================================ --}}
-    <div id="activeMembersTable" class="table-section-modern active-section">
+    <div id="activeMembersTable" class="table-section-modern {{ !$isDeceasedFilter ? 'active-section' : '' }}">
         <div class="table-container-modern">
             <div class="table-responsive">
                 <table class="table-modern table">
@@ -1059,7 +1069,7 @@
                                 <td colspan="7">
                                     <div class="empty-state-modern">
                                         <i class="fas fa-users"></i>
-                                        <h5>No Members Yet</h5>
+                                        <h5>No Active Members Yet</h5>
                                         <p>Get started by adding your first church member to the system.</p>
                                         <a href="{{ route('members.create') }}" class="btn-add-modern">
                                             <i class="fas fa-plus me-2"></i>Add Your First Member
@@ -1075,7 +1085,7 @@
             @if($members->hasPages())
             <div class="pagination-container-modern">
                 <div class="pagination-info-modern">
-                    Showing <strong>{{ $members->firstItem() }}</strong> to <strong>{{ $members->lastItem() }}</strong> of <strong>{{ $members->total() }}</strong> members
+                    Showing <strong>{{ $members->firstItem() }}</strong> to <strong>{{ $members->lastItem() }}</strong> of <strong>{{ $members->total() }}</strong> active members
                 </div>
                 {{ $members->links('pagination::bootstrap-5') }}
             </div>
@@ -1086,7 +1096,7 @@
     {{-- ============================================ --}}
     {{-- DECEASED MEMBERS TABLE --}}
     {{-- ============================================ --}}
-    <div id="deceasedMembersTable" class="table-section-modern">
+    <div id="deceasedMembersTable" class="table-section-modern {{ $isDeceasedFilter ? 'active-section' : '' }}">
         <div class="table-container-modern">
             <div class="table-responsive">
                 <table class="table-modern table">
@@ -1102,7 +1112,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($deceasedMembers ?? [] as $index => $member)
+                        @forelse($deceasedMembers as $index => $member)
                             @php
                                 $ageAtDeath = null;
                                 if ($member->birthday && $member->date_deceased) {
@@ -1140,7 +1150,7 @@
                                 data-member-ischoir="{{ $member->is_choir ? 'true' : 'false' }}"
                                 data-member-isdeceased="true">
                                 
-                                <td class="text-muted">{{ ($deceasedMembers->currentPage() - 1) * $deceasedMembers->perPage() + $index + 1 }}</td>
+                                <td class="text-muted">{{ $deceasedMembers->firstItem() + $index }}</td>
                                 
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
@@ -1218,18 +1228,12 @@
                 </table>
             </div>
             
-            @if(isset($deceasedMembers) && $deceasedMembers instanceof \Illuminate\Pagination\LengthAwarePaginator && $deceasedMembers->hasPages())
+            @if($deceasedMembers->hasPages())
             <div class="pagination-container-modern">
                 <div class="pagination-info-modern">
                     Showing <strong>{{ $deceasedMembers->firstItem() }}</strong> to <strong>{{ $deceasedMembers->lastItem() }}</strong> of <strong>{{ $deceasedMembers->total() }}</strong> deceased members
                 </div>
                 {{ $deceasedMembers->links('pagination::bootstrap-5') }}
-            </div>
-            @elseif(isset($deceasedMembers) && $deceasedMembers->count() > 0)
-            <div class="pagination-container-modern">
-                <div class="pagination-info-modern">
-                    Showing <strong>{{ $deceasedMembers->count() }}</strong> deceased members
-                </div>
             </div>
             @endif
         </div>
@@ -1241,26 +1245,6 @@
 {{-- ============================================= --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // =============================================
-    // TABLE SWITCHING FUNCTION
-    // =============================================
-    function switchTable(tableType) {
-        const tabs = document.querySelectorAll('.member-tab-modern');
-        tabs.forEach(tab => tab.classList.remove('active'));
-        
-        if (tableType === 'active') {
-            tabs[0].classList.add('active');
-            document.getElementById('activeMembersTable').classList.add('active-section');
-            document.getElementById('deceasedMembersTable').classList.remove('active-section');
-        } else {
-            tabs[1].classList.add('active');
-            document.getElementById('deceasedMembersTable').classList.add('active-section');
-            document.getElementById('activeMembersTable').classList.remove('active-section');
-        }
-        
-        window.location.hash = tableType;
-    }
-    
     // =============================================
     // DELETE ACTIVE MEMBER
     // =============================================
@@ -1463,15 +1447,5 @@
             }
         });
     }
-    
-    // =============================================
-    // INITIALIZE ON PAGE LOAD
-    // =============================================
-    document.addEventListener('DOMContentLoaded', function() {
-        const hash = window.location.hash.substring(1);
-        if (hash === 'deceased') { 
-            switchTable('deceased');
-        }
-    });
 </script>
 @endsection

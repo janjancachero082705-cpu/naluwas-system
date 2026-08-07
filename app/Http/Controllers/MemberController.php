@@ -16,7 +16,16 @@ class MemberController extends Controller
     {
         $churchId = session('current_church_id', auth()->user()->church_id);
         
-        $query = Member::where('church_id', $churchId)->where('is_deceased', false);
+        $query = Member::where('church_id', $churchId);
+
+        // FIX: Handle the "Deceased" filter from the profile button
+        $isDeceasedFilter = $request->query('filter') === 'deceased';
+
+        if ($isDeceasedFilter) {
+            $query->where('is_deceased', true);
+        } else {
+            $query->where('is_deceased', false);
+        }
         
         if ($request->role && $request->role != 'all') {
             $query->whereHas('roles', function($q) use ($request) {
@@ -30,6 +39,7 @@ class MemberController extends Controller
         
         $members = $query->orderBy('created_at', 'desc')->paginate(10);
         
+        // Fetch deceased members separately for the tab
         $deceasedMembers = Member::where('church_id', $churchId)
             ->where('is_deceased', true)
             ->orderBy('date_deceased', 'desc')
@@ -48,8 +58,19 @@ class MemberController extends Controller
         $deceasedCount = Member::where('church_id', $churchId)->where('is_deceased', true)->count();
         $activeMinistries = Role::count();
         
-        return view('members.index', compact('members', 'deceasedMembers', 'currentFilter', 'choirFilter', 'allRoles', 
-            'totalMembers', 'choirCount', 'birthdaysThisMonth', 'activeMinistries', 'deceasedCount'));
+        return view('members.index', compact(
+            'members', 
+            'deceasedMembers', 
+            'currentFilter', 
+            'choirFilter', 
+            'allRoles', 
+            'totalMembers', 
+            'choirCount', 
+            'birthdaysThisMonth', 
+            'activeMinistries', 
+            'deceasedCount',
+            'isDeceasedFilter' // Pass this to the view for tab activation
+        ));
     }
 
     public function create()
@@ -89,21 +110,12 @@ class MemberController extends Controller
         }
     }
 
-    /**
-     * STORE - FIXED VERSION
-     */
     public function store(Request $request)
     {
         try {
-            // =============================================
-            // DEBUG: SHOW ALL FORM DATA
-            // =============================================
             \Log::info('=== FORM DATA ===');
             \Log::info(json_encode($request->all()));
             
-            // =============================================
-            // VALIDATE
-            // =============================================
             $validated = $request->validate([
                 'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
@@ -118,23 +130,16 @@ class MemberController extends Controller
                 'choir_role' => 'nullable|string|in:Singer,Guitarist,Bassist,Drummer',
             ]);
 
-            // =============================================
-            // LOG THE GENDER
-            // =============================================
             \Log::info('GENDER FROM FORM: ' . ($validated['gender'] ?? 'NOT SET'));
 
             $churchId = session('current_church_id', auth()->user()->church_id);
 
-            // Check if choir member
             $isChoirMember = $request->has('is_choir') ||
                              (isset($validated['choir_role']) && $validated['choir_role']) ||
                              (isset($validated['choir_group_id']) && $validated['choir_group_id']);
 
             $choirRole = $validated['choir_role'] ?? null;
 
-            // =============================================
-            // CREATE MEMBER USING direct assignment
-            // =============================================
             $member = new Member();
             $member->first_name = $validated['first_name'];
             $member->last_name = $validated['last_name'];
@@ -142,7 +147,7 @@ class MemberController extends Controller
             $member->address = $validated['address'] ?? null;
             $member->phone = $validated['phone'] ?? null;
             $member->email = $validated['email'] ?? null;
-            $member->gender = $validated['gender'] ?? null; // THIS SAVES THE GENDER
+            $member->gender = $validated['gender'] ?? null;
             $member->church_id = $churchId;
             $member->is_choir = $isChoirMember;
             $member->choir_role = $choirRole;
@@ -151,13 +156,9 @@ class MemberController extends Controller
             $member->date_deceased = null;
             $member->save();
 
-            // =============================================
-            // LOG WHAT WAS SAVED
-            // =============================================
             \Log::info('SAVED MEMBER ID: ' . $member->id);
             \Log::info('SAVED GENDER: ' . ($member->gender ?? 'NULL'));
 
-            // Attach roles
             if (isset($validated['roles']) && !empty($validated['roles'])) {
                 $member->roles()->attach($validated['roles']);
             }
@@ -227,7 +228,6 @@ class MemberController extends Controller
                 'choir_role' => 'nullable|string|in:Singer,Guitarist,Bassist,Drummer',
             ]);
 
-            // Update using direct assignment
             $member->first_name = $validated['first_name'];
             $member->last_name = $validated['last_name'];
             $member->birthday = $validated['birthday'] ?? null;

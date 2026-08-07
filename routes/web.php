@@ -8,7 +8,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ChoirMemberController;
 use App\Http\Controllers\ChoirScheduleController;
 use App\Http\Controllers\MemberController;
-use App\Http\Controllers\AttendanceController;
+// use App\Http\Controllers\AttendanceController; // Commented out to prioritize Sunday Attendance
 use App\Http\Controllers\SundayAttendanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -95,31 +95,46 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     
-    // INVENTORY - Updated with edit/delete transaction routes
+    // ============================================
+    // INVENTORY / FINANCE ROUTES - COMPLETE CRUD
+    // ============================================
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
     Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
-    Route::delete('/inventory/destroy/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
     
-    // INVENTORY TRANSACTION ROUTES - For Edit and Delete
+    Route::get('/inventory/{id}/edit', [InventoryController::class, 'edit'])->name('inventory.edit');
+    Route::put('/inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
+    Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
+    Route::delete('/inventory/destroy/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy.alt');
+    
     Route::get('/inventory/transaction/{id}', [InventoryController::class, 'getTransaction'])->name('inventory.transaction.get');
     Route::put('/inventory/transaction/{id}', [InventoryController::class, 'updateTransaction'])->name('inventory.transaction.update');
     Route::delete('/inventory/transaction/{id}', [InventoryController::class, 'destroyTransaction'])->name('inventory.transaction.destroy');
     
+    Route::get('/inventory/balance', [InventoryController::class, 'getBalance'])->name('inventory.balance');
+    
+    // ============================================
     // MEMBERS - Full Resource with additional routes
+    // ============================================
     Route::resource('members', MemberController::class);
     Route::put('/members/{member}/deceased', [MemberController::class, 'markAsDeceased'])->name('members.deceased');
     Route::put('/members/{member}/restore', [MemberController::class, 'restoreFromDeceased'])->name('members.restore');
     Route::post('/members/{member}/assign-group', [MemberController::class, 'assignToGroup'])->name('members.assign-group');
     Route::delete('/members/{member}/remove-group', [MemberController::class, 'removeFromGroup'])->name('members.remove-group');
     
-    // ATTENDANCE - Full Resource
-    Route::resource('attendance', AttendanceController::class);
-    Route::get('/attendance/create/{member_id?}', [AttendanceController::class, 'create'])->name('attendance.create');
+    // ============================================
+    // ATTENDANCE - Commented out to redirect to Sunday Attendance
+    // ============================================
+    // Route::resource('attendance', AttendanceController::class);
+    // Route::get('/attendance/create/{member_id?}', [AttendanceController::class, 'create'])->name('attendance.create');
     
+    // ============================================
     // CHOIR MEMBERS
+    // ============================================
     Route::resource('choir-members', ChoirMemberController::class);
     
+    // ============================================
     // CHOIR SCHEDULES & GROUPS
+    // ============================================
     Route::get('/choir-schedules/groups', [ChoirScheduleController::class, 'groups'])->name('choir-schedules.groups');
     Route::post('/choir-schedules/groups', [ChoirScheduleController::class, 'storeGroup'])->name('choir-schedules.groups.store');
     Route::put('/choir-schedules/groups/{id}', [ChoirScheduleController::class, 'updateGroup'])->name('choir-schedules.groups.update');
@@ -138,7 +153,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/choir-schedules/remove-schedule-member', [ChoirScheduleController::class, 'removeMemberFromSchedule'])->name('choir-schedules.remove-schedule-member');
     Route::post('/choir-schedules/store-direct', [ChoirScheduleController::class, 'storeDirect'])->name('choir-schedules.store-direct');
     
-    // SUNDAY ATTENDANCE
+    // ============================================
+    // SUNDAY ATTENDANCE - THIS IS YOUR MAIN SYSTEM
+    // ============================================
     Route::get('/sunday-attendance', [SundayAttendanceController::class, 'index'])->name('sunday-attendance.index');
     Route::get('/sunday-attendance/entry/{date}', [SundayAttendanceController::class, 'create'])->name('sunday-attendance.entry');
     Route::post('/sunday-attendance', [SundayAttendanceController::class, 'store'])->name('sunday-attendance.store');
@@ -146,22 +163,30 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sunday-attendance/report', [SundayAttendanceController::class, 'report'])->name('sunday-attendance.report');
     Route::get('/sunday-attendance/records', [SundayAttendanceController::class, 'records'])->name('sunday-attendance.records');
     
+    // ============================================
     // CHURCH SETTINGS
+    // ============================================
     Route::post('/settings/profile', [ChurchSettingController::class, 'updateProfile'])->name('settings.profile.update');
     Route::post('/settings/logo', [ChurchSettingController::class, 'updateLogo'])->name('settings.logo.update');
     Route::delete('/settings/logo', [ChurchSettingController::class, 'removeLogo'])->name('settings.logo.remove');
     
+    // ============================================
     // CHOIR PRACTICES
+    // ============================================
     Route::get('/choir-practices/get', [ChoirPracticeController::class, 'getPractices'])->name('choir.practices.get');
     Route::post('/choir-practices/store', [ChoirPracticeController::class, 'store'])->name('choir.practices.store');
     Route::delete('/choir-practices/{id}', [ChoirPracticeController::class, 'destroy'])->name('choir.practices.delete');
     
+    // ============================================
     // WEEKLY SCHEDULES
+    // ============================================
     Route::get('/weekly-schedules/get', [WeeklyScheduleController::class, 'getSchedules'])->name('weekly.schedules.get');
     Route::post('/weekly-schedules/store', [WeeklyScheduleController::class, 'store'])->name('weekly.schedules.store');
     Route::delete('/weekly-schedules/{id}', [WeeklyScheduleController::class, 'destroy'])->name('weekly.schedules.delete');
     
+    // ============================================
     // FINANCE - Full CRUD with additional routes
+    // ============================================
     Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
     Route::get('/finance/create', [FinanceController::class, 'create'])->name('finance.create');
     Route::post('/finance/store', [FinanceController::class, 'store'])->name('finance.store');
@@ -172,15 +197,21 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/reports/analytics', [FinanceController::class, 'reportsAnalytics'])->name('reports.analytics');
     
+    // ============================================
     // NOTIFICATIONS
+    // ============================================
     Route::get('/notifications', [DashboardController::class, 'getNotifications'])->name('notifications.get');
     Route::post('/notifications/mark-read', [DashboardController::class, 'markNotificationsAsRead'])->name('notifications.mark-read');
     
+    // ============================================
     // PROFILE PICTURE
+    // ============================================
     Route::post('/profile/picture/upload', [ProfilePictureController::class, 'upload'])->name('profile.picture.upload');
     Route::delete('/profile/picture/remove', [ProfilePictureController::class, 'remove'])->name('profile.picture.remove');
     
+    // ============================================
     // MESSAGING SYSTEM
+    // ============================================
     Route::prefix('messages')->name('messages.')->group(function () {
         Route::get('/', [MessageController::class, 'index'])->name('index');
         Route::get('/create', [MessageController::class, 'create'])->name('create');
@@ -377,13 +408,3 @@ Route::get('/test-member-controller', function() {
 Route::get('/simple-members', function() {
     return "Simple test working!";
 });
-
-/*
-|--------------------------------------------------------------------------
-| FALLBACK ROUTE - Catch all undefined routes (Optional)
-|--------------------------------------------------------------------------
-*/
-// Uncomment this if you want to handle 404 errors gracefully
-// Route::fallback(function () {
-//     return redirect()->route('dashboard');
-// });

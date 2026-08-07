@@ -738,359 +738,6 @@
         box-shadow: none !important;
     }
     
-    /* Edit Modal - FULLY CLICKABLE */
-    .edit-modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.6);
-        backdrop-filter: blur(6px);
-        z-index: 100001;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-    }
-    
-    .edit-modal-overlay.active {
-        display: flex !important;
-    }
-    
-    .edit-modal-content {
-        background: #ffffff;
-        border-radius: 24px;
-        padding: 35px;
-        max-width: 580px;
-        width: 100%;
-        max-height: 95vh;
-        overflow-y: auto;
-        box-shadow: 0 30px 80px rgba(0,0,0,0.35);
-        border: none;
-        position: relative;
-        z-index: 100002;
-        animation: modalSlideIn 0.3s ease;
-    }
-    
-    @keyframes modalSlideIn {
-        from {
-            opacity: 0;
-            transform: translateY(-30px) scale(0.95);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-    }
-    
-    .edit-modal-content .modal-header-custom {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-        padding-bottom: 18px;
-        border-bottom: 2px solid #f0f0f0;
-    }
-    
-    .edit-modal-content .modal-header-custom h3 {
-        font-size: 22px;
-        font-weight: 700;
-        color: #1a1a2e;
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .edit-modal-content .modal-header-custom h3 i {
-        color: #4F46E5;
-        font-size: 22px;
-    }
-    
-    .edit-modal-content .modal-header-custom .close-btn {
-        background: none;
-        border: none;
-        font-size: 28px;
-        color: #9ca3af;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        padding: 0 8px;
-        line-height: 1;
-    }
-    
-    .edit-modal-content .modal-header-custom .close-btn:hover {
-        color: #1a1a2e;
-        transform: rotate(90deg);
-    }
-    
-    /* FULLY CLICKABLE FORM FIELDS */
-    .edit-modal-content .form-group {
-        margin-bottom: 18px;
-    }
-    
-    .edit-modal-content .form-group label {
-        display: block;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        font-weight: 700;
-        color: #6b7280;
-        margin-bottom: 6px;
-        font-family: 'Inter', sans-serif;
-        cursor: default;
-    }
-    
-    .edit-modal-content .form-group label i {
-        margin-right: 6px;
-        color: #4F46E5;
-        width: 16px;
-    }
-    
-    /* Make ALL input fields clickable */
-    .edit-modal-content .form-group .editable-field,
-    .edit-modal-content .form-group input,
-    .edit-modal-content .form-group textarea,
-    .edit-modal-content .form-group select {
-        width: 100% !important;
-        padding: 12px 16px !important;
-        border: 2px solid #d1d5db !important;
-        border-radius: 12px !important;
-        font-size: 15px !important;
-        color: #1a1a2e !important;
-        background: #ffffff !important;
-        transition: all 0.25s ease !important;
-        outline: none !important;
-        box-sizing: border-box !important;
-        font-family: 'Inter', sans-serif !important;
-        cursor: text !important;
-        -webkit-appearance: none !important;
-        appearance: none !important;
-    }
-    
-    .edit-modal-content .form-group .editable-field:hover,
-    .edit-modal-content .form-group input:hover,
-    .edit-modal-content .form-group textarea:hover,
-    .edit-modal-content .form-group select:hover {
-        border-color: #4F46E5 !important;
-        background: #fafaff !important;
-    }
-    
-    .edit-modal-content .form-group .editable-field:focus,
-    .edit-modal-content .form-group input:focus,
-    .edit-modal-content .form-group textarea:focus,
-    .edit-modal-content .form-group select:focus {
-        border-color: #4F46E5 !important;
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12) !important;
-        background: #ffffff !important;
-    }
-    
-    .edit-modal-content .form-group textarea.editable-field,
-    .edit-modal-content .form-group textarea {
-        resize: vertical !important;
-        min-height: 70px !important;
-        line-height: 1.6 !important;
-    }
-    
-    .edit-modal-content .form-group input[type="date"].editable-field,
-    .edit-modal-content .form-group input[type="date"] {
-        cursor: pointer !important;
-        min-height: 48px !important;
-    }
-    
-    .edit-modal-content .form-group input[type="number"].editable-field,
-    .edit-modal-content .form-group input[type="number"] {
-        -moz-appearance: textfield !important;
-    }
-    
-    .edit-modal-content .form-group input[type="number"]::-webkit-outer-spin-button,
-    .edit-modal-content .form-group input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none !important;
-        margin: 0 !important;
-    }
-    
-    /* Amount input wrapper */
-    .edit-modal-content .amount-input-wrapper {
-        display: flex !important;
-        align-items: center !important;
-        border: 2px solid #d1d5db !important;
-        border-radius: 12px !important;
-        background: #ffffff !important;
-        transition: all 0.25s ease !important;
-        overflow: hidden !important;
-    }
-    
-    .edit-modal-content .amount-input-wrapper:hover {
-        border-color: #4F46E5 !important;
-        background: #fafaff !important;
-    }
-    
-    .edit-modal-content .amount-input-wrapper:focus-within {
-        border-color: #4F46E5 !important;
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12) !important;
-    }
-    
-    .edit-modal-content .amount-input-wrapper .currency-symbol {
-        padding: 12px 16px !important;
-        background: #f9fafb !important;
-        color: #6b7280 !important;
-        font-weight: 700 !important;
-        font-size: 15px !important;
-        border-right: 2px solid #d1d5db !important;
-        flex-shrink: 0 !important;
-        font-family: 'Inter', sans-serif !important;
-    }
-    
-    .edit-modal-content .amount-input-wrapper input {
-        width: 100% !important;
-        padding: 12px 16px !important;
-        border: none !important;
-        font-size: 15px !important;
-        color: #1a1a2e !important;
-        background: transparent !important;
-        outline: none !important;
-        box-sizing: border-box !important;
-        font-family: 'Inter', sans-serif !important;
-        cursor: text !important;
-    }
-    
-    .edit-modal-content .amount-input-wrapper input:hover {
-        background: transparent !important;
-    }
-    
-    .edit-modal-content .amount-input-wrapper input:focus {
-        background: transparent !important;
-    }
-    
-    /* Type select dropdown */
-    .edit-modal-content .type-select-wrapper {
-        display: flex !important;
-        align-items: center !important;
-        gap: 12px !important;
-    }
-    
-    .edit-modal-content .type-select-wrapper select {
-        flex: 1 !important;
-        padding: 12px 16px !important;
-        border: 2px solid #d1d5db !important;
-        border-radius: 12px !important;
-        font-size: 15px !important;
-        color: #1a1a2e !important;
-        background: #ffffff !important;
-        transition: all 0.25s ease !important;
-        outline: none !important;
-        cursor: pointer !important;
-        font-family: 'Inter', sans-serif !important;
-        min-height: 48px !important;
-        -webkit-appearance: none !important;
-        appearance: none !important;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
-        background-repeat: no-repeat !important;
-        background-position: right 16px center !important;
-        padding-right: 40px !important;
-    }
-    
-    .edit-modal-content .type-select-wrapper select:hover {
-        border-color: #4F46E5 !important;
-        background-color: #fafaff !important;
-    }
-    
-    .edit-modal-content .type-select-wrapper select:focus {
-        border-color: #4F46E5 !important;
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12) !important;
-    }
-    
-    .edit-modal-content .type-badge-display {
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-        padding: 8px 18px !important;
-        border-radius: 20px !important;
-        font-size: 13px !important;
-        font-weight: 600 !important;
-        white-space: nowrap !important;
-        font-family: 'Inter', sans-serif !important;
-        flex-shrink: 0 !important;
-    }
-    
-    .edit-modal-content .type-badge-display.income {
-        background: rgba(16, 185, 129, 0.12) !important;
-        color: #10B981 !important;
-    }
-    
-    .edit-modal-content .type-badge-display.expense {
-        background: rgba(239, 68, 68, 0.12) !important;
-        color: #EF4444 !important;
-    }
-    
-    /* Edit Modal Buttons */
-    .edit-modal-actions {
-        display: flex !important;
-        gap: 12px !important;
-        margin-top: 25px !important;
-        padding-top: 22px !important;
-        border-top: 2px solid #f0f0f0 !important;
-    }
-    
-    .edit-modal-actions .btn-action {
-        flex: 1 !important;
-        padding: 14px 20px !important;
-        border-radius: 14px !important;
-        font-weight: 700 !important;
-        font-size: 15px !important;
-        border: none !important;
-        cursor: pointer !important;
-        transition: all 0.3s ease !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 8px !important;
-        font-family: 'Inter', sans-serif !important;
-        min-height: 52px !important;
-    }
-    
-    .edit-modal-actions .btn-action:hover {
-        transform: translateY(-2px) !important;
-    }
-    
-    .edit-modal-actions .btn-action:active {
-        transform: scale(0.97) !important;
-    }
-    
-    .btn-save-edit {
-        background: linear-gradient(135deg, #10B981, #34D399) !important;
-        color: white !important;
-        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3) !important;
-        flex: 2 !important;
-    }
-    
-    .btn-save-edit:hover {
-        box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4) !important;
-    }
-    
-    .btn-cancel-edit {
-        background: #f3f4f6 !important;
-        color: #1a1a2e !important;
-        border: 2px solid #d1d5db !important;
-        flex: 1 !important;
-    }
-    
-    .btn-cancel-edit:hover {
-        background: #e5e7eb !important;
-    }
-    
-    .btn-delete-from-edit {
-        background: linear-gradient(135deg, #EF4444, #F87171) !important;
-        color: white !important;
-        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.25) !important;
-        flex: 1 !important;
-    }
-    
-    .btn-delete-from-edit:hover {
-        box-shadow: 0 8px 32px rgba(239, 68, 68, 0.35) !important;
-    }
-    
     /* Export Modal */
     .export-modal-overlay {
         display: none;
@@ -1778,33 +1425,6 @@
         .export-actions {
             flex-direction: column;
         }
-        
-        .edit-modal-content {
-            padding: 25px 20px;
-            border-radius: 20px;
-        }
-        
-        .edit-modal-actions {
-            flex-direction: column;
-        }
-        
-        .edit-modal-actions .btn-action {
-            flex: none;
-            width: 100%;
-        }
-        
-        .edit-modal-content .type-select-wrapper {
-            flex-direction: column;
-            align-items: stretch;
-        }
-        
-        .edit-modal-content .type-select-wrapper select {
-            flex: none;
-        }
-        
-        .edit-modal-content .type-badge-display {
-            align-self: flex-start;
-        }
     }
     
     @media (max-width: 480px) {
@@ -1819,14 +1439,6 @@
         .btn-hero {
             width: 100%;
             justify-content: center;
-        }
-        
-        .edit-modal-content {
-            padding: 20px 16px;
-        }
-        
-        .edit-modal-content .modal-header-custom h3 {
-            font-size: 18px;
         }
     }
 </style>
@@ -2033,6 +1645,7 @@
                         <th>Type</th>
                         <th>Amount</th>
                         <th>Notes</th>
+                        <th style="width: 100px; text-align: center;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -2066,10 +1679,21 @@
                         <td style="color: #6b7280;">
                             {{ $transaction->remarks ?? '-' }}
                         </td>
+                        <td style="text-align: center;">
+                            <div class="action-btns-premium">
+                                <!-- UPDATED: Edit button now links to edit page -->
+                                <a href="{{ route('inventory.edit', $transaction->id) }}" class="btn-edit-premium" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button class="btn-delete-premium" onclick="confirmDelete({{ $transaction->id }})" title="Delete">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-4" style="color: #6b7280;">
+                        <td colspan="7" class="text-center py-4" style="color: #6b7280;">
                             <i class="fas fa-receipt fa-2x mb-2 d-block" style="color: #6b7280;"></i>
                             <p class="mb-0" style="color: #6b7280;">No transactions yet</p>
                             <small style="color: #6b7280;">Click "Income" or "Expense" to get started</small>
@@ -2142,113 +1766,6 @@
                 <i class="fas fa-file-pdf"></i> Export PDF
             </button>
         </div>
-    </div>
-</div>
-
-{{-- ============================================ --}}
-{{-- EDIT TRANSACTION MODAL - FULLY CLICKABLE FIELDS --}}
-{{-- ============================================ --}}
-<div class="edit-modal-overlay" id="editModal">
-    <div class="edit-modal-content">
-        <div class="modal-header-custom">
-            <h3><i class="fas fa-edit"></i> Edit Transaction</h3>
-            <button class="close-btn" onclick="closeEditModal()">&times;</button>
-        </div>
-        
-        <form id="editTransactionForm" method="POST" action="">
-            @csrf
-            @method('PUT')
-            <input type="hidden" id="editTransactionId" name="transaction_id">
-            
-            <!-- DESCRIPTION - Clickable -->
-            <div class="form-group">
-                <label for="editDescription"><i class="fas fa-tag"></i> Description <span style="color:#EF4444;">*</span></label>
-                <input type="text" id="editDescription" name="description" required 
-                       class="form-control editable-field" 
-                       placeholder="Enter description"
-                       autocomplete="off">
-            </div>
-            
-            <!-- CATEGORY - Clickable -->
-            <div class="form-group">
-                <label for="editCategory"><i class="fas fa-folder"></i> Category <span style="color:#EF4444;">*</span></label>
-                <input type="text" id="editCategory" name="category" required 
-                       class="form-control editable-field"
-                       placeholder="Enter category"
-                       autocomplete="off">
-            </div>
-            
-            <!-- AMOUNT - Clickable -->
-            <div class="form-group">
-                <label for="editAmount"><i class="fas fa-money-bill-wave"></i> Amount (₱) <span style="color:#EF4444;">*</span></label>
-                <div class="amount-input-wrapper">
-                    <span class="currency-symbol">₱</span>
-                    <input type="number" id="editAmount" name="amount" step="0.01" required 
-                           placeholder="0.00"
-                           autocomplete="off">
-                </div>
-            </div>
-            
-            <!-- DATE - Clickable -->
-            <div class="form-group">
-                <label for="editDate"><i class="fas fa-calendar"></i> Date <span style="color:#EF4444;">*</span></label>
-                <input type="date" id="editDate" name="date" required 
-                       class="form-control editable-field">
-            </div>
-            
-            <!-- TYPE - Clickable -->
-            <div class="form-group">
-                <label><i class="fas fa-info-circle"></i> Type</label>
-                <div class="type-select-wrapper">
-                    <select id="editType" name="type" required>
-                        <option value="income">Income</option>
-                        <option value="expense">Expense</option>
-                    </select>
-                    <span id="editTypeDisplay" class="type-badge-display income">
-                        <i class="fas fa-arrow-down"></i> Income
-                    </span>
-                </div>
-            </div>
-            
-            <!-- DONOR NAME - Clickable -->
-            <div id="editDonorGroup" class="form-group">
-                <label for="editDonorName"><i class="fas fa-user"></i> Donor Name</label>
-                <input type="text" id="editDonorName" name="donor_name" 
-                       class="form-control editable-field"
-                       placeholder="Donor name (optional)"
-                       autocomplete="off">
-            </div>
-            
-            <!-- RECIPIENT - Clickable -->
-            <div id="editRecipientGroup" class="form-group" style="display:none;">
-                <label for="editRecipient"><i class="fas fa-user"></i> Recipient / Beneficiary</label>
-                <input type="text" id="editRecipient" name="recipient" 
-                       class="form-control editable-field"
-                       placeholder="Recipient name (optional)"
-                       autocomplete="off">
-            </div>
-            
-            <!-- REMARKS - Clickable -->
-            <div class="form-group">
-                <label for="editRemarks"><i class="fas fa-pen"></i> Remarks / Notes</label>
-                <textarea id="editRemarks" name="remarks" rows="3" 
-                          class="form-control editable-field"
-                          placeholder="Additional notes..."></textarea>
-            </div>
-            
-            <!-- BUTTONS -->
-            <div class="edit-modal-actions">
-                <button type="button" class="btn-action btn-cancel-edit" onclick="closeEditModal()">
-                    <i class="fas fa-times"></i> Cancel
-                </button>
-                <button type="button" class="btn-action btn-delete-from-edit" onclick="deleteFromEdit()">
-                    <i class="fas fa-trash-alt"></i> Delete
-                </button>
-                <button type="submit" class="btn-action btn-save-edit">
-                    <i class="fas fa-save"></i> Update
-                </button>
-            </div>
-        </form>
     </div>
 </div>
 
@@ -2603,9 +2120,10 @@
                                 <td style="color: #6b7280;">{{ $transaction->remarks ?? '—' }}</td>
                                 <td style="text-align: center;">
                                     <div class="action-btns-premium">
-                                        <button class="btn-edit-premium" onclick="event.stopPropagation(); openEditModal({{ $transaction->id }})" title="Edit">
+                                        <!-- UPDATED: Edit button now links to edit page -->
+                                        <a href="{{ route('inventory.edit', $transaction->id) }}" class="btn-edit-premium" title="Edit">
                                             <i class="fas fa-edit"></i>
-                                        </button>
+                                        </a>
                                         <button class="btn-delete-premium" onclick="event.stopPropagation(); confirmDelete({{ $transaction->id }})" title="Delete">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
@@ -3024,182 +2542,6 @@
     }
     
     // ============================================
-    // EDIT TRANSACTION - FULLY WORKING WITH MONEY UPDATE
-    // ============================================
-    let currentEditId = null;
-    
-    function openEditModal(id) {
-        currentEditId = id;
-        Swal.fire({
-            title: 'Loading...',
-            text: 'Please wait...',
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading(); }
-        });
-        
-        fetch(`/inventory/transaction/${id}`)
-            .then(response => response.json())
-            .then(data => {
-                Swal.close();
-                if (data.success) {
-                    const transaction = data.transaction;
-                    
-                    // Populate all fields
-                    document.getElementById('editTransactionId').value = transaction.id;
-                    document.getElementById('editDescription').value = transaction.description || '';
-                    document.getElementById('editCategory').value = transaction.category || '';
-                    document.getElementById('editAmount').value = transaction.amount || 0;
-                    document.getElementById('editDate').value = transaction.date || '';
-                    document.getElementById('editType').value = transaction.type || 'income';
-                    document.getElementById('editRemarks').value = transaction.remarks || '';
-                    
-                    // Set type display
-                    const typeDisplay = document.getElementById('editTypeDisplay');
-                    if (transaction.type === 'income') {
-                        typeDisplay.className = 'type-badge-display income';
-                        typeDisplay.innerHTML = '<i class="fas fa-arrow-down"></i> Income';
-                        document.getElementById('editDonorGroup').style.display = 'block';
-                        document.getElementById('editRecipientGroup').style.display = 'none';
-                        document.getElementById('editDonorName').value = transaction.donor_name || '';
-                        document.getElementById('editRecipient').value = '';
-                    } else {
-                        typeDisplay.className = 'type-badge-display expense';
-                        typeDisplay.innerHTML = '<i class="fas fa-arrow-up"></i> Expense';
-                        document.getElementById('editDonorGroup').style.display = 'none';
-                        document.getElementById('editRecipientGroup').style.display = 'block';
-                        document.getElementById('editRecipient').value = transaction.recipient || '';
-                        document.getElementById('editDonorName').value = '';
-                    }
-                    
-                    // Set form action
-                    document.getElementById('editTransactionForm').action = `/inventory/transaction/${id}`;
-                    
-                    // Show the modal
-                    const modal = document.getElementById('editModal');
-                    modal.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                    
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: data.message || 'Failed to load transaction details.',
-                        confirmButtonColor: '#EF4444'
-                    });
-                }
-            })
-            .catch(error => {
-                Swal.close();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Failed to load transaction details. Please try again.',
-                    confirmButtonColor: '#EF4444'
-                });
-            });
-    }
-    
-    function closeEditModal() {
-        const modal = document.getElementById('editModal');
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-        currentEditId = null;
-    }
-    
-    // Close modal when clicking outside
-    document.getElementById('editModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeEditModal();
-        }
-    });
-    
-    // Type change handler for edit modal
-    document.getElementById('editType')?.addEventListener('change', function() {
-        const typeDisplay = document.getElementById('editTypeDisplay');
-        if (this.value === 'income') {
-            typeDisplay.className = 'type-badge-display income';
-            typeDisplay.innerHTML = '<i class="fas fa-arrow-down"></i> Income';
-            document.getElementById('editDonorGroup').style.display = 'block';
-            document.getElementById('editRecipientGroup').style.display = 'none';
-            document.getElementById('editRecipient').value = '';
-        } else {
-            typeDisplay.className = 'type-badge-display expense';
-            typeDisplay.innerHTML = '<i class="fas fa-arrow-up"></i> Expense';
-            document.getElementById('editDonorGroup').style.display = 'none';
-            document.getElementById('editRecipientGroup').style.display = 'block';
-            document.getElementById('editDonorName').value = '';
-        }
-    });
-    
-    // Delete from edit modal
-    function deleteFromEdit() {
-        const id = document.getElementById('editTransactionId').value;
-        closeEditModal();
-        confirmDelete(id);
-    }
-    
-    // Handle edit form submission - UPDATES MONEY IN ALL RECORDS
-    document.getElementById('editTransactionForm')?.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const form = this;
-        const formData = new FormData(form);
-        const id = document.getElementById('editTransactionId').value;
-        
-        Swal.fire({
-            title: 'Updating...',
-            text: 'Please wait...',
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading(); }
-        });
-        
-        fetch(form.action, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'X-HTTP-Method-Override': 'PUT',
-                'Accept': 'application/json'
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            Swal.close();
-            if (data.success) {
-                closeEditModal();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Updated!',
-                    text: data.message || 'Transaction updated successfully. All financial records have been updated.',
-                    timer: 3000,
-                    showConfirmButton: false,
-                    toast: true,
-                    position: 'top-end'
-                });
-                setTimeout(() => {
-                    location.reload();
-                }, 500);
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.message || 'Failed to update transaction.',
-                    confirmButtonColor: '#EF4444'
-                });
-            }
-        })
-        .catch(error => {
-            Swal.close();
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Something went wrong. Please try again.',
-                confirmButtonColor: '#EF4444'
-            });
-        });
-    });
-    
-    // ============================================
     // DELETE TRANSACTION
     // ============================================
     function confirmDelete(id) {
@@ -3221,7 +2563,7 @@
                     didOpen: () => { Swal.showLoading(); }
                 });
                 
-                fetch(`/inventory/transaction/${id}`, {
+                fetch(`/inventory/destroy/${id}`, {
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -3235,8 +2577,8 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Deleted!',
-                            text: data.message || 'Transaction deleted successfully. All financial records have been updated.',
-                            timer: 3000,
+                            text: data.message || 'Transaction deleted successfully.',
+                            timer: 2000,
                             showConfirmButton: false,
                             toast: true,
                             position: 'top-end'
@@ -3323,7 +2665,7 @@
     }
     
     // ============================================
-    // CLICKABLE ROWS
+    // CLICKABLE ROWS - For All Transactions Modal
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('#transactionsTableBody .clickable-row').forEach(row => {
@@ -3333,7 +2675,7 @@
                 }
                 const id = this.getAttribute('data-id');
                 if (id) {
-                    openEditModal(id);
+                    window.location.href = `/inventory/${id}/edit`;
                 }
             });
         });

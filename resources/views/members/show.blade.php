@@ -819,7 +819,7 @@
                 <h1>Member Profile</h1>
                 <p class="hero-sub">
                     <i class="fas fa-id-card"></i>
-                    ID: #{{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}
+                    ID: {{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}
                     &nbsp;·&nbsp;
                     <span class="badge-status-modern {{ $member->is_deceased ? 'deceased' : 'active' }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 2px 12px; border-radius: 20px; font-size: 0.6rem; font-weight: 700; text-transform: uppercase;">
                         {{ $member->is_deceased ? 'Deceased' : 'Active' }}
@@ -841,23 +841,6 @@
          QUICK ACTIONS - HORIZONTAL
     ============================================ -->
     <div class="quick-actions-horizontal">
-        <a href="{{ route('attendance.create', ['member_id' => $member->id]) }}" class="quick-action-btn attendance">
-            <i class="fas fa-calendar-check"></i>
-            <span>Record Attendance</span>
-        </a>
-
-        @if(!$member->is_deceased)
-        <a href="#" class="quick-action-btn deceased" onclick="confirmDeceased({{ $member->id }})">
-            <i class="fas fa-cross"></i>
-            <span>Mark Deceased</span>
-        </a>
-        @endif
-
-        <a href="{{ route('members.edit', $member->id) }}" class="quick-action-btn edit">
-            <i class="fas fa-user-edit"></i>
-            <span>Edit Details</span>
-        </a>
-
         @if($member->is_deceased)
         <a href="#" class="quick-action-btn restore" onclick="confirmRestore({{ $member->id }})">
             <i class="fas fa-undo-alt"></i>
@@ -880,7 +863,7 @@
                     {{ strtoupper(substr($member->first_name ?? 'M', 0, 1)) }}{{ strtoupper(substr($member->last_name ?? 'M', 0, 1)) }}
                 </div>
                 <h2 class="member-name">{{ $member->first_name ?? '' }} {{ $member->last_name ?? '' }}</h2>
-                <p class="member-id"><i class="fas fa-id-card"></i> ID: #{{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}</p>
+                <p class="member-id"><i class="fas fa-id-card"></i> ID: {{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}</p>
                 
                 <div class="name-divider"></div>
                 
