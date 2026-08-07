@@ -28,6 +28,12 @@ class InventoryController extends Controller
         $allTimeExpense = $transactions->where('type', 'expense')->sum('amount');
         $allTimeBalance = $allTimeIncome - $allTimeExpense;
 
+        // Recent Transactions (latest 10 for the table)
+        $recentTransactions = MoneyTransaction::where('church_id', $churchId)
+            ->orderBy('date', 'desc')
+            ->limit(10)
+            ->get();
+
         // Filter by month/year (if selected)
         $selectedMonth = $request->month;
         $selectedYear = $request->year;
@@ -66,7 +72,8 @@ class InventoryController extends Controller
         return view('inventory.index', compact(
             'transactions', 'allTimeIncome', 'allTimeExpense', 'allTimeBalance',
             'totalIncome', 'totalExpense', 'balance', 'incomeByCategory', 
-            'expenseByCategory', 'church', 'selectedMonth', 'selectedYear'
+            'expenseByCategory', 'church', 'selectedMonth', 'selectedYear',
+            'recentTransactions'
         ));
     }
 
@@ -78,6 +85,7 @@ class InventoryController extends Controller
             'category' => 'nullable|string|max:100',
             'amount' => 'required|numeric|min:0.01',
             'recipient' => 'nullable|string|max:255',
+            'donor_name' => 'nullable|string|max:255',
             'remarks' => 'nullable|string',
             'date' => 'required|date'
         ]);
@@ -142,8 +150,124 @@ class InventoryController extends Controller
             "🗑️ Deleted: {$description} (₱" . number_format($amount, 2) . ") - New Balance: ₱" . number_format($balance, 2)
         );
     }
+
+    /**
+     * Get single transaction for editing
+     */
+    public function getTransaction($id)
+    {
+        $churchId = $this->getCurrentChurchId();
+        
+        $transaction = MoneyTransaction::where('id', $id)
+            ->where('church_id', $churchId)
+            ->first();
+            
+        if (!$transaction) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Transaction not found'
+            ], 404);
+        }
+        
+        return response()->json([
+            'success' => true, 
+            'transaction' => $transaction
+        ]);
+    }
+
+    /**
+     * Update transaction
+     */
+    public function updateTransaction(Request $request, $id)
+    {
+        $churchId = $this->getCurrentChurchId();
+        
+        $transaction = MoneyTransaction::where('id', $id)
+            ->where('church_id', $churchId)
+            ->first();
+            
+        if (!$transaction) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Transaction not found'
+            ], 404);
+        }
+        
+        $validated = $request->validate([
+            'description' => 'required|string|max:255',
+            'category' => 'nullable|string|max:100',
+            'amount' => 'required|numeric|min:0.01',
+            'date' => 'required|date',
+            'donor_name' => 'nullable|string|max:255',
+            'recipient' => 'nullable|string|max:255',
+            'remarks' => 'nullable|string'
+        ]);
+        
+        // Update transaction fields
+        $transaction->description = $validated['description'];
+        $transaction->category = $validated['category'];
+        $transaction->amount = $validated['amount'];
+        $transaction->date = $validated['date'];
+        $transaction->remarks = $validated['remarks'] ?? null;
+        
+        // Update donor or recipient based on type
+        if ($transaction->type === 'income') {
+            $transaction->donor_name = $validated['donor_name'] ?? null;
+            $transaction->recipient = null;
+        } else {
+            $transaction->recipient = $validated['recipient'] ?? null;
+            $transaction->donor_name = null;
+        }
+        
+        $transaction->save();
+        
+        // Get updated balance
+        $income = MoneyTransaction::where('church_id', $churchId)->where('type', 'income')->sum('amount');
+        $expense = MoneyTransaction::where('church_id', $churchId)->where('type', 'expense')->sum('amount');
+        $balance = $income - $expense;
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaction updated successfully',
+            'balance' => $balance
+        ]);
+    }
+
+    /**
+     * Delete transaction (API version)
+     */
+    public function destroyTransaction($id)
+    {
+        $churchId = $this->getCurrentChurchId();
+        
+        $transaction = MoneyTransaction::where('id', $id)
+            ->where('church_id', $churchId)
+            ->first();
+            
+        if (!$transaction) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Transaction not found'
+            ], 404);
+        }
+        
+        $transaction->delete();
+        
+        // Get updated balance
+        $income = MoneyTransaction::where('church_id', $churchId)->where('type', 'income')->sum('amount');
+        $expense = MoneyTransaction::where('church_id', $churchId)->where('type', 'expense')->sum('amount');
+        $balance = $income - $expense;
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaction deleted successfully',
+            'balance' => $balance
+        ]);
+    }
     
-    // Optional: Get balance for current church
+    /**
+     * Get balance for current church
+     */
     public function getBalance()
     {
         $churchId = $this->getCurrentChurchId();

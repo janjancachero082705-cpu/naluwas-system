@@ -95,10 +95,15 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     
-    // INVENTORY
+    // INVENTORY - Updated with edit/delete transaction routes
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
     Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
     Route::delete('/inventory/destroy/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
+    
+    // INVENTORY TRANSACTION ROUTES - For Edit and Delete
+    Route::get('/inventory/transaction/{id}', [InventoryController::class, 'getTransaction'])->name('inventory.transaction.get');
+    Route::put('/inventory/transaction/{id}', [InventoryController::class, 'updateTransaction'])->name('inventory.transaction.update');
+    Route::delete('/inventory/transaction/{id}', [InventoryController::class, 'destroyTransaction'])->name('inventory.transaction.destroy');
     
     // MEMBERS - Full Resource with additional routes
     Route::resource('members', MemberController::class);
@@ -109,7 +114,6 @@ Route::middleware(['auth'])->group(function () {
     
     // ATTENDANCE - Full Resource
     Route::resource('attendance', AttendanceController::class);
-    // Additional attendance routes if needed
     Route::get('/attendance/create/{member_id?}', [AttendanceController::class, 'create'])->name('attendance.create');
     
     // CHOIR MEMBERS

@@ -893,9 +893,6 @@
                 <a href="{{ route('reports.analytics') }}" class="btn-hero btn-hero-white">
                     <i class="fas fa-chart-line"></i> Analytics
                 </a>
-                <a href="{{ route('members.create') }}" class="btn-hero btn-hero-ghost">
-                    <i class="fas fa-user-plus"></i> Add Member
-                </a>
             </div>
         </div>
     </div>
