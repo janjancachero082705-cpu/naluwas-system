@@ -714,7 +714,7 @@
                         <i class="fas fa-edit"></i> Edit Transaction Details
                     </h5>
                     <span class="transaction-id-badge">
-                        <i class="fas fa-hashtag"></i> #{{ str_pad($transaction->id ?? 0, 4, '0', STR_PAD_LEFT) }}
+                        <i class="fas fa-hashtag"></i> {{ str_pad($transaction->id ?? 0, 4, '0', STR_PAD_LEFT) }}
                         <span style="opacity:0.3; margin:0 6px;">·</span>
                         <i class="fas fa-clock"></i> {{ $transaction->updated_at ? \Carbon\Carbon::parse($transaction->updated_at)->diffForHumans() : 'Never' }}
                     </span>

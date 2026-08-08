@@ -111,6 +111,13 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/inventory/transaction/{id}', [InventoryController::class, 'destroyTransaction'])->name('inventory.transaction.destroy');
     
     Route::get('/inventory/balance', [InventoryController::class, 'getBalance'])->name('inventory.balance');
+
+    // ============================================
+    // NEW: AJAX Route for Date Filtering in Transactions Modal
+    // ============================================
+    Route::get('/inventory/transactions', [InventoryController::class, 'getTransactions'])->name('inventory.transactions');
+
+    Route::get('/inventory/export-data', [InventoryController::class, 'exportData'])->name('inventory.export-data');
     
     // ============================================
     // MEMBERS - Full Resource with additional routes

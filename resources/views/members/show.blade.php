@@ -832,7 +832,7 @@
                 <i class="fas fa-edit"></i> Edit Profile
             </a>
             <a href="{{ route('members.index') }}" class="btn-hero btn-hero-ghost">
-                <i class="fas fa-arrow-left"></i> Back
+                <i class="fas fa-arrow-left"></i> Back to Members
             </a>
         </div>
     </div>

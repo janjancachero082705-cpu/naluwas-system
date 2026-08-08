@@ -34,21 +34,30 @@ class InventoryController extends Controller
             ->limit(10)
             ->get();
 
-        // Filter by month/year (if selected)
+        // Filter by Month, Year, or Week
         $selectedMonth = $request->month;
         $selectedYear = $request->year;
+        $selectedWeek = $request->week;
 
         $filtered = $transactions;
 
-        if ($selectedMonth) {
-            $filtered = $filtered->filter(function ($t) use ($selectedMonth) {
-                return date('m', strtotime($t->date)) == $selectedMonth;
+        if ($selectedMonth && $selectedYear) {
+            // Filter by specific Month & Year
+            $filtered = $filtered->filter(function ($t) use ($selectedMonth, $selectedYear) {
+                return date('m', strtotime($t->date)) == $selectedMonth 
+                    && date('Y', strtotime($t->date)) == $selectedYear;
+            });
+        } elseif ($selectedYear) {
+            // Filter by specific Year only
+            $filtered = $filtered->filter(function ($t) use ($selectedYear) {
+                return date('Y', strtotime($t->date)) == $selectedYear;
             });
         }
 
-        if ($selectedYear) {
-            $filtered = $filtered->filter(function ($t) use ($selectedYear) {
-                return date('Y', strtotime($t->date)) == $selectedYear;
+        if ($selectedWeek) {
+            // Filter by specific Week (e.g., "2026-W32")
+            $filtered = $filtered->filter(function ($t) use ($selectedWeek) {
+                return \Carbon\Carbon::parse($t->date)->isoWeekYear() . '-W' . \Carbon\Carbon::parse($t->date)->isoWeek() == $selectedWeek;
             });
         }
 
@@ -69,12 +78,120 @@ class InventoryController extends Controller
             ->map(fn ($items) => $items->sum('amount'))
             ->toArray();
 
+        // Generate list of available months and years for dropdowns
+        $availableYears = $transactions->map(fn($t) => date('Y', strtotime($t->date)))->unique()->sort()->values();
+        $availableMonths = [];
+        if ($selectedYear) {
+            $availableMonths = $transactions->filter(fn($t) => date('Y', strtotime($t->date)) == $selectedYear)
+                ->map(fn($t) => date('m', strtotime($t->date)))->unique()->sort()->values();
+        }
+
         return view('inventory.index', compact(
             'transactions', 'allTimeIncome', 'allTimeExpense', 'allTimeBalance',
             'totalIncome', 'totalExpense', 'balance', 'incomeByCategory', 
-            'expenseByCategory', 'church', 'selectedMonth', 'selectedYear',
-            'recentTransactions'
+            'expenseByCategory', 'church', 'selectedMonth', 'selectedYear', 'selectedWeek',
+            'recentTransactions', 'availableYears', 'availableMonths'
         ));
+    }
+
+    /**
+     * AJAX: Get filtered transactions for the modal (Month, Year, Week)
+     */
+    public function getTransactions(Request $request)
+    {
+        $churchId = $this->getCurrentChurchId();
+        
+        $query = MoneyTransaction::where('church_id', $churchId);
+        
+        // --- FILTER BY MONTH & YEAR ---
+        if ($request->filled('month') && $request->filled('year')) {
+            $query->whereMonth('date', $request->month)->whereYear('date', $request->year);
+        } elseif ($request->filled('year')) {
+            $query->whereYear('date', $request->year);
+        }
+        
+        // --- FILTER BY WEEK ---
+        if ($request->filled('week')) {
+            $query->whereRaw('YEAR(date) = ? AND WEEK(date, 1) = ?', [
+                substr($request->week, 0, 4),
+                substr($request->week, 6, 2)
+            ]);
+        }
+        
+        $transactions = $query->orderBy('date', 'desc')->get();
+        
+        // Calculate totals for the filtered data
+        $totalIncome = $transactions->where('type', 'income')->sum('amount');
+        $totalExpense = $transactions->where('type', 'expense')->sum('amount');
+        $netBalance = $totalIncome - $totalExpense;
+        $totalCount = $transactions->count();
+        
+        return response()->json([
+            'success' => true,
+            'transactions' => $transactions,
+            'totals' => [
+                'income' => number_format($totalIncome, 2),
+                'expense' => number_format($totalExpense, 2),
+                'balance' => number_format($netBalance, 2),
+                'count' => $totalCount,
+            ]
+        ]);
+    }
+
+       /**
+     * AJAX: Get filtered transactions for Export (Multiple Months, Year, Week)
+     * If no filters are selected, returns ALL data.
+     */
+    public function exportData(Request $request)
+    {
+        $churchId = $this->getCurrentChurchId();
+        
+        $query = MoneyTransaction::where('church_id', $churchId);
+        
+        // --- FILTER BY MULTIPLE MONTHS (e.g., 1,2,3 for Jan, Feb, Mar) ---
+        if ($request->filled('months') && is_array($request->months)) {
+            // Flatten the array if it comes as a comma-separated string
+            $months = $request->months;
+            if (count($months) === 1 && strpos($months[0], ',') !== false) {
+                $months = explode(',', $months[0]);
+            }
+            $query->whereIn(\DB::raw('MONTH(date)'), $months);
+        }
+        
+        // --- FILTER BY YEAR ---
+        if ($request->filled('year')) {
+            $query->whereYear('date', $request->year);
+        }
+        
+        // --- FILTER BY WEEK ---
+        if ($request->filled('week')) {
+            $query->whereRaw('YEAR(date) = ? AND WEEK(date, 1) = ?', [
+                substr($request->week, 0, 4),
+                substr($request->week, 6, 2)
+            ]);
+        }
+        
+        // --- IF NO FILTERS ARE SELECTED, RETURN ALL DATA ---
+        // (The query will already have no filters applied, so it returns everything)
+        
+        $transactions = $query->orderBy('date', 'desc')->get();
+        
+        // Calculate totals
+        $totalIncome = $transactions->where('type', 'income')->sum('amount');
+        $totalExpense = $transactions->where('type', 'expense')->sum('amount');
+        $netBalance = $totalIncome - $totalExpense;
+        $totalCount = $transactions->count();
+        
+        return response()->json([
+            'success' => true,
+            'transactions' => $transactions,
+            'totals' => [
+                'income' => number_format($totalIncome, 2),
+                'expense' => number_format($totalExpense, 2),
+                'balance' => number_format($netBalance, 2),
+                'count' => $totalCount,
+            ]
+        ]);
     }
 
     public function store(Request $request)
