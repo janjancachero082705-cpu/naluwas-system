@@ -8,7 +8,6 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ChoirMemberController;
 use App\Http\Controllers\ChoirScheduleController;
 use App\Http\Controllers\MemberController;
-// use App\Http\Controllers\AttendanceController; // Commented out to prioritize Sunday Attendance
 use App\Http\Controllers\SundayAttendanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +16,7 @@ use App\Http\Controllers\ChoirPracticeController;
 use App\Http\Controllers\WeeklyScheduleController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\SettingsController;
 use App\Models\Church;
 use App\Models\User;
 use App\Models\ChurchSetting;
@@ -96,6 +96,17 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->group(function () {
     
     // ============================================
+    // SETTINGS - Language & Security
+    // ============================================
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::post('/language', [SettingsController::class, 'updateLanguage'])->name('language');
+        Route::post('/two-factor', [SettingsController::class, 'toggleTwoFactor'])->name('two-factor');
+        Route::post('/session-timeout', [SettingsController::class, 'updateSessionTimeout'])->name('session-timeout');
+        Route::post('/password', [SettingsController::class, 'updatePassword'])->name('password');
+        Route::post('/logout-all', [SettingsController::class, 'logoutAllSessions'])->name('logout-all');
+    });
+    
+    // ============================================
     // INVENTORY / FINANCE ROUTES - COMPLETE CRUD
     // ============================================
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
@@ -111,12 +122,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/inventory/transaction/{id}', [InventoryController::class, 'destroyTransaction'])->name('inventory.transaction.destroy');
     
     Route::get('/inventory/balance', [InventoryController::class, 'getBalance'])->name('inventory.balance');
-
-    // ============================================
-    // NEW: AJAX Route for Date Filtering in Transactions Modal
-    // ============================================
     Route::get('/inventory/transactions', [InventoryController::class, 'getTransactions'])->name('inventory.transactions');
-
     Route::get('/inventory/export-data', [InventoryController::class, 'exportData'])->name('inventory.export-data');
     
     // ============================================
@@ -127,12 +133,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/members/{member}/restore', [MemberController::class, 'restoreFromDeceased'])->name('members.restore');
     Route::post('/members/{member}/assign-group', [MemberController::class, 'assignToGroup'])->name('members.assign-group');
     Route::delete('/members/{member}/remove-group', [MemberController::class, 'removeFromGroup'])->name('members.remove-group');
-    
-    // ============================================
-    // ATTENDANCE - Commented out to redirect to Sunday Attendance
-    // ============================================
-    // Route::resource('attendance', AttendanceController::class);
-    // Route::get('/attendance/create/{member_id?}', [AttendanceController::class, 'create'])->name('attendance.create');
     
     // ============================================
     // CHOIR MEMBERS
@@ -161,7 +161,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/choir-schedules/store-direct', [ChoirScheduleController::class, 'storeDirect'])->name('choir-schedules.store-direct');
     
     // ============================================
-    // SUNDAY ATTENDANCE - THIS IS YOUR MAIN SYSTEM
+    // SUNDAY ATTENDANCE
     // ============================================
     Route::get('/sunday-attendance', [SundayAttendanceController::class, 'index'])->name('sunday-attendance.index');
     Route::get('/sunday-attendance/entry/{date}', [SundayAttendanceController::class, 'create'])->name('sunday-attendance.entry');
@@ -322,96 +322,4 @@ Route::middleware('guest')->group(function () {
 
         return redirect('/dashboard')->with('success', 'Welcome to ' . $request->church_name . '! Your church has been successfully registered.');
     });
-});
-
-/*
-|--------------------------------------------------------------------------
-| DEBUG ROUTES (Remove after testing)
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware('auth')->group(function () {
-    Route::get('/debug-church', function () {
-        $user = auth()->user();
-        $sessionChurchId = session('current_church_id');
-        $usedChurchId = $sessionChurchId ?: $user->church_id;
-        
-        $income = App\Models\MoneyTransaction::where('church_id', $usedChurchId)->where('type', 'income')->sum('amount');
-        $expense = App\Models\MoneyTransaction::where('church_id', $usedChurchId)->where('type', 'expense')->sum('amount');
-        
-        $churches = App\Models\Church::all();
-        $churchBalances = [];
-        foreach ($churches as $church) {
-            $churchIncome = App\Models\MoneyTransaction::where('church_id', $church->id)->where('type', 'income')->sum('amount');
-            $churchExpense = App\Models\MoneyTransaction::where('church_id', $church->id)->where('type', 'expense')->sum('amount');
-            $churchBalances[] = [
-                'church_id' => $church->id,
-                'church_name' => $church->name,
-                'income' => number_format($churchIncome, 2),
-                'expense' => number_format($churchExpense, 2),
-                'balance' => number_format($churchIncome - $churchExpense, 2),
-            ];
-        }
-        
-        $users = App\Models\User::select('id', 'name', 'email', 'church_id', 'role')->get();
-        
-        return response()->json([
-            'logged_in_user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'church_id' => $user->church_id,
-                'role' => $user->role,
-            ],
-            'session' => [
-                'current_church_id' => $sessionChurchId,
-            ],
-            'used_church_id' => $usedChurchId,
-            'current_church_balance' => [
-                'income' => number_format($income, 2),
-                'expense' => number_format($expense, 2),
-                'balance' => number_format($income - $expense, 2),
-            ],
-            'all_churches_balances' => $churchBalances,
-            'all_users' => $users,
-        ]);
-    });
-});
-
-/*
-|--------------------------------------------------------------------------
-| EMERGENCY RESET (Remove in production)
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/quick-reset/{email}/{newpassword}', function ($email, $newpassword) {
-    $user = User::where('email', $email)->first();
-    if ($user) {
-        $user->password = bcrypt($newpassword);
-        $user->save();
-        return "Password for {$email} has been reset to: {$newpassword}";
-    }
-    return "User not found!";
-});
-
-Route::get('/test-member-controller', function() {
-    try {
-        $members = App\Models\Member::paginate(5);
-        
-        return [
-            'success' => true,
-            'members_count' => $members->count(),
-            'total_members' => App\Models\Member::count()
-        ];
-    } catch (Exception $e) {
-        return [
-            'error' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine()
-        ];
-    }
-});
-
-Route::get('/simple-members', function() {
-    return "Simple test working!";
 });

@@ -16,6 +16,7 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
+        /* ===== ALL YOUR EXISTING STYLES ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
@@ -68,6 +69,12 @@
             --font-display: 'Fraunces', Georgia, serif;
             --font-body: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
             --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+            
+            /* NEW: Language & Security variables */
+            --dropdown-shadow: 0 20px 48px -12px rgba(16,24,39,0.22);
+            --danger-color: #B03B34;
+            --danger-hover: #8A2A26;
+            --success-color: #2A7048;
         }
 
         [data-theme="dark"] {
@@ -110,6 +117,7 @@
             --finance-balance: #9FB6D6;
             --brass: #D3A24C;
             --brass-deep: #E6C077;
+            --dropdown-shadow: 0 20px 48px -12px rgba(0,0,0,0.6);
         }
 
         body {
@@ -166,7 +174,7 @@
             border-right: 1px solid var(--sidebar-border);
         }
 
-        /* ===== LOGO - FIXED (never scrolls) ===== */
+        /* ===== LOGO - FIXED ===== */
         .logo-section {
             padding: 1.5rem 1.25rem 1.35rem;
             border-bottom: 1px solid var(--sidebar-border);
@@ -229,7 +237,7 @@
             font-weight: 600;
         }
 
-        /* ===== NAVIGATION - SCROLLABLE (only this part) ===== */
+        /* ===== NAVIGATION ===== */
         .nav-menu-wrap {
             flex: 1;
             overflow: hidden;
@@ -335,7 +343,7 @@
             animation: pulse-dot 2s infinite;
         }
 
-        /* ===== USER SECTION - FIXED (never scrolls) ===== */
+        /* ===== USER SECTION ===== */
         .user-section {
             flex-shrink: 0;
             background: var(--user-section-bg);
@@ -384,7 +392,7 @@
         }
         .logout-btn:hover { background: rgba(176,59,52,0.12); transform: translateY(-1px); }
 
-        /* ===== MAIN CONTENT - SCROLLABLE ===== */
+        /* ===== MAIN CONTENT ===== */
         .main-content {
             margin-left: 264px;
             height: 100vh;
@@ -396,7 +404,7 @@
         .main-content::-webkit-scrollbar-track { background: transparent; }
         .main-content::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
 
-        /* ===== TOP HEADER - FIXED ===== */
+        /* ===== TOP HEADER ===== */
         .top-header {
             background: var(--header-bg);
             border-bottom: 1px solid var(--header-border);
@@ -435,7 +443,7 @@
 
         .header-right { display: flex; align-items: center; gap: 10px; position: relative; }
 
-        /* ===== CONTENT AREA - SCROLLABLE ===== */
+        /* ===== CONTENT AREA ===== */
         .content-area {
             padding: 1.5rem 2rem 2rem;
             animation: fadeInUp 0.4s ease;
@@ -751,31 +759,336 @@
         }
         .toast-close:hover { color: var(--text-primary); transform: rotate(90deg); }
 
-        /* ===== USER PROFILE (header) ===== */
-        .header-user {
-            display: flex; align-items: center; gap: 10px;
-            padding: 6px 12px;
-            border-radius: 10px;
+        /* ===== USER DROPDOWN (NEW) ===== */
+        .user-dropdown-wrapper {
+            position: relative;
             cursor: pointer;
+        }
+
+        .user-dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 14px 6px 10px;
+            border-radius: 10px;
             transition: all 0.2s ease;
             background: var(--hover-bg);
             border: 1px solid var(--border-color);
+            cursor: pointer;
         }
-        .header-user:hover { background: var(--sidebar-active-bg); border-color: var(--ink); }
-        [data-theme="dark"] .header-user:hover { border-color: var(--brass); }
+        .user-dropdown-toggle:hover {
+            background: var(--sidebar-active-bg);
+            border-color: var(--ink);
+        }
+        [data-theme="dark"] .user-dropdown-toggle:hover {
+            border-color: var(--brass);
+        }
 
-        .header-avatar {
-            width: 32px; height: 32px;
-            border-radius: 9px;
-            display: flex; align-items: center; justify-content: center;
+        .user-dropdown-toggle .arrow {
+            margin-left: 4px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            transition: transform 0.25s ease;
+        }
+        .user-dropdown-toggle.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        .user-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            min-width: 280px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            box-shadow: var(--dropdown-shadow);
+            padding: 0.5rem;
+            display: none;
+            z-index: 1060;
+            animation: dropdownSlideDown 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: top right;
+        }
+        .user-dropdown-menu.show {
+            display: block !important;
+        }
+
+        .dropdown-user-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 0.75rem 0.9rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .dropdown-user-header .avatar-lg {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid var(--brass);
+        }
+        .dropdown-user-header .avatar-lg-initials {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 700;
-            font-size: 0.72rem;
+            font-size: 1.1rem;
             color: white;
             flex-shrink: 0;
+            border: 2px solid var(--brass);
         }
-        .header-avatar-img { width: 32px; height: 32px; border-radius: 9px; object-fit: cover; flex-shrink: 0; }
-        .header-user-name { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
-        .header-user-role { font-size: 0.62rem; color: var(--text-muted); }
+        .dropdown-user-header .user-details {
+            flex: 1;
+            min-width: 0;
+        }
+        .dropdown-user-header .user-details .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+        .dropdown-user-header .user-details .email {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            word-break: break-all;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 0.4rem 0;
+        }
+
+        .dropdown-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.6rem 0.85rem;
+            border-radius: 9px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+        .dropdown-menu-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+        [data-theme="dark"] .dropdown-menu-item:hover {
+            color: var(--brass);
+        }
+        .dropdown-menu-item i {
+            width: 20px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .dropdown-menu-item:hover i {
+            color: var(--text-secondary);
+        }
+        [data-theme="dark"] .dropdown-menu-item:hover i {
+            color: var(--brass);
+        }
+        .dropdown-menu-item.danger {
+            color: var(--danger-color);
+        }
+        .dropdown-menu-item.danger i {
+            color: var(--danger-color);
+        }
+        .dropdown-menu-item.danger:hover {
+            background: rgba(176,59,52,0.08);
+            color: var(--danger-hover);
+        }
+
+        .dropdown-menu-item .badge {
+            margin-left: auto;
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: var(--gradient-brass);
+            color: white;
+            font-weight: 700;
+        }
+
+        /* ===== LANGUAGE SELECTOR ===== */
+        .language-selector-wrapper {
+            padding: 0.3rem 0.5rem;
+        }
+        .language-selector-wrapper label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 700;
+            display: block;
+            padding: 0.3rem 0.4rem 0.5rem;
+        }
+        .language-options {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .language-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.5rem 0.7rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: 1px solid transparent;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+        .language-option:hover {
+            background: var(--hover-bg);
+        }
+        .language-option.active {
+            background: var(--sidebar-active-bg);
+            border-color: var(--brass);
+            color: var(--text-primary);
+        }
+        [data-theme="dark"] .language-option.active {
+            background: rgba(201,153,66,0.15);
+            color: var(--brass);
+        }
+        .language-option .flag {
+            font-size: 1.2rem;
+            width: 28px;
+            text-align: center;
+        }
+        .language-option .lang-name {
+            flex: 1;
+        }
+        .language-option .check {
+            color: var(--brass);
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .language-option.active .check {
+            opacity: 1;
+        }
+
+        /* ===== SECURITY SETTINGS MODAL ===== */
+        .security-settings-modal .modal-content {
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .security-settings-modal .modal-header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.2rem 1.5rem;
+            background: var(--bg-tertiary);
+        }
+        .security-settings-modal .modal-header h5 {
+            font-family: var(--font-display);
+            font-weight: 600;
+        }
+        .security-settings-modal .modal-body {
+            padding: 1.5rem;
+        }
+        .security-settings-modal .modal-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+        }
+
+        .security-setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .security-setting-item:last-child {
+            border-bottom: none;
+        }
+        .security-setting-item .setting-info {
+            flex: 1;
+        }
+        .security-setting-item .setting-info h6 {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin: 0 0 2px;
+            color: var(--text-primary);
+        }
+        .security-setting-item .setting-info p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+        .security-setting-item .setting-control {
+            margin-left: 1rem;
+        }
+
+        /* ===== TOGGLE SWITCH ===== */
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--border-color);
+            border-radius: 24px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--brass);
+        }
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(20px);
+        }
+
+        .password-change-form {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .password-change-form .form-group {
+            margin-bottom: 1rem;
+        }
+        .password-change-form label {
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
 
         /* ===== ALERTS ===== */
         .alert {
@@ -910,26 +1223,6 @@
         }
         [data-theme="dark"] .fab-theme:hover { box-shadow: 0 8px 28px rgba(211,162,76,0.5); }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1024px) {
-            .sidebar-container { width: 224px; }
-            .main-content { margin-left: 224px; }
-        }
-        @media (max-width: 768px) {
-            .sidebar-container { transform: translateX(-100%); width: 280px; position: fixed; z-index: 1050; }
-            .sidebar-container.mobile-open { transform: translateX(0); }
-            .main-content { margin-left: 0; }
-            .content-area { padding: 1rem; }
-            .top-header { padding: 0 1rem; }
-            .header-user-info { display: none; }
-            .header-left h1 { font-size: 1rem; }
-            .fab-theme { bottom: 16px; right: 16px; width: 44px; height: 44px; font-size: 1rem; }
-            .logo-toast { bottom: 80px; right: 16px; left: 16px; }
-            .notification-dropdown { width: calc(100vw - 32px); right: -16px; top: calc(100% + 8px); }
-            .toast-container { max-width: calc(100vw - 32px); right: 16px; }
-            .live-indicator span { display: none; }
-        }
-
         /* ===== PROFILE PICTURE UPLOAD ===== */
         .profile-picture-wrapper { position: relative; display: inline-block; cursor: pointer; }
         .profile-picture-wrapper .upload-overlay {
@@ -997,6 +1290,27 @@
         .connection-status .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
         .connection-status.connected .dot { background: #2A7048; animation: pulse-dot 1.5s infinite; }
         .connection-status.disconnected .dot { background: #B03B34; animation: none; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .sidebar-container { width: 224px; }
+            .main-content { margin-left: 224px; }
+        }
+        @media (max-width: 768px) {
+            .sidebar-container { transform: translateX(-100%); width: 280px; position: fixed; z-index: 1050; }
+            .sidebar-container.mobile-open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .content-area { padding: 1rem; }
+            .top-header { padding: 0 1rem; }
+            .header-user-info { display: none; }
+            .header-left h1 { font-size: 1rem; }
+            .fab-theme { bottom: 16px; right: 16px; width: 44px; height: 44px; font-size: 1rem; }
+            .logo-toast { bottom: 80px; right: 16px; left: 16px; }
+            .notification-dropdown { width: calc(100vw - 32px); right: -16px; top: calc(100% + 8px); }
+            .toast-container { max-width: calc(100vw - 32px); right: 16px; }
+            .live-indicator span { display: none; }
+            .user-dropdown-menu { min-width: 260px; right: -10px; }
+        }
     </style>
     @stack('styles')
 </head>
@@ -1007,6 +1321,7 @@
     $user = Auth::user();
     $churchName = $user?->church?->name ?? $churchSettings?->church_name ?? 'Church Management';
     $tagline = $churchSettings->tagline ?? 'Church Management System';
+    $currentLang = session('app_locale', $user?->preferred_language ?? 'en');
 
     $unreadMsgCount = 0;
     if ($user && $user->church_id) {
@@ -1050,7 +1365,7 @@
 
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar-container" id="sidebar">
-        <!-- Logo - FIXED (never scrolls) -->
+        <!-- Logo - FIXED -->
         <div class="logo-section">
             <div class="logo-wrapper">
                 <div class="logo-upload-trigger" id="logoTrigger" title="Click to change logo">
@@ -1069,7 +1384,7 @@
             </div>
         </div>
 
-        <!-- Navigation - SCROLLABLE (only this part scrolls) -->
+        <!-- Navigation - SCROLLABLE -->
         <div class="nav-menu-wrap">
             <nav class="nav-menu">
                 <div class="nav-section">
@@ -1136,7 +1451,7 @@
             </nav>
         </div>
 
-        <!-- User Section - FIXED (never scrolls) -->
+        <!-- User Section - FIXED -->
         <div class="user-section">
             <div class="user-info">
                 @if($user && $user->profile_picture)
@@ -1162,7 +1477,7 @@
 
     <!-- ===== MAIN CONTENT ===== -->
     <div class="main-content">
-        <!-- Top Header - FIXED (Breadcrumb removed) -->
+        <!-- Top Header - FIXED -->
         <header class="top-header">
             <div class="header-left">
                 <h1>@yield('header', 'Dashboard')</h1>
@@ -1215,18 +1530,87 @@
                     </div>
                 </div>
 
-                <!-- User Profile with Profile Picture -->
-                <div class="header-user" id="userProfileBtn">
-                    @if($user && $user->profile_picture)
-                        <img src="{{ $user->profile_picture_url }}" alt="{{ $user->name }}" class="header-profile-img">
-                    @else
-                        <div class="header-profile-initials" style="background: {{ $user?->avatar_color ?? '#132D4D' }};">
-                            {{ $user?->initials ?? 'A' }}
+                <!-- ===== NEW: USER DROPDOWN WITH LANGUAGE & SECURITY ===== -->
+                <div class="user-dropdown-wrapper" id="userDropdownWrapper">
+                    <div class="user-dropdown-toggle" id="userDropdownToggle">
+                        @if($user && $user->profile_picture)
+                            <img src="{{ $user->profile_picture_url }}" alt="{{ $user->name }}" class="header-profile-img">
+                        @else
+                            <div class="header-profile-initials" style="background: {{ $user?->avatar_color ?? '#132D4D' }};">
+                                {{ $user?->initials ?? 'A' }}
+                            </div>
+                        @endif
+                        <div class="header-user-info">
+                            <span class="header-user-name">{{ $user->name ?? 'Administrator' }}</span>
+                            <span class="header-user-role">{{ $user->role ?? 'Administrator' }}</span>
                         </div>
-                    @endif
-                    <div class="header-user-info">
-                        <span class="header-user-name">{{ $user->name ?? 'Administrator' }}</span>
-                        <span class="header-user-role">{{ $user->role ?? 'Administrator' }}</span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+
+                    <!-- User Dropdown Menu -->
+                    <div class="user-dropdown-menu" id="userDropdownMenu">
+                        <!-- User Header -->
+                        <div class="dropdown-user-header">
+                            @if($user && $user->profile_picture)
+                                <img src="{{ $user->profile_picture_url }}" alt="{{ $user->name }}" class="avatar-lg">
+                            @else
+                                <div class="avatar-lg-initials" style="background: {{ $user?->avatar_color ?? '#132D4D' }};">
+                                    {{ $user?->initials ?? 'A' }}
+                                </div>
+                            @endif
+                            <div class="user-details">
+                                <div class="name">{{ $user->name ?? 'Administrator' }}</div>
+                                <div class="email">{{ $user->email ?? 'admin@church.com' }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Language Selector -->
+                        <div class="language-selector-wrapper">
+                            <label><i class="fas fa-globe"></i> Language / Pinulongan</label>
+                            <div class="language-options" id="languageOptions">
+                                <button class="language-option {{ $currentLang === 'en' ? 'active' : '' }}" data-lang="en">
+                                    <span class="flag">🇬🇧</span>
+                                    <span class="lang-name">English</span>
+                                    <span class="check"><i class="fas fa-check-circle"></i></span>
+                                </button>
+                                <button class="language-option {{ $currentLang === 'ceb' ? 'active' : '' }}" data-lang="ceb">
+                                    <span class="flag">🇵🇭</span>
+                                    <span class="lang-name">Cebuano / Bisaya</span>
+                                    <span class="check"><i class="fas fa-check-circle"></i></span>
+                                </button>
+                                <button class="language-option {{ $currentLang === 'tl' ? 'active' : '' }}" data-lang="tl">
+                                    <span class="flag">🇵🇭</span>
+                                    <span class="lang-name">Tagalog</span>
+                                    <span class="check"><i class="fas fa-check-circle"></i></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="dropdown-divider"></div>
+
+                        <!-- Profile Link -->
+                        <a href="{{ route('profile.edit') }}" class="dropdown-menu-item">
+                            <i class="fas fa-user-cog"></i>
+                            <span>My Profile</span>
+                        </a>
+
+                        <!-- Security Settings -->
+                        <button class="dropdown-menu-item" id="securitySettingsBtn">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Security Settings</span>
+                            <span class="badge">Secure</span>
+                        </button>
+
+                        <div class="dropdown-divider"></div>
+
+                        <!-- Sign Out -->
+                        <form method="POST" action="{{ route('logout') }}" id="logout-form-dropdown">
+                            @csrf
+                            <button type="submit" class="dropdown-menu-item danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Sign Out</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -1251,13 +1635,318 @@
         </div>
     </div>
 
-    <!-- ============================================
-         REVERB REAL-TIME BROADCASTING SETUP
-         ============================================ -->
+    <!-- ===== SECURITY SETTINGS MODAL ===== -->
+    <div class="modal fade security-settings-modal" id="securitySettingsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-shield-alt me-2"></i> Security Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Two-Factor Authentication -->
+                    <div class="security-setting-item">
+                        <div class="setting-info">
+                            <h6>Two-Factor Authentication</h6>
+                            <p>Add an extra layer of security to your account</p>
+                        </div>
+                        <div class="setting-control">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="twoFactorToggle" {{ ($user?->two_factor_enabled ?? false) ? 'checked' : '' }}>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Session Timeout -->
+                    <div class="security-setting-item">
+                        <div class="setting-info">
+                            <h6>Session Timeout</h6>
+                            <p>Automatically log out after inactivity</p>
+                        </div>
+                        <div class="setting-control">
+                            <select class="form-select form-select-sm" id="sessionTimeout" style="width:120px;">
+                                <option value="15" {{ ($user?->session_timeout ?? 30) == 15 ? 'selected' : '' }}>15 min</option>
+                                <option value="30" {{ ($user?->session_timeout ?? 30) == 30 ? 'selected' : '' }}>30 min</option>
+                                <option value="60" {{ ($user?->session_timeout ?? 30) == 60 ? 'selected' : '' }}>60 min</option>
+                                <option value="120" {{ ($user?->session_timeout ?? 30) == 120 ? 'selected' : '' }}>2 hours</option>
+                                <option value="0" {{ ($user?->session_timeout ?? 30) == 0 ? 'selected' : '' }}>Never</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Change Password -->
+                    <div class="password-change-form">
+                        <h6 style="font-weight:600;margin-bottom:0.75rem;">Change Password</h6>
+                        <form id="passwordChangeForm">
+                            @csrf
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" class="form-control form-control-sm" id="currentPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" class="form-control form-control-sm" id="newPassword" required minlength="8">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                <input type="password" class="form-control form-control-sm" id="confirmPassword" required>
+                            </div>
+                            <div id="passwordStrength" class="mt-2" style="font-size:0.8rem;color:var(--text-muted);">
+                                <span>Password strength:</span>
+                                <span id="strengthText">Weak</span>
+                                <div class="progress mt-1" style="height:4px;">
+                                    <div id="strengthBar" class="progress-bar" style="width:0%;background:#B03B34;" role="progressbar"></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Active Sessions -->
+                    <div class="security-setting-item" style="border-bottom:none;padding-bottom:0;">
+                        <div class="setting-info">
+                            <h6>Active Sessions</h6>
+                            <p>Manage where you're currently logged in</p>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn btn-sm btn-outline-danger" id="logoutAllSessions">Logout All</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveSecuritySettings">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- SCRIPTS -->
+    <!-- ============================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.0/dist/echo.iife.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pusher-js@8.0.2/dist/web/pusher.min.js"></script>
 
     <script>
+        // ============================================
+        // USER DROPDOWN TOGGLE
+        // ============================================
+        const dropdownToggle = document.getElementById('userDropdownToggle');
+        const dropdownMenu = document.getElementById('userDropdownMenu');
+
+        if (dropdownToggle && dropdownMenu) {
+            dropdownToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.classList.toggle('active');
+                dropdownMenu.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownToggle.classList.remove('active');
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    dropdownToggle.classList.remove('active');
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+        }
+
+        // ============================================
+        // LANGUAGE SELECTOR
+        // ============================================
+        document.querySelectorAll('.language-option').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const lang = this.dataset.lang;
+
+                document.querySelectorAll('.language-option').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                fetch('{{ route("settings.language") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ locale: lang })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showToastNotification('success', 'Language Updated', 'Language changed successfully');
+                    }
+                })
+                .catch(() => {
+                    showToastNotification('error', 'Error', 'Failed to save language preference');
+                });
+
+                dropdownToggle.classList.remove('active');
+                dropdownMenu.classList.remove('show');
+            });
+        });
+
+        // ============================================
+        // SECURITY SETTINGS MODAL
+        // ============================================
+        const securityModal = new bootstrap.Modal(document.getElementById('securitySettingsModal'));
+        document.getElementById('securitySettingsBtn').addEventListener('click', function() {
+            securityModal.show();
+            dropdownToggle.classList.remove('active');
+            dropdownMenu.classList.remove('show');
+        });
+
+        // Password strength checker
+        const newPassword = document.getElementById('newPassword');
+        const strengthText = document.getElementById('strengthText');
+        const strengthBar = document.getElementById('strengthBar');
+
+        if (newPassword) {
+            newPassword.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                let level = 'Weak';
+                let color = '#B03B34';
+                let width = 0;
+
+                if (password.length >= 8) strength += 1;
+                if (password.match(/[a-z]/)) strength += 1;
+                if (password.match(/[A-Z]/)) strength += 1;
+                if (password.match(/[0-9]/)) strength += 1;
+                if (password.match(/[^a-zA-Z0-9]/)) strength += 1;
+
+                if (strength <= 2) { level = 'Weak'; color = '#B03B34'; width = 20; }
+                else if (strength <= 3) { level = 'Medium'; color = '#F5A623'; width = 60; }
+                else { level = 'Strong'; color = '#2A7048'; width = 100; }
+
+                strengthText.textContent = level;
+                strengthText.style.color = color;
+                strengthBar.style.width = width + '%';
+                strengthBar.style.background = color;
+            });
+        }
+
+        // Two-Factor Toggle
+        document.getElementById('twoFactorToggle')?.addEventListener('change', function() {
+            const enabled = this.checked;
+            fetch('{{ route("settings.two-factor") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ enabled: enabled })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToastNotification('success', 'Security', enabled ? 'Two-factor authentication enabled' : 'Two-factor authentication disabled');
+                }
+            })
+            .catch(() => {
+                showToastNotification('error', 'Error', 'Failed to update two-factor authentication');
+            });
+        });
+
+        // Session Timeout
+        document.getElementById('sessionTimeout')?.addEventListener('change', function() {
+            const timeout = parseInt(this.value);
+            fetch('{{ route("settings.session-timeout") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ timeout: timeout })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToastNotification('success', 'Security', 'Session timeout updated successfully');
+                }
+            })
+            .catch(() => {
+                showToastNotification('error', 'Error', 'Failed to update session timeout');
+            });
+        });
+
+        // Logout All Sessions
+        document.getElementById('logoutAllSessions')?.addEventListener('click', function() {
+            if (confirm('Are you sure you want to log out all other sessions?')) {
+                fetch('{{ route("settings.logout-all") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showToastNotification('success', 'Security', 'All other sessions logged out');
+                    }
+                })
+                .catch(() => {
+                    showToastNotification('error', 'Error', 'Failed to logout all sessions');
+                });
+            }
+        });
+
+        // Save Security Settings (Password)
+        document.getElementById('saveSecuritySettings')?.addEventListener('click', function() {
+            const currentPw = document.getElementById('currentPassword')?.value;
+            const newPw = document.getElementById('newPassword')?.value;
+            const confirmPw = document.getElementById('confirmPassword')?.value;
+
+            if (newPw && currentPw) {
+                if (newPw !== confirmPw) {
+                    showToastNotification('error', 'Error', 'Passwords do not match');
+                    return;
+                }
+                if (newPw.length < 8) {
+                    showToastNotification('error', 'Error', 'Password must be at least 8 characters');
+                    return;
+                }
+
+                fetch('{{ route("settings.password") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        current_password: currentPw,
+                        new_password: newPw,
+                        new_password_confirmation: confirmPw
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showToastNotification('success', 'Security', 'Password updated successfully');
+                        document.getElementById('currentPassword').value = '';
+                        document.getElementById('newPassword').value = '';
+                        document.getElementById('confirmPassword').value = '';
+                        securityModal.hide();
+                    } else {
+                        showToastNotification('error', 'Error', data.message || 'Failed to update password');
+                    }
+                })
+                .catch(() => {
+                    showToastNotification('error', 'Error', 'Something went wrong');
+                });
+            } else {
+                securityModal.hide();
+            }
+        });
+
+        // ============================================
+        // REVERB REAL-TIME BROADCASTING
+        // ============================================
         window.Pusher = Pusher;
 
         const echoConfig = {
@@ -1319,7 +2008,7 @@
                 window.Echo.channel(`messages.{{ Auth::user()->church_id }}`)
                     .listen('message.new', (e) => {
                         const msgDot = document.querySelector('.header-message-btn .msg-dot');
-                        const sidebarBadge = document.querySelector('.nav-item.active .message-badge, .nav-item .message-badge');
+                        const sidebarBadge = document.querySelector('.nav-item .message-badge');
 
                         if (msgDot) {
                             const current = parseInt(msgDot.textContent) || 0;
@@ -1465,9 +2154,9 @@
         window.updateConnectionStatus = updateConnectionStatus;
     </script>
 
-    <!-- ============================================
-     ADDITIONAL SCRIPTS
-     ============================================ -->
+    <!-- ============================================ -->
+    <!-- ADDITIONAL SCRIPTS (Your Existing Code) -->
+    <!-- ============================================ -->
     <script>
         // ===== THEME TOGGLE =====
         const fabToggle = document.getElementById('fabThemeToggle');
@@ -1722,7 +2411,6 @@
         });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
 </body>
 </html>

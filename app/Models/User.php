@@ -19,6 +19,10 @@ class User extends Authenticatable
         'role',
         'profile_picture',
         'avatar_color',
+        'preferred_language',      // Add this
+        'two_factor_enabled',      // Add this
+        'session_timeout',         // Add this
+        'last_activity',           // Add this
     ];
 
     protected $hidden = [
@@ -28,6 +32,9 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'two_factor_enabled' => 'boolean',      // Add this
+        'session_timeout' => 'integer',         // Add this
+        'last_activity' => 'datetime',          // Add this
     ];
 
     /**
@@ -125,5 +132,71 @@ class User extends Authenticatable
             return true;
         }
         return false;
+    }
+
+    // ============================================
+    // NEW METHODS FOR LANGUAGE & SECURITY
+    // ============================================
+
+    /**
+     * Get user's preferred language
+     */
+    public function getPreferredLanguageAttribute($value)
+    {
+        return $value ?? 'en';
+    }
+
+    /**
+     * Check if two-factor authentication is enabled
+     */
+    public function hasTwoFactorEnabled()
+    {
+        return (bool) $this->two_factor_enabled;
+    }
+
+    /**
+     * Get session timeout in minutes
+     */
+    public function getSessionTimeout()
+    {
+        return $this->session_timeout ?? 30;
+    }
+
+    /**
+     * Check if session has expired
+     */
+    public function isSessionExpired()
+    {
+        if (!$this->last_activity || $this->session_timeout == 0) {
+            return false;
+        }
+        
+        $timeoutMinutes = $this->session_timeout;
+        $expiryTime = $this->last_activity->addMinutes($timeoutMinutes);
+        
+        return now()->greaterThan($expiryTime);
+    }
+
+    /**
+     * Update last activity timestamp
+     */
+    public function updateLastActivity()
+    {
+        $this->last_activity = now();
+        $this->save();
+    }
+
+    /**
+     * Force logout all other sessions
+     */
+    public function forceLogoutOtherSessions()
+    {
+        // Regenerate remember token to invalidate other sessions
+        $this->remember_token = null;
+        $this->save();
+        
+        // Update last activity
+        $this->last_activity = now();
+        $this->save();
     }
 }
