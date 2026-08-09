@@ -1384,39 +1384,39 @@
             </div>
         </div>
 
-        <!-- Navigation - SCROLLABLE -->
+        <!-- Navigation - SCROLLABLE (FIXED: REMOVED HARDCODED ENGLISH TEXT) -->
         <div class="nav-menu-wrap">
             <nav class="nav-menu">
                 <div class="nav-section">
-                    <div class="nav-section-title"><i class="fas fa-th-large"></i> Main Menu</div>
+                    <div class="nav-section-title" data-i18n="main_menu"><i class="fas fa-th-large"></i></div>
 
-                    <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}" data-i18n="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> <span data-i18n="dashboard"></span>
                     </a>
 
-                    <a href="{{ route('members.index') }}" class="nav-item {{ request()->routeIs('members.*') ? 'active' : '' }}">
-                        <i class="fas fa-users"></i> Members
+                    <a href="{{ route('members.index') }}" class="nav-item {{ request()->routeIs('members.*') ? 'active' : '' }}" data-i18n="members">
+                        <i class="fas fa-users"></i> <span data-i18n="members"></span>
                     </a>
 
-                    <a href="{{ route('finance.index') }}" class="nav-item {{ request()->routeIs('finance.*') ? 'active' : '' }}">
-                        <i class="fas fa-coins"></i> Finance
+                    <a href="{{ route('finance.index') }}" class="nav-item {{ request()->routeIs('finance.*') ? 'active' : '' }}" data-i18n="finance">
+                        <i class="fas fa-coins"></i> <span data-i18n="finance"></span>
                         <span class="nav-badge finance"><i class="fas fa-arrow-trend-up"></i></span>
                     </a>
 
-                    <a href="{{ route('sunday-attendance.index') }}" class="nav-item {{ request()->routeIs('sunday-attendance.*') ? 'active' : '' }}">
-                        <i class="fas fa-church"></i> Sunday Service
+                    <a href="{{ route('sunday-attendance.index') }}" class="nav-item {{ request()->routeIs('sunday-attendance.*') ? 'active' : '' }}" data-i18n="sunday_service">
+                        <i class="fas fa-church"></i> <span data-i18n="sunday_service"></span>
                     </a>
 
-                    <a href="{{ route('inventory.index') }}" class="nav-item {{ request()->routeIs('inventory.*') ? 'active' : '' }}">
-                        <i class="fas fa-boxes"></i> Inventory
+                    <a href="{{ route('inventory.index') }}" class="nav-item {{ request()->routeIs('inventory.*') ? 'active' : '' }}" data-i18n="inventory">
+                        <i class="fas fa-boxes"></i> <span data-i18n="inventory"></span>
                     </a>
                 </div>
 
                 <div class="nav-section">
-                    <div class="nav-section-title"><i class="fas fa-comment-dots"></i> Communication</div>
+                    <div class="nav-section-title" data-i18n="communication"><i class="fas fa-comment-dots"></i></div>
 
-                    <a href="{{ route('messages.index') }}" class="nav-item {{ request()->routeIs('messages.*') ? 'active' : '' }}">
-                        <i class="fas fa-envelope"></i> Messages
+                    <a href="{{ route('messages.index') }}" class="nav-item {{ request()->routeIs('messages.*') ? 'active' : '' }}" data-i18n="messages">
+                        <i class="fas fa-envelope"></i> <span data-i18n="messages"></span>
                         @if($unreadMsgCount > 0)
                             <span class="nav-badge message-badge">{{ $unreadMsgCount > 99 ? '99+' : $unreadMsgCount }}</span>
                         @endif
@@ -1424,10 +1424,10 @@
                 </div>
 
                 <div class="nav-section">
-                    <div class="nav-section-title"><i class="fas fa-music"></i> Choir Ministry</div>
+                    <div class="nav-section-title" data-i18n="choir_ministry"><i class="fas fa-music"></i></div>
 
-                    <a href="{{ route('choir-members.index') }}" class="nav-item {{ request()->routeIs('choir-members.*') ? 'active' : '' }}">
-                        <i class="fas fa-music"></i> Choir Members
+                    <a href="{{ route('choir-members.index') }}" class="nav-item {{ request()->routeIs('choir-members.*') ? 'active' : '' }}" data-i18n="choir_members">
+                        <i class="fas fa-music"></i> <span data-i18n="choir_members"></span>
                         @php
                             $choirCount = $user?->church_id ? \App\Models\Member::where('church_id', $user->church_id)->where('is_choir', true)->count() : 0;
                         @endphp
@@ -1436,16 +1436,16 @@
                         @endif
                     </a>
 
-                    <a href="{{ route('choir-schedules.index') }}" class="nav-item {{ request()->routeIs('choir-schedules.*') ? 'active' : '' }}">
-                        <i class="fas fa-calendar-alt"></i> Schedules
+                    <a href="{{ route('choir-schedules.index') }}" class="nav-item {{ request()->routeIs('choir-schedules.*') ? 'active' : '' }}" data-i18n="schedules">
+                        <i class="fas fa-calendar-alt"></i> <span data-i18n="schedules"></span>
                     </a>
                 </div>
 
                 <div class="nav-section">
-                    <div class="nav-section-title"><i class="fas fa-chart-line"></i> Reports</div>
+                    <div class="nav-section-title" data-i18n="reports"><i class="fas fa-chart-line"></i></div>
 
-                    <a href="{{ route('reports.analytics') }}" class="nav-item {{ request()->routeIs('reports.analytics') ? 'active' : '' }}">
-                        <i class="fas fa-chart-pie"></i> Reports &amp; Analytics
+                    <a href="{{ route('reports.analytics') }}" class="nav-item {{ request()->routeIs('reports.analytics') ? 'active' : '' }}" data-i18n="reports_analytics">
+                        <i class="fas fa-chart-pie"></i> <span data-i18n="reports_analytics"></span>
                     </a>
                 </div>
             </nav>
@@ -1469,7 +1469,7 @@
             <form method="POST" action="{{ route('logout') }}" id="logout-form">
                 @csrf
                 <button type="submit" class="logout-btn" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                    <i class="fas fa-sign-out-alt"></i> <span data-i18n="sign_out"></span>
                 </button>
             </form>
         </div>
@@ -1487,7 +1487,7 @@
                 <!-- Live Connection Status -->
                 <div class="live-indicator connected" id="liveIndicator">
                     <span class="pulse"></span>
-                    <span>Live</span>
+                    <span data-i18n="live"></span>
                 </div>
 
                 <!-- Message Button -->
@@ -1510,18 +1510,18 @@
                     <!-- Notification Dropdown -->
                     <div class="notification-dropdown" id="notificationDropdown">
                         <div class="dropdown-header">
-                            <span>Notifications</span>
+                            <span data-i18n="notifications"></span>
                             <span class="notif-total" id="notifTotalCount">{{ $unreadMsgCount }}</span>
                         </div>
                         <div class="dropdown-list" id="notificationList">
                             <div class="dropdown-empty">
                                 <i class="fas fa-bell-slash"></i>
-                                <span>No notifications</span>
+                                <span data-i18n="no_notifications"></span>
                             </div>
                         </div>
                         <div class="dropdown-footer">
                             <a href="{{ route('messages.index') }}">
-                                <i class="fas fa-envelope"></i> Go to Messages
+                                <i class="fas fa-envelope"></i> <span data-i18n="go_to_messages"></span>
                                 @if($unreadMsgCount > 0)
                                     <span class="msg-count-badge">{{ $unreadMsgCount }}</span>
                                 @endif
@@ -1530,7 +1530,7 @@
                     </div>
                 </div>
 
-                <!-- ===== NEW: USER DROPDOWN WITH LANGUAGE & SECURITY ===== -->
+                <!-- ===== USER DROPDOWN WITH LANGUAGE & SECURITY ===== -->
                 <div class="user-dropdown-wrapper" id="userDropdownWrapper">
                     <div class="user-dropdown-toggle" id="userDropdownToggle">
                         @if($user && $user->profile_picture)
@@ -1566,7 +1566,7 @@
 
                         <!-- Language Selector -->
                         <div class="language-selector-wrapper">
-                            <label><i class="fas fa-globe"></i> Language / Pinulongan</label>
+                            <label data-i18n="language"><i class="fas fa-globe"></i></label>
                             <div class="language-options" id="languageOptions">
                                 <button class="language-option {{ $currentLang === 'en' ? 'active' : '' }}" data-lang="en">
                                     <span class="flag">🇬🇧</span>
@@ -1589,28 +1589,25 @@
                         <div class="dropdown-divider"></div>
 
                         <!-- Profile Link -->
-                        <a href="{{ route('profile.edit') }}" class="dropdown-menu-item">
+                        <a href="{{ route('profile.edit') }}" class="dropdown-menu-item" data-i18n="my_profile">
                             <i class="fas fa-user-cog"></i>
-                            <span>My Profile</span>
+                            <span data-i18n="my_profile"></span>
                         </a>
 
                         <!-- Security Settings -->
-                        <button class="dropdown-menu-item" id="securitySettingsBtn">
+                        <button class="dropdown-menu-item" id="securitySettingsBtn" data-i18n="security_settings">
                             <i class="fas fa-shield-alt"></i>
-                            <span>Security Settings</span>
-                            <span class="badge">Secure</span>
+                            <span data-i18n="security_settings"></span>
+                            <span class="badge" data-i18n="secure"></span>
                         </button>
 
                         <div class="dropdown-divider"></div>
 
                         <!-- Sign Out -->
-                        <form method="POST" action="{{ route('logout') }}" id="logout-form-dropdown">
-                            @csrf
-                            <button type="submit" class="dropdown-menu-item danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fas fa-sign-out-alt"></i>
-                                <span>Sign Out</span>
-                            </button>
-                        </form>
+                        <button class="dropdown-menu-item danger" onclick="document.getElementById('logout-form').submit();" data-i18n="sign_out">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span data-i18n="sign_out"></span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1640,15 +1637,15 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-shield-alt me-2"></i> Security Settings</h5>
+                    <h5 class="modal-title"><i class="fas fa-shield-alt me-2"></i> <span data-i18n="security_settings"></span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <!-- Two-Factor Authentication -->
                     <div class="security-setting-item">
                         <div class="setting-info">
-                            <h6>Two-Factor Authentication</h6>
-                            <p>Add an extra layer of security to your account</p>
+                            <h6 data-i18n="two_factor_auth"></h6>
+                            <p data-i18n="two_factor_desc"></p>
                         </div>
                         <div class="setting-control">
                             <label class="toggle-switch">
@@ -1661,8 +1658,8 @@
                     <!-- Session Timeout -->
                     <div class="security-setting-item">
                         <div class="setting-info">
-                            <h6>Session Timeout</h6>
-                            <p>Automatically log out after inactivity</p>
+                            <h6 data-i18n="session_timeout"></h6>
+                            <p data-i18n="session_timeout_desc"></p>
                         </div>
                         <div class="setting-control">
                             <select class="form-select form-select-sm" id="sessionTimeout" style="width:120px;">
@@ -1677,24 +1674,24 @@
 
                     <!-- Change Password -->
                     <div class="password-change-form">
-                        <h6 style="font-weight:600;margin-bottom:0.75rem;">Change Password</h6>
+                        <h6 style="font-weight:600;margin-bottom:0.75rem;" data-i18n="change_password"></h6>
                         <form id="passwordChangeForm">
                             @csrf
                             <div class="form-group">
-                                <label>Current Password</label>
+                                <label data-i18n="current_password"></label>
                                 <input type="password" class="form-control form-control-sm" id="currentPassword" required>
                             </div>
                             <div class="form-group">
-                                <label>New Password</label>
+                                <label data-i18n="new_password"></label>
                                 <input type="password" class="form-control form-control-sm" id="newPassword" required minlength="8">
                             </div>
                             <div class="form-group">
-                                <label>Confirm Password</label>
+                                <label data-i18n="confirm_password"></label>
                                 <input type="password" class="form-control form-control-sm" id="confirmPassword" required>
                             </div>
                             <div id="passwordStrength" class="mt-2" style="font-size:0.8rem;color:var(--text-muted);">
-                                <span>Password strength:</span>
-                                <span id="strengthText">Weak</span>
+                                <span data-i18n="password_strength"></span>
+                                <span id="strengthText" data-i18n="weak"></span>
                                 <div class="progress mt-1" style="height:4px;">
                                     <div id="strengthBar" class="progress-bar" style="width:0%;background:#B03B34;" role="progressbar"></div>
                                 </div>
@@ -1705,17 +1702,17 @@
                     <!-- Active Sessions -->
                     <div class="security-setting-item" style="border-bottom:none;padding-bottom:0;">
                         <div class="setting-info">
-                            <h6>Active Sessions</h6>
-                            <p>Manage where you're currently logged in</p>
+                            <h6 data-i18n="active_sessions"></h6>
+                            <p data-i18n="active_sessions_desc"></p>
                         </div>
                         <div class="setting-control">
-                            <button class="btn btn-sm btn-outline-danger" id="logoutAllSessions">Logout All</button>
+                            <button class="btn btn-sm btn-outline-danger" id="logoutAllSessions" data-i18n="logout_all"></button>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveSecuritySettings">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="close"></button>
+                    <button type="button" class="btn btn-primary" id="saveSecuritySettings" data-i18n="save_changes"></button>
                 </div>
             </div>
         </div>
@@ -1729,6 +1726,212 @@
     <script src="https://cdn.jsdelivr.net/npm/pusher-js@8.0.2/dist/web/pusher.min.js"></script>
 
     <script>
+        // ============================================
+        // COMPLETE TRANSLATIONS - ENGLISH, CEBUANO, TAGALOG
+        // ============================================
+        const translations = {
+            en: {
+                // Sidebar
+                main_menu: 'Main Menu',
+                dashboard: 'Dashboard',
+                members: 'Members',
+                finance: 'Finance',
+                sunday_service: 'Sunday Service',
+                inventory: 'Inventory',
+                communication: 'Communication',
+                messages: 'Messages',
+                choir_ministry: 'Choir Ministry',
+                choir_members: 'Choir Members',
+                schedules: 'Schedules',
+                reports: 'Reports',
+                reports_analytics: 'Reports & Analytics',
+                // Dropdown
+                language: 'Language / Pinulongan',
+                my_profile: 'My Profile',
+                security_settings: 'Security Settings',
+                sign_out: 'Sign Out',
+                secure: 'Secure',
+                // Notifications
+                notifications: 'Notifications',
+                no_notifications: 'No notifications',
+                go_to_messages: 'Go to Messages',
+                // Security
+                two_factor_auth: 'Two-Factor Authentication',
+                two_factor_desc: 'Add an extra layer of security to your account',
+                session_timeout: 'Session Timeout',
+                session_timeout_desc: 'Automatically log out after inactivity',
+                change_password: 'Change Password',
+                current_password: 'Current Password',
+                new_password: 'New Password',
+                confirm_password: 'Confirm Password',
+                password_strength: 'Password strength:',
+                weak: 'Weak',
+                medium: 'Medium',
+                strong: 'Strong',
+                active_sessions: 'Active Sessions',
+                active_sessions_desc: 'Manage where you\'re currently logged in',
+                logout_all: 'Logout All',
+                save_changes: 'Save Changes',
+                close: 'Close',
+                // Toast
+                password_updated: 'Password updated successfully!',
+                settings_saved: 'Security settings saved!',
+                two_factor_enabled: 'Two-factor authentication enabled',
+                two_factor_disabled: 'Two-factor authentication disabled',
+                session_timeout_updated: 'Session timeout updated',
+                all_sessions_logged_out: 'All other sessions logged out',
+                language_updated: 'Language updated successfully',
+                live: 'Live'
+            },
+            ceb: {
+                // Sidebar
+                main_menu: 'Panguna nga Menu',
+                dashboard: 'Dashboard',
+                members: 'Mga Miyembro',
+                finance: 'Pinansyal',
+                sunday_service: 'Serbisyo sa Domingo',
+                inventory: 'Imbentaryo',
+                communication: 'Komunikasyon',
+                messages: 'Mga Mensahe',
+                choir_ministry: 'Ministriyo sa Koro',
+                choir_members: 'Mga Miyembro sa Koro',
+                schedules: 'Mga Iskedyul',
+                reports: 'Mga Report',
+                reports_analytics: 'Mga Report ug Analisis',
+                language: 'Pinulongan',
+                my_profile: 'Akong Profile',
+                security_settings: 'Mga Setting sa Seguridad',
+                sign_out: 'Pag-gawas',
+                secure: 'Seguro',
+                notifications: 'Mga Pahibalo',
+                no_notifications: 'Walay mga pahibalo',
+                go_to_messages: 'Adto sa mga Mensahe',
+                two_factor_auth: 'Duha ka Factor nga Pag-ila',
+                two_factor_desc: 'Pagdugang og dugang nga seguridad sa imong account',
+                session_timeout: 'Timeout sa Sesyon',
+                session_timeout_desc: 'Awtomatikong pag-gawas kung walay kalihokan',
+                change_password: 'Ilisan ang Password',
+                current_password: 'Kasalukuyang Password',
+                new_password: 'Bag-ong Password',
+                confirm_password: 'Kumpirmaha ang Password',
+                password_strength: 'Kusog sa password:',
+                weak: 'Huyang',
+                medium: 'Tunga-tunga',
+                strong: 'Lig-on',
+                active_sessions: 'Mga Aktibong Sesyon',
+                active_sessions_desc: 'Pagdumala kung asa ka kasalukuyang naka-login',
+                logout_all: 'Pag-gawas sa Tanan',
+                save_changes: 'I-save ang mga Pagbag-o',
+                close: 'Isira',
+                password_updated: 'Malampusong gi-update ang password!',
+                settings_saved: 'Na-save ang mga setting sa seguridad!',
+                two_factor_enabled: 'Gi-enable ang duha ka factor nga pag-ila',
+                two_factor_disabled: 'Gi-disable ang duha ka factor nga pag-ila',
+                session_timeout_updated: 'Gi-update ang timeout sa sesyon',
+                all_sessions_logged_out: 'Gi-logout ang tanang ubang sesyon',
+                language_updated: 'Malampusong gi-update ang pinulongan',
+                live: 'Buhi'
+            },
+            tl: {
+                // Sidebar
+                main_menu: 'Pangunahing Menu',
+                dashboard: 'Dashboard',
+                members: 'Mga Miyembro',
+                finance: 'Pinansyal',
+                sunday_service: 'Serbisyo sa Linggo',
+                inventory: 'Imbentaryo',
+                communication: 'Komunikasyon',
+                messages: 'Mga Mensahe',
+                choir_ministry: 'Ministeryo ng Koro',
+                choir_members: 'Mga Miyembro ng Koro',
+                schedules: 'Mga Iskedyul',
+                reports: 'Mga Ulat',
+                reports_analytics: 'Mga Ulat at Analisis',
+                language: 'Wika',
+                my_profile: 'Aking Profile',
+                security_settings: 'Mga Setting ng Seguridad',
+                sign_out: 'Mag-sign Out',
+                secure: 'Ligtas',
+                notifications: 'Mga Abiso',
+                no_notifications: 'Walang mga abiso',
+                go_to_messages: 'Pumunta sa mga Mensahe',
+                two_factor_auth: 'Two-Factor Authentication',
+                two_factor_desc: 'Magdagdag ng karagdagang seguridad sa iyong account',
+                session_timeout: 'Timeout ng Session',
+                session_timeout_desc: 'Awtomatikong mag-logout pagkatapos ng kawalan ng aktibidad',
+                change_password: 'Palitan ang Password',
+                current_password: 'Kasalukuyang Password',
+                new_password: 'Bagong Password',
+                confirm_password: 'Kumpirmahin ang Password',
+                password_strength: 'Lakas ng password:',
+                weak: 'Mahina',
+                medium: 'Katamtaman',
+                strong: 'Malakas',
+                active_sessions: 'Mga Aktibong Session',
+                active_sessions_desc: 'Pamahalaan kung saan ka kasalukuyang naka-login',
+                logout_all: 'Mag-logout sa Lahat',
+                save_changes: 'I-save ang mga Pagbabago',
+                close: 'Isara',
+                password_updated: 'Matagumpay na na-update ang password!',
+                settings_saved: 'Na-save ang mga setting ng seguridad!',
+                two_factor_enabled: 'Na-enable ang two-factor authentication',
+                two_factor_disabled: 'Na-disable ang two-factor authentication',
+                session_timeout_updated: 'Na-update ang timeout ng session',
+                all_sessions_logged_out: 'Na-logout ang lahat ng ibang session',
+                language_updated: 'Matagumpay na na-update ang wika',
+                live: 'Live'
+            }
+        };
+
+        // ============================================
+        // LANGUAGE MANAGEMENT
+        // ============================================
+        let currentLanguage = localStorage.getItem('tinc-language') || '{{ $currentLang }}' || 'en';
+
+        function t(key) {
+            const translation = translations[currentLanguage]?.[key];
+            if (translation) return translation;
+            // Fallback to English
+            const englishTranslation = translations.en[key];
+            if (englishTranslation) return englishTranslation;
+            return key;
+        }
+
+        function applyTranslations() {
+            // Update all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translation = t(key);
+                
+                // Check if element contains an icon inside, but no text nodes (e.g., <span data-i18n></span>)
+                const hasIcon = element.querySelector('i');
+                
+                // If the element is empty, simply assign the translation
+                if (element.textContent.trim() === '') {
+                    element.textContent = translation;
+                } else {
+                    // Otherwise, find text nodes and replace them (preserving icons)
+                    const textNodes = Array.from(element.childNodes).filter(node => node.nodeType === 3);
+                    
+                    if (textNodes.length > 0) {
+                        textNodes.forEach(node => {
+                            node.textContent = translation;
+                        });
+                    } else if (hasIcon) {
+                        // If it has only an icon, append a text node
+                        const textNode = document.createTextNode(' ' + translation);
+                        element.appendChild(textNode);
+                    } else {
+                        // Fallback for anything else
+                        element.textContent = translation;
+                    }
+                }
+            });
+            
+            // Update HTML lang attribute
+            document.documentElement.lang = currentLanguage;
+        }
+
         // ============================================
         // USER DROPDOWN TOGGLE
         // ============================================
@@ -1758,15 +1961,33 @@
         }
 
         // ============================================
-        // LANGUAGE SELECTOR
+        // LANGUAGE SELECTOR - FULL FUNCTIONALITY
         // ============================================
         document.querySelectorAll('.language-option').forEach(btn => {
             btn.addEventListener('click', function() {
                 const lang = this.dataset.lang;
 
+                // Update UI - active state
                 document.querySelectorAll('.language-option').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
 
+                // Update current language
+                currentLanguage = lang;
+                localStorage.setItem('tinc-language', lang);
+
+                // Apply all translations
+                applyTranslations();
+
+                // Update live indicator
+                const liveSpan = document.querySelector('.live-indicator span:last-child');
+                if (liveSpan) {
+                    liveSpan.textContent = t('live');
+                }
+
+                // Show success toast
+                showToastNotification('success', 'Language Updated', t('language_updated'));
+
+                // Save to server
                 fetch('{{ route("settings.language") }}', {
                     method: 'POST',
                     headers: {
@@ -1777,14 +1998,15 @@
                 })
                 .then(res => res.json())
                 .then(data => {
-                    if (data.success) {
-                        showToastNotification('success', 'Language Updated', 'Language changed successfully');
+                    if (!data.success) {
+                        showToastNotification('error', 'Error', 'Failed to save language preference');
                     }
                 })
                 .catch(() => {
                     showToastNotification('error', 'Error', 'Failed to save language preference');
                 });
 
+                // Close dropdown
                 dropdownToggle.classList.remove('active');
                 dropdownMenu.classList.remove('show');
             });
@@ -1809,7 +2031,7 @@
             newPassword.addEventListener('input', function() {
                 const password = this.value;
                 let strength = 0;
-                let level = 'Weak';
+                let level = 'weak';
                 let color = '#B03B34';
                 let width = 0;
 
@@ -1819,11 +2041,11 @@
                 if (password.match(/[0-9]/)) strength += 1;
                 if (password.match(/[^a-zA-Z0-9]/)) strength += 1;
 
-                if (strength <= 2) { level = 'Weak'; color = '#B03B34'; width = 20; }
-                else if (strength <= 3) { level = 'Medium'; color = '#F5A623'; width = 60; }
-                else { level = 'Strong'; color = '#2A7048'; width = 100; }
+                if (strength <= 2) { level = 'weak'; color = '#B03B34'; width = 20; }
+                else if (strength <= 3) { level = 'medium'; color = '#F5A623'; width = 60; }
+                else { level = 'strong'; color = '#2A7048'; width = 100; }
 
-                strengthText.textContent = level;
+                strengthText.textContent = t(level);
                 strengthText.style.color = color;
                 strengthBar.style.width = width + '%';
                 strengthBar.style.background = color;
@@ -1844,7 +2066,7 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    showToastNotification('success', 'Security', enabled ? 'Two-factor authentication enabled' : 'Two-factor authentication disabled');
+                    showToastNotification('success', 'Security', enabled ? t('two_factor_enabled') : t('two_factor_disabled'));
                 }
             })
             .catch(() => {
@@ -1866,7 +2088,7 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    showToastNotification('success', 'Security', 'Session timeout updated successfully');
+                    showToastNotification('success', 'Security', t('session_timeout_updated'));
                 }
             })
             .catch(() => {
@@ -1887,7 +2109,7 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        showToastNotification('success', 'Security', 'All other sessions logged out');
+                        showToastNotification('success', 'Security', t('all_sessions_logged_out'));
                     }
                 })
                 .catch(() => {
@@ -1927,7 +2149,7 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        showToastNotification('success', 'Security', 'Password updated successfully');
+                        showToastNotification('success', 'Security', t('password_updated'));
                         document.getElementById('currentPassword').value = '';
                         document.getElementById('newPassword').value = '';
                         document.getElementById('confirmPassword').value = '';
@@ -1943,6 +2165,62 @@
                 securityModal.hide();
             }
         });
+
+        // ============================================
+        // TOAST NOTIFICATIONS
+        // ============================================
+        const toastContainer = document.getElementById('toastContainer');
+
+        function showToastNotification(type, title, message, duration = 5000) {
+            if (!toastContainer) return;
+
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-times-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle',
+                message: 'fa-envelope'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `toast-notification ${type}`;
+            toast.innerHTML = `
+                <div class="toast-icon ${type}">
+                    <i class="fas ${icons[type] || 'fa-bell'}"></i>
+                </div>
+                <div class="toast-body">
+                    <div class="toast-title">${escapeHtml(title)}</div>
+                    <div class="toast-message">${escapeHtml(message)}</div>
+                </div>
+                <button class="toast-close" onclick="this.closest('.toast-notification').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            const timeoutId = setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.classList.add('hiding');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, duration);
+
+            toast.addEventListener('click', (e) => {
+                if (e.target.closest('.toast-close')) return;
+                clearTimeout(timeoutId);
+                toast.classList.add('hiding');
+                setTimeout(() => toast.remove(), 300);
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+
+        window.showToastNotification = showToastNotification;
 
         // ============================================
         // REVERB REAL-TIME BROADCASTING
@@ -1968,7 +2246,7 @@
             liveIndicator.classList.remove('connected', 'disconnected', 'connecting');
             if (status === 'connected') {
                 liveIndicator.classList.add('connected');
-                liveIndicator.innerHTML = '<span class="pulse"></span><span>Live</span>';
+                liveIndicator.innerHTML = `<span class="pulse"></span><span>${t('live')}</span>`;
             } else if (status === 'connecting') {
                 liveIndicator.classList.add('connecting');
                 liveIndicator.innerHTML = '<span class="pulse"></span><span>Connecting...</span>';
@@ -2094,57 +2372,6 @@
                     setTimeout(() => item.classList.remove('new-item'), 5000);
                 }
             }
-        }
-
-        const toastContainer = document.getElementById('toastContainer');
-
-        function showToastNotification(type, title, message, duration = 5000) {
-            if (!toastContainer) return;
-
-            const icons = {
-                success: 'fa-check-circle',
-                error: 'fa-times-circle',
-                warning: 'fa-exclamation-triangle',
-                info: 'fa-info-circle',
-                message: 'fa-envelope'
-            };
-
-            const toast = document.createElement('div');
-            toast.className = `toast-notification ${type}`;
-            toast.innerHTML = `
-                <div class="toast-icon ${type}">
-                    <i class="fas ${icons[type] || 'fa-bell'}"></i>
-                </div>
-                <div class="toast-body">
-                    <div class="toast-title">${escapeHtml(title)}</div>
-                    <div class="toast-message">${escapeHtml(message)}</div>
-                </div>
-                <button class="toast-close" onclick="this.closest('.toast-notification').remove()">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-
-            toastContainer.appendChild(toast);
-
-            const timeoutId = setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.classList.add('hiding');
-                    setTimeout(() => toast.remove(), 300);
-                }
-            }, duration);
-
-            toast.addEventListener('click', (e) => {
-                if (e.target.closest('.toast-close')) return;
-                clearTimeout(timeoutId);
-                toast.classList.add('hiding');
-                setTimeout(() => toast.remove(), 300);
-            });
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text || '';
-            return div.innerHTML;
         }
 
         window.showToastNotification = showToastNotification;
@@ -2407,8 +2634,23 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Apply translations on page load
+            applyTranslations();
+            
+            // Initialize notification manager
             new NotificationManager();
+            
+            // Update live indicator
+            const liveSpan = document.querySelector('.live-indicator span:last-child');
+            if (liveSpan) {
+                liveSpan.textContent = t('live');
+            }
         });
+
+        // Make functions globally available
+        window.t = t;
+        window.applyTranslations = applyTranslations;
+        window.showToastNotification = showToastNotification;
     </script>
 
     @stack('scripts')
