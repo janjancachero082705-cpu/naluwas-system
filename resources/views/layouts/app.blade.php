@@ -70,7 +70,6 @@
             --font-body: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
             --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
             
-            /* NEW: Language & Security variables */
             --dropdown-shadow: 0 20px 48px -12px rgba(16,24,39,0.22);
             --danger-color: #B03B34;
             --danger-hover: #8A2A26;
@@ -132,7 +131,6 @@
             font-size: 15px;
         }
 
-        /* ===== AMBIENT BACKGROUND ===== */
         .animated-bg {
             position: fixed;
             top: 0; left: 0;
@@ -159,7 +157,6 @@
             75% { transform: translate(40px, 35px) scale(1.03); }
         }
 
-        /* ===== SIDEBAR - FIXED ===== */
         .sidebar-container {
             position: fixed;
             left: 0; top: 0;
@@ -174,7 +171,6 @@
             border-right: 1px solid var(--sidebar-border);
         }
 
-        /* ===== LOGO - FIXED ===== */
         .logo-section {
             padding: 1.5rem 1.25rem 1.35rem;
             border-bottom: 1px solid var(--sidebar-border);
@@ -237,7 +233,6 @@
             font-weight: 600;
         }
 
-        /* ===== NAVIGATION ===== */
         .nav-menu-wrap {
             flex: 1;
             overflow: hidden;
@@ -343,7 +338,6 @@
             animation: pulse-dot 2s infinite;
         }
 
-        /* ===== USER SECTION ===== */
         .user-section {
             flex-shrink: 0;
             background: var(--user-section-bg);
@@ -392,7 +386,6 @@
         }
         .logout-btn:hover { background: rgba(176,59,52,0.12); transform: translateY(-1px); }
 
-        /* ===== MAIN CONTENT ===== */
         .main-content {
             margin-left: 264px;
             height: 100vh;
@@ -404,7 +397,6 @@
         .main-content::-webkit-scrollbar-track { background: transparent; }
         .main-content::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
 
-        /* ===== TOP HEADER ===== */
         .top-header {
             background: var(--header-bg);
             border-bottom: 1px solid var(--header-border);
@@ -443,7 +435,6 @@
 
         .header-right { display: flex; align-items: center; gap: 10px; position: relative; }
 
-        /* ===== CONTENT AREA ===== */
         .content-area {
             padding: 1.5rem 2rem 2rem;
             animation: fadeInUp 0.4s ease;
@@ -454,7 +445,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== LIVE INDICATOR ===== */
         .live-indicator {
             display: inline-flex;
             align-items: center;
@@ -496,7 +486,6 @@
             50% { opacity: 0.45; transform: scale(0.78); }
         }
 
-        /* ===== MESSAGE BUTTON ===== */
         .header-message-btn {
             width: 40px; height: 40px;
             border-radius: 10px;
@@ -530,7 +519,6 @@
             animation: pulse-dot 2s infinite;
         }
 
-        /* ===== NOTIFICATION BUTTON ===== */
         .header-notif {
             width: 40px; height: 40px;
             border-radius: 10px;
@@ -565,7 +553,6 @@
         }
         .notif-dot.has-messages { background: var(--brass-deep); animation: pulse-dot 1s infinite; }
 
-        /* ===== NOTIFICATION DROPDOWN ===== */
         .notification-dropdown {
             position: absolute;
             top: calc(100% + 10px);
@@ -696,7 +683,6 @@
         .dropdown-empty { padding: 40px 20px; text-align: center; color: var(--text-muted); }
         .dropdown-empty i { font-size: 2.2rem; margin-bottom: 12px; display: block; opacity: 0.4; }
 
-        /* ===== TOAST NOTIFICATIONS ===== */
         .toast-container {
             position: fixed;
             top: 82px; right: 20px;
@@ -759,7 +745,6 @@
         }
         .toast-close:hover { color: var(--text-primary); transform: rotate(90deg); }
 
-        /* ===== USER DROPDOWN (NEW) ===== */
         .user-dropdown-wrapper {
             position: relative;
             cursor: pointer;
@@ -919,7 +904,6 @@
             font-weight: 700;
         }
 
-        /* ===== LANGUAGE SELECTOR ===== */
         .language-selector-wrapper {
             padding: 0.3rem 0.5rem;
         }
@@ -982,7 +966,6 @@
             opacity: 1;
         }
 
-        /* ===== SECURITY SETTINGS MODAL ===== */
         .security-settings-modal .modal-content {
             border-radius: 16px;
             overflow: hidden;
@@ -1032,7 +1015,6 @@
             margin-left: 1rem;
         }
 
-        /* ===== TOGGLE SWITCH ===== */
         .toggle-switch {
             position: relative;
             width: 44px;
@@ -1090,7 +1072,6 @@
             margin-bottom: 4px;
         }
 
-        /* ===== ALERTS ===== */
         .alert {
             padding: 0.85rem 1.1rem;
             border-radius: 10px;
@@ -1110,7 +1091,6 @@
         .alert-warning { background: var(--alert-warning-bg); color: var(--alert-warning-text); border-left: 3px solid var(--brass); }
         .alert-info    { background: var(--alert-info-bg);    color: var(--alert-info-text);    border-left: 3px solid #2B5A85; }
 
-        /* ===== CARDS ===== */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -1121,7 +1101,6 @@
         }
         .card:hover { box-shadow: var(--card-hover-shadow); transform: translateY(-2px); }
 
-        /* ===== FORM CONTROLS ===== */
         .form-control, .form-select {
             background: var(--input-bg);
             border: 1px solid var(--input-border);
@@ -1141,14 +1120,12 @@
         }
         .form-control::placeholder { color: var(--text-muted); }
 
-        /* ===== BUTTONS ===== */
         .btn-primary {
             background: var(--gradient-primary);
             border: none;
         }
         .btn-primary:hover { background: var(--ink-deep); }
 
-        /* ===== MODAL ===== */
         .modal-content {
             background: var(--modal-bg);
             color: var(--text-primary);
@@ -1159,7 +1136,6 @@
         .modal-header { border-bottom: 1px solid var(--border-color); padding: 1.2rem 1.5rem; }
         .modal-footer { border-top: 1px solid var(--border-color); padding: 1rem 1.5rem; }
 
-        /* ===== TABLES ===== */
         .table { color: var(--text-primary); }
         .table thead th {
             border-bottom: 2px solid var(--border-color);
@@ -1172,7 +1148,6 @@
         .table td, .table th { border-color: var(--border-color); padding: 0.8rem 1rem; vertical-align: middle; }
         .table-striped > tbody > tr:nth-of-type(odd) { background: rgba(0,0,0,0.015); }
 
-        /* ===== LOGO TOAST ===== */
         .logo-toast {
             position: fixed;
             bottom: 24px; right: 24px;
@@ -1194,7 +1169,6 @@
         .logo-toast.success { border-left: 3px solid #2A7048; }
         .logo-toast.error { border-left: 3px solid #B03B34; }
 
-        /* ===== FLOATING THEME TOGGLE ===== */
         .fab-theme {
             position: fixed;
             bottom: 28px; right: 28px;
@@ -1223,7 +1197,6 @@
         }
         [data-theme="dark"] .fab-theme:hover { box-shadow: 0 8px 28px rgba(211,162,76,0.5); }
 
-        /* ===== PROFILE PICTURE UPLOAD ===== */
         .profile-picture-wrapper { position: relative; display: inline-block; cursor: pointer; }
         .profile-picture-wrapper .upload-overlay {
             position: absolute; bottom: 0; right: 0;
@@ -1291,7 +1264,6 @@
         .connection-status.connected .dot { background: #2A7048; animation: pulse-dot 1.5s infinite; }
         .connection-status.disconnected .dot { background: #B03B34; animation: none; }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
             .sidebar-container { width: 224px; }
             .main-content { margin-left: 224px; }
@@ -1365,7 +1337,6 @@
 
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar-container" id="sidebar">
-        <!-- Logo - FIXED -->
         <div class="logo-section">
             <div class="logo-wrapper">
                 <div class="logo-upload-trigger" id="logoTrigger" title="Click to change logo">
@@ -1384,39 +1355,38 @@
             </div>
         </div>
 
-        <!-- Navigation - SCROLLABLE (FIXED: REMOVED HARDCODED ENGLISH TEXT) -->
         <div class="nav-menu-wrap">
             <nav class="nav-menu">
                 <div class="nav-section">
                     <div class="nav-section-title" data-i18n="main_menu"><i class="fas fa-th-large"></i></div>
 
-                    <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}" data-i18n="dashboard">
-                        <i class="fas fa-tachometer-alt"></i> <span data-i18n="dashboard"></span>
+                    <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('Dashboard') ? 'active' : '' }}" data-i18n="Dashboard">
+                        <i class="fas fa-tachometer-alt"></i> <span data-i18n="Dashboard"></span>
                     </a>
 
-                    <a href="{{ route('members.index') }}" class="nav-item {{ request()->routeIs('members.*') ? 'active' : '' }}" data-i18n="members">
-                        <i class="fas fa-users"></i> <span data-i18n="members"></span>
+                    <a href="{{ route('members.index') }}" class="nav-item {{ request()->routeIs('Members.*') ? 'active' : '' }}" data-i18n="Members">
+                        <i class="fas fa-users"></i> <span data-i18n="Members"></span>
                     </a>
 
-                    <a href="{{ route('finance.index') }}" class="nav-item {{ request()->routeIs('finance.*') ? 'active' : '' }}" data-i18n="finance">
-                        <i class="fas fa-coins"></i> <span data-i18n="finance"></span>
+                    <a href="{{ route('finance.index') }}" class="nav-item {{ request()->routeIs('Finance.*') ? 'active' : '' }}" data-i18n="Finance">
+                        <i class="fas fa-coins"></i> <span data-i18n="Finance"></span>
                         <span class="nav-badge finance"><i class="fas fa-arrow-trend-up"></i></span>
                     </a>
 
-                    <a href="{{ route('sunday-attendance.index') }}" class="nav-item {{ request()->routeIs('sunday-attendance.*') ? 'active' : '' }}" data-i18n="sunday_service">
-                        <i class="fas fa-church"></i> <span data-i18n="sunday_service"></span>
+                    <a href="{{ route('sunday-attendance.index') }}" class="nav-item {{ request()->routeIs('Sunday Attendance.*') ? 'active' : '' }}" data-i18n="Sunday Attendance">
+                        <i class="fas fa-church"></i> <span data-i18n="Sunday Attendance"></span>
                     </a>
 
-                    <a href="{{ route('inventory.index') }}" class="nav-item {{ request()->routeIs('inventory.*') ? 'active' : '' }}" data-i18n="inventory">
-                        <i class="fas fa-boxes"></i> <span data-i18n="inventory"></span>
+                    <a href="{{ route('inventory.index') }}" class="nav-item {{ request()->routeIs('Inventory.*') ? 'active' : '' }}" data-i18n="Inventory">
+                        <i class="fas fa-boxes"></i> <span data-i18n="Inventory"></span>
                     </a>
                 </div>
 
                 <div class="nav-section">
                     <div class="nav-section-title" data-i18n="communication"><i class="fas fa-comment-dots"></i></div>
 
-                    <a href="{{ route('messages.index') }}" class="nav-item {{ request()->routeIs('messages.*') ? 'active' : '' }}" data-i18n="messages">
-                        <i class="fas fa-envelope"></i> <span data-i18n="messages"></span>
+                    <a href="{{ route('messages.index') }}" class="nav-item {{ request()->routeIs('Messages.*') ? 'active' : '' }}" data-i18n="Messages">
+                        <i class="fas fa-envelope"></i> <span data-i18n="Messages"></span>
                         @if($unreadMsgCount > 0)
                             <span class="nav-badge message-badge">{{ $unreadMsgCount > 99 ? '99+' : $unreadMsgCount }}</span>
                         @endif
@@ -1426,8 +1396,8 @@
                 <div class="nav-section">
                     <div class="nav-section-title" data-i18n="choir_ministry"><i class="fas fa-music"></i></div>
 
-                    <a href="{{ route('choir-members.index') }}" class="nav-item {{ request()->routeIs('choir-members.*') ? 'active' : '' }}" data-i18n="choir_members">
-                        <i class="fas fa-music"></i> <span data-i18n="choir_members"></span>
+                    <a href="{{ route('choir-members.index') }}" class="nav-item {{ request()->routeIs('Choir Members.*') ? 'active' : '' }}" data-i18n="Choir Members">
+                        <i class="fas fa-music"></i> <span data-i18n="Choir Members"></span>
                         @php
                             $choirCount = $user?->church_id ? \App\Models\Member::where('church_id', $user->church_id)->where('is_choir', true)->count() : 0;
                         @endphp
@@ -1436,22 +1406,21 @@
                         @endif
                     </a>
 
-                    <a href="{{ route('choir-schedules.index') }}" class="nav-item {{ request()->routeIs('choir-schedules.*') ? 'active' : '' }}" data-i18n="schedules">
-                        <i class="fas fa-calendar-alt"></i> <span data-i18n="schedules"></span>
+                    <a href="{{ route('choir-schedules.index') }}" class="nav-item {{ request()->routeIs('choir-schedules.*') ? 'active' : '' }}" data-i18n="Schedules">
+                        <i class="fas fa-calendar-alt"></i> <span data-i18n="Schedules"></span>
                     </a>
                 </div>
 
                 <div class="nav-section">
                     <div class="nav-section-title" data-i18n="reports"><i class="fas fa-chart-line"></i></div>
 
-                    <a href="{{ route('reports.analytics') }}" class="nav-item {{ request()->routeIs('reports.analytics') ? 'active' : '' }}" data-i18n="reports_analytics">
-                        <i class="fas fa-chart-pie"></i> <span data-i18n="reports_analytics"></span>
+                    <a href="{{ route('reports.analytics') }}" class="nav-item {{ request()->routeIs('reports.analytics') ? 'active' : '' }}" data-i18n="Reports & Analytics">
+                        <i class="fas fa-chart-pie"></i> <span data-i18n="Reports & Analytics"></span>
                     </a>
                 </div>
             </nav>
         </div>
 
-        <!-- User Section - FIXED -->
         <div class="user-section">
             <div class="user-info">
                 @if($user && $user->profile_picture)
@@ -1477,20 +1446,17 @@
 
     <!-- ===== MAIN CONTENT ===== -->
     <div class="main-content">
-        <!-- Top Header - FIXED -->
         <header class="top-header">
             <div class="header-left">
                 <h1>@yield('header', 'Dashboard')</h1>
             </div>
 
             <div class="header-right">
-                <!-- Live Connection Status -->
                 <div class="live-indicator connected" id="liveIndicator">
                     <span class="pulse"></span>
                     <span data-i18n="live"></span>
                 </div>
 
-                <!-- Message Button -->
                 <a href="{{ route('messages.index') }}" class="header-message-btn" title="Messages">
                     <i class="fas fa-envelope"></i>
                     @if($unreadMsgCount > 0)
@@ -1498,7 +1464,6 @@
                     @endif
                 </a>
 
-                <!-- Notifications -->
                 <div style="position: relative;">
                     <button class="header-notif" id="notificationBell" title="Notifications">
                         <i class="fas fa-bell"></i>
@@ -1507,7 +1472,6 @@
                         </span>
                     </button>
 
-                    <!-- Notification Dropdown -->
                     <div class="notification-dropdown" id="notificationDropdown">
                         <div class="dropdown-header">
                             <span data-i18n="notifications"></span>
@@ -1530,7 +1494,6 @@
                     </div>
                 </div>
 
-                <!-- ===== USER DROPDOWN WITH LANGUAGE & SECURITY ===== -->
                 <div class="user-dropdown-wrapper" id="userDropdownWrapper">
                     <div class="user-dropdown-toggle" id="userDropdownToggle">
                         @if($user && $user->profile_picture)
@@ -1547,9 +1510,7 @@
                         <i class="fas fa-chevron-down arrow"></i>
                     </div>
 
-                    <!-- User Dropdown Menu -->
                     <div class="user-dropdown-menu" id="userDropdownMenu">
-                        <!-- User Header -->
                         <div class="dropdown-user-header">
                             @if($user && $user->profile_picture)
                                 <img src="{{ $user->profile_picture_url }}" alt="{{ $user->name }}" class="avatar-lg">
@@ -1564,7 +1525,6 @@
                             </div>
                         </div>
 
-                        <!-- Language Selector -->
                         <div class="language-selector-wrapper">
                             <label data-i18n="language"><i class="fas fa-globe"></i></label>
                             <div class="language-options" id="languageOptions">
@@ -1588,13 +1548,11 @@
 
                         <div class="dropdown-divider"></div>
 
-                        <!-- Profile Link -->
                         <a href="{{ route('profile.edit') }}" class="dropdown-menu-item" data-i18n="my_profile">
                             <i class="fas fa-user-cog"></i>
                             <span data-i18n="my_profile"></span>
                         </a>
 
-                        <!-- Security Settings -->
                         <button class="dropdown-menu-item" id="securitySettingsBtn" data-i18n="security_settings">
                             <i class="fas fa-shield-alt"></i>
                             <span data-i18n="security_settings"></span>
@@ -1603,7 +1561,6 @@
 
                         <div class="dropdown-divider"></div>
 
-                        <!-- Sign Out -->
                         <button class="dropdown-menu-item danger" onclick="document.getElementById('logout-form').submit();" data-i18n="sign_out">
                             <i class="fas fa-sign-out-alt"></i>
                             <span data-i18n="sign_out"></span>
@@ -1613,7 +1570,6 @@
             </div>
         </header>
 
-        <!-- Content - SCROLLABLE -->
         <div class="content-area">
             @if(session('success'))
                 <div class="alert alert-success"><i class="fas fa-check-circle"></i> {{ session('success') }}</div>
@@ -1641,7 +1597,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Two-Factor Authentication -->
                     <div class="security-setting-item">
                         <div class="setting-info">
                             <h6 data-i18n="two_factor_auth"></h6>
@@ -1655,7 +1610,6 @@
                         </div>
                     </div>
 
-                    <!-- Session Timeout -->
                     <div class="security-setting-item">
                         <div class="setting-info">
                             <h6 data-i18n="session_timeout"></h6>
@@ -1672,7 +1626,6 @@
                         </div>
                     </div>
 
-                    <!-- Change Password -->
                     <div class="password-change-form">
                         <h6 style="font-weight:600;margin-bottom:0.75rem;" data-i18n="change_password"></h6>
                         <form id="passwordChangeForm">
@@ -1699,7 +1652,6 @@
                         </form>
                     </div>
 
-                    <!-- Active Sessions -->
                     <div class="security-setting-item" style="border-bottom:none;padding-bottom:0;">
                         <div class="setting-info">
                             <h6 data-i18n="active_sessions"></h6>
@@ -1730,158 +1682,528 @@
         // COMPLETE TRANSLATIONS - ENGLISH, CEBUANO, TAGALOG
         // ============================================
         const translations = {
-            en: {
-                // Sidebar
-                main_menu: 'Main Menu',
-                dashboard: 'Dashboard',
-                members: 'Members',
-                finance: 'Finance',
-                sunday_service: 'Sunday Service',
-                inventory: 'Inventory',
-                communication: 'Communication',
-                messages: 'Messages',
-                choir_ministry: 'Choir Ministry',
-                choir_members: 'Choir Members',
-                schedules: 'Schedules',
-                reports: 'Reports',
-                reports_analytics: 'Reports & Analytics',
-                // Dropdown
-                language: 'Language / Pinulongan',
-                my_profile: 'My Profile',
-                security_settings: 'Security Settings',
-                sign_out: 'Sign Out',
-                secure: 'Secure',
-                // Notifications
-                notifications: 'Notifications',
-                no_notifications: 'No notifications',
-                go_to_messages: 'Go to Messages',
-                // Security
-                two_factor_auth: 'Two-Factor Authentication',
-                two_factor_desc: 'Add an extra layer of security to your account',
-                session_timeout: 'Session Timeout',
-                session_timeout_desc: 'Automatically log out after inactivity',
-                change_password: 'Change Password',
-                current_password: 'Current Password',
-                new_password: 'New Password',
-                confirm_password: 'Confirm Password',
-                password_strength: 'Password strength:',
-                weak: 'Weak',
-                medium: 'Medium',
-                strong: 'Strong',
-                active_sessions: 'Active Sessions',
-                active_sessions_desc: 'Manage where you\'re currently logged in',
-                logout_all: 'Logout All',
-                save_changes: 'Save Changes',
-                close: 'Close',
-                // Toast
-                password_updated: 'Password updated successfully!',
-                settings_saved: 'Security settings saved!',
-                two_factor_enabled: 'Two-factor authentication enabled',
-                two_factor_disabled: 'Two-factor authentication disabled',
-                session_timeout_updated: 'Session timeout updated',
-                all_sessions_logged_out: 'All other sessions logged out',
-                language_updated: 'Language updated successfully',
-                live: 'Live'
-            },
-            ceb: {
-                // Sidebar
-                main_menu: 'Panguna nga Menu',
-                dashboard: 'Dashboard',
-                members: 'Mga Miyembro',
-                finance: 'Pinansyal',
-                sunday_service: 'Serbisyo sa Domingo',
-                inventory: 'Imbentaryo',
-                communication: 'Komunikasyon',
-                messages: 'Mga Mensahe',
-                choir_ministry: 'Ministriyo sa Koro',
-                choir_members: 'Mga Miyembro sa Koro',
-                schedules: 'Mga Iskedyul',
-                reports: 'Mga Report',
-                reports_analytics: 'Mga Report ug Analisis',
-                language: 'Pinulongan',
-                my_profile: 'Akong Profile',
-                security_settings: 'Mga Setting sa Seguridad',
-                sign_out: 'Pag-gawas',
-                secure: 'Seguro',
-                notifications: 'Mga Pahibalo',
-                no_notifications: 'Walay mga pahibalo',
-                go_to_messages: 'Adto sa mga Mensahe',
-                two_factor_auth: 'Duha ka Factor nga Pag-ila',
-                two_factor_desc: 'Pagdugang og dugang nga seguridad sa imong account',
-                session_timeout: 'Timeout sa Sesyon',
-                session_timeout_desc: 'Awtomatikong pag-gawas kung walay kalihokan',
-                change_password: 'Ilisan ang Password',
-                current_password: 'Kasalukuyang Password',
-                new_password: 'Bag-ong Password',
-                confirm_password: 'Kumpirmaha ang Password',
-                password_strength: 'Kusog sa password:',
-                weak: 'Huyang',
-                medium: 'Tunga-tunga',
-                strong: 'Lig-on',
-                active_sessions: 'Mga Aktibong Sesyon',
-                active_sessions_desc: 'Pagdumala kung asa ka kasalukuyang naka-login',
-                logout_all: 'Pag-gawas sa Tanan',
-                save_changes: 'I-save ang mga Pagbag-o',
-                close: 'Isira',
-                password_updated: 'Malampusong gi-update ang password!',
-                settings_saved: 'Na-save ang mga setting sa seguridad!',
-                two_factor_enabled: 'Gi-enable ang duha ka factor nga pag-ila',
-                two_factor_disabled: 'Gi-disable ang duha ka factor nga pag-ila',
-                session_timeout_updated: 'Gi-update ang timeout sa sesyon',
-                all_sessions_logged_out: 'Gi-logout ang tanang ubang sesyon',
-                language_updated: 'Malampusong gi-update ang pinulongan',
-                live: 'Buhi'
-            },
-            tl: {
-                // Sidebar
-                main_menu: 'Pangunahing Menu',
-                dashboard: 'Dashboard',
-                members: 'Mga Miyembro',
-                finance: 'Pinansyal',
-                sunday_service: 'Serbisyo sa Linggo',
-                inventory: 'Imbentaryo',
-                communication: 'Komunikasyon',
-                messages: 'Mga Mensahe',
-                choir_ministry: 'Ministeryo ng Koro',
-                choir_members: 'Mga Miyembro ng Koro',
-                schedules: 'Mga Iskedyul',
-                reports: 'Mga Ulat',
-                reports_analytics: 'Mga Ulat at Analisis',
-                language: 'Wika',
-                my_profile: 'Aking Profile',
-                security_settings: 'Mga Setting ng Seguridad',
-                sign_out: 'Mag-sign Out',
-                secure: 'Ligtas',
-                notifications: 'Mga Abiso',
-                no_notifications: 'Walang mga abiso',
-                go_to_messages: 'Pumunta sa mga Mensahe',
-                two_factor_auth: 'Two-Factor Authentication',
-                two_factor_desc: 'Magdagdag ng karagdagang seguridad sa iyong account',
-                session_timeout: 'Timeout ng Session',
-                session_timeout_desc: 'Awtomatikong mag-logout pagkatapos ng kawalan ng aktibidad',
-                change_password: 'Palitan ang Password',
-                current_password: 'Kasalukuyang Password',
-                new_password: 'Bagong Password',
-                confirm_password: 'Kumpirmahin ang Password',
-                password_strength: 'Lakas ng password:',
-                weak: 'Mahina',
-                medium: 'Katamtaman',
-                strong: 'Malakas',
-                active_sessions: 'Mga Aktibong Session',
-                active_sessions_desc: 'Pamahalaan kung saan ka kasalukuyang naka-login',
-                logout_all: 'Mag-logout sa Lahat',
-                save_changes: 'I-save ang mga Pagbabago',
-                close: 'Isara',
-                password_updated: 'Matagumpay na na-update ang password!',
-                settings_saved: 'Na-save ang mga setting ng seguridad!',
-                two_factor_enabled: 'Na-enable ang two-factor authentication',
-                two_factor_disabled: 'Na-disable ang two-factor authentication',
-                session_timeout_updated: 'Na-update ang timeout ng session',
-                all_sessions_logged_out: 'Na-logout ang lahat ng ibang session',
-                language_updated: 'Matagumpay na na-update ang wika',
-                live: 'Live'
-            }
-        };
+    en: {
+        // ... all existing translations ...
+        // Dashboard translations
+        welcome_back: 'Welcome back! Here\'s your church overview',
+        analytics: 'Analytics',
+        total_members: 'Total Members',
+        active_members: 'Active members',
+        choir_members: 'Choir Members',
+        music_ministry: 'Music ministry',
+        today_attendance: 'Today\'s Attendance',
+        present: 'present',
+        monthly_balance: 'Monthly Balance',
+        surplus: 'Surplus',
+        deficit: 'Deficit',
+        income_vs_expenses: 'Income vs Expenses',
+        last_6_months: 'Last 6 Months',
+        income: 'Income',
+        expenses: 'Expenses',
+        recent_transactions: 'Recent Transactions',
+        view_all: 'View all',
+        no_transactions: 'No transactions yet',
+        add_transaction: 'Add transaction',
+        upcoming_birthdays: 'Upcoming Birthdays',
+        this_month: 'This month',
+        today_label: 'Today!',
+        tomorrow_label: 'Tomorrow!',
+        turning_in_days: 'Turning',
+        in: 'in',
+        days: 'days',
+        no_upcoming_birthdays: 'No upcoming birthdays',
+        choir_schedule: 'Choir Schedule',
+        upcoming_label: 'Upcoming',
+        view_full_schedule: 'View Full Schedule',
+        no_upcoming_schedule: 'No upcoming schedule',
+        create_schedule: 'Create schedule',
+        no_members_assigned: 'No members assigned',
+        choir: 'Choir',
+        today: 'Today',
+        update_received: 'Update received',
+        real_time_data_updated: 'Real-time data updated',
+        // member management translations
+        member_management: 'Member Management',
+member_management_desc: 'Manage your church members, roles, and choir assignments',
+add_member: 'Add Member',
+back_to_active: 'Back to Active',
+view_deceased: 'View Deceased',
+active_members_label: 'Active Members',
+choir_members_label: 'Choir Members',
+birthdays_this_month: 'Birthdays This Month',
+celebrating_soon: 'Celebrating soon',
+deceased_label: 'Deceased',
+at_rest: 'At rest',
+filter_by_ministry: 'Filter by Ministry',
+all_members: 'All Members',
+total_deceased: 'Total Deceased',
+total_active: 'Total Active',
+active: 'Active',
+deceased: 'Deceased',
+member: 'Member',
+gender: 'Gender',
+roles: 'Roles',
+birthday: 'Birthday',
+age: 'Age',
+actions: 'Actions',
+regular: 'Regular',
+choir: 'Choir',
+showing: 'Showing',
+to: 'to',
+of: 'of',
+no_active_members: 'No Active Members Yet',
+no_active_members_desc: 'Get started by adding your first church member to the system.',
+add_first_member: 'Add Your First Member',
+no_deceased_members: 'No Deceased Members',
+no_deceased_members_desc: 'Click the cross button on any active member to move them here.',
+deceased_members: 'deceased members',
+// SweetAlert translations
+delete_member: 'Delete Member?',
+delete_member_confirm: 'Are you sure you want to permanently delete <strong>{memberName}</strong>?<br><small>This action cannot be undone.</small>',
+yes_delete: 'Yes, delete!',
+cancel: 'Cancel',
+deleting: 'Deleting...',
+please_wait: 'Please wait',
+permanently_delete: 'Permanently Delete?',
+permanently_delete_confirm: 'Are you sure you want to permanently delete <strong>{memberName}</strong>?<br><small>All records will be lost forever.</small>',
+restore_member: 'Restore Member?',
+restore_member_confirm: 'Are you sure you want to restore <strong>{memberName}</strong> to active members?',
+yes_restore: 'Yes, restore!',
+restoring: 'Restoring...',
+restored: 'Restored!',
+error: 'Error!',
+mark_as_deceased: 'Mark as Deceased',
+date_of_death: 'Date of Death:',
+mark_deceased: 'Mark as Deceased',
+processing: 'Processing...',
+marked_deceased: 'Marked as Deceased',
+mark_deceased_confirm: 'Mark <strong>{memberName}</strong> as deceased?',
+deceased_move_note: 'This member will be moved to the Deceased Members section.',
+select_death_date: 'Please select the date of death',
+// member profile translations
+member_profile: 'Member Profile',
+id_label: 'ID:',
+edit_profile: 'Edit Profile',
+back_to_members: 'Back to Members',
+restore_to_active: 'Restore to Active',
+personal_information: 'Personal Information',
+birthday_label: 'Birthday',
+years_old: 'years old',
+phone_label: 'Phone Number',
+email_label: 'Email Address',
+address_label: 'Address',
+roles_label: 'Roles & Responsibilities',
+choir_label: 'Choir',
+no_roles_assigned: 'No roles assigned',
+add_label: 'Add',
+not_specified: 'Not Specified',
+male: 'Male',
+female: 'Female',
+// SweetAlert translations
+mark_deceased_profile_confirm: 'Are you sure you want to mark this member as <strong>DECEASED</strong>?',
+action_cannot_be_undone: 'This action cannot be undone.',
+yes_mark_deceased: 'Yes, Mark Deceased',
+restore_active_confirm: 'Are you sure you want to restore this member to ACTIVE status?',
+delete_confirm_text: 'Are you sure you want to permanently delete',
+delete_warning: 'This action cannot be undone. All data associated with this member will be permanently removed.',
+// edit member translation
+edit_member: 'Edit Member',
+edit_member_information: 'Edit Member Information',
+last_updated: 'Last updated:',
+first_name: 'First Name',
+last_name: 'Last Name',
+enter_first_name: 'Enter first name',
+enter_last_name: 'Enter last name',
+phone_number: 'Phone Number',
+email_address: 'Email Address',
+enter_phone_number: 'Enter phone number',
+enter_email_address: 'Enter email address',
+address: 'Address',
+enter_address: 'Enter address',
+roles_responsibilities: 'Roles & Responsibilities',
+assign_roles: 'Assign Roles',
+select_multiple_hint: 'Hold',
+windows_hint: '(Windows) or',
+mac_hint: '(Mac) to select multiple roles',
+choir_information: 'Choir Information',
+choir_assignment: 'Choir Assignment',
+choir_group: 'Choir Group',
+no_choir_group: 'No Choir Group',
+choir_role: 'Choir Role',
+no_choir_role: 'No Choir Role',
+singer: 'Singer',
+guitarist: 'Guitarist',
+bassist: 'Bassist',
+drummer: 'Drummer',
+update_member: 'Update Member',
+view_profile: 'View Profile',
+back: 'Back',
+cancel: 'Cancel',
+select_gender: 'Select Gender',
+current_db_value: 'Current value in database:',
+unsaved_changes: 'You have unsaved changes. Are you sure you want to leave?'
+    },
+    ceb: {
+        // ... all Cebuano translations ...
+        welcome_back: 'Welcome back! Ania ang imong church overview',
+        analytics: 'Analisis',
+        total_members: 'Kabuok nga Miyembro',
+        active_members: 'Mga aktibong miyembro',
+        choir_members: 'Mga Miyembro sa Koro',
+        music_ministry: 'Ministriyo sa musika',
+        today_attendance: 'Tubag Karon',
+        present: 'tumambong',
+        monthly_balance: 'Buwanang Balanse',
+        surplus: 'Surplus',
+        deficit: 'Kulang',
+        income_vs_expenses: 'Kita vs Gastos',
+        last_6_months: 'Miaging 6 ka Buwan',
+        income: 'Kita',
+        expenses: 'Gastos',
+        recent_transactions: 'Bag-ong mga Transaksyon',
+        view_all: 'Tan-awa tanan',
+        no_transactions: 'Wala pay mga transaksyon',
+        add_transaction: 'Pagdugang transaksyon',
+        upcoming_birthdays: 'Umaabot nga mga Adlawng Natawhan',
+        this_month: 'Karong buwana',
+        today_label: 'Karon na!',
+        tomorrow_label: 'Ugma na!',
+        turning_in_days: 'Mag-',
+        in: 'sa',
+        days: 'ka adlaw',
+        no_upcoming_birthdays: 'Walay umaabot nga mga adlawng natawhan',
+        choir_schedule: 'Iskedyul sa Koro',
+        upcoming_label: 'Umaabot',
+        view_full_schedule: 'Tan-awa ang Tibuok Iskedyul',
+        no_upcoming_schedule: 'Walay umaabot nga iskedyul',
+        create_schedule: 'Paghimo og iskedyul',
+        no_members_assigned: 'Walay mga miyembro nga gi-assign',
+        choir: 'Koro',
+        today: 'Karon',
+        update_received: 'Nadawat ang update',
+        real_time_data_updated: 'Gi-update ang real-time nga datos',
+        // Add to translations.ceb
+member_management: 'Pagtuki sa mga Miyembro',
+member_management_desc: 'Pagdumala sa imong mga miyembro sa simbahan, mga tahas, ug mga asaynment sa koro',
+add_member: 'Pagdugang og Miyembro',
+back_to_active: 'Balik sa Aktibo',
+view_deceased: 'Tan-awa ang mga Namatay',
+active_members_label: 'Aktibong mga Miyembro',
+choir_members_label: 'Mga Miyembro sa Koro',
+birthdays_this_month: 'Mga Adlawng Natawhan Karong Buwana',
+celebrating_soon: 'Nagsaulog sa dili madugay',
+deceased_label: 'Namatay',
+at_rest: 'Nagpahulay',
+filter_by_ministry: 'Pagsala sa Ministriyo',
+all_members: 'Tanang Miyembro',
+total_deceased: 'Kinasangputan nga Namatay',
+total_active: 'Kinasangputan nga Aktibo',
+active: 'Aktibo',
+deceased: 'Namatay',
+member: 'Miyembro',
+gender: 'Sekso',
+roles: 'Mga Tahas',
+birthday: 'Adlawng Natawhan',
+age: 'Edad',
+actions: 'Mga Aksyon',
+regular: 'Regular',
+choir: 'Koro',
+showing: 'Gipakita',
+to: 'hangtod',
+of: 'sa',
+no_active_members: 'Wala pay Aktibong mga Miyembro',
+no_active_members_desc: 'Pagsugod pinaagi sa pagdugang sa imong unang miyembro sa simbahan.',
+add_first_member: 'Pagdugang sa Imong Unang Miyembro',
+no_deceased_members: 'Walay mga Namatay nga Miyembro',
+no_deceased_members_desc: 'I-klik ang cross button sa bisan unsang aktibong miyembro aron ibalhin sila dinhi.',
+deceased_members: 'mga namatay nga miyembro',
+// SweetAlert Cebuano
+delete_member: 'Kuhaon ang Miyembro?',
+delete_member_confirm: 'Sigurado ka bang gusto nimo nga permanenteng kuhaon <strong>{memberName}</strong>?<br><small>Kining aksyon dili na mabalik.</small>',
+yes_delete: 'Oo, kuhaa!',
+cancel: 'Kanselar',
+deleting: 'Nag-kuha...',
+please_wait: 'Palihug paghulat',
+permanently_delete: 'Permanenteng Kuhaon?',
+permanently_delete_confirm: 'Sigurado ka bang gusto nimo nga permanenteng kuhaon <strong>{memberName}</strong>?<br><small>Tanang rekord mawala na.</small>',
+restore_member: 'Ibalik ang Miyembro?',
+restore_member_confirm: 'Sigurado ka bang gusto nimo nga ibalik <strong>{memberName}</strong> sa aktibong mga miyembro?',
+yes_restore: 'Oo, ibalik!',
+restoring: 'Nag-ibalik...',
+restored: 'Naibalik!',
+error: 'Sayop!',
+mark_as_deceased: 'Markahan nga Namatay',
+date_of_death: 'Petsa sa Kamatayon:',
+mark_deceased: 'Markahan nga Namatay',
+processing: 'Nag-proseso...',
+marked_deceased: 'Markahan nga Namatay!',
+mark_deceased_confirm: 'Markahan <strong>{memberName}</strong> nga namatay?',
+deceased_move_note: 'Kining miyembro ibalhin sa seksyon sa mga Namatay.',
+select_death_date: 'Palihug pagpili sa petsa sa kamatayon',
+// Table headers
+member_table: 'Talaan sa mga Miyembro',
+id: 'ID',
+name: 'Ngalan',
+contact: 'Kontak',
+status: 'Kahimtang',
+date_added: 'Petsa nga Gidugang',
+last_updated: 'Katapusang Gi-update',
+view_profile: 'Tan-awa ang Profile',
+edit_member: 'Usba ang Miyembro',
+delete_member_title: 'Kuhaon ang Miyembro',
+restore_member_title: 'Ibalik ang Miyembro',
+permanent_delete_title: 'Permanenteng Kuhaon',
+// Additional
+search_members: 'Pangitaa ang mga Miyembro',
+no_results: 'Walay nakit-an nga mga miyembro',
+loading: 'Nag-load...',
+success: 'Malampuson!',
+confirm: 'Kompirmar',
+yes: 'Oo',
+no: 'Dili',
+// member profile translations
+member_profile: 'Profile sa Miyembro',
+id_label: 'ID:',
+edit_profile: 'Usba ang Profile',
+back_to_members: 'Balik sa mga Miyembro',
+restore_to_active: 'Ibalik sa Aktibo',
+personal_information: 'Panguna nga Impormasyon',
+birthday_label: 'Adlawng Natawhan',
+years_old: 'ka tuig ang panuigon',
+phone_label: 'Numero sa Telepono',
+email_label: 'Email Address',
+address_label: 'Address',
+roles_label: 'Mga Tahas ug Responsibilidad',
+choir_label: 'Koro',
+no_roles_assigned: 'Walay mga tahas nga gi-assign',
+add_label: 'Pagdugang',
+not_specified: 'Wala Matino',
+male: 'Lalaki',
+female: 'Babaye',
+mark_deceased_profile_confirm: 'Sigurado ka bang gusto nimo nga markahan kini nga miyembro nga <strong>NAMATAY</strong>?',
+action_cannot_be_undone: 'Kining aksyon dili na mabalik.',
+yes_mark_deceased: 'Oo, Markahan nga Namatay',
+restore_active_confirm: 'Sigurado ka bang gusto nimo nga ibalik kini nga miyembro sa AKTIBO nga kahimtang?',
+delete_confirm_text: 'Sigurado ka bang gusto nimo nga permanenteng kuhaon',
+delete_warning: 'Kining aksyon dili na mabalik. Tanang datos nga naay kalabotan niini nga miyembro mawala na.',
+// member edit translation
+edit_member: 'Usba ang Miyembro',
+edit_member_information: 'Usba ang Impormasyon sa Miyembro',
+last_updated: 'Katapusang gi-update:',
+first_name: 'Unang Ngalan',
+last_name: 'Apelyido',
+enter_first_name: 'Isulod ang unang ngalan',
+enter_last_name: 'Isulod ang apelyido',
+phone_number: 'Numero sa Telepono',
+email_address: 'Email Address',
+enter_phone_number: 'Isulod ang numero sa telepono',
+enter_email_address: 'Isulod ang email address',
+address: 'Address',
+enter_address: 'Isulod ang address',
+roles_responsibilities: 'Mga Tahas ug Responsibilidad',
+assign_roles: 'Pag-assign og mga Tahas',
+select_multiple_hint: 'Paghawak',
+windows_hint: '(Windows) o',
+mac_hint: '(Mac) aron makapili og daghang mga tahas',
+choir_information: 'Impormasyon sa Koro',
+choir_assignment: 'Asaynment sa Koro',
+choir_group: 'Grupo sa Koro',
+no_choir_group: 'Walay Grupo sa Koro',
+choir_role: 'Tahas sa Koro',
+no_choir_role: 'Walay Tahas sa Koro',
+singer: 'Manganta',
+guitarist: 'Gitara',
+bassist: 'Bass',
+drummer: 'Drummer',
+update_member: 'I-update ang Miyembro',
+view_profile: 'Tan-awa ang Profile',
+back: 'Balik',
+cancel: 'Kanselar',
+select_gender: 'Pagpili og Sekso',
+current_db_value: 'Kasalukuyang value sa database:',
+unsaved_changes: 'Naay mga wala ma-save nga mga pagbag-o. Sigurado ka bang gusto nimo nga mobiya?'
+    },
+    tl: {
+        // ... all Tagalog translations ...
+        welcome_back: 'Welcome back! Narito ang iyong church overview',
+        analytics: 'Analisis',
+        total_members: 'Kabuuang Miyembro',
+        active_members: 'Mga aktibong miyembro',
+        choir_members: 'Mga Miyembro ng Koro',
+        music_ministry: 'Ministeryo ng musika',
+        today_attendance: 'Pagdalo Ngayon',
+        present: 'dumalo',
+        monthly_balance: 'Buwanang Balanse',
+        surplus: 'Sobra',
+        deficit: 'Kulang',
+        income_vs_expenses: 'Kita vs Gastos',
+        last_6_months: 'Huling 6 na Buwan',
+        income: 'Kita',
+        expenses: 'Gastos',
+        recent_transactions: 'Mga Bagong Transaksyon',
+        view_all: 'Tingnan lahat',
+        no_transactions: 'Wala pang mga transaksyon',
+        add_transaction: 'Magdagdag ng transaksyon',
+        upcoming_birthdays: 'Mga Paparating na Kaarawan',
+        this_month: 'Ngayong buwan',
+        today_label: 'Ngayon na!',
+        tomorrow_label: 'Bukas na!',
+        turning_in_days: 'Mag-',
+        in: 'sa',
+        days: 'na araw',
+        no_upcoming_birthdays: 'Walang paparating na kaarawan',
+        choir_schedule: 'Iskedyul ng Koro',
+        upcoming_label: 'Paparating',
+        view_full_schedule: 'Tingnan ang Buong Iskedyul',
+        no_upcoming_schedule: 'Walang paparating na iskedyul',
+        create_schedule: 'Gumawa ng iskedyul',
+        no_members_assigned: 'Walang mga miyembro na naka-assign',
+        choir: 'Koro',
+        today: 'Ngayon',
+        update_received: 'Natanggap ang update',
+        real_time_data_updated: 'Na-update ang real-time na datos',
+        // Add to translations.tl
+member_management: 'Pamamahala ng mga Miyembro',
+member_management_desc: 'Pamahalaan ang iyong mga miyembro ng simbahan, mga tungkulin, at mga asignasyon sa koro',
+add_member: 'Magdagdag ng Miyembro',
+back_to_active: 'Bumalik sa Aktibo',
+view_deceased: 'Tingnan ang mga Yumao',
+active_members_label: 'Aktibong mga Miyembro',
+choir_members_label: 'Mga Miyembro ng Koro',
+birthdays_this_month: 'Mga Kaarawan Ngayong Buwan',
+celebrating_soon: 'Magdiriwang sa lalong madaling panahon',
+deceased_label: 'Yumao',
+at_rest: 'Nagpapahinga',
+filter_by_ministry: 'Salain ayon sa Ministeryo',
+all_members: 'Lahat ng Miyembro',
+total_deceased: 'Kabuuang Yumao',
+total_active: 'Kabuuang Aktibo',
+active: 'Aktibo',
+deceased: 'Yumao',
+member: 'Miyembro',
+gender: 'Kasarian',
+roles: 'Mga Tungkulin',
+birthday: 'Kaarawan',
+age: 'Edad',
+actions: 'Mga Aksyon',
+regular: 'Regular',
+choir: 'Koro',
+showing: 'Ipinapakita',
+to: 'hanggang',
+of: 'ng',
+no_active_members: 'Walang Aktibong mga Miyembro',
+no_active_members_desc: 'Magsimula sa pamamagitan ng pagdagdag ng iyong unang miyembro ng simbahan sa sistema.',
+add_first_member: 'Idagdag ang Iyong Unang Miyembro',
+no_deceased_members: 'Walang mga Yumao na Miyembro',
+no_deceased_members_desc: 'I-click ang cross button sa anumang aktibong miyembro upang ilipat sila dito.',
+deceased_members: 'mga yumaong miyembro',
+// SweetAlert Tagalog
+delete_member: 'Tanggalin ang Miyembro?',
+delete_member_confirm: 'Sigurado ka bang gusto mong permanenteng tanggalin <strong>{memberName}</strong>?<br><small>Ang aksyon na ito ay hindi na maibabalik.</small>',
+yes_delete: 'Oo, tanggalin!',
+cancel: 'Kanselahin',
+deleting: 'Tinatanggal...',
+please_wait: 'Mangyaring maghintay',
+permanently_delete: 'Permanenteng Tanggalin?',
+permanently_delete_confirm: 'Sigurado ka bang gusto mong permanenteng tanggalin <strong>{memberName}</strong>?<br><small>Lahat ng rekord ay mawawala na.</small>',
+restore_member: 'Ibalik ang Miyembro?',
+restore_member_confirm: 'Sigurado ka bang gusto mong ibalik <strong>{memberName}</strong> sa aktibong mga miyembro?',
+yes_restore: 'Oo, ibalik!',
+restoring: 'Ibinabalik...',
+restored: 'Naibalik!',
+error: 'Error!',
+mark_as_deceased: 'Markahan bilang Yumao',
+date_of_death: 'Petsa ng Kamatayan:',
+mark_deceased: 'Markahan bilang Yumao',
+processing: 'Nagproseso...',
+marked_deceased: 'Minarkahan bilang Yumao!',
+mark_deceased_confirm: 'Markahan <strong>{memberName}</strong> bilang yumao?',
+deceased_move_note: 'Ang miyembrong ito ay ililipat sa seksyon ng mga Yumao.',
+select_death_date: 'Mangyaring pumili ng petsa ng kamatayan',
+// Table headers
+member_table: 'Talaan ng mga Miyembro',
+id: 'ID',
+name: 'Pangalan',
+contact: 'Kontak',
+status: 'Katayuan',
+date_added: 'Petsa ng Pagdagdag',
+last_updated: 'Huling Na-update',
+view_profile: 'Tingnan ang Profile',
+edit_member: 'Baguhin ang Miyembro',
+delete_member_title: 'Tanggalin ang Miyembro',
+restore_member_title: 'Ibalik ang Miyembro',
+permanent_delete_title: 'Permanenteng Tanggalin',
+// Additional
+search_members: 'Maghanap ng mga Miyembro',
+no_results: 'Walang nakitang mga miyembro',
+loading: 'Naglo-load...',
+success: 'Matagumpay!',
+confirm: 'Kumpirmahin',
+yes: 'Oo',
+no: 'Hindi',
+//member profile translations
+member_profile: 'Profile ng Miyembro',
+id_label: 'ID:',
+edit_profile: 'Baguhin ang Profile',
+back_to_members: 'Bumalik sa mga Miyembro',
+restore_to_active: 'Ibalik sa Aktibo',
+personal_information: 'Personal na Impormasyon',
+birthday_label: 'Kaarawan',
+years_old: 'taong gulang',
+phone_label: 'Numero ng Telepono',
+email_label: 'Email Address',
+address_label: 'Address',
+roles_label: 'Mga Tungkulin at Responsibilidad',
+choir_label: 'Koro',
+no_roles_assigned: 'Walang mga tungkulin na naka-assign',
+add_label: 'Magdagdag',
+not_specified: 'Hindi Natukoy',
+male: 'Lalaki',
+female: 'Babae',
+mark_deceased_profile_confirm: 'Sigurado ka bang gusto mong markahan ang miyembrong ito bilang <strong>YUMATO</strong>?',
+action_cannot_be_undone: 'Ang aksyon na ito ay hindi na maibabalik.',
+yes_mark_deceased: 'Oo, Markahan bilang Yumao',
+restore_active_confirm: 'Sigurado ka bang gusto mong ibalik ang miyembrong ito sa AKTIBO na katayuan?',
+delete_confirm_text: 'Sigurado ka bang gusto mong permanenteng tanggalin',
+delete_warning: 'Ang aksyon na ito ay hindi na maibabalik. Lahat ng datos na may kaugnayan sa miyembrong ito ay tuluyang mawawala.',
+// member edit translation
+edit_member: 'Baguhin ang Miyembro',
+edit_member_information: 'Baguhin ang Impormasyon ng Miyembro',
+last_updated: 'Huling na-update:',
+first_name: 'Unang Pangalan',
+last_name: 'Apelyido',
+enter_first_name: 'Ilagay ang unang pangalan',
+enter_last_name: 'Ilagay ang apelyido',
+phone_number: 'Numero ng Telepono',
+email_address: 'Email Address',
+enter_phone_number: 'Ilagay ang numero ng telepono',
+enter_email_address: 'Ilagay ang email address',
+address: 'Address',
+enter_address: 'Ilagay ang address',
+roles_responsibilities: 'Mga Tungkulin at Responsibilidad',
+assign_roles: 'Mag-assign ng mga Tungkulin',
+select_multiple_hint: 'Pigilan',
+windows_hint: '(Windows) o',
+mac_hint: '(Mac) upang pumili ng maraming tungkulin',
+choir_information: 'Impormasyon ng Koro',
+choir_assignment: 'Asignasyon sa Koro',
+choir_group: 'Grupo ng Koro',
+no_choir_group: 'Walang Grupo ng Koro',
+choir_role: 'Tungkulin sa Koro',
+no_choir_role: 'Walang Tungkulin sa Koro',
+singer: 'Mang-aawit',
+guitarist: 'Gitara',
+bassist: 'Bass',
+drummer: 'Drummer',
+update_member: 'I-update ang Miyembro',
+view_profile: 'Tingnan ang Profile',
+back: 'Bumalik',
+cancel: 'Kanselahin',
+select_gender: 'Pumili ng Kasarian',
+current_db_value: 'Kasalukuyang value sa database:',
+unsaved_changes: 'May mga hindi na-save na pagbabago. Sigurado ka bang gusto mong umalis?'
+    }
+};
 
         // ============================================
         // LANGUAGE MANAGEMENT
@@ -1891,7 +2213,6 @@
         function t(key) {
             const translation = translations[currentLanguage]?.[key];
             if (translation) return translation;
-            // Fallback to English
             const englishTranslation = translations.en[key];
             if (englishTranslation) return englishTranslation;
             return key;
@@ -1903,14 +2224,11 @@
                 const key = element.getAttribute('data-i18n');
                 const translation = t(key);
                 
-                // Check if element contains an icon inside, but no text nodes (e.g., <span data-i18n></span>)
                 const hasIcon = element.querySelector('i');
                 
-                // If the element is empty, simply assign the translation
                 if (element.textContent.trim() === '') {
                     element.textContent = translation;
                 } else {
-                    // Otherwise, find text nodes and replace them (preserving icons)
                     const textNodes = Array.from(element.childNodes).filter(node => node.nodeType === 3);
                     
                     if (textNodes.length > 0) {
@@ -1918,18 +2236,27 @@
                             node.textContent = translation;
                         });
                     } else if (hasIcon) {
-                        // If it has only an icon, append a text node
                         const textNode = document.createTextNode(' ' + translation);
                         element.appendChild(textNode);
                     } else {
-                        // Fallback for anything else
                         element.textContent = translation;
                     }
                 }
             });
             
+            // Update all elements with data-i18n-placeholder
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-i18n-placeholder');
+                element.placeholder = t(key);
+            });
+            
             // Update HTML lang attribute
             document.documentElement.lang = currentLanguage;
+            
+            // Update chart labels if chart exists
+            if (window.financeChart) {
+                updateChartLabels();
+            }
         }
 
         // ============================================
@@ -1961,33 +2288,27 @@
         }
 
         // ============================================
-        // LANGUAGE SELECTOR - FULL FUNCTIONALITY
+        // LANGUAGE SELECTOR
         // ============================================
         document.querySelectorAll('.language-option').forEach(btn => {
             btn.addEventListener('click', function() {
                 const lang = this.dataset.lang;
 
-                // Update UI - active state
                 document.querySelectorAll('.language-option').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
 
-                // Update current language
                 currentLanguage = lang;
                 localStorage.setItem('tinc-language', lang);
 
-                // Apply all translations
                 applyTranslations();
 
-                // Update live indicator
                 const liveSpan = document.querySelector('.live-indicator span:last-child');
                 if (liveSpan) {
                     liveSpan.textContent = t('live');
                 }
 
-                // Show success toast
                 showToastNotification('success', 'Language Updated', t('language_updated'));
 
-                // Save to server
                 fetch('{{ route("settings.language") }}', {
                     method: 'POST',
                     headers: {
@@ -2006,7 +2327,6 @@
                     showToastNotification('error', 'Error', 'Failed to save language preference');
                 });
 
-                // Close dropdown
                 dropdownToggle.classList.remove('active');
                 dropdownMenu.classList.remove('show');
             });
@@ -2223,6 +2543,160 @@
         window.showToastNotification = showToastNotification;
 
         // ============================================
+        // FINANCE CHART
+        // ============================================
+        function initializeChart() {
+            const canvas = document.getElementById('financeChart');
+            if (!canvas) return;
+
+            const monthsData = @json($months ?? []);
+            const incomeData = @json($incomeData ?? []);
+            const expenseData = @json($expenseData ?? []);
+
+            let months = Array.isArray(monthsData) && monthsData.length > 0 ? monthsData : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            let income = Array.isArray(incomeData) && incomeData.length > 0 ? incomeData : [0, 0, 0, 0, 0, 0];
+            let expense = Array.isArray(expenseData) && expenseData.length > 0 ? expenseData : [0, 0, 0, 0, 0, 0];
+
+            while (income.length < months.length) income.push(0);
+            while (expense.length < months.length) expense.push(0);
+
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
+            const tickColor = isDark ? 'rgba(255,255,255,0.4)' : '#888';
+
+            const chart = new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: t('income'),
+                            data: income,
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#10B981',
+                            pointBorderColor: isDark ? '#1e1e1e' : '#fff',
+                            pointBorderWidth: 2,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: t('expenses'),
+                            data: expense,
+                            borderColor: '#EF4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                            borderWidth: 2,
+                            borderDash: [5, 3],
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#EF4444',
+                            pointBorderColor: isDark ? '#1e1e1e' : '#fff',
+                            pointBorderWidth: 2,
+                            pointHoverRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: { size: 11, weight: '600' },
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim(),
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: isDark ? '#2a2a2a' : '#fff',
+                            titleColor: isDark ? '#e0e0e0' : '#1e293b',
+                            bodyColor: isDark ? '#aaa' : '#475569',
+                            borderColor: isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            padding: 10,
+                            callbacks: {
+                                label: function(ctx) {
+                                    return ctx.dataset.label + ': ₱' + ctx.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₱' + value.toLocaleString();
+                                },
+                                font: { size: 11 },
+                                color: tickColor
+                            },
+                            grid: {
+                                color: gridColor,
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 11 },
+                                color: tickColor
+                            },
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+
+            window.financeChart = chart;
+            return chart;
+        }
+
+        function updateChartLabels() {
+            const chart = window.financeChart;
+            if (!chart) return;
+            
+            chart.data.datasets[0].label = t('income');
+            chart.data.datasets[1].label = t('expenses');
+            chart.update();
+        }
+
+        // ============================================
+        // THEME CHANGE FOR CHART
+        // ============================================
+        const themeObserver = new MutationObserver(function() {
+            const chart = window.financeChart;
+            if (!chart) return;
+            
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
+            const tickColor = isDark ? 'rgba(255,255,255,0.4)' : '#888';
+            
+            chart.options.scales.y.grid.color = gridColor;
+            chart.options.scales.y.ticks.color = tickColor;
+            chart.options.scales.x.ticks.color = tickColor;
+            chart.update();
+        });
+
+        themeObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+
+        // ============================================
         // REVERB REAL-TIME BROADCASTING
         // ============================================
         window.Pusher = Pusher;
@@ -2379,10 +2853,14 @@
         window.updateBalanceStats = updateBalanceStats;
         window.updateChoirSchedule = updateChoirSchedule;
         window.updateConnectionStatus = updateConnectionStatus;
+        window.t = t;
+        window.applyTranslations = applyTranslations;
+        window.initializeChart = initializeChart;
+        window.updateChartLabels = updateChartLabels;
     </script>
 
     <!-- ============================================ -->
-    <!-- ADDITIONAL SCRIPTS (Your Existing Code) -->
+    <!-- ADDITIONAL SCRIPTS -->
     <!-- ============================================ -->
     <script>
         // ===== THEME TOGGLE =====
@@ -2634,23 +3112,20 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Apply translations on page load
             applyTranslations();
             
-            // Initialize notification manager
+            // Initialize chart if it exists
+            if (document.getElementById('financeChart')) {
+                initializeChart();
+            }
+            
             new NotificationManager();
             
-            // Update live indicator
             const liveSpan = document.querySelector('.live-indicator span:last-child');
             if (liveSpan) {
                 liveSpan.textContent = t('live');
             }
         });
-
-        // Make functions globally available
-        window.t = t;
-        window.applyTranslations = applyTranslations;
-        window.showToastNotification = showToastNotification;
     </script>
 
     @stack('scripts')

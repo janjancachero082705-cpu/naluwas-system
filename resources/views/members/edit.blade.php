@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('header', 'Edit Member')
+@section('header')
+    <span data-i18n="edit_member">Edit Member</span>
+@endsection
 
 @section('content')
 <style>
@@ -482,22 +484,22 @@
                     {{ strtoupper(substr($member->first_name ?? 'M', 0, 1)) }}{{ strtoupper(substr($member->last_name ?? 'M', 0, 1)) }}
                 </div>
                 <div class="hero-text">
-                    <h1>Edit Member</h1>
+                    <h1><span data-i18n="edit_member">Edit Member</span></h1>
                     <p class="hero-sub">
                         <i class="fas fa-user"></i>
                         {{ $member->first_name ?? '' }} {{ $member->last_name ?? '' }}
                         <span style="opacity: 0.5; margin: 0 6px;">·</span>
                         <i class="fas fa-id-card"></i>
-                        ID: #{{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}
+                        <span data-i18n="id_label">ID:</span> #{{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}
                     </p>
                 </div>
             </div>
             <div class="hero-actions">
                 <a href="{{ route('members.show', $member->id) }}" class="btn-hero-edit btn-hero-edit-ghost">
-                    <i class="fas fa-eye"></i> View Profile
+                    <i class="fas fa-eye"></i> <span data-i18n="view_profile">View Profile</span>
                 </a>
                 <a href="{{ route('members.index') }}" class="btn-hero-edit btn-hero-edit-white">
-                    <i class="fas fa-arrow-left"></i> Back
+                    <i class="fas fa-arrow-left"></i> <span data-i18n="back">Back</span>
                 </a>
             </div>
         </div>
@@ -508,10 +510,10 @@
             <div class="edit-card">
                 <div class="edit-card-header">
                     <h5>
-                        <i class="fas fa-user-edit"></i> Edit Member Information
+                        <i class="fas fa-user-edit"></i> <span data-i18n="edit_member_information">Edit Member Information</span>
                     </h5>
                     <span class="member-id-badge">
-                        <i class="fas fa-clock"></i> Last updated: {{ $member->updated_at ? \Carbon\Carbon::parse($member->updated_at)->diffForHumans() : 'Never' }}
+                        <i class="fas fa-clock"></i> <span data-i18n="last_updated">Last updated:</span> {{ $member->updated_at ? \Carbon\Carbon::parse($member->updated_at)->diffForHumans() : 'Never' }}
                     </span>
                 </div>
                 <div class="edit-card-body">
@@ -522,17 +524,17 @@
                         <div class="row g-4">
                             <div class="col-12">
                                 <h6 class="fw-bold text-primary mb-3" style="font-family: 'Inter', sans-serif;">
-                                    <i class="fas fa-user-circle me-2"></i> Personal Information
+                                    <i class="fas fa-user-circle me-2"></i> <span data-i18n="personal_information">Personal Information</span>
                                 </h6>
                             </div>
                             
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <i class="fas fa-user"></i> First Name <span class="required">*</span>
+                                        <i class="fas fa-user"></i> <span data-i18n="first_name">First Name</span> <span class="required">*</span>
                                     </label>
                                     <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror" 
-                                           value="{{ old('first_name', $member->first_name) }}" placeholder="Enter first name" required>
+                                           value="{{ old('first_name', $member->first_name) }}" placeholder="{{ __('Enter first name') }}" required>
                                     @error('first_name')
                                         <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
                                     @enderror
@@ -542,10 +544,10 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <i class="fas fa-user"></i> Last Name <span class="required">*</span>
+                                        <i class="fas fa-user"></i> <span data-i18n="last_name">Last Name</span> <span class="required">*</span>
                                     </label>
                                     <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror" 
-                                           value="{{ old('last_name', $member->last_name) }}" placeholder="Enter last name" required>
+                                           value="{{ old('last_name', $member->last_name) }}" placeholder="{{ __('Enter last name') }}" required>
                                     @error('last_name')
                                         <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
                                     @enderror
@@ -555,7 +557,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <i class="fas fa-birthday-cake"></i> Birthday
+                                        <i class="fas fa-birthday-cake"></i> <span data-i18n="birthday">Birthday</span>
                                     </label>
                                     <input type="date" name="birthday" class="form-control @error('birthday') is-invalid @enderror" 
                                            value="{{ old('birthday', $member->birthday ? \Carbon\Carbon::parse($member->birthday)->format('Y-m-d') : '') }}">
@@ -565,25 +567,21 @@
                                 </div>
                             </div>
                             
-                            <!-- ============================================
-                                 GENDER - FIXED
-                            ============================================ -->
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <i class="fas fa-venus-mars"></i> Gender
+                                        <i class="fas fa-venus-mars"></i> <span data-i18n="gender">Gender</span>
                                     </label>
                                     <select name="gender" class="form-control @error('gender') is-invalid @enderror">
-                                        <option value="">Select Gender</option>
-                                        <option value="male" {{ old('gender', $member->gender) == 'male' ? 'selected' : '' }}>👨 Male</option>
-                                        <option value="female" {{ old('gender', $member->gender) == 'female' ? 'selected' : '' }}>👩 Female</option>
+                                        <option value=""><span data-i18n="select_gender">Select Gender</span></option>
+                                        <option value="male" {{ old('gender', $member->gender) == 'male' ? 'selected' : '' }}>👨 <span data-i18n="male">Male</span></option>
+                                        <option value="female" {{ old('gender', $member->gender) == 'female' ? 'selected' : '' }}>👩 <span data-i18n="female">Female</span></option>
                                     </select>
                                     @error('gender')
                                         <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
                                     @enderror
-                                    <!-- Debug: Show current database value -->
                                     <div style="font-size: 0.7rem; color: #EF4444; margin-top: 4px; background: rgba(239, 68, 68, 0.08); padding: 4px 10px; border-radius: 6px;">
-                                        <i class="fas fa-database"></i> Current value in database: <strong>{{ $member->gender ?? 'null' }}</strong>
+                                        <i class="fas fa-database"></i> <span data-i18n="current_db_value">Current value in database:</span> <strong>{{ $member->gender ?? 'null' }}</strong>
                                     </div>
                                 </div>
                             </div>
@@ -591,10 +589,10 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <i class="fas fa-phone"></i> Phone Number
+                                        <i class="fas fa-phone"></i> <span data-i18n="phone_number">Phone Number</span>
                                     </label>
                                     <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" 
-                                           value="{{ old('phone', $member->phone) }}" placeholder="Enter phone number">
+                                           value="{{ old('phone', $member->phone) }}" placeholder="{{ __('Enter phone number') }}">
                                     @error('phone')
                                         <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
                                     @enderror
@@ -604,10 +602,10 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <i class="fas fa-envelope"></i> Email Address
+                                        <i class="fas fa-envelope"></i> <span data-i18n="email_address">Email Address</span>
                                     </label>
                                     <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
-                                           value="{{ old('email', $member->email) }}" placeholder="Enter email address">
+                                           value="{{ old('email', $member->email) }}" placeholder="{{ __('Enter email address') }}">
                                     @error('email')
                                         <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
                                     @enderror
@@ -617,10 +615,10 @@
                             <div class="col-12">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <i class="fas fa-map-marker-alt"></i> Address
+                                        <i class="fas fa-map-marker-alt"></i> <span data-i18n="address">Address</span>
                                     </label>
                                     <input type="text" name="address" class="form-control @error('address') is-invalid @enderror" 
-                                           value="{{ old('address', $member->address) }}" placeholder="Enter address">
+                                           value="{{ old('address', $member->address) }}" placeholder="{{ __('Enter address') }}">
                                     @error('address')
                                         <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
                                     @enderror
@@ -629,14 +627,14 @@
                             
                             <div class="col-12 mt-3">
                                 <h6 class="fw-bold text-primary mb-3" style="font-family: 'Inter', sans-serif;">
-                                    <i class="fas fa-tags me-2"></i> Roles & Responsibilities
+                                    <i class="fas fa-tags me-2"></i> <span data-i18n="roles_responsibilities">Roles & Responsibilities</span>
                                 </h6>
                             </div>
                             
                             <div class="col-12">
                                 <div class="form-group">
                                     <label class="form-label">
-                                        <i class="fas fa-shield-alt"></i> Assign Roles
+                                        <i class="fas fa-shield-alt"></i> <span data-i18n="assign_roles">Assign Roles</span>
                                     </label>
                                     <select name="roles[]" class="form-control @error('roles') is-invalid @enderror" multiple>
                                         @foreach($roles as $role)
@@ -646,7 +644,7 @@
                                         @endforeach
                                     </select>
                                     <div class="form-text">
-                                        <i class="fas fa-info-circle"></i> Hold <strong>Ctrl</strong> (Windows) or <strong>Cmd</strong> (Mac) to select multiple roles
+                                        <i class="fas fa-info-circle"></i> <span data-i18n="select_multiple_hint">Hold</span> <strong>Ctrl</strong> <span data-i18n="windows_hint">(Windows) or</span> <strong>Cmd</strong> <span data-i18n="mac_hint">(Mac) to select multiple roles</span>
                                     </div>
                                     @error('roles')
                                         <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
@@ -656,23 +654,23 @@
                             
                             <div class="col-12 mt-3">
                                 <h6 class="fw-bold text-purple mb-3" style="font-family: 'Inter', sans-serif; color: #8B5CF6;">
-                                    <i class="fas fa-music me-2"></i> Choir Information
+                                    <i class="fas fa-music me-2"></i> <span data-i18n="choir_information">Choir Information</span>
                                 </h6>
                             </div>
                             
                             <div class="col-12">
                                 <div class="choir-section">
                                     <div class="choir-title">
-                                        <i class="fas fa-users"></i> Choir Assignment
+                                        <i class="fas fa-users"></i> <span data-i18n="choir_assignment">Choir Assignment</span>
                                     </div>
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="form-label">
-                                                    <i class="fas fa-layer-group"></i> Choir Group
+                                                    <i class="fas fa-layer-group"></i> <span data-i18n="choir_group">Choir Group</span>
                                                 </label>
                                                 <select name="choir_group_id" class="form-control @error('choir_group_id') is-invalid @enderror">
-                                                    <option value="">No Choir Group</option>
+                                                    <option value=""><span data-i18n="no_choir_group">No Choir Group</span></option>
                                                     @foreach($choirGroups ?? [] as $group)
                                                         <option value="{{ $group->id }}" {{ old('choir_group_id', $member->choir_group_id) == $group->id ? 'selected' : '' }}>
                                                             {{ $group->name }}
@@ -688,14 +686,14 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="form-label">
-                                                    <i class="fas fa-microphone-alt"></i> Choir Role
+                                                    <i class="fas fa-microphone-alt"></i> <span data-i18n="choir_role">Choir Role</span>
                                                 </label>
                                                 <select name="choir_role" class="form-control @error('choir_role') is-invalid @enderror">
-                                                    <option value="">No Choir Role</option>
-                                                    <option value="Singer" {{ old('choir_role', $member->choir_role) == 'Singer' ? 'selected' : '' }}>🎤 Singer</option>
-                                                    <option value="Guitarist" {{ old('choir_role', $member->choir_role) == 'Guitarist' ? 'selected' : '' }}>🎸 Guitarist</option>
-                                                    <option value="Bassist" {{ old('choir_role', $member->choir_role) == 'Bassist' ? 'selected' : '' }}>🎸 Bassist</option>
-                                                    <option value="Drummer" {{ old('choir_role', $member->choir_role) == 'Drummer' ? 'selected' : '' }}>🥁 Drummer</option>
+                                                    <option value=""><span data-i18n="no_choir_role">No Choir Role</span></option>
+                                                    <option value="Singer" {{ old('choir_role', $member->choir_role) == 'Singer' ? 'selected' : '' }}>🎤 <span data-i18n="singer">Singer</span></option>
+                                                    <option value="Guitarist" {{ old('choir_role', $member->choir_role) == 'Guitarist' ? 'selected' : '' }}>🎸 <span data-i18n="guitarist">Guitarist</span></option>
+                                                    <option value="Bassist" {{ old('choir_role', $member->choir_role) == 'Bassist' ? 'selected' : '' }}>🎸 <span data-i18n="bassist">Bassist</span></option>
+                                                    <option value="Drummer" {{ old('choir_role', $member->choir_role) == 'Drummer' ? 'selected' : '' }}>🥁 <span data-i18n="drummer">Drummer</span></option>
                                                 </select>
                                                 @error('choir_role')
                                                     <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
@@ -709,14 +707,14 @@
                         
                         <div class="form-actions">
                             <a href="{{ route('members.index') }}" class="btn-back-edit">
-                                <i class="fas fa-times"></i> Cancel
+                                <i class="fas fa-times"></i> <span data-i18n="cancel">Cancel</span>
                             </a>
                             <div class="d-flex gap-2">
                                 <a href="{{ route('members.show', $member->id) }}" class="btn-back-edit" style="border-color: #4F46E5; color: #4F46E5;">
-                                    <i class="fas fa-eye"></i> View Profile
+                                    <i class="fas fa-eye"></i> <span data-i18n="view_profile">View Profile</span>
                                 </a>
                                 <button type="submit" class="btn-update-edit">
-                                    <i class="fas fa-save"></i> Update Member
+                                    <i class="fas fa-save"></i> <span data-i18n="update_member">Update Member</span>
                                 </button>
                             </div>
                         </div>
@@ -748,7 +746,7 @@
         window.addEventListener('beforeunload', function(e) {
             if (formChanged) {
                 e.preventDefault();
-                e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+                e.returnValue = window.t ? window.t('unsaved_changes') : 'You have unsaved changes. Are you sure you want to leave?';
                 return e.returnValue;
             }
         });

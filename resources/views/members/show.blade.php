@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('header', 'Member Profile')
+@section('header')
+    <span data-i18n="member_profile">Member Profile</span>
+@endsection
 
 @section('content')
 <style>
@@ -816,23 +818,25 @@
                 <i class="fas fa-user-circle" style="font-size: 2.2rem;"></i>
             </div>
             <div class="hero-text">
-                <h1>Member Profile</h1>
+                <h1><span data-i18n="member_profile">Member Profile</span></h1>
                 <p class="hero-sub">
                     <i class="fas fa-id-card"></i>
-                    ID: {{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}
+                    <span data-i18n="id_label">ID:</span> {{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}
                     &nbsp;·&nbsp;
                     <span class="badge-status-modern {{ $member->is_deceased ? 'deceased' : 'active' }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 2px 12px; border-radius: 20px; font-size: 0.6rem; font-weight: 700; text-transform: uppercase;">
-                        {{ $member->is_deceased ? 'Deceased' : 'Active' }}
+                        <span data-i18n="{{ $member->is_deceased ? 'deceased' : 'active' }}">
+                            {{ $member->is_deceased ? 'Deceased' : 'Active' }}
+                        </span>
                     </span>
                 </p>
             </div>
         </div>
         <div class="hero-actions">
             <a href="{{ route('members.edit', $member->id) }}" class="btn-hero btn-hero-white">
-                <i class="fas fa-edit"></i> Edit Profile
+                <i class="fas fa-edit"></i> <span data-i18n="edit_profile">Edit Profile</span>
             </a>
             <a href="{{ route('members.index') }}" class="btn-hero btn-hero-ghost">
-                <i class="fas fa-arrow-left"></i> Back to Members
+                <i class="fas fa-arrow-left"></i> <span data-i18n="back_to_members">Back to Members</span>
             </a>
         </div>
     </div>
@@ -844,7 +848,7 @@
         @if($member->is_deceased)
         <a href="#" class="quick-action-btn restore" onclick="confirmRestore({{ $member->id }})">
             <i class="fas fa-undo-alt"></i>
-            <span>Restore to Active</span>
+            <span data-i18n="restore_to_active">Restore to Active</span>
         </a>
         @endif
     </div>
@@ -863,13 +867,15 @@
                     {{ strtoupper(substr($member->first_name ?? 'M', 0, 1)) }}{{ strtoupper(substr($member->last_name ?? 'M', 0, 1)) }}
                 </div>
                 <h2 class="member-name">{{ $member->first_name ?? '' }} {{ $member->last_name ?? '' }}</h2>
-                <p class="member-id"><i class="fas fa-id-card"></i> ID: {{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}</p>
+                <p class="member-id"><i class="fas fa-id-card"></i> <span data-i18n="id_label">ID:</span> {{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}</p>
                 
                 <div class="name-divider"></div>
                 
                 <div>
                     <span class="status-badge {{ $member->is_deceased ? 'deceased' : 'active' }}">
-                        {{ $member->is_deceased ? 'Deceased' : 'Active' }}
+                        <span data-i18n="{{ $member->is_deceased ? 'deceased' : 'active' }}">
+                            {{ $member->is_deceased ? 'Deceased' : 'Active' }}
+                        </span>
                     </span>
                 </div>
                 
@@ -892,7 +898,9 @@
                     @endphp
                     <span class="gender-badge {{ $genderClass }}">
                         <i class="fas {{ $genderIcon }}"></i>
-                        {{ $genderLabel }}
+                        <span data-i18n="{{ $genderValue ? ($genderValue === 'male' ? 'male' : 'female') : 'not_specified' }}">
+                            {{ $genderLabel }}
+                        </span>
                     </span>
                 </div>
             </div>
@@ -904,7 +912,7 @@
         <div class="profile-right">
             <div class="info-card">
                 <div class="card-header">
-                    <h6><i class="fas fa-user-circle"></i> Personal Information</h6>
+                    <h6><i class="fas fa-user-circle"></i> <span data-i18n="personal_information">Personal Information</span></h6>
                     <span class="member-since">
                         <i class="fas fa-clock"></i> 
                         {{ \Carbon\Carbon::parse($member->created_at ?? now())->format('M d, Y') }}
@@ -916,12 +924,12 @@
                     <div class="info-item">
                         <div class="info-icon pink"><i class="fas fa-birthday-cake"></i></div>
                         <div class="info-content">
-                            <p class="info-label">Birthday</p>
+                            <p class="info-label" data-i18n="birthday_label">Birthday</p>
                             <p class="info-value">
                                 {{ $member->birthday ? \Carbon\Carbon::parse($member->birthday)->format('F d, Y') : 'N/A' }}
                                 @if($member->birthday)
                                     <span style="font-size: 0.65rem; font-weight: 400; color: var(--text-muted);">
-                                        ({{ \Carbon\Carbon::parse($member->birthday)->age }} years old)
+                                        (<span data-i18n="years_old">{{ \Carbon\Carbon::parse($member->birthday)->age }} years old</span>)
                                     </span>
                                 @endif
                             </p>
@@ -932,7 +940,7 @@
                     <div class="info-item">
                         <div class="info-icon green"><i class="fas fa-phone"></i></div>
                         <div class="info-content">
-                            <p class="info-label">Phone Number</p>
+                            <p class="info-label" data-i18n="phone_label">Phone Number</p>
                             <p class="info-value">{{ $member->phone ?? 'N/A' }}</p>
                         </div>
                     </div>
@@ -941,7 +949,7 @@
                     <div class="info-item">
                         <div class="info-icon orange"><i class="fas fa-envelope"></i></div>
                         <div class="info-content">
-                            <p class="info-label">Email Address</p>
+                            <p class="info-label" data-i18n="email_label">Email Address</p>
                             <p class="info-value">{{ $member->email ?? 'N/A' }}</p>
                         </div>
                     </div>
@@ -950,7 +958,7 @@
                     <div class="info-item">
                         <div class="info-icon teal"><i class="fas fa-map-marker-alt"></i></div>
                         <div class="info-content">
-                            <p class="info-label">Address</p>
+                            <p class="info-label" data-i18n="address_label">Address</p>
                             <p class="info-value">{{ $member->address ?? 'N/A' }}</p>
                         </div>
                     </div>
@@ -959,7 +967,7 @@
                     <div class="info-item">
                         <div class="info-icon roles"><i class="fas fa-tags"></i></div>
                         <div class="info-content">
-                            <p class="info-label">Roles & Responsibilities</p>
+                            <p class="info-label" data-i18n="roles_label">Roles & Responsibilities</p>
                             <div class="info-value">
                                 @if($member->roles->count() > 0)
                                     <div class="d-flex flex-wrap" style="margin-top: 2px;">
@@ -971,15 +979,15 @@
                                         @endforeach
                                         @if($member->is_choir)
                                             <span class="role-tag choir">
-                                                <i class="fas fa-music"></i> Choir
+                                                <i class="fas fa-music"></i> <span data-i18n="choir_label">Choir</span>
                                             </span>
                                         @endif
                                     </div>
                                 @else
                                     <span class="no-roles">
-                                        No roles assigned
+                                        <span data-i18n="no_roles_assigned">No roles assigned</span>
                                         <a href="{{ route('members.edit', $member->id) }}">
-                                            <i class="fas fa-plus"></i> Add
+                                            <i class="fas fa-plus"></i> <span data-i18n="add_label">Add</span>
                                         </a>
                                     </span>
                                 @endif
@@ -997,30 +1005,42 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 function confirmDeceased(memberId) {
+    const title = window.t ? window.t('mark_as_deceased') : '⚠️ Mark as Deceased?';
+    const html = (window.t ? window.t('mark_deceased_profile_confirm') : 'Are you sure you want to mark this member as <strong>DECEASED</strong>?');
+    const dateLabel = window.t ? window.t('date_of_death') : 'Date of Death:';
+    const note = window.t ? window.t('action_cannot_be_undone') : 'This action cannot be undone.';
+    const confirmText = window.t ? window.t('yes_mark_deceased') : 'Yes, Mark Deceased';
+    const cancelText = window.t ? window.t('cancel') : 'Cancel';
+    const processingTitle = window.t ? window.t('processing') : 'Processing...';
+    const pleaseWait = window.t ? window.t('please_wait') : 'Please wait';
+    const successTitle = window.t ? window.t('marked_deceased') : '✅ Marked as Deceased';
+    const errorTitle = window.t ? window.t('error') : '❌ Error!';
+    const validationMsg = window.t ? window.t('select_death_date') : 'Please select the date of death';
+    
     Swal.fire({
-        title: '⚠️ Mark as Deceased?',
+        title: title,
         html: `
             <div style="text-align: left;">
-                <p>Are you sure you want to mark this member as <strong>DECEASED</strong>?</p>
+                <p>${html}</p>
                 <div class="mb-3">
-                    <label class="form-label" style="display: block; text-align: left; margin-bottom: 5px;">Date of Death:</label>
+                    <label class="form-label" style="display: block; text-align: left; margin-bottom: 5px;">${dateLabel}</label>
                     <input type="date" id="date_deceased_input" class="swal2-input" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #d1d5db;" max="${new Date().toISOString().split('T')[0]}" required>
                 </div>
-                <small style="color: #6b7280;">This action cannot be undone.</small>
+                <small style="color: #6b7280;">${note}</small>
             </div>
         `,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Yes, Mark Deceased',
-        cancelButtonText: 'Cancel',
+        confirmButtonText: confirmText,
+        cancelButtonText: cancelText,
         background: 'var(--card-bg)',
         color: 'var(--text-primary)',
         preConfirm: () => {
             const dateDeceased = document.getElementById('date_deceased_input').value;
             if (!dateDeceased) {
-                Swal.showValidationMessage('Please select the date of death');
+                Swal.showValidationMessage(validationMsg);
                 return false;
             }
             return { date_deceased: dateDeceased };
@@ -1030,8 +1050,8 @@ function confirmDeceased(memberId) {
             const dateDeceased = result.value.date_deceased;
             
             Swal.fire({
-                title: 'Processing...',
-                html: '<div class="loading-spinner"></div><p class="mt-2">Please wait</p>',
+                title: processingTitle,
+                html: '<div class="loading-spinner"></div><p class="mt-2">' + pleaseWait + '</p>',
                 showConfirmButton: false,
                 allowOutsideClick: false,
                 background: 'var(--card-bg)'
@@ -1051,7 +1071,7 @@ function confirmDeceased(memberId) {
                 if (data.success) {
                     Swal.fire({
                         icon: 'success',
-                        title: '✅ Marked as Deceased',
+                        title: successTitle,
                         text: data.message,
                         timer: 2000,
                         showConfirmButton: false,
@@ -1065,7 +1085,7 @@ function confirmDeceased(memberId) {
             .catch(error => {
                 Swal.fire({
                     icon: 'error',
-                    title: '❌ Error!',
+                    title: errorTitle,
                     text: error.message,
                     confirmButtonColor: '#ef4444',
                     background: 'var(--card-bg)',
@@ -1077,22 +1097,31 @@ function confirmDeceased(memberId) {
 }
 
 function confirmRestore(memberId) {
+    const title = window.t ? window.t('restore_member') : '🔄 Restore Member?';
+    const text = window.t ? window.t('restore_active_confirm') : 'Are you sure you want to restore this member to ACTIVE status?';
+    const confirmText = window.t ? window.t('yes_restore') : 'Yes, Restore!';
+    const cancelText = window.t ? window.t('cancel') : 'Cancel';
+    const processingTitle = window.t ? window.t('restoring') : 'Restoring...';
+    const pleaseWait = window.t ? window.t('please_wait') : 'Please wait';
+    const successTitle = window.t ? window.t('restored') : '✅ Restored!';
+    const errorTitle = window.t ? window.t('error') : '❌ Error!';
+    
     Swal.fire({
-        title: '🔄 Restore Member?',
-        text: 'Are you sure you want to restore this member to ACTIVE status?',
+        title: title,
+        text: text,
         icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#10b981',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Yes, Restore!',
-        cancelButtonText: 'Cancel',
+        confirmButtonText: confirmText,
+        cancelButtonText: cancelText,
         background: 'var(--card-bg)',
         color: 'var(--text-primary)'
     }).then((result) => {
         if (result.isConfirmed) {
             Swal.fire({
-                title: 'Restoring...',
-                html: '<div class="loading-spinner"></div><p class="mt-2">Please wait</p>',
+                title: processingTitle,
+                html: '<div class="loading-spinner"></div><p class="mt-2">' + pleaseWait + '</p>',
                 showConfirmButton: false,
                 allowOutsideClick: false,
                 background: 'var(--card-bg)'
@@ -1111,7 +1140,7 @@ function confirmRestore(memberId) {
                 if (data.success) {
                     Swal.fire({
                         icon: 'success',
-                        title: '✅ Restored!',
+                        title: successTitle,
                         text: data.message,
                         timer: 2000,
                         showConfirmButton: false,
@@ -1125,7 +1154,7 @@ function confirmRestore(memberId) {
             .catch(error => {
                 Swal.fire({
                     icon: 'error',
-                    title: '❌ Error!',
+                    title: errorTitle,
                     text: error.message,
                     confirmButtonColor: '#ef4444',
                     background: 'var(--card-bg)',
@@ -1141,13 +1170,19 @@ function confirmRestore(memberId) {
 // ============================================
 function confirmDelete(memberId, memberName) {
     const memberDisplay = memberName || 'this member';
+    const title = window.t ? window.t('delete_member') : 'Delete Member';
+    const confirmText = window.t ? window.t('yes_delete') : 'Delete Member';
+    const cancelText = window.t ? window.t('cancel') : 'Cancel';
+    const processingTitle = window.t ? window.t('deleting') : 'Deleting Member...';
+    const pleaseWait = window.t ? window.t('please_wait') : 'Please wait while we remove the member';
+    const warningText = window.t ? window.t('delete_warning') : 'This action cannot be undone. All data associated with this member will be permanently removed.';
     
     Swal.fire({
-        title: 'Delete Member',
+        title: title,
         html: `
             <div style="text-align: left;">
                 <p style="margin-bottom: 0.5rem;">
-                    Are you sure you want to permanently delete 
+                    ${window.t ? window.t('delete_confirm_text') : 'Are you sure you want to permanently delete'} 
                     <span class="member-name-highlight" style="color: #EF4444; font-weight: 700; background: #fef2f2; padding: 2px 12px; border-radius: 6px; display: inline-block;">
                         ${memberDisplay}
                     </span>
@@ -1155,7 +1190,7 @@ function confirmDelete(memberId, memberName) {
                 </p>
                 <div class="warning-box" style="background: #fef3c7; border: 1px solid #fcd34d; border-radius: 10px; padding: 0.8rem 1rem; margin-top: 0.8rem; font-size: 0.8rem; color: #92400e; display: flex; align-items: center; gap: 8px;">
                     <i class="fas fa-exclamation-triangle" style="font-size: 1rem; color: #f59e0b;"></i>
-                    <span>This action cannot be undone. All data associated with this member will be permanently removed.</span>
+                    <span>${warningText}</span>
                 </div>
             </div>
         `,
@@ -1163,8 +1198,8 @@ function confirmDelete(memberId, memberName) {
         showCancelButton: true,
         confirmButtonColor: '#EF4444',
         cancelButtonColor: '#6b7280',
-        confirmButtonText: '<i class="fas fa-trash-alt"></i> Delete Member',
-        cancelButtonText: '<i class="fas fa-times"></i> Cancel',
+        confirmButtonText: '<i class="fas fa-trash-alt"></i> ' + confirmText,
+        cancelButtonText: '<i class="fas fa-times"></i> ' + cancelText,
         customClass: {
             popup: 'swal2-custom-delete',
             confirmButton: 'swal2-confirm',
@@ -1190,13 +1225,12 @@ function confirmDelete(memberId, memberName) {
         allowEscapeKey: true
     }).then((result) => {
         if (result.isConfirmed) {
-            // Show processing state
             Swal.fire({
-                title: 'Deleting Member...',
+                title: processingTitle,
                 html: `
                     <div style="text-align: center; padding: 1rem 0;">
                         <div style="width: 48px; height: 48px; border: 4px solid #e5e7eb; border-top-color: #EF4444; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem;"></div>
-                        <p style="color: #64748b; font-size: 0.9rem;">Please wait while we remove the member</p>
+                        <p style="color: #64748b; font-size: 0.9rem;">${pleaseWait}</p>
                     </div>
                     <style>
                         @keyframes spin {
@@ -1214,7 +1248,6 @@ function confirmDelete(memberId, memberName) {
                 }
             });
             
-            // Submit the form
             document.getElementById(`delete-form-${memberId}`).submit();
         }
     });

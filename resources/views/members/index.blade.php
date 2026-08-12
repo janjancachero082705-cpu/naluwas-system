@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('header', 'Member Management')
+@section('header')
+    <span data-i18n="member_management">Member Management</span>
+@endsection
 
 @section('content')
 
@@ -717,6 +719,20 @@
         font-size: 0.8rem;
     }
     
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto;
+        border: 4px solid var(--border-color);
+        border-top-color: var(--profile-primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
     /* Responsive */
     @media (max-width: 1200px) {
         .stats-grid-premium {
@@ -802,11 +818,6 @@
         .stats-grid-premium {
             grid-template-columns: 1fr;
         }
-        
-        .profile-header-left {
-            flex-direction: column;
-            text-align: center;
-        }
     }
 </style>
 
@@ -816,28 +827,28 @@
 <div class="container-fluid px-0">
 
     {{-- ============================================ --}}
-    {{-- HERO SECTION - SAME AS PROFILE --}}
+    {{-- HERO SECTION --}}
     {{-- ============================================ --}}
     <div class="member-hero">
         <div class="hero-content">
             <div class="hero-left">
-                <h1><i class="fas fa-users"></i> Member Management</h1>
+                <h1><i class="fas fa-users"></i> <span data-i18n="member_management">Member Management</span></h1>
                 <p class="hero-sub">
                     <i class="fas fa-circle" style="color: #34D399; font-size: 0.4rem; vertical-align: middle;"></i>
-                    Manage your church members, roles, and choir assignments
+                    <span data-i18n="member_management_desc">Manage your church members, roles, and choir assignments</span>
                 </p>
             </div>
             <div class="hero-actions">
                 <a href="{{ route('members.create') }}" class="btn-hero btn-hero-white">
-                    <i class="fas fa-user-plus"></i> Add Member
+                    <i class="fas fa-user-plus"></i> <span data-i18n="add_member">Add Member</span>
                 </a>
                 @if($isDeceasedFilter)
                     <a href="{{ route('members.index') }}" class="btn-hero btn-hero-ghost">
-                        <i class="fas fa-arrow-left"></i> Back to Active
+                        <i class="fas fa-arrow-left"></i> <span data-i18n="back_to_active">Back to Active</span>
                     </a>
                 @else
                     <a href="{{ route('members.index', ['filter' => 'deceased']) }}" class="btn-hero btn-hero-ghost">
-                        <i class="fas fa-cross"></i> View Deceased
+                        <i class="fas fa-cross"></i> <span data-i18n="view_deceased">View Deceased</span>
                     </a>
                 @endif
             </div>
@@ -845,56 +856,56 @@
     </div>
 
     {{-- ============================================ --}}
-    {{-- STATS CARDS - SAME AS PROFILE --}}
+    {{-- STATS CARDS --}}
     {{-- ============================================ --}}
     <div class="stats-grid-premium">
         <div class="stat-card-premium green">
             <div class="stat-top">
-                <span class="stat-label">Active Members</span>
+                <span class="stat-label" data-i18n="active_members_label">Active Members</span>
                 <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
             </div>
             <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> Active members</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="active_members">Active members</span></div>
         </div>
         
         <div class="stat-card-premium purple">
             <div class="stat-top">
-                <span class="stat-label">Choir Members</span>
+                <span class="stat-label" data-i18n="choir_members_label">Choir Members</span>
                 <div class="stat-icon-wrap"><i class="fas fa-music"></i></div>
             </div>
             <div class="stat-value">{{ number_format($choirCount ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> Music ministry</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="music_ministry">Music ministry</span></div>
         </div>
         
         <div class="stat-card-premium orange">
             <div class="stat-top">
-                <span class="stat-label">Birthdays This Month</span>
+                <span class="stat-label" data-i18n="birthdays_this_month">Birthdays This Month</span>
                 <div class="stat-icon-wrap"><i class="fas fa-birthday-cake"></i></div>
             </div>
             <div class="stat-value">{{ number_format($birthdaysThisMonth ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> Celebrating soon</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="celebrating_soon">Celebrating soon</span></div>
         </div>
         
         <div class="stat-card-premium red">
             <div class="stat-top">
-                <span class="stat-label">Deceased</span>
+                <span class="stat-label" data-i18n="deceased_label">Deceased</span>
                 <div class="stat-icon-wrap"><i class="fas fa-cross"></i></div>
             </div>
             <div class="stat-value">{{ number_format($deceasedCount ?? 0) }}</div>
-            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> At rest</div>
+            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="at_rest">At rest</span></div>
         </div>
     </div>
 
     {{-- ============================================ --}}
-    {{-- FILTER SECTION - SAME AS PROFILE CARDS --}}
+    {{-- FILTER SECTION --}}
     {{-- ============================================ --}}
     <div class="filter-card-modern">
         <div class="row align-items-center">
             <div class="col-md-6">
-                <span class="filter-label-modern"><i class="fas fa-filter me-1"></i> Filter by Ministry</span>
+                <span class="filter-label-modern"><i class="fas fa-filter me-1"></i> <span data-i18n="filter_by_ministry">Filter by Ministry</span></span>
                 <select id="roleFilter" class="filter-select-modern" onchange="window.location.href=this.value">
                     <option value="{{ route('members.index', ['role' => 'all']) }}" {{ ($currentFilter ?? 'all') == 'all' ? 'selected' : '' }}>
-                        📋 All Members
+                        📋 <span data-i18n="all_members">All Members</span>
                     </option>
                     @php
                         $uniqueRoles = collect($allRoles ?? [])->unique('name')->values()->all();
@@ -910,9 +921,9 @@
                 <span class="total-badge-modern">
                     <i class="fas fa-church"></i>
                     @if($isDeceasedFilter)
-                        Total Deceased: {{ number_format($deceasedMembers->total() ?? 0) }}
+                        <span data-i18n="total_deceased">Total Deceased:</span> {{ number_format($deceasedMembers->total() ?? 0) }}
                     @else
-                        Total Active: {{ number_format($members->total() ?? 0) }}
+                        <span data-i18n="total_active">Total Active:</span> {{ number_format($members->total() ?? 0) }}
                     @endif
                 </span>
             </div>
@@ -920,15 +931,15 @@
     </div>
 
     {{-- ============================================ --}}
-    {{-- TABS NAVIGATION - SAME AS PROFILE --}}
+    {{-- TABS NAVIGATION --}}
     {{-- ============================================ --}}
     <div class="member-tabs-modern">
         <button class="member-tab-modern {{ !$isDeceasedFilter ? 'active' : '' }}" onclick="window.location.href='{{ route('members.index') }}'">
-            <i class="fas fa-user-friends me-2"></i>Active
+            <i class="fas fa-user-friends me-2"></i><span data-i18n="active">Active</span>
             <span class="badge-modern">{{ number_format($totalMembers ?? 0) }}</span>
         </button>
         <button class="member-tab-modern {{ $isDeceasedFilter ? 'active' : '' }}" onclick="window.location.href='{{ route('members.index', ['filter' => 'deceased']) }}'">
-            <i class="fas fa-cross me-2"></i>Deceased
+            <i class="fas fa-cross me-2"></i><span data-i18n="deceased">Deceased</span>
             <span class="badge-modern">{{ number_format($deceasedCount ?? 0) }}</span>
         </button>
     </div>
@@ -943,12 +954,12 @@
                     <thead>
                         <tr>
                             <th style="width: 50px;">#</th>
-                            <th>Member</th>
-                            <th style="width: 80px;">Gender</th>
-                            <th>Roles</th>
-                            <th>Birthday</th>
-                            <th>Age</th>
-                            <th style="width: 150px;">Actions</th>
+                            <th data-i18n="member">Member</th>
+                            <th style="width: 80px;" data-i18n="gender">Gender</th>
+                            <th data-i18n="roles">Roles</th>
+                            <th data-i18n="birthday">Birthday</th>
+                            <th data-i18n="age">Age</th>
+                            <th style="width: 150px;" data-i18n="actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1029,10 +1040,10 @@
                                         @forelse($uniqueRoles as $role)
                                             <span class="role-tag-modern"><i class="fas fa-tag"></i> {{ $role['name'] ?? $role }}</span>
                                         @empty
-                                            <span class="role-tag-modern"><i class="fas fa-user"></i> Regular</span>
+                                            <span class="role-tag-modern"><i class="fas fa-user"></i> <span data-i18n="regular">Regular</span></span>
                                         @endforelse
                                         @if($member->is_choir)
-                                            <span class="role-tag-modern choir"><i class="fas fa-music"></i> Choir</span>
+                                            <span class="role-tag-modern choir"><i class="fas fa-music"></i> <span data-i18n="choir">Choir</span></span>
                                         @endif
                                     </div>
                                 </td>
@@ -1069,10 +1080,10 @@
                                 <td colspan="7">
                                     <div class="empty-state-modern">
                                         <i class="fas fa-users"></i>
-                                        <h5>No Active Members Yet</h5>
-                                        <p>Get started by adding your first church member to the system.</p>
+                                        <h5 data-i18n="no_active_members">No Active Members Yet</h5>
+                                        <p data-i18n="no_active_members_desc">Get started by adding your first church member to the system.</p>
                                         <a href="{{ route('members.create') }}" class="btn-add-modern">
-                                            <i class="fas fa-plus me-2"></i>Add Your First Member
+                                            <i class="fas fa-plus me-2"></i><span data-i18n="add_first_member">Add Your First Member</span>
                                         </a>
                                     </div>
                                 </td>
@@ -1085,7 +1096,7 @@
             @if($members->hasPages())
             <div class="pagination-container-modern">
                 <div class="pagination-info-modern">
-                    Showing <strong>{{ $members->firstItem() }}</strong> to <strong>{{ $members->lastItem() }}</strong> of <strong>{{ $members->total() }}</strong> active members
+                    <span data-i18n="showing">Showing</span> <strong>{{ $members->firstItem() }}</strong> <span data-i18n="to">to</span> <strong>{{ $members->lastItem() }}</strong> <span data-i18n="of">of</span> <strong>{{ $members->total() }}</strong> <span data-i18n="active_members">active members</span>
                 </div>
                 {{ $members->links('pagination::bootstrap-5') }}
             </div>
@@ -1103,12 +1114,12 @@
                     <thead>
                         <tr>
                             <th style="width: 50px;">#</th>
-                            <th>Member</th>
-                            <th style="width: 80px;">Gender</th>
-                            <th>Roles</th>
-                            <th>Birthday</th>
-                            <th>Age</th>
-                            <th style="width: 120px;">Actions</th>
+                            <th data-i18n="member">Member</th>
+                            <th style="width: 80px;" data-i18n="gender">Gender</th>
+                            <th data-i18n="roles">Roles</th>
+                            <th data-i18n="birthday">Birthday</th>
+                            <th data-i18n="age">Age</th>
+                            <th style="width: 120px;" data-i18n="actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1182,12 +1193,12 @@
                                         @forelse($uniqueRoles as $role)
                                             <span class="role-tag-modern"><i class="fas fa-tag"></i> {{ $role['name'] ?? $role }}</span>
                                         @empty
-                                            <span class="role-tag-modern"><i class="fas fa-user"></i> Regular</span>
+                                            <span class="role-tag-modern"><i class="fas fa-user"></i> <span data-i18n="regular">Regular</span></span>
                                         @endforelse
                                         @if($member->is_choir)
-                                            <span class="role-tag-modern choir"><i class="fas fa-music"></i> Choir</span>
+                                            <span class="role-tag-modern choir"><i class="fas fa-music"></i> <span data-i18n="choir">Choir</span></span>
                                         @endif
-                                        <span class="role-tag-modern deceased-tag"><i class="fas fa-cross"></i> Deceased</span>
+                                        <span class="role-tag-modern deceased-tag"><i class="fas fa-cross"></i> <span data-i18n="deceased">Deceased</span></span>
                                     </div>
                                 </td>
                                 
@@ -1218,8 +1229,8 @@
                                 <td colspan="7">
                                     <div class="empty-state-modern">
                                         <i class="fas fa-cross"></i>
-                                        <h5>No Deceased Members</h5>
-                                        <p>Click the cross button <i class="fas fa-cross"></i> on any active member to move them here.</p>
+                                        <h5 data-i18n="no_deceased_members">No Deceased Members</h5>
+                                        <p data-i18n="no_deceased_members_desc">Click the cross button <i class="fas fa-cross"></i> on any active member to move them here.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -1231,7 +1242,7 @@
             @if($deceasedMembers->hasPages())
             <div class="pagination-container-modern">
                 <div class="pagination-info-modern">
-                    Showing <strong>{{ $deceasedMembers->firstItem() }}</strong> to <strong>{{ $deceasedMembers->lastItem() }}</strong> of <strong>{{ $deceasedMembers->total() }}</strong> deceased members
+                    <span data-i18n="showing">Showing</span> <strong>{{ $deceasedMembers->firstItem() }}</strong> <span data-i18n="to">to</span> <strong>{{ $deceasedMembers->lastItem() }}</strong> <span data-i18n="of">of</span> <strong>{{ $deceasedMembers->total() }}</strong> <span data-i18n="deceased_members">deceased members</span>
                 </div>
                 {{ $deceasedMembers->links('pagination::bootstrap-5') }}
             </div>
@@ -1249,22 +1260,29 @@
     // DELETE ACTIVE MEMBER
     // =============================================
     function confirmDelete(memberId, memberName) {
+        const title = window.t ? window.t('delete_member') : 'Delete Member?';
+        const html = (window.t ? window.t('delete_member_confirm') : 'Are you sure you want to permanently delete <strong>{memberName}</strong>?<br><small>This action cannot be undone.</small>').replace('{memberName}', memberName);
+        const confirmText = window.t ? window.t('yes_delete') : 'Yes, delete!';
+        const cancelText = window.t ? window.t('cancel') : 'Cancel';
+        const deletingText = window.t ? window.t('deleting') : 'Deleting...';
+        const pleaseWait = window.t ? window.t('please_wait') : 'Please wait';
+        
         Swal.fire({
-            title: 'Delete Member?',
-            html: `Are you sure you want to permanently delete <strong>${memberName}</strong>?<br><small>This action cannot be undone.</small>`,
+            title: title,
+            html: html,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#ef4444',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, delete!',
-            cancelButtonText: 'Cancel',
+            confirmButtonText: confirmText,
+            cancelButtonText: cancelText,
             background: 'var(--card-bg)',
             color: 'var(--text-primary)'
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
-                    title: 'Deleting...',
-                    html: '<div class="loading-spinner"></div><p class="mt-2">Please wait</p>',
+                    title: deletingText,
+                    html: '<div class="loading-spinner"></div><p class="mt-2">' + pleaseWait + '</p>',
                     showConfirmButton: false,
                     allowOutsideClick: false,
                     background: 'var(--card-bg)'
@@ -1278,22 +1296,29 @@
     // DELETE DECEASED MEMBER (PERMANENT)
     // =============================================
     function confirmDeletePermanent(memberId, memberName) {
+        const title = window.t ? window.t('permanently_delete') : 'Permanently Delete?';
+        const html = (window.t ? window.t('permanently_delete_confirm') : 'Are you sure you want to permanently delete <strong>{memberName}</strong>?<br><small>All records will be lost forever.</small>').replace('{memberName}', memberName);
+        const confirmText = window.t ? window.t('yes_delete') : 'Yes, delete!';
+        const cancelText = window.t ? window.t('cancel') : 'Cancel';
+        const deletingText = window.t ? window.t('deleting') : 'Deleting...';
+        const pleaseWait = window.t ? window.t('please_wait') : 'Please wait';
+        
         Swal.fire({
-            title: 'Permanently Delete?',
-            html: `Are you sure you want to permanently delete <strong>${memberName}</strong>?<br><small>All records will be lost forever.</small>`,
+            title: title,
+            html: html,
             icon: 'error',
             showCancelButton: true,
             confirmButtonColor: '#ef4444',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, delete!',
-            cancelButtonText: 'Cancel',
+            confirmButtonText: confirmText,
+            cancelButtonText: cancelText,
             background: 'var(--card-bg)',
             color: 'var(--text-primary)'
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
-                    title: 'Deleting...',
-                    html: '<div class="loading-spinner"></div><p class="mt-2">Please wait</p>',
+                    title: deletingText,
+                    html: '<div class="loading-spinner"></div><p class="mt-2">' + pleaseWait + '</p>',
                     showConfirmButton: false,
                     allowOutsideClick: false,
                     background: 'var(--card-bg)'
@@ -1307,22 +1332,29 @@
     // RESTORE DECEASED MEMBER
     // =============================================
     function confirmRestore(memberId, memberName) {
+        const title = window.t ? window.t('restore_member') : 'Restore Member?';
+        const html = (window.t ? window.t('restore_member_confirm') : 'Are you sure you want to restore <strong>{memberName}</strong> to active members?').replace('{memberName}', memberName);
+        const confirmText = window.t ? window.t('yes_restore') : 'Yes, restore!';
+        const cancelText = window.t ? window.t('cancel') : 'Cancel';
+        const restoringText = window.t ? window.t('restoring') : 'Restoring...';
+        const pleaseWait = window.t ? window.t('please_wait') : 'Please wait';
+        
         Swal.fire({
-            title: 'Restore Member?',
-            html: `Are you sure you want to restore <strong>${memberName}</strong> to active members?`,
+            title: title,
+            html: html,
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#10b981',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, restore!',
-            cancelButtonText: 'Cancel',
+            confirmButtonText: confirmText,
+            cancelButtonText: cancelText,
             background: 'var(--card-bg)',
             color: 'var(--text-primary)'
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
-                    title: 'Restoring...',
-                    html: '<div class="loading-spinner"></div><p class="mt-2">Please wait</p>',
+                    title: restoringText,
+                    html: '<div class="loading-spinner"></div><p class="mt-2">' + pleaseWait + '</p>',
                     showConfirmButton: false,
                     allowOutsideClick: false,
                     background: 'var(--card-bg)'
@@ -1339,9 +1371,10 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
+                        const successTitle = window.t ? window.t('restored') : 'Restored!';
                         Swal.fire({
                             icon: 'success',
-                            title: 'Restored!',
+                            title: successTitle,
                             text: data.message,
                             timer: 2000,
                             showConfirmButton: false,
@@ -1353,9 +1386,10 @@
                     }
                 })
                 .catch(error => {
+                    const errorTitle = window.t ? window.t('error') : 'Error!';
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error!',
+                        title: errorTitle,
                         text: error.message,
                         confirmButtonColor: '#ef4444',
                         background: 'var(--card-bg)',
@@ -1370,30 +1404,39 @@
     // MARK AS DECEASED MODAL
     // =============================================
     function openDeceasedModal(memberId, memberName) {
+        const title = window.t ? window.t('mark_as_deceased') : 'Mark as Deceased';
+        const dateLabel = window.t ? window.t('date_of_death') : 'Date of Death:';
+        const confirmText = window.t ? window.t('mark_deceased') : 'Mark as Deceased';
+        const cancelText = window.t ? window.t('cancel') : 'Cancel';
+        const processingText = window.t ? window.t('processing') : 'Processing...';
+        const pleaseWait = window.t ? window.t('please_wait') : 'Please wait';
+        const successTitle = window.t ? window.t('marked_deceased') : 'Marked as Deceased';
+        const errorTitle = window.t ? window.t('error') : 'Error!';
+        
         Swal.fire({
-            title: 'Mark as Deceased',
+            title: title,
             html: `
                 <div style="text-align: left;">
-                    <p>Mark <strong>${memberName}</strong> as deceased?</p>
+                    <p>${(window.t ? window.t('mark_deceased_confirm') : 'Mark <strong>{memberName}</strong> as deceased?').replace('{memberName}', memberName)}</p>
                     <div class="mb-3">
-                        <label class="form-label" style="display: block; text-align: left; margin-bottom: 5px;">Date of Death:</label>
+                        <label class="form-label" style="display: block; text-align: left; margin-bottom: 5px;">${dateLabel}</label>
                         <input type="date" id="date_deceased_input" class="swal2-input" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #d1d5db;" max="${new Date().toISOString().split('T')[0]}" required>
                     </div>
-                    <small style="color: #6b7280;">This member will be moved to the Deceased Members section.</small>
+                    <small style="color: #6b7280;">${window.t ? window.t('deceased_move_note') : 'This member will be moved to the Deceased Members section.'}</small>
                 </div>
             `,
             icon: 'info',
             showCancelButton: true,
             confirmButtonColor: '#6b7280',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Mark as Deceased',
-            cancelButtonText: 'Cancel',
+            confirmButtonText: confirmText,
+            cancelButtonText: cancelText,
             background: 'var(--card-bg)',
             color: 'var(--text-primary)',
             preConfirm: () => {
                 const dateDeceased = document.getElementById('date_deceased_input').value;
                 if (!dateDeceased) {
-                    Swal.showValidationMessage('Please select the date of death');
+                    Swal.showValidationMessage(window.t ? window.t('select_death_date') : 'Please select the date of death');
                     return false;
                 }
                 return { date_deceased: dateDeceased };
@@ -1402,8 +1445,8 @@
             if (result.isConfirmed) {
                 const dateDeceased = result.value.date_deceased;
                 Swal.fire({
-                    title: 'Processing...',
-                    html: '<div class="loading-spinner"></div><p class="mt-2">Please wait</p>',
+                    title: processingText,
+                    html: '<div class="loading-spinner"></div><p class="mt-2">' + pleaseWait + '</p>',
                     showConfirmButton: false,
                     allowOutsideClick: false,
                     background: 'var(--card-bg)'
@@ -1423,7 +1466,7 @@
                     if (data.success) {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Marked as Deceased',
+                            title: successTitle,
                             text: data.message,
                             timer: 2000,
                             showConfirmButton: false,
@@ -1437,7 +1480,7 @@
                 .catch(error => {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error!',
+                        title: errorTitle,
                         text: error.message,
                         confirmButtonColor: '#ef4444',
                         background: 'var(--card-bg)',
