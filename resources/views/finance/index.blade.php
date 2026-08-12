@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('header', 'Finance Dashboard')
+@section('header')
+    <span data-i18n="finance_dashboard">Finance Dashboard</span>
+@endsection
 
 @section('content')
 
@@ -869,18 +871,18 @@
     <div class="finance-hero">
         <div class="hero-content">
             <div class="hero-left">
-                <h1><i class="fas fa-coins"></i> Finance Dashboard</h1>
+                <h1><i class="fas fa-coins"></i> <span data-i18n="finance_dashboard">Finance Dashboard</span></h1>
                 <p class="hero-sub">
                     <i class="fas fa-circle" style="color: #34D399; font-size: 0.4rem; vertical-align: middle;"></i>
-                    Track income, expenses, and financial health across all churches
+                    <span data-i18n="finance_dashboard_desc">Track income, expenses, and financial health across all churches</span>
                 </p>
             </div>
             <div class="hero-actions">
                 <a href="{{ route('finance.index') }}?church=all" class="btn-hero btn-hero-white">
-                    <i class="fas fa-chart-simple"></i> View All
+                    <i class="fas fa-chart-simple"></i> <span data-i18n="view_all">View All</span>
                 </a>
                 <a href="{{ route('finance.index') }}" class="btn-hero btn-hero-ghost">
-                    <i class="fas fa-sync-alt"></i> Refresh
+                    <i class="fas fa-sync-alt"></i> <span data-i18n="refresh">Refresh</span>
                 </a>
             </div>
         </div>
@@ -892,25 +894,25 @@
     <div class="stats-grid-premium">
         <div class="stat-card-premium green">
             <div class="stat-top">
-                <span class="stat-label">Total Income</span>
+                <span class="stat-label" data-i18n="total_income">Total Income</span>
                 <div class="stat-icon-wrap"><i class="fas fa-arrow-down"></i></div>
             </div>
             <div class="stat-value">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> All churches</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="all_churches">All churches</span></div>
         </div>
         
         <div class="stat-card-premium red">
             <div class="stat-top">
-                <span class="stat-label">Total Expenses</span>
+                <span class="stat-label" data-i18n="total_expenses">Total Expenses</span>
                 <div class="stat-icon-wrap"><i class="fas fa-arrow-up"></i></div>
             </div>
             <div class="stat-value">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
-            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> All churches</div>
+            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="all_churches">All churches</span></div>
         </div>
         
         <div class="stat-card-premium blue">
             <div class="stat-top">
-                <span class="stat-label">Overall Balance</span>
+                <span class="stat-label" data-i18n="overall_balance">Overall Balance</span>
                 <div class="stat-icon-wrap"><i class="fas fa-scale-balanced"></i></div>
             </div>
             <div class="stat-value" style="color: {{ ($overallBalance ?? 0) >= 0 ? '#10B981' : '#EF4444' }}">
@@ -923,11 +925,11 @@
         
         <div class="stat-card-premium purple">
             <div class="stat-top">
-                <span class="stat-label">Churches</span>
+                <span class="stat-label" data-i18n="churches">Churches</span>
                 <div class="stat-icon-wrap"><i class="fas fa-church"></i></div>
             </div>
             <div class="stat-value">{{ $churches->count() ?? 0 }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> Connected churches</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="connected_churches">Connected churches</span></div>
         </div>
     </div>
 
@@ -937,9 +939,9 @@
     <div class="filter-card-modern">
         <div class="row align-items-center">
             <div class="col-md-6">
-                <span class="filter-label-modern"><i class="fas fa-church me-1"></i> Select Church</span>
+                <span class="filter-label-modern"><i class="fas fa-church me-1"></i> <span data-i18n="select_church">Select Church</span></span>
                 <select id="churchSelect" class="filter-select-modern" onchange="window.location.href='{{ route('finance.index') }}?church=' + this.value">
-                    <option value="">-- Choose a Church --</option>
+                    <option value="">-- <span data-i18n="choose_church">Choose a Church</span> --</option>
                     @foreach($churches as $church)
                         <option value="{{ $church->id }}" {{ ($selectedChurchId ?? '') == $church->id ? 'selected' : '' }}>
                             {{ $church->name }}
@@ -951,9 +953,9 @@
                 <span class="total-badge-modern">
                     <i class="fas fa-building"></i>
                     @if($selectedChurch)
-                        Viewing: <strong>{{ $selectedChurch->name }}</strong>
+                        <span data-i18n="viewing">Viewing:</span> <strong>{{ $selectedChurch->name }}</strong>
                     @else
-                        All Churches
+                        <span data-i18n="all_churches_label">All Churches</span>
                     @endif
                 </span>
             </div>
@@ -976,15 +978,15 @@
             
             <div class="church-detail-grid">
                 <div class="church-detail-item">
-                    <div class="label"><i class="fas fa-arrow-down" style="color: #10B981;"></i> Total Income</div>
+                    <div class="label"><i class="fas fa-arrow-down" style="color: #10B981;"></i> <span data-i18n="total_income">Total Income</span></div>
                     <div class="value income">₱{{ number_format($churchIncome ?? 0, 2) }}</div>
                 </div>
                 <div class="church-detail-item">
-                    <div class="label"><i class="fas fa-arrow-up" style="color: #EF4444;"></i> Total Expenses</div>
+                    <div class="label"><i class="fas fa-arrow-up" style="color: #EF4444;"></i> <span data-i18n="total_expenses">Total Expenses</span></div>
                     <div class="value expense">₱{{ number_format($churchExpenses ?? 0, 2) }}</div>
                 </div>
                 <div class="church-detail-item">
-                    <div class="label"><i class="fas fa-scale-balanced" style="color: #4F46E5;"></i> Balance</div>
+                    <div class="label"><i class="fas fa-scale-balanced" style="color: #4F46E5;"></i> <span data-i18n="balance">Balance</span></div>
                     <div class="value balance {{ ($churchBalance ?? 0) >= 0 ? 'positive' : 'negative' }}">
                         ₱{{ number_format(abs($churchBalance ?? 0), 2) }}
                     </div>
@@ -996,26 +998,26 @@
             
             <div class="category-section">
                 <div>
-                    <span class="cat-label"><i class="fas fa-tags" style="color: #10B981;"></i> Income Categories</span>
+                    <span class="cat-label"><i class="fas fa-tags" style="color: #10B981;"></i> <span data-i18n="income_categories">Income Categories</span></span>
                     <div class="category-tags">
                         @forelse($incomeTypes ?? [] as $type)
                             <span class="category-tag income-tag">
                                 {{ $type->category ?? 'Uncategorized' }}: ₱{{ number_format($type->total, 2) }}
                             </span>
                         @empty
-                            <span style="font-size: 0.7rem; color: var(--text-muted);">No income categories</span>
+                            <span style="font-size: 0.7rem; color: var(--text-muted);"><span data-i18n="no_income_categories">No income categories</span></span>
                         @endforelse
                     </div>
                 </div>
                 <div>
-                    <span class="cat-label"><i class="fas fa-tags" style="color: #EF4444;"></i> Expense Categories</span>
+                    <span class="cat-label"><i class="fas fa-tags" style="color: #EF4444;"></i> <span data-i18n="expense_categories">Expense Categories</span></span>
                     <div class="category-tags">
                         @forelse($expenseTypes ?? [] as $type)
                             <span class="category-tag expense-tag">
                                 {{ $type->category ?? 'Uncategorized' }}: ₱{{ number_format($type->total, 2) }}
                             </span>
                         @empty
-                            <span style="font-size: 0.7rem; color: var(--text-muted);">No expense categories</span>
+                            <span style="font-size: 0.7rem; color: var(--text-muted);"><span data-i18n="no_expense_categories">No expense categories</span></span>
                         @endforelse
                     </div>
                 </div>
@@ -1026,16 +1028,16 @@
         <div class="chart-container-premium">
             <div class="chart-header">
                 <h6>
-                    <i class="fas fa-chart-line"></i> Monthly Income vs Expenses - {{ $selectedChurch->name }}
+                    <i class="fas fa-chart-line"></i> <span data-i18n="monthly_income_expenses">Monthly Income vs Expenses</span> - {{ $selectedChurch->name }}
                 </h6>
-                <span style="font-size: 0.65rem; color: var(--text-muted);">Last 6 months</span>
+                <span style="font-size: 0.65rem; color: var(--text-muted);"><span data-i18n="last_6_months">Last 6 months</span></span>
             </div>
             <div class="chart-legend-premium">
                 <span class="leg-item">
-                    <span class="leg-dot" style="background: #10B981;"></span> Income
+                    <span class="leg-dot" style="background: #10B981;"></span> <span data-i18n="income">Income</span>
                 </span>
                 <span class="leg-item">
-                    <span class="leg-dot" style="background: #EF4444; border: 2px dashed #EF4444; background: none; width: 20px; height: 2px; border-radius: 0;"></span> Expenses
+                    <span class="leg-dot" style="background: #EF4444; border: 2px dashed #EF4444; background: none; width: 20px; height: 2px; border-radius: 0;"></span> <span data-i18n="expenses">Expenses</span>
                 </span>
             </div>
             <div class="chart-box">
@@ -1048,7 +1050,7 @@
         {{-- ============================================ --}}
         <div class="info-message-modern">
             <i class="fas fa-info-circle"></i>
-            Select a church above to view its detailed financial information.
+            <span data-i18n="select_church_hint">Select a church above to view its detailed financial information.</span>
         </div>
         
         <div class="all-churches-grid-premium">
@@ -1067,7 +1069,7 @@
                     <span><i class="fas fa-arrow-up" style="color: #EF4444;"></i> ₱{{ number_format($data['expense'], 2) }}</span>
                 </div>
                 <a href="{{ route('finance.index') }}?church={{ $data['church']->id }}" class="btn-view-church-premium">
-                    <i class="fas fa-eye"></i> View Details
+                    <i class="fas fa-eye"></i> <span data-i18n="view_details">View Details</span>
                 </a>
             </div>
             @endforeach
@@ -1107,13 +1109,17 @@
             const ttBorder = isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0';
             const ptBorder = isDark ? '#1e1e1e' : '#ffffff';
 
+            // Get translated labels
+            const incomeLabel = window.t ? window.t('income') : 'Income';
+            const expensesLabel = window.t ? window.t('expenses') : 'Expenses';
+
             new Chart(canvas, {
                 type: 'line',
                 data: {
                     labels: months,
                     datasets: [
                         {
-                            label: 'Income',
+                            label: incomeLabel,
                             data: incomeData,
                             borderColor: '#10B981',
                             backgroundColor: 'rgba(16, 185, 129, 0.07)',
@@ -1130,7 +1136,7 @@
                             pointHoverBorderWidth: 2
                         },
                         {
-                            label: 'Expenses',
+                            label: expensesLabel,
                             data: expenseData,
                             borderColor: '#EF4444',
                             backgroundColor: 'rgba(239, 68, 68, 0.05)',

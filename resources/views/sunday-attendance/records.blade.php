@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('header', 'Attendance Records')
+@section('header')
+    <span data-i18n="attendance_records">Attendance Records</span>
+@endsection
 
 @section('content')
 
@@ -855,8 +857,8 @@
     <div class="records-hero">
         <div class="hero-content">
             <div class="hero-left">
-                <h1><i class="fas fa-calendar-check"></i> Attendance Records</h1>
-                <p>View and analyze church attendance data</p>
+                <h1><i class="fas fa-calendar-check"></i> <span data-i18n="attendance_records">Attendance Records</span></h1>
+                <p><span data-i18n="attendance_records_desc">View and analyze church attendance data</span></p>
                 <div class="hero-badge">
                     <i class="fas fa-circle" style="color: #34D399; font-size: 0.5rem;"></i>
                     {{ \Carbon\Carbon::parse($selectedDate ?? date('Y-m-d'))->format('F d, Y') }}
@@ -864,7 +866,7 @@
             </div>
             <div class="hero-actions">
                 <a href="{{ route('sunday-attendance.index', ['date' => $selectedDate ?? date('Y-m-d')]) }}" class="btn-hero-primary">
-                    <i class="fas fa-pen-alt"></i> Input Attendance
+                    <i class="fas fa-pen-alt"></i> <span data-i18n="input_attendance">Input Attendance</span>
                 </a>
                 <span class="btn-hero-secondary">
                     <i class="fas fa-calendar-alt"></i>
@@ -880,29 +882,29 @@
     <div class="stats-grid-premium">
         <div class="stat-card-premium blue">
             <div class="stat-top">
-                <span class="stat-label">Total Members</span>
+                <span class="stat-label" data-i18n="total_members_label">Total Members</span>
                 <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
             </div>
             <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-users"></i> Registered</div>
+            <div class="stat-change positive"><i class="fas fa-users"></i> <span data-i18n="registered">Registered</span></div>
         </div>
         
         <div class="stat-card-premium green">
             <div class="stat-top">
-                <span class="stat-label">Present Today</span>
+                <span class="stat-label" data-i18n="present_today">Present Today</span>
                 <div class="stat-icon-wrap"><i class="fas fa-check-circle"></i></div>
             </div>
             <div class="stat-value" style="color: #10B981;">{{ number_format($presentCount ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> Attended</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="attended">Attended</span></div>
         </div>
         
         <div class="stat-card-premium red">
             <div class="stat-top">
-                <span class="stat-label">Absent Today</span>
+                <span class="stat-label" data-i18n="absent_today">Absent Today</span>
                 <div class="stat-icon-wrap"><i class="fas fa-times-circle"></i></div>
             </div>
             <div class="stat-value" style="color: #EF4444;">{{ number_format($absentCount ?? 0) }}</div>
-            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> Not attended</div>
+            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="not_attended">Not attended</span></div>
         </div>
     </div>
 
@@ -913,8 +915,8 @@
         <div class="selector-header">
             <div class="selector-title">
                 <i class="fas fa-calendar-week"></i>
-                <span>Select Date</span>
-                <small><i class="fas fa-info-circle"></i> Only Sundays are selectable</small>
+                <span data-i18n="select_date">Select Date</span>
+                <small><i class="fas fa-info-circle"></i> <span data-i18n="only_sundays">Only Sundays are selectable</span></small>
             </div>
             <div class="total-badge-premium">
                 <i class="fas fa-church"></i>
@@ -923,20 +925,20 @@
         </div>
         <div class="selector-group">
             <div class="selector-item">
-                <label><i class="fas fa-calendar-day me-1"></i> DATE</label>
+                <label><i class="fas fa-calendar-day me-1"></i> <span data-i18n="date_label">DATE</span></label>
                 <input type="date" id="dateSelector" value="{{ $selectedDate ?? date('Y-m-d') }}"
                        min="{{ \Carbon\Carbon::now()->subYears(5)->format('Y-m-d') }}"
                        max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
             </div>
             <div class="quick-actions">
                 <button class="btn-quick-premium" onclick="selectToday()">
-                    <i class="fas fa-calendar-day"></i> Today
+                    <i class="fas fa-calendar-day"></i> <span data-i18n="today">Today</span>
                 </button>
                 <button class="btn-quick-premium" onclick="selectLastSunday()">
-                    <i class="fas fa-calendar-week"></i> Last Sunday
+                    <i class="fas fa-calendar-week"></i> <span data-i18n="last_sunday">Last Sunday</span>
                 </button>
                 <button class="btn-quick-premium" onclick="selectPrevSunday()">
-                    <i class="fas fa-chevron-left"></i> Previous
+                    <i class="fas fa-chevron-left"></i> <span data-i18n="previous">Previous</span>
                 </button>
             </div>
         </div>
@@ -949,8 +951,8 @@
         <div class="table-header-premium">
             <h6>
                 <i class="fas fa-users"></i>
-                Attendance Details
-                <span class="badge-count-premium">{{ $presentCount ?? 0 }} Present / {{ $totalMembers ?? 0 }} Members</span>
+                <span data-i18n="attendance_details">Attendance Details</span>
+                <span class="badge-count-premium">{{ $presentCount ?? 0 }} <span data-i18n="present_short">Present</span> / {{ $totalMembers ?? 0 }} <span data-i18n="members_short">Members</span></span>
             </h6>
             <span style="font-size: 0.65rem; color: var(--text-muted);">
                 <i class="fas fa-calendar-alt"></i>
@@ -962,10 +964,10 @@
                 <thead>
                     <tr>
                         <th style="width: 50px;">#</th>
-                        <th>Member Information</th>
-                        <th>Age</th>
-                        <th style="width: 140px;">Status</th>
-                        <th>Notes</th>
+                        <th data-i18n="member_info">Member Information</th>
+                        <th data-i18n="age_label">Age</th>
+                        <th style="width: 140px;" data-i18n="status_label">Status</th>
+                        <th data-i18n="notes_label">Notes</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -987,7 +989,7 @@
                                 <div>
                                     <div class="member-name-premium">{{ $member->first_name ?? '' }} {{ $member->last_name ?? '' }}</div>
                                     @if($isChoir)
-                                        <div class="member-role-premium"><i class="fas fa-music"></i> Choir Member</div>
+                                        <div class="member-role-premium"><i class="fas fa-music"></i> <span data-i18n="choir_member">Choir Member</span></div>
                                     @endif
                                 </div>
                             </div>
@@ -996,11 +998,11 @@
                         <td>
                             @if($status == 'Present')
                                 <span class="status-badge-premium status-present-premium">
-                                    <i class="fas fa-check-circle"></i> Present
+                                    <i class="fas fa-check-circle"></i> <span data-i18n="present_option">Present</span>
                                 </span>
                             @else
                                 <span class="status-badge-premium status-absent-premium">
-                                    <i class="fas fa-times-circle"></i> Absent
+                                    <i class="fas fa-times-circle"></i> <span data-i18n="absent_option">Absent</span>
                                 </span>
                             @endif
                         </td>
@@ -1011,7 +1013,7 @@
                         <td colspan="5">
                             <div class="empty-state-premium">
                                 <i class="fas fa-users"></i>
-                                <p>No members found. Please add members first.</p>
+                                <p data-i18n="no_members_found">No members found. Please add members first.</p>
                             </div>
                         </td>
                     </tr>
@@ -1023,11 +1025,11 @@
         @if(($members ?? collect())->count() > 0)
         <div class="table-footer-premium">
             <i class="fas fa-users me-1"></i>
-            Total members: <strong>{{ $members->count() }}</strong> &nbsp;|&nbsp;
+            <span data-i18n="total_members_footer">Total members:</span> <strong>{{ $members->count() }}</strong> &nbsp;|&nbsp;
             <i class="fas fa-check-circle me-1" style="color: #10B981;"></i>
-            Present: <strong class="text-success">{{ $presentCount ?? 0 }}</strong> &nbsp;|&nbsp;
+            <span data-i18n="present_footer">Present:</span> <strong class="text-success">{{ $presentCount ?? 0 }}</strong> &nbsp;|&nbsp;
             <i class="fas fa-times-circle me-1" style="color: #EF4444;"></i>
-            Absent: <strong class="text-danger">{{ $absentCount ?? 0 }}</strong>
+            <span data-i18n="absent_footer">Absent:</span> <strong class="text-danger">{{ $absentCount ?? 0 }}</strong>
         </div>
         @endif
     </div>
@@ -1041,14 +1043,14 @@
         <div class="custom-alert-icon">
             <i class="fas fa-exclamation-circle"></i>
         </div>
-        <h3>Only Sundays Allowed</h3>
-        <p>Attendance records can only be viewed for Sundays. Please select a Sunday date.</p>
+        <h3 data-i18n="only_sundays_allowed">Only Sundays Allowed</h3>
+        <p data-i18n="only_sundays_records_desc">Attendance records can only be viewed for Sundays. Please select a Sunday date.</p>
         <div class="alert-date">
             <i class="fas fa-calendar-day"></i>
-            <span id="alertSelectedDate">Select a date</span>
+            <span id="alertSelectedDate"><span data-i18n="select_date_label">Select a date</span></span>
         </div>
         <button class="btn-alert-close" onclick="closeCustomAlert()">
-            <i class="fas fa-check me-1"></i> OK, I Understand
+            <i class="fas fa-check me-1"></i> <span data-i18n="ok_understand">OK, I Understand</span>
         </button>
     </div>
 </div>
@@ -1073,7 +1075,7 @@
                 day: 'numeric' 
             });
         } else {
-            dateSpan.textContent = 'Invalid date selected';
+            dateSpan.textContent = window.t ? window.t('invalid_date') : 'Invalid date selected';
         }
         
         overlay.classList.add('active');

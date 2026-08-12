@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('header', 'Add New Member')
+@section('header')
+    <span data-i18n="add_new_member">Add New Member</span>
+@endsection
 
 @section('content')
 <style>
@@ -367,11 +369,11 @@
         <div>
             <h1 class="h2 mb-1 fw-bold" style="color: var(--text-primary); font-size: 1.3rem;">
                 <span class="header-icon"><i class="fas fa-user-plus"></i></span>
-                Add New Member
+                <span data-i18n="add_new_member">Add New Member</span>
             </h1>
             <p class="mb-0" style="color: var(--text-muted); font-size: 0.8rem;">
                 <i class="fas fa-leaf" style="color: #10b981; font-size: 0.6rem;"></i>
-                Add a new member to your church family
+                <span data-i18n="add_member_desc">Add a new member to your church family</span>
             </p>
         </div>
     </div>
@@ -384,11 +386,11 @@
                 {{-- First Name --}}
                 <div class="col-md-6">
                     <label for="first_name" class="form-label">
-                        <i class="fas fa-user"></i> First Name <span style="color: #ef4444;">*</span>
+                        <i class="fas fa-user"></i> <span data-i18n="first_name">First Name</span> <span style="color: #ef4444;">*</span>
                     </label>
                     <div class="input-icon-wrapper">
                         <input type="text" class="form-control @error('first_name') is-invalid @enderror" 
-                               id="first_name" name="first_name" placeholder="Enter first name" 
+                               id="first_name" name="first_name" placeholder="{{ __('Enter first name') }}" 
                                value="{{ old('first_name') }}" required>
                         <i class="fas fa-user input-icon"></i>
                     </div>
@@ -400,11 +402,11 @@
                 {{-- Last Name --}}
                 <div class="col-md-6">
                     <label for="last_name" class="form-label">
-                        <i class="fas fa-user"></i> Last Name <span style="color: #ef4444;">*</span>
+                        <i class="fas fa-user"></i> <span data-i18n="last_name">Last Name</span> <span style="color: #ef4444;">*</span>
                     </label>
                     <div class="input-icon-wrapper">
                         <input type="text" class="form-control @error('last_name') is-invalid @enderror" 
-                               id="last_name" name="last_name" placeholder="Enter last name" 
+                               id="last_name" name="last_name" placeholder="{{ __('Enter last name') }}" 
                                value="{{ old('last_name') }}" required>
                         <i class="fas fa-user input-icon"></i>
                     </div>
@@ -414,34 +416,33 @@
                 </div>
                 
                 {{-- ============================================ --}}
-                {{-- GENDER - COMPLETELY REWRITTEN --}}
+                {{-- GENDER --}}
                 {{-- ============================================ --}}
                 <div class="col-md-6">
                     <label for="gender" class="form-label">
-                        <i class="fas fa-venus-mars"></i> Gender
+                        <i class="fas fa-venus-mars"></i> <span data-i18n="gender">Gender</span>
                     </label>
                     <div class="input-icon-wrapper">
                         <select class="form-control @error('gender') is-invalid @enderror" 
                                 id="gender" name="gender">
-                            <option value="">Select Gender</option>
-                            <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>👨 Male</option>
-                            <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>👩 Female</option>
+                            <option value=""><span data-i18n="select_gender">Select Gender</span></option>
+                            <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>👨 <span data-i18n="male">Male</span></option>
+                            <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>👩 <span data-i18n="female">Female</span></option>
                         </select>
                         <i class="fas fa-venus-mars input-icon"></i>
                     </div>
                     @error('gender')
                         <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
                     @enderror
-                    {{-- Debug: Show selected value --}}
                     <div style="font-size: 0.7rem; color: #10B981; margin-top: 4px; padding: 4px 8px; background: rgba(16, 185, 129, 0.08); border-radius: 6px;">
-                        <i class="fas fa-info-circle"></i> Selected: <strong id="genderDisplay">Not selected</strong>
+                        <i class="fas fa-info-circle"></i> <span data-i18n="selected_label">Selected:</span> <strong id="genderDisplay"><span data-i18n="not_selected">Not selected</span></strong>
                     </div>
                 </div>
                 
                 {{-- Birthday --}}
                 <div class="col-md-6">
                     <label for="birthday" class="form-label">
-                        <i class="fas fa-birthday-cake"></i> Birthday
+                        <i class="fas fa-birthday-cake"></i> <span data-i18n="birthday">Birthday</span>
                     </label>
                     <div class="input-icon-wrapper">
                         <input type="date" class="form-control @error('birthday') is-invalid @enderror" 
@@ -456,11 +457,11 @@
                 {{-- Phone --}}
                 <div class="col-md-6">
                     <label for="phone" class="form-label">
-                        <i class="fas fa-phone"></i> Phone <span style="color: var(--text-muted); font-weight: 400; text-transform: lowercase;">(Optional)</span>
+                        <i class="fas fa-phone"></i> <span data-i18n="phone">Phone</span> <span style="color: var(--text-muted); font-weight: 400; text-transform: lowercase;">(<span data-i18n="optional">Optional</span>)</span>
                     </label>
                     <div class="input-icon-wrapper">
                         <input type="text" class="form-control @error('phone') is-invalid @enderror" 
-                               id="phone" name="phone" placeholder="Enter phone number (optional)" 
+                               id="phone" name="phone" placeholder="{{ __('Enter phone number (optional)') }}" 
                                value="{{ old('phone') }}">
                         <i class="fas fa-phone input-icon"></i>
                     </div>
@@ -472,11 +473,11 @@
                 {{-- Email --}}
                 <div class="col-md-6">
                     <label for="email" class="form-label">
-                        <i class="fas fa-envelope"></i> Email <span style="color: var(--text-muted); font-weight: 400; text-transform: lowercase;">(Optional)</span>
+                        <i class="fas fa-envelope"></i> <span data-i18n="email">Email</span> <span style="color: var(--text-muted); font-weight: 400; text-transform: lowercase;">(<span data-i18n="optional">Optional</span>)</span>
                     </label>
                     <div class="input-icon-wrapper">
                         <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                               id="email" name="email" placeholder="Enter email address (optional)" 
+                               id="email" name="email" placeholder="{{ __('Enter email address (optional)') }}" 
                                value="{{ old('email') }}">
                         <i class="fas fa-envelope input-icon"></i>
                     </div>
@@ -488,11 +489,11 @@
                 {{-- Address --}}
                 <div class="col-12">
                     <label for="address" class="form-label">
-                        <i class="fas fa-map-marker-alt"></i> Address
+                        <i class="fas fa-map-marker-alt"></i> <span data-i18n="address">Address</span>
                     </label>
                     <div class="input-icon-wrapper">
                         <input type="text" class="form-control @error('address') is-invalid @enderror" 
-                               id="address" name="address" placeholder="Complete address of the member" 
+                               id="address" name="address" placeholder="{{ __('Complete address of the member') }}" 
                                value="{{ old('address') }}">
                         <i class="fas fa-home input-icon"></i>
                     </div>
@@ -504,10 +505,10 @@
                 {{-- Roles / Ministries --}}
                 <div class="col-12">
                     <label class="form-label">
-                        <i class="fas fa-tags"></i> Roles / Ministries
+                        <i class="fas fa-tags"></i> <span data-i18n="roles_ministries">Roles / Ministries</span>
                     </label>
                     <p class="form-text">
-                        <i class="fas fa-check-circle"></i> Select one or more roles for this member
+                        <i class="fas fa-check-circle"></i> <span data-i18n="select_roles_hint">Select one or more roles for this member</span>
                     </p>
                     
                     <div class="role-checkbox-group">
@@ -525,7 +526,7 @@
                         @else
                             <p class="text-muted" style="grid-column: span 2; text-align: center; padding: 0.5rem;">
                                 <i class="fas fa-info-circle" style="color: #10b981;"></i>
-                                No roles available. Please contact administrator.
+                                <span data-i18n="no_roles_available">No roles available. Please contact administrator.</span>
                             </p>
                         @endif
                     </div>
@@ -533,7 +534,7 @@
                     <div class="choir-note">
                         <i class="fas fa-info-circle"></i>
                         <div>
-                            <strong>Note:</strong> Members with <strong>Training Pastor, Palagkanta, Instruments, Singer, Musician, Guitarist, Pianist, Drummer, Bassist, or Choir</strong> roles will automatically be added to the <strong>Choir Ministry</strong>.
+                            <span data-i18n="choir_note_text">Note: Members with Training Pastor, Palagkanta, Instruments, Singer, Musician, Guitarist, Pianist, Drummer, Bassist, or Choir roles will automatically be added to the Choir Ministry .</span>
                         </div>
                     </div>
                     
@@ -546,10 +547,10 @@
             {{-- Form Actions --}}
             <div class="form-actions">
                 <a href="{{ route('members.index') }}" class="btn-cancel">
-                    <i class="fas fa-times"></i> Cancel
+                    <i class="fas fa-times"></i> <span data-i18n="cancel">Cancel</span>
                 </a>
                 <button type="submit" class="btn-save">
-                    <i class="fas fa-save"></i> Save Member
+                    <i class="fas fa-save"></i> <span data-i18n="save_member">Save Member</span>
                 </button>
             </div>
         </form>
@@ -563,16 +564,29 @@
         const genderDisplay = document.getElementById('genderDisplay');
         
         if (genderSelect && genderDisplay) {
+            // Set initial value
+            const initialValue = genderSelect.value;
+            if (initialValue === 'male') {
+                genderDisplay.textContent = window.t ? window.t('male'): 'Male ';
+                genderDisplay.style.color = '#3B82F6';
+            } else if (initialValue === 'female') {
+                genderDisplay.textContent = window.t ? window.t('female'): 'Female ';
+                genderDisplay.style.color = '#EC4899';
+            } else {
+                genderDisplay.textContent = window.t ? window.t('not_selected') : 'Not selected';
+                genderDisplay.style.color = '#10B981';
+            }
+            
             genderSelect.addEventListener('change', function() {
                 const value = this.value;
                 if (value === 'male') {
-                    genderDisplay.textContent = 'Male 👨';
+                    genderDisplay.textContent = (window.t ? window.t('male') : 'Male');
                     genderDisplay.style.color = '#3B82F6';
                 } else if (value === 'female') {
-                    genderDisplay.textContent = 'Female 👩';
+                    genderDisplay.textContent = (window.t ? window.t('female') : 'Female');
                     genderDisplay.style.color = '#EC4899';
                 } else {
-                    genderDisplay.textContent = 'Not selected';
+                    genderDisplay.textContent = window.t ? window.t('not_selected') : 'Not selected';
                     genderDisplay.style.color = '#10B981';
                 }
             });

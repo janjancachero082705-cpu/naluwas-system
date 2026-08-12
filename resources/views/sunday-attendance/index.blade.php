@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('header', 'Sunday Service Attendance')
+@section('header')
+    <span data-i18n="sunday_attendance">Sunday Service Attendance</span>
+@endsection
 
 @section('content')
 
@@ -929,16 +931,16 @@
     <div class="attendance-hero">
         <div class="hero-content">
             <div class="hero-left">
-                <h1><i class="fas fa-church"></i> Sunday Service Attendance</h1>
-                <p>Record and manage attendance for Sunday worship services</p>
+                <h1><i class="fas fa-church"></i> <span data-i18n="sunday_attendance">Sunday Service Attendance</span></h1>
+                <p><span data-i18n="sunday_attendance_desc">Record and manage attendance for Sunday worship services</span></p>
                 <div class="hero-badge">
                     <i class="fas fa-circle" style="color: #34D399; font-size: 0.5rem;"></i>
-                    Sunday Service • {{ \Carbon\Carbon::parse($selectedDate)->format('F d, Y') }}
+                    <span data-i18n="sunday_service_label">Sunday Service</span> • {{ \Carbon\Carbon::parse($selectedDate)->format('F d, Y') }}
                 </div>
             </div>
             <div class="hero-actions">
                 <a href="{{ route('sunday-attendance.records', ['date' => $selectedDate]) }}" class="btn-hero-primary">
-                    <i class="fas fa-history"></i> View Records
+                    <i class="fas fa-history"></i> <span data-i18n="view_records">View Records</span>
                 </a>
                 <span class="btn-hero-secondary">
                     <i class="fas fa-calendar-alt"></i>
@@ -971,29 +973,29 @@
     <div class="stats-grid-premium">
         <div class="stat-card-premium blue">
             <div class="stat-top">
-                <span class="stat-label">Total Members</span>
+                <span class="stat-label" data-i18n="total_members">Total Members</span>
                 <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
             </div>
             <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-users"></i> Church family</div>
+            <div class="stat-change positive"><i class="fas fa-users"></i> <span data-i18n="church_family">Church family</span></div>
         </div>
         
         <div class="stat-card-premium green">
             <div class="stat-top">
-                <span class="stat-label">Present</span>
+                <span class="stat-label" data-i18n="present_label">Present</span>
                 <div class="stat-icon-wrap"><i class="fas fa-check-circle"></i></div>
             </div>
             <div class="stat-value amount-positive-premium">{{ number_format($presentCount ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> Attended today</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="attended_today">Attended today</span></div>
         </div>
         
         <div class="stat-card-premium red">
             <div class="stat-top">
-                <span class="stat-label">Absent</span>
+                <span class="stat-label" data-i18n="absent_label">Absent</span>
                 <div class="stat-icon-wrap"><i class="fas fa-times-circle"></i></div>
             </div>
             <div class="stat-value amount-negative-premium">{{ number_format($absentCount ?? 0) }}</div>
-            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> Not attended</div>
+            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="not_attended">Not attended</span></div>
         </div>
     </div>
 
@@ -1004,27 +1006,27 @@
         <div class="selector-header">
             <div class="selector-title">
                 <i class="fas fa-calendar-week"></i>
-                <span>Select Date</span>
-                <small><i class="fas fa-info-circle"></i> Only Sundays are selectable</small>
+                <span data-i18n="select_date">Select Date</span>
+                <small><i class="fas fa-info-circle"></i> <span data-i18n="only_sundays">Only Sundays are selectable</span></small>
             </div>
             <div class="auto-save-status">
                 <i class="fas fa-sync-alt fa-fw" id="autoSaveSpinner"></i>
-                <span id="autoSaveLabel">Auto-save enabled</span>
+                <span id="autoSaveLabel" data-i18n="auto_save_enabled">Auto-save enabled</span>
             </div>
         </div>
         <div class="selector-group">
             <div class="selector-item">
-                <label><i class="fas fa-calendar-day me-1"></i> DATE</label>
+                <label><i class="fas fa-calendar-day me-1"></i> <span data-i18n="date_label">DATE</span></label>
                 <input type="date" id="datePicker" value="{{ $selectedDate }}" 
                        min="{{ \Carbon\Carbon::now()->subYears(5)->format('Y-m-d') }}"
                        max="{{ \Carbon\Carbon::now()->addYears(1)->format('Y-m-d') }}">
             </div>
             <div class="week-nav">
                 <button type="button" class="btn-week-premium btn-week-prev" onclick="goToPrevWeek()">
-                    <i class="fas fa-chevron-left"></i> Prev Week
+                    <i class="fas fa-chevron-left"></i> <span data-i18n="prev_week">Prev Week</span>
                 </button>
                 <button type="button" class="btn-week-premium btn-week-next" onclick="goToNextWeek()">
-                    Next Week <i class="fas fa-chevron-right"></i>
+                    <span data-i18n="next_week">Next Week</span> <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>
@@ -1041,11 +1043,11 @@
             <div class="table-header-premium">
                 <h6>
                     <i class="fas fa-users"></i>
-                    Member Attendance
-                    <span class="badge-count-premium">{{ $presentCount ?? 0 }} / {{ $totalMembers ?? 0 }} Recorded</span>
+                    <span data-i18n="member_attendance">Member Attendance</span>
+                    <span class="badge-count-premium">{{ $presentCount ?? 0 }} / {{ $totalMembers ?? 0 }} <span data-i18n="recorded">Recorded</span></span>
                 </h6>
                 <span style="font-size: 0.65rem; color: var(--text-muted);">
-                    <i class="fas fa-edit"></i> Changes auto-save
+                    <i class="fas fa-edit"></i> <span data-i18n="changes_auto_save">Changes auto-save</span>
                 </span>
             </div>
             <div class="table-responsive">
@@ -1053,9 +1055,9 @@
                     <thead>
                         <tr>
                             <th style="width: 50px;">#</th>
-                            <th>Member Information</th>
-                            <th style="width: 140px;">Status</th>
-                            <th>Notes</th>
+                            <th data-i18n="member_info">Member Information</th>
+                            <th style="width: 140px;" data-i18n="status_label">Status</th>
+                            <th data-i18n="notes_label">Notes</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1075,7 +1077,7 @@
                                     <div>
                                         <div class="member-name-premium">{{ $member->first_name }} {{ $member->last_name }}</div>
                                         @if(($member->is_choir ?? false))
-                                            <div class="member-role-premium"><i class="fas fa-music"></i> Choir Member</div>
+                                            <div class="member-role-premium"><i class="fas fa-music"></i> <span data-i18n="choir_member">Choir Member</span></div>
                                         @endif
                                     </div>
                                 </div>
@@ -1085,14 +1087,14 @@
                                         class="status-select-premium" 
                                         data-member="{{ $member->id }}"
                                         onchange="autoSave(this)">
-                                    <option value="Present" {{ $status == 'Present' ? 'selected' : '' }}>✅ Present</option>
-                                    <option value="Absent" {{ $status == 'Absent' ? 'selected' : '' }}>❌ Absent</option>
+                                    <option value="Present" {{ $status == 'Present' ? 'selected' : '' }}>✅ <span data-i18n="present_option">Present</span></option>
+                                    <option value="Absent" {{ $status == 'Absent' ? 'selected' : '' }}>❌ <span data-i18n="absent_option">Absent</span></option>
                                 </select>
                             </td>
                             <td>
                                 <input type="text" name="attendances[{{ $member->id }}][notes]" 
                                        class="notes-input-premium" 
-                                       placeholder="Add notes..." 
+                                       placeholder="{{ __('Add notes...') }}" 
                                        value="{{ $notes }}"
                                        data-member="{{ $member->id }}"
                                        onchange="autoSave(this)"
@@ -1104,7 +1106,7 @@
                             <td colspan="4">
                                 <div class="empty-state-premium">
                                     <i class="fas fa-users"></i>
-                                    <p>No members found. Please add members first.</p>
+                                    <p data-i18n="no_members_found">No members found. Please add members first.</p>
                                 </div>
                             </td>
                         </tr>
@@ -1126,14 +1128,14 @@
         <div class="custom-alert-icon">
             <i class="fas fa-exclamation-circle"></i>
         </div>
-        <h3>Only Sundays Allowed</h3>
-        <p>Attendance can only be recorded on Sundays. Please select a Sunday date.</p>
+        <h3 data-i18n="only_sundays_allowed">Only Sundays Allowed</h3>
+        <p data-i18n="only_sundays_desc">Attendance can only be recorded on Sundays. Please select a Sunday date.</p>
         <div class="alert-date">
             <i class="fas fa-calendar-day"></i>
-            <span id="alertSelectedDate">Select a date</span>
+            <span id="alertSelectedDate"><span data-i18n="select_date_label">Select a date</span></span>
         </div>
         <button class="btn-alert-close" onclick="closeCustomAlert()">
-            <i class="fas fa-check me-1"></i> OK, I Understand
+            <i class="fas fa-check me-1"></i> <span data-i18n="ok_understand">OK, I Understand</span>
         </button>
     </div>
 </div>
@@ -1143,7 +1145,7 @@
 {{-- ============================================ --}}
 <div class="auto-save-toast" id="autoSaveToast">
     <i class="fas fa-check-circle"></i>
-    <span id="autoSaveMessage">Changes saved automatically</span>
+    <span id="autoSaveMessage" data-i18n="changes_saved">Changes saved automatically</span>
 </div>
 
 {{-- ============================================= --}}
@@ -1166,7 +1168,7 @@
                 day: 'numeric' 
             });
         } else {
-            dateSpan.textContent = 'Invalid date selected';
+            dateSpan.textContent = window.t ? window.t('invalid_date') : 'Invalid date selected';
         }
         
         overlay.classList.add('active');
@@ -1228,7 +1230,7 @@
             element.classList.add('changed');
         }
         spinner.className = 'fas fa-spinner fa-spin fa-fw';
-        autoSaveLabel.textContent = 'Saving...';
+        autoSaveLabel.textContent = window.t ? window.t('saving') : 'Saving...';
         
         saveTimeout = setTimeout(() => {
             saveAttendance();
@@ -1242,7 +1244,7 @@
             element.classList.add('changed');
         }
         spinner.className = 'fas fa-spinner fa-spin fa-fw';
-        autoSaveLabel.textContent = 'Saving...';
+        autoSaveLabel.textContent = window.t ? window.t('saving') : 'Saving...';
         
         saveTimeout = setTimeout(() => {
             saveAttendance();
@@ -1308,36 +1310,40 @@
                 });
                 
                 spinner.className = 'fas fa-check-circle fa-fw';
-                autoSaveLabel.textContent = 'Auto-saved';
+                autoSaveLabel.textContent = window.t ? window.t('auto_saved') : 'Auto-saved';
                 
                 if (data.stats) {
-                    document.querySelector('.stat-card-premium.green .stat-value').textContent = data.stats.present;
-                    document.querySelector('.stat-card-premium.red .stat-value').textContent = data.stats.absent;
-                    document.querySelector('.badge-count-premium').textContent = data.stats.present + ' / ' + data.stats.total + ' Recorded';
+                    const presentEl = document.querySelector('.stat-card-premium.green .stat-value');
+                    const absentEl = document.querySelector('.stat-card-premium.red .stat-value');
+                    const badgeEl = document.querySelector('.badge-count-premium');
+                    
+                    if (presentEl) presentEl.textContent = data.stats.present;
+                    if (absentEl) absentEl.textContent = data.stats.absent;
+                    if (badgeEl) badgeEl.textContent = data.stats.present + ' / ' + data.stats.total + ' ' + (window.t ? window.t('recorded') : 'Recorded');
                 }
                 
-                showToast(data.message || 'Changes saved automatically', 'success');
+                showToast(data.message || (window.t ? window.t('changes_saved') : 'Changes saved automatically'), 'success');
             } else {
-                showToast(data.message || 'Error saving changes', 'error');
+                showToast(data.message || (window.t ? window.t('save_error') : 'Error saving changes'), 'error');
                 spinner.className = 'fas fa-exclamation-circle fa-fw';
-                autoSaveLabel.textContent = 'Auto-save failed';
+                autoSaveLabel.textContent = window.t ? window.t('save_failed') : 'Auto-save failed';
             }
             
             setTimeout(() => {
                 spinner.className = 'fas fa-sync-alt fa-fw';
-                autoSaveLabel.textContent = 'Auto-save enabled';
+                autoSaveLabel.textContent = window.t ? window.t('auto_save_enabled') : 'Auto-save enabled';
             }, 3000);
         })
         .catch(error => {
             isSaving = false;
             console.error('Auto-save error:', error);
-            showToast('Network error. Please check your connection.', 'error');
+            showToast(window.t ? window.t('network_error') : 'Network error. Please check your connection.', 'error');
             spinner.className = 'fas fa-exclamation-circle fa-fw';
-            autoSaveLabel.textContent = 'Auto-save failed';
+            autoSaveLabel.textContent = window.t ? window.t('save_failed') : 'Auto-save failed';
             
             setTimeout(() => {
                 spinner.className = 'fas fa-sync-alt fa-fw';
-                autoSaveLabel.textContent = 'Auto-save enabled';
+                autoSaveLabel.textContent = window.t ? window.t('auto_save_enabled') : 'Auto-save enabled';
             }, 3000);
         });
     }
@@ -1406,10 +1412,10 @@
                 const text = badge.textContent;
                 if (text && !text.includes('0 /')) {
                     spinner.className = 'fas fa-check-circle fa-fw';
-                    autoSaveLabel.textContent = 'Auto-saved';
+                    autoSaveLabel.textContent = window.t ? window.t('auto_saved') : 'Auto-saved';
                     setTimeout(() => {
                         spinner.className = 'fas fa-sync-alt fa-fw';
-                        autoSaveLabel.textContent = 'Auto-save enabled';
+                        autoSaveLabel.textContent = window.t ? window.t('auto_save_enabled') : 'Auto-save enabled';
                     }, 2000);
                 }
             }
