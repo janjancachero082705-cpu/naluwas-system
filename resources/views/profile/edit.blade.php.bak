@@ -57,7 +57,7 @@
                         <i class="fas fa-camera"></i>
                         <span class="upload-tooltip">Change Photo</span>
                     </div>
-                    <input type="file" id="profilePictureInput" name="profile_picture" accept="*/*" style="display:none;">
+                    <input type="file" id="profilePictureInput" name="profile_picture" accept="image/*" style="display:none;">
                 </div>
             </div>
 
@@ -398,7 +398,7 @@
 
 <style>
     /* ============================================================
-       PROFILE PAGE — REDESIGNED WITH BETTER CONTRAST
+       PROFILE PAGE — REDESIGNED
        ============================================================ */
     .profile-page {
         max-width: 1200px;
@@ -424,14 +424,15 @@
         box-shadow: 0 4px 16px rgba(15,27,45,0.06), 0 24px 56px -20px rgba(15,27,45,0.22);
     }
 
-    /* Darker gradient for better text contrast */
+    /* Dark gradient extends lower to cover name area */
     .profile-hero-bg {
         position: absolute;
         top: 0; left: 0; right: 0;
         height: 290px;
-        background: linear-gradient(135deg, #061428 0%, #0A1F3D 30%, #0F2A52 60%, #153868 100%);
+        background: linear-gradient(135deg, #0A1A30 0%, #0F2646 35%, #14315A 70%, #1B4074 100%);
         overflow: hidden;
     }
+    /* Bottom fade sa dark background para smooth transition */
     .profile-hero-bg::after {
         content: '';
         position: absolute;
@@ -441,6 +442,7 @@
         pointer-events: none;
     }
 
+    /* Decorative pattern overlay */
     .hero-pattern {
         position: absolute;
         inset: 0;
@@ -470,7 +472,7 @@
         min-height: 270px;
     }
 
-    /* ==================== AVATAR (200px) ==================== */
+    /* ==================== AVATAR (BIGGER 200px) ==================== */
     .profile-avatar-section {
         flex-shrink: 0;
         position: relative;
@@ -534,7 +536,6 @@
         height: 100%;
         border-radius: 50%;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
         font-size: 5rem;
@@ -615,7 +616,7 @@
         50% { opacity: 1; }
     }
 
-    /* ==================== HERO INFO — HIGH CONTRAST ==================== */
+    /* ==================== HERO INFO — HIGH CONTRAST TEXT ==================== */
     .profile-hero-info {
         padding-bottom: 0.5rem;
         min-width: 0;
@@ -625,51 +626,42 @@
         justify-content: flex-end;
     }
 
-    /* ✅ NAME — Bold white with 3-layer shadow */
+    /* ✅ NAME — Bright white with strong multi-layer shadow */
     .profile-hero-name {
         font-family: 'Fraunces', Georgia, serif;
-        font-size: 2.4rem;
-        font-weight: 800;
+        font-size: 2.5rem;
+        font-weight: 700;
         color: #FFFFFF;
-        margin: 0 0 0.7rem;
+        margin: 0 0 0.65rem;
         letter-spacing: -0.8px;
         line-height: 1.1;
         text-shadow:
-            0 1px 0 rgba(0,0,0,0.6),
-            0 3px 8px rgba(0,0,0,0.55),
-            0 8px 28px rgba(0,0,0,0.45);
+            0 0 1px rgba(0,0,0,0.5),
+            0 2px 6px rgba(0,0,0,0.5),
+            0 6px 24px rgba(0,0,0,0.4);
     }
 
-    /* ✅ EMAIL — Dark pill background, VERY VISIBLE */
+    /* ✅ EMAIL — Bright with icon and strong shadow */
     .profile-hero-email {
-        display: inline-flex;
+        color: #FFFFFF;
+        font-size: 1.02rem;
+        margin: 0 0 1.25rem;
+        display: flex;
         align-items: center;
         gap: 10px;
-        margin: 0 0 1.3rem;
-        padding: 9px 20px;
-        border-radius: 30px;
-        background: rgba(0, 0, 0, 0.45);
-        border: 1.5px solid rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        color: #FFFFFF;
-        font-size: 0.95rem;
         font-weight: 600;
-        letter-spacing: 0.2px;
-        box-shadow:
-            0 6px 20px rgba(0, 0, 0, 0.35),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        width: fit-content;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+        text-shadow:
+            0 1px 2px rgba(0,0,0,0.6),
+            0 2px 8px rgba(0,0,0,0.4);
+        letter-spacing: 0.1px;
     }
     .profile-hero-email i {
         color: #FFD97A;
-        font-size: 0.9rem;
-        filter: drop-shadow(0 0 8px rgba(255, 217, 122, 0.5));
+        font-size: 0.95rem;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
     }
     .profile-hero-email span {
-        color: #FFFFFF;
-        font-weight: 600;
+        opacity: 0.98;
     }
 
     .profile-hero-badges {
@@ -678,75 +670,65 @@
         gap: 10px;
     }
 
-    /* ✅ BADGES — SOLID colors with strong contrast */
+    /* ✅ BADGES — Bolder, more visible */
     .hero-badge {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 9px 17px;
+        padding: 8px 16px;
         border-radius: 30px;
         font-size: 0.72rem;
         font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.8px;
+        letter-spacing: 0.7px;
+        border: 1.5px solid rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.18);
         color: #FFFFFF;
-        border: 2px solid;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
         box-shadow:
-            0 6px 18px rgba(0,0,0,0.3),
-            inset 0 1px 0 rgba(255,255,255,0.25);
-        text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+            0 4px 12px rgba(0,0,0,0.2),
+            inset 0 1px 0 rgba(255,255,255,0.15);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
-
-    /* Role — SOLID GOLD */
     .hero-badge.role-badge {
-        background: linear-gradient(135deg, #D3A24C 0%, #B9862F 100%);
-        border-color: #FFD97A;
-        color: #1A1000;
-        text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+        background: linear-gradient(135deg, rgba(211,162,76,0.55), rgba(184,134,47,0.4));
+        border-color: rgba(255,217,122,0.7);
+        color: #FFF4D6;
         box-shadow:
-            0 6px 20px rgba(211,162,76,0.55),
-            inset 0 1px 0 rgba(255,255,255,0.5);
+            0 4px 16px rgba(211,162,76,0.4),
+            inset 0 1px 0 rgba(255,255,255,0.25);
     }
-    .hero-badge.role-badge i {
-        color: #1A1000;
-        filter: drop-shadow(0 1px 1px rgba(255,255,255,0.3));
-    }
-
-    /* Status — SOLID GREEN */
     .hero-badge.status-badge {
-        background: linear-gradient(135deg, #16A075 0%, #0F7A57 100%);
-        border-color: #7FE5B8;
-        color: #FFFFFF;
+        background: linear-gradient(135deg, rgba(22,160,117,0.5), rgba(15,122,87,0.35));
+        border-color: rgba(168,240,204,0.7);
+        color: #D4F8E5;
         box-shadow:
-            0 6px 20px rgba(22,160,117,0.55),
-            inset 0 1px 0 rgba(255,255,255,0.3);
+            0 4px 16px rgba(22,160,117,0.4),
+            inset 0 1px 0 rgba(255,255,255,0.25);
     }
-    .hero-badge.status-badge .hero-status-dot {
-        background: #FFFFFF;
-        box-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 0 0 rgba(255,255,255,0.7);
-    }
-    @keyframes pulseStatus {
-        0%   { box-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 0 0 rgba(255,255,255,0.7); }
-        70%  { box-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 0 8px rgba(255,255,255,0); }
-        100% { box-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 0 0 rgba(255,255,255,0); }
-    }
-
-    /* Joined — SOLID BLUE */
     .hero-badge.joined-badge {
-        background: linear-gradient(135deg, #4A7AB5 0%, #2B5A85 100%);
-        border-color: #A8CCF0;
-        color: #FFFFFF;
+        background: linear-gradient(135deg, rgba(74,122,181,0.5), rgba(43,90,133,0.35));
+        border-color: rgba(197,210,227,0.6);
+        color: #EAF1FA;
         box-shadow:
-            0 6px 20px rgba(74,122,181,0.55),
-            inset 0 1px 0 rgba(255,255,255,0.3);
+            0 4px 16px rgba(74,122,181,0.4),
+            inset 0 1px 0 rgba(255,255,255,0.25);
     }
 
     .hero-status-dot {
         display: inline-block;
         width: 8px;
         height: 8px;
+        background: #7FE5B8;
         border-radius: 50%;
+        box-shadow: 0 0 12px rgba(127,229,184,1), 0 0 0 0 rgba(127,229,184,0.7);
         animation: pulseStatus 2s infinite;
+    }
+    @keyframes pulseStatus {
+        0%   { box-shadow: 0 0 12px rgba(127,229,184,1), 0 0 0 0 rgba(127,229,184,0.7); }
+        70%  { box-shadow: 0 0 12px rgba(127,229,184,1), 0 0 0 10px rgba(127,229,184,0); }
+        100% { box-shadow: 0 0 12px rgba(127,229,184,1), 0 0 0 0 rgba(127,229,184,0); }
     }
 
     /* ==================== STATS ==================== */
@@ -865,6 +847,7 @@
         font-weight: 500;
     }
 
+    /* EDIT BUTTON */
     .btn-edit-icon {
         display: inline-flex;
         align-items: center;
@@ -890,6 +873,7 @@
     }
     .btn-edit-icon i { font-size: 0.7rem; }
 
+    /* INFO LIST */
     .info-list { display: flex; flex-direction: column; gap: 6px; }
     .info-row {
         display: flex;
@@ -947,6 +931,7 @@
         letter-spacing: 0.5px;
     }
 
+    /* OVERVIEW */
     .overview-list { display: flex; flex-direction: column; }
     .overview-item {
         display: flex;
@@ -969,6 +954,7 @@
     .overview-label i { color: #6B7A93; font-size: 0.9rem; width: 20px; text-align: center; }
     .overview-value { font-size: 0.88rem; font-weight: 700; color: #0F1B2D; text-align: right; }
 
+    /* PREFERENCES */
     .preference-item {
         display: flex;
         align-items: center;
@@ -1281,14 +1267,14 @@
     }
 
     @media (max-width: 700px) {
-        .profile-hero-bg { height: 340px; }
+        .profile-hero-bg { height: 320px; }
         .profile-hero-content {
             flex-direction: column;
             align-items: center;
             text-align: center;
             padding: 1.5rem 1.25rem 2rem;
-            margin-top: 170px;
-            min-height: 330px;
+            margin-top: 160px;
+            min-height: 310px;
             gap: 1.25rem;
         }
         .profile-hero-badges { justify-content: center; }
@@ -1297,7 +1283,7 @@
             text-align: center;
         }
         .profile-hero-email {
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             justify-content: center;
         }
         .profile-picture-wrapper {
@@ -1310,7 +1296,9 @@
             height: 48px;
             font-size: 1.05rem;
         }
-        .profile-hero-info { align-items: center; }
+        .profile-hero-info {
+            align-items: center;
+        }
         .edit-form-row { grid-template-columns: 1fr; }
         .edit-modal-footer { flex-direction: column-reverse; }
         .edit-btn { width: 100%; justify-content: center; }
@@ -1441,22 +1429,6 @@
         }
     }
 
-    function showFileIcon(ext) {
-        var preview = document.getElementById('profilePicturePreview');
-        if (!preview) return;
-        var iconHtml = '<i class="fas fa-file" style="font-size: 3.5rem; opacity: 0.9;"></i><div style="font-size: 1rem; margin-top: 10px; font-weight: 800; letter-spacing: 1px;">.' + ext + '</div>';
-        if (preview.tagName === 'IMG') {
-            var placeholder = document.createElement('div');
-            placeholder.className = 'profile-picture-placeholder';
-            placeholder.id = 'profilePicturePreview';
-            placeholder.style.background = 'linear-gradient(135deg, #16324F, #0B1E36)';
-            placeholder.innerHTML = iconHtml;
-            preview.replaceWith(placeholder);
-        } else {
-            preview.innerHTML = iconHtml;
-        }
-    }
-
     var pictureInput = document.getElementById('profilePictureInput');
     var pictureWrapper = document.getElementById('profilePictureWrapper');
 
@@ -1465,29 +1437,27 @@
             var file = this.files[0];
             if (!file) return;
 
-            if (file.size > 10 * 1024 * 1024) {
-                notify('error', 'Error', 'File size must be less than 10MB');
+            if (file.size > 2 * 1024 * 1024) {
+                notify('error', 'Error', 'File size must be less than 2MB');
+                this.value = '';
+                return;
+            }
+            if (!file.type.match(/^image\//)) {
+                notify('error', 'Error', 'Please select an image file');
                 this.value = '';
                 return;
             }
 
             var dataUrl = null;
-
-            // Preview — images show, others show icon
-            if (file.type.startsWith('image/')) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    dataUrl = e.target.result;
-                    showProfileImage(dataUrl);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                var ext = (file.name.split('.').pop() || 'file').toUpperCase();
-                showFileIcon(ext);
-            }
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                dataUrl = e.target.result;
+                showProfileImage(dataUrl);
+            };
+            reader.readAsDataURL(file);
 
             if (!pictureEndpoint || pictureEndpoint === '#') {
-                notify('info', 'Preview', 'File preview updated');
+                notify('info', 'Preview', 'Photo preview updated');
                 this.value = '';
                 return;
             }
@@ -1524,26 +1494,18 @@
 
                 var finalUrl = withCacheBuster(data.profile_picture_url);
 
-                // Only try to preload if it's an image
-                if (file.type.startsWith('image/')) {
-                    return preloadImage(finalUrl)
-                        .then(function(loadedUrl) {
-                            showProfileImage(loadedUrl);
-                            if (typeof window.updateProfileImages === 'function') {
-                                window.updateProfileImages(loadedUrl);
-                            }
-                            notify('success', 'Success', data.message || 'Profile picture updated!');
-                        })
-                        .catch(function() {
-                            if (dataUrl) showProfileImage(dataUrl);
-                            notify('info', 'Saved', 'File saved. Refresh page to see it.');
-                        });
-                } else {
-                    if (typeof window.updateProfileImages === 'function') {
-                        window.updateProfileImages(finalUrl);
-                    }
-                    notify('success', 'Success', data.message || 'File uploaded successfully!');
-                }
+                return preloadImage(finalUrl)
+                    .then(function(loadedUrl) {
+                        showProfileImage(loadedUrl);
+                        if (typeof window.updateProfileImages === 'function') {
+                            window.updateProfileImages(loadedUrl);
+                        }
+                        notify('success', 'Success', data.message || 'Profile picture updated!');
+                    })
+                    .catch(function() {
+                        if (dataUrl) showProfileImage(dataUrl);
+                        notify('info', 'Saved', 'Picture saved. Refresh page to see it.');
+                    });
             })
             .catch(function(err) {
                 console.error('[UPLOAD] Error:', err);

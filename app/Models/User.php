@@ -11,6 +11,10 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    // ============================================
+    // MASS ASSIGNMENT
+    // ============================================
+
     protected $fillable = [
         'name',
         'email',
@@ -19,10 +23,14 @@ class User extends Authenticatable
         'role',
         'profile_picture',
         'avatar_color',
-        'preferred_language',      // Add this
-        'two_factor_enabled',      // Add this
-        'session_timeout',         // Add this
-        'last_activity',           // Add this
+        'preferred_language',
+        'two_factor_enabled',
+        'session_timeout',
+        'last_activity',
+        'last_login_at',
+        'phone',
+        'birthday',
+        'address',
     ];
 
     protected $hidden = [
@@ -30,15 +38,35 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    // ============================================
+    // CASTS
+    // ============================================
+
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'two_factor_enabled' => 'boolean',      // Add this
-        'session_timeout' => 'integer',         // Add this
-        'last_activity' => 'datetime',          // Add this
+        'email_verified_at'  => 'datetime',
+        'two_factor_enabled' => 'boolean',
+        'session_timeout'    => 'integer',
+        'last_activity'      => 'datetime',
+        'last_login_at'      => 'datetime',
+        'birthday'           => 'date',
+        'avatar_color'       => 'string',
     ];
 
     /**
-     * Get the church that owns the user
+     * Auto-append these computed attributes when the model is serialized to JSON.
+     */
+    protected $appends = [
+        'profile_picture_url',
+        'initials',
+        'has_profile_picture',
+    ];
+
+    // ============================================
+    // RELATIONSHIPS
+    // ============================================
+
+    /**
+     * The church that owns this user.
      */
     public function church()
     {
@@ -46,157 +74,259 @@ class User extends Authenticatable
     }
 
     /**
-     * Get church settings through church
+     * Church settings through church.
      */
     public function churchSettings()
     {
-        return $this->hasOneThrough(ChurchSetting::class, Church::class, 'id', 'church_id', 'church_id');
+        return $this->hasOneThrough(
+            ChurchSetting::class,
+            Church::class,
+            'id',        // Foreign key on churches table
+            'church_id', // Foreign key on church_settings table
+            'church_id', // Local key on users table
+            'id'         // Local key on churches table
+        );
     }
 
+    // ============================================
+    // HELPERS
+    // ============================================
+
     /**
-     * Check if user is admin
+     * Check if user is a church admin.
      */
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->role === 'church_admin';
     }
 
     /**
-     * Get profile picture URL
+     * Check if the user has a profile picture set.
      */
-    public function getProfilePictureUrlAttribute()
+    public function hasProfilePicture(): bool
     {
-        if ($this->profile_picture) {
-            return asset('storage/profile_pictures/' . $this->profile_picture);
+        return !empty($this->profile_picture);
+    }
+
+    // ============================================
+    // ACCESSORS
+    // ============================================
+
+    /**
+     * Get profile picture URL with cache-buster.
+     *
+     * ✅ IMPORTANT: Appends "?v={updated_at}" so the browser always
+     * fetches the FRESH image after an update, instead of using the
+     * cached old one.
+     *
+     * Handles:
+     *  - External URLs (http/https)
+     *  - New format: "profile-pictures/abc.jpg"
+     *  - Legacy format: "profile_pictures/abc.jpg"
+     *  - Bare filename: "abc.jpg" (auto-prefixed)
+     */
+    public function getProfilePictureUrlAttribute(): ?string
+    {
+        if (empty($this->profile_picture)) {
+            return null;
         }
-        return null;
+
+        // External URL — return as-is
+        if (filter_var($this->profile_picture, FILTER_VALIDATE_URL)) {
+            return $this->profile_picture;
+        }
+
+        // Normalize path
+        $path = $this->profile_picture;
+
+        if (
+            !str_starts_with($path, 'profile-pictures/') &&
+            !str_starts_with($path, 'profile_pictures/')
+        ) {
+            $path = 'profile-pictures/' . $path;
+        }
+
+        $url = Storage::disk('public')->url($path);
+
+        // ✅ Append cache-buster (forces browser to reload after update)
+        if ($this->updated_at) {
+            $separator = str_contains($url, '?') ? '&' : '?';
+            $url .= $separator . 'v=' . $this->updated_at->timestamp;
+        }
+
+        return $url;
     }
 
     /**
-     * Get user initials
+     * Get the raw stored path (no URL, no cache-buster).
+     * Useful for Storage operations, delete, etc.
      */
-    public function getInitialsAttribute()
+    public function getProfilePicturePathAttribute(): ?string
     {
-        $name = $this->name;
-        $words = explode(' ', trim($name));
+        if (empty($this->profile_picture)) {
+            return null;
+        }
+
+        if (filter_var($this->profile_picture, FILTER_VALIDATE_URL)) {
+            return null;
+        }
+
+        $path = $this->profile_picture;
+
+        if (
+            !str_starts_with($path, 'profile-pictures/') &&
+            !str_starts_with($path, 'profile_pictures/')
+        ) {
+            $path = 'profile-pictures/' . $path;
+        }
+
+        return $path;
+    }
+
+    /**
+     * Boolean accessor for $appends — whether user has a picture.
+     */
+    public function getHasProfilePictureAttribute(): bool
+    {
+        return !empty($this->profile_picture);
+    }
+
+    /**
+     * Get user initials (max 2 characters).
+     */
+    public function getInitialsAttribute(): string
+    {
+        $name = trim($this->name ?? '');
+
+        if (empty($name)) {
+            return 'A';
+        }
+
+        $words = preg_split('/\s+/', $name);
         $initials = '';
-        
+
         foreach ($words as $word) {
             if (!empty($word)) {
-                $initials .= strtoupper($word[0]);
+                $initials .= mb_strtoupper(mb_substr($word, 0, 1));
             }
         }
-        
-        return substr($initials, 0, 2);
+
+        return mb_substr($initials, 0, 2) ?: 'A';
     }
 
     /**
-     * Get avatar color (generates random color if not set)
+     * Get avatar color — deterministic fallback based on user ID.
+     * Does NOT save on read (no side effects).
      */
-    public function getAvatarColorAttribute($value)
+    public function getAvatarColorAttribute($value): string
     {
-        if ($value) {
+        if (!empty($value)) {
             return $value;
         }
-        
+
         $colors = [
-            '#4F46E5', '#10B981', '#EF4444', '#F59E0B', 
+            '#4F46E5', '#10B981', '#EF4444', '#F59E0B',
             '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6',
-            '#F97316', '#6366F1', '#06B6D4', '#D946EF'
+            '#F97316', '#6366F1', '#06B6D4', '#D946EF',
         ];
-        
-        $randomColor = $colors[array_rand($colors)];
-        $this->avatar_color = $randomColor;
-        $this->save();
-        
-        return $randomColor;
+
+        return $colors[($this->id ?? 0) % count($colors)];
     }
 
     /**
-     * Check if user has profile picture
+     * Get preferred language with fallback.
      */
-    public function hasProfilePicture()
+    public function getPreferredLanguageAttribute($value): string
     {
-        return !is_null($this->profile_picture);
-    }
-
-    /**
-     * Delete profile picture
-     */
-    public function deleteProfilePicture()
-    {
-        if ($this->profile_picture) {
-            Storage::disk('public')->delete('profile_pictures/' . $this->profile_picture);
-            $this->profile_picture = null;
-            $this->save();
-            return true;
-        }
-        return false;
+        return $value ?: 'en';
     }
 
     // ============================================
-    // NEW METHODS FOR LANGUAGE & SECURITY
+    // SECURITY / SESSION METHODS
     // ============================================
 
-    /**
-     * Get user's preferred language
-     */
-    public function getPreferredLanguageAttribute($value)
-    {
-        return $value ?? 'en';
-    }
-
-    /**
-     * Check if two-factor authentication is enabled
-     */
-    public function hasTwoFactorEnabled()
+    public function hasTwoFactorEnabled(): bool
     {
         return (bool) $this->two_factor_enabled;
     }
 
-    /**
-     * Get session timeout in minutes
-     */
-    public function getSessionTimeout()
+    public function getSessionTimeout(): int
     {
-        return $this->session_timeout ?? 30;
+        return (int) ($this->session_timeout ?? 30);
     }
 
-    /**
-     * Check if session has expired
-     */
-    public function isSessionExpired()
+    public function isSessionExpired(): bool
     {
-        if (!$this->last_activity || $this->session_timeout == 0) {
+        if (!$this->last_activity || $this->session_timeout === 0) {
             return false;
         }
-        
-        $timeoutMinutes = $this->session_timeout;
-        $expiryTime = $this->last_activity->addMinutes($timeoutMinutes);
-        
-        return now()->greaterThan($expiryTime);
+
+        return now()->greaterThan(
+            $this->last_activity->copy()->addMinutes((int) $this->session_timeout)
+        );
     }
 
-    /**
-     * Update last activity timestamp
-     */
-    public function updateLastActivity()
+    public function updateLastActivity(): void
     {
         $this->last_activity = now();
         $this->save();
     }
 
-    /**
-     * Force logout all other sessions
-     */
-    public function forceLogoutOtherSessions()
+    public function forceLogoutOtherSessions(): void
     {
-        // Regenerate remember token to invalidate other sessions
         $this->remember_token = null;
-        $this->save();
-        
-        // Update last activity
         $this->last_activity = now();
         $this->save();
+    }
+
+    // ============================================
+    // PROFILE PICTURE MANAGEMENT
+    // ============================================
+
+    /**
+     * Delete current profile picture from storage.
+     *
+     * ✅ Also clears the model attribute BEFORE saving, so subsequent
+     * calls to hasProfilePicture() return false immediately.
+     */
+    public function deleteProfilePicture(): bool
+    {
+        if (empty($this->profile_picture)) {
+            return false;
+        }
+
+        $path = $this->getProfilePicturePathAttribute();
+
+        // Delete from storage (skip external URLs)
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+
+        // Clear attribute before save
+        $this->profile_picture = null;
+        $this->save();
+
+        return true;
+    }
+
+    /**
+     * Store a new profile picture and update the model.
+     *
+     * Returns the stored path (relative, e.g. "profile-pictures/abc.jpg").
+     */
+    public function storeProfilePicture(\Illuminate\Http\UploadedFile $file): string
+    {
+        // Delete old picture first
+        if ($this->hasProfilePicture()) {
+            $this->deleteProfilePicture();
+        }
+
+        // Store new picture
+        $path = $file->store('profile-pictures', 'public');
+
+        $this->profile_picture = $path;
+        $this->save();
+
+        return $path;
     }
 }

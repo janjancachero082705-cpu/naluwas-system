@@ -1,6 +1,8 @@
 ﻿@extends('layouts.app')
 
-@section('header', 'Reports & Analytics')
+@section('header')
+    <span data-i18n="reports_analytics_title">Reports & Analytics</span>
+@endsection
 
 @php
 use Carbon\Carbon;
@@ -1026,8 +1028,8 @@ use Carbon\Carbon;
     <div class="analytics-hero">
         <div class="hero-content">
             <div class="hero-left">
-                <h1><i class="fas fa-chart-line"></i> Reports & Analytics</h1>
-                <p>Complete church financial and ministry analytics dashboard</p>
+                <h1><i class="fas fa-chart-line"></i> <span data-i18n="reports_analytics_title">Reports & Analytics</span></h1>
+                <p><span data-i18n="reports_analytics_desc">Complete church financial and ministry analytics dashboard</span></p>
                 <div class="hero-badge">
                     <i class="fas fa-circle" style="color: #34D399; font-size: 0.5rem;"></i>
                     {{ \Carbon\Carbon::now()->format('F d, Y') }} • {{ \Carbon\Carbon::now()->format('h:i A') }}
@@ -1035,10 +1037,10 @@ use Carbon\Carbon;
             </div>
             <div class="hero-actions no-print">
                 <a href="{{ route('dashboard') }}" class="btn-hero-secondary">
-                    <i class="fas fa-arrow-left"></i> Dashboard
+                    <i class="fas fa-arrow-left"></i> <span data-i18n="Dashboard">Dashboard</span>
                 </a>
                 <button class="btn-hero-primary" onclick="openExportModal()">
-                    <i class="fas fa-download"></i> Export Report
+                    <i class="fas fa-download"></i> <span data-i18n="export_report">Export Report</span>
                 </button>
             </div>
         </div>
@@ -1048,29 +1050,29 @@ use Carbon\Carbon;
     <div class="analytics-stats" id="statsSection">
         <div class="stat-card-modern green">
             <div class="stat-top">
-                <span class="stat-label">Total Income</span>
+                <span class="stat-label" data-i18n="total_income">Total Income</span>
                 <div class="stat-icon-wrap"><i class="fas fa-arrow-down"></i></div>
             </div>
             <div class="stat-value" id="totalIncome">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
             <div class="stat-change positive">
-                <i class="fas fa-arrow-up"></i> Money received
+                <i class="fas fa-arrow-up"></i> <span data-i18n="money_received">Money received</span>
             </div>
         </div>
         
         <div class="stat-card-modern red">
             <div class="stat-top">
-                <span class="stat-label">Total Expenses</span>
+                <span class="stat-label" data-i18n="total_expenses">Total Expenses</span>
                 <div class="stat-icon-wrap"><i class="fas fa-arrow-up"></i></div>
             </div>
             <div class="stat-value" id="totalExpense">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
             <div class="stat-change negative">
-                <i class="fas fa-arrow-down"></i> Money spent
+                <i class="fas fa-arrow-down"></i> <span data-i18n="money_spent">Money spent</span>
             </div>
         </div>
         
         <div class="stat-card-modern blue">
             <div class="stat-top">
-                <span class="stat-label">Net Balance</span>
+                <span class="stat-label" data-i18n="net_balance">Net Balance</span>
                 <div class="stat-icon-wrap"><i class="fas fa-scale-balanced"></i></div>
             </div>
             <div class="stat-value {{ ($balance ?? 0) >= 0 ? '' : 'text-danger' }}" id="netBalance">
@@ -1078,29 +1080,29 @@ use Carbon\Carbon;
             </div>
             <div class="stat-change {{ ($balance ?? 0) >= 0 ? 'positive' : 'negative' }}">
                 <i class="fas fa-{{ ($balance ?? 0) >= 0 ? 'arrow-up' : 'arrow-down' }}"></i>
-                {{ ($balance ?? 0) >= 0 ? 'Surplus' : 'Deficit' }}
+                <span data-i18n="{{ ($balance ?? 0) >= 0 ? 'surplus' : 'deficit' }}">{{ ($balance ?? 0) >= 0 ? 'Surplus' : 'Deficit' }}</span>
             </div>
         </div>
         
         <div class="stat-card-modern purple">
             <div class="stat-top">
-                <span class="stat-label">Total Members</span>
+                <span class="stat-label" data-i18n="total_members">Total Members</span>
                 <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
             </div>
             <div class="stat-value" id="totalMembers">{{ number_format($totalMembers ?? 0) }}</div>
             <div class="stat-change positive">
-                <i class="fas fa-users"></i> Church family
+                <i class="fas fa-users"></i> <span data-i18n="church_family">Church family</span>
             </div>
         </div>
         
         <div class="stat-card-modern orange">
             <div class="stat-top">
-                <span class="stat-label">Choir Members</span>
+                <span class="stat-label" data-i18n="choir_members">Choir Members</span>
                 <div class="stat-icon-wrap"><i class="fas fa-music"></i></div>
             </div>
             <div class="stat-value" id="choirMembers">{{ number_format($choirMembers ?? 0) }}</div>
             <div class="stat-change positive">
-                <i class="fas fa-microphone"></i> Voices of praise
+                <i class="fas fa-microphone"></i> <span data-i18n="voices_of_praise">Voices of praise</span>
             </div>
         </div>
     </div>
@@ -1108,8 +1110,8 @@ use Carbon\Carbon;
     <!-- Chart Section -->
     <div class="chart-modern" id="chartSection">
         <div class="chart-header">
-            <h5><i class="fas fa-chart-line"></i> Income vs Expenses (Last 6 Months)</h5>
-            <span class="badge-modern member"><i class="fas fa-calendar"></i> 6 Months</span>
+            <h5><i class="fas fa-chart-line"></i> <span data-i18n="income_vs_expenses_chart">Income vs Expenses (Last 6 Months)</span></h5>
+            <span class="badge-modern member"><i class="fas fa-calendar"></i> <span data-i18n="six_months">6 Months</span></span>
         </div>
         <div class="chart-body">
             <canvas id="financeChart"></canvas>
@@ -1121,18 +1123,18 @@ use Carbon\Carbon;
         <!-- Recent Transactions -->
         <div class="card-modern" id="transactionsCard">
             <div class="card-header-custom">
-                <h6><i class="fas fa-history"></i> Recent Transactions</h6>
-                <span class="badge-modern member">{{ count($recentTransactions ?? []) }} entries</span>
+                <h6><i class="fas fa-history"></i> <span data-i18n="recent_transactions">Recent Transactions</span></h6>
+                <span class="badge-modern member">{{ count($recentTransactions ?? []) }} <span data-i18n="entries">entries</span></span>
             </div>
             <div class="card-body" style="padding: 0;">
                 <div style="max-height: 350px; overflow-y: auto;">
                     <table class="table-modern" id="transactionsTable">
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Description</th>
-                                <th>Category</th>
-                                <th style="text-align: right;">Amount</th>
+                                <th data-i18n="date">Date</th>
+                                <th data-i18n="description">Description</th>
+                                <th data-i18n="category">Category</th>
+                                <th style="text-align: right;" data-i18n="amount">Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1153,7 +1155,7 @@ use Carbon\Carbon;
                             <tr>
                                 <td colspan="4" style="text-align: center; padding: 2rem; color: var(--text-muted);">
                                     <i class="fas fa-receipt" style="font-size: 1.5rem; display: block; opacity: 0.3; margin-bottom: 0.5rem;"></i>
-                                    No transactions found
+                                    <span data-i18n="no_transactions_found">No transactions found</span>
                                 </td>
                             </tr>
                             @endforelse
@@ -1167,8 +1169,8 @@ use Carbon\Carbon;
         <div>
             <div class="card-modern" id="membersCard">
                 <div class="card-header-custom">
-                    <h6><i class="fas fa-users"></i> Recent Members</h6>
-                    <span class="badge-modern member">{{ count($recentMembers ?? []) }} new</span>
+                    <h6><i class="fas fa-users"></i> <span data-i18n="recent_members">Recent Members</span></h6>
+                    <span class="badge-modern member">{{ count($recentMembers ?? []) }} <span data-i18n="new">new</span></span>
                 </div>
                 <div class="card-body" id="membersList">
                     @forelse(($recentMembers ?? []) as $member)
@@ -1178,13 +1180,13 @@ use Carbon\Carbon;
                         </div>
                         <div class="member-info">
                             <div class="member-name">{{ $member->first_name ?? '' }} {{ $member->last_name ?? '' }}</div>
-                            <div class="member-meta">Joined {{ Carbon::parse($member->created_at)->diffForHumans() }}</div>
+                            <div class="member-meta"><span data-i18n="joined">Joined</span> {{ Carbon::parse($member->created_at)->diffForHumans() }}</div>
                         </div>
                     </div>
                     @empty
                     <div style="text-align: center; padding: 1.5rem; color: var(--text-muted);">
                         <i class="fas fa-users" style="font-size: 1.5rem; display: block; opacity: 0.3; margin-bottom: 0.5rem;"></i>
-                        No members found
+                        <span data-i18n="no_members_found">No members found</span>
                     </div>
                     @endforelse
                 </div>
@@ -1192,8 +1194,8 @@ use Carbon\Carbon;
 
             <div class="card-modern" id="birthdaysCard" style="margin-bottom: 0;">
                 <div class="card-header-custom">
-                    <h6><i class="fas fa-birthday-cake"></i> Upcoming Birthdays</h6>
-                    <span class="badge-modern choir">{{ count($upcomingBirthdays ?? []) }} celebrating</span>
+                    <h6><i class="fas fa-birthday-cake"></i> <span data-i18n="upcoming_birthdays">Upcoming Birthdays</span></h6>
+                    <span class="badge-modern choir">{{ count($upcomingBirthdays ?? []) }} <span data-i18n="celebrating">celebrating</span></span>
                 </div>
                 <div class="card-body" id="birthdaysList">
                     @forelse(($upcomingBirthdays ?? []) as $birthday)
@@ -1209,7 +1211,7 @@ use Carbon\Carbon;
                     @empty
                     <div style="text-align: center; padding: 1.5rem; color: var(--text-muted);">
                         <i class="fas fa-birthday-cake" style="font-size: 1.5rem; display: block; opacity: 0.3; margin-bottom: 0.5rem;"></i>
-                        No upcoming birthdays
+                        <span data-i18n="no_upcoming_birthdays">No upcoming birthdays</span>
                     </div>
                     @endforelse
                 </div>
@@ -1220,8 +1222,8 @@ use Carbon\Carbon;
     <!-- Choir Schedule -->
     <div class="card-modern" id="choirCard">
         <div class="card-header-custom">
-            <h6><i class="fas fa-music"></i> Upcoming Choir Schedule</h6>
-            <span class="badge-modern choir"><i class="fas fa-clock"></i> This Week</span>
+            <h6><i class="fas fa-music"></i> <span data-i18n="upcoming_choir_schedule">Upcoming Choir Schedule</span></h6>
+            <span class="badge-modern choir"><i class="fas fa-clock"></i> <span data-i18n="this_week">This Week</span></span>
         </div>
         <div class="card-body">
             <div class="schedule-card-modern">
@@ -1230,7 +1232,7 @@ use Carbon\Carbon;
                         <i class="fas fa-layer-group"></i> {{ $choirGroupName ?? 'Worship Team' }}
                     </div>
                     <div class="schedule-detail">
-                        <i class="fas fa-users"></i> {{ $choirMembersCount ?? 0 }} members
+                        <i class="fas fa-users"></i> {{ $choirMembersCount ?? 0 }} <span data-i18n="members">members</span>
                     </div>
                     <div class="schedule-detail">
                         <i class="fas fa-calendar-alt"></i> 
@@ -1242,7 +1244,7 @@ use Carbon\Carbon;
                     </div>
                 </div>
                 <a href="{{ route('choir-schedules.index') }}" class="btn-hero-primary no-print" style="background: var(--gradient-purple); color: white; padding: 0.5rem 1.5rem;">
-                    <i class="fas fa-arrow-right"></i> View Schedule
+                    <i class="fas fa-arrow-right"></i> <span data-i18n="view_schedule">View Schedule</span>
                 </a>
             </div>
         </div>
@@ -1255,12 +1257,12 @@ use Carbon\Carbon;
 <div class="export-modal-overlay" id="exportModal">
     <div class="export-modal-content">
         <div class="modal-header-custom">
-            <h3><i class="fas fa-file-export"></i> Export Report</h3>
+            <h3><i class="fas fa-file-export"></i> <span data-i18n="export_report">Export Report</span></h3>
             <button class="close-btn" onclick="closeExportModal()">&times;</button>
         </div>
         
         <div style="margin-bottom: 1.5rem;">
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;" data-i18n="export_report_desc">
                 Select the sections you want to include in your report. Each section will appear organized in the PDF.
             </p>
         </div>
@@ -1268,53 +1270,52 @@ use Carbon\Carbon;
         <div class="export-section-group">
             <div class="select-all-row" onclick="toggleAllSections()">
                 <input type="checkbox" id="selectAll" checked>
-                <label for="selectAll"><i class="fas fa-check-circle"></i> Select All Sections</label>
+                <label for="selectAll"><i class="fas fa-check-circle"></i> <span data-i18n="select_all_sections">Select All Sections</span></label>
             </div>
             
             <div class="checkbox-grid">
                 <div class="checkbox-item">
                     <input type="checkbox" class="section-checkbox" value="stats" checked>
-                    <label><i class="fas fa-chart-pie"></i> Stats Cards</label>
+                    <label><i class="fas fa-chart-pie"></i> <span data-i18n="stats_cards">Stats Cards</span></label>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" class="section-checkbox" value="chart" checked>
-                    <label><i class="fas fa-chart-line"></i> Chart</label>
+                    <label><i class="fas fa-chart-line"></i> <span data-i18n="chart_label">Chart</span></label>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" class="section-checkbox" value="transactions" checked>
-                    <label><i class="fas fa-list"></i> Transactions</label>
+                    <label><i class="fas fa-list"></i> <span data-i18n="transactions_label">Transactions</span></label>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" class="section-checkbox" value="members" checked>
-                    <label><i class="fas fa-users"></i> Members</label>
+                    <label><i class="fas fa-users"></i> <span data-i18n="members_label">Members</span></label>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" class="section-checkbox" value="birthdays" checked>
-                    <label><i class="fas fa-birthday-cake"></i> Birthdays</label>
+                    <label><i class="fas fa-birthday-cake"></i> <span data-i18n="birthdays_label">Birthdays</span></label>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" class="section-checkbox" value="choir" checked>
-                    <label><i class="fas fa-music"></i> Choir</label>
+                    <label><i class="fas fa-music"></i> <span data-i18n="choir_label">Choir</span></label>
                 </div>
             </div>
         </div>
         
         <div style="padding: 0.8rem 1rem; background: rgba(79,70,229,0.05); border-radius: 10px; border: 1px solid rgba(79,70,229,0.1); margin-bottom: 1.5rem;">
-            <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">
-                <i class="fas fa-info-circle" style="color: #4F46E5;"></i> 
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;" data-i18n="export_info">
                 Only the sections you select will appear in the exported PDF. Each section will be organized by category.
             </p>
         </div>
         
         <div class="export-actions">
             <button class="btn-export btn-export-cancel" onclick="closeExportModal()">
-                <i class="fas fa-times"></i> Cancel
+                <i class="fas fa-times"></i> <span data-i18n="cancel">Cancel</span>
             </button>
             <button class="btn-export btn-export-print" onclick="exportPrint()">
-                <i class="fas fa-print"></i> Print
+                <i class="fas fa-print"></i> <span data-i18n="print">Print</span>
             </button>
             <button class="btn-export btn-export-pdf" onclick="exportPDF()">
-                <i class="fas fa-file-pdf"></i> Export PDF
+                <i class="fas fa-file-pdf"></i> <span data-i18n="export_pdf">Export PDF</span>
             </button>
         </div>
     </div>
@@ -1325,15 +1326,15 @@ use Carbon\Carbon;
 <!-- ============================================ -->
 <div class="pdf-export-wrapper" id="pdfExportContainer">
     <div class="pdf-header">
-        <h1>Reports & Analytics</h1>
-        <p>Complete church financial and ministry analytics</p>
-        <div class="pdf-date">Generated: {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}</div>
+        <h1><span data-i18n="reports_analytics_title">Reports & Analytics</span></h1>
+        <p><span data-i18n="reports_analytics_desc">Complete church financial and ministry analytics</span></p>
+        <div class="pdf-date"><span data-i18n="generated">Generated</span>: {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}</div>
     </div>
     
     <div id="pdfContent">
         <!-- Stats Section -->
         <div class="pdf-section" id="pdf-stats">
-            <div class="pdf-section-title"><i class="fas fa-chart-pie"></i> Statistics Overview</div>
+            <div class="pdf-section-title"><i class="fas fa-chart-pie"></i> <span data-i18n="statistics_overview">Statistics Overview</span></div>
             <div class="pdf-stats-grid" id="pdfStatsGrid">
                 <!-- Filled by JavaScript -->
             </div>
@@ -1341,7 +1342,7 @@ use Carbon\Carbon;
         
         <!-- Chart Section -->
         <div class="pdf-section" id="pdf-chart" style="display:none;">
-            <div class="pdf-section-title"><i class="fas fa-chart-line"></i> Income vs Expenses Chart</div>
+            <div class="pdf-section-title"><i class="fas fa-chart-line"></i> <span data-i18n="income_vs_expenses_chart">Income vs Expenses Chart</span></div>
             <div class="pdf-chart-container" id="pdfChartContainer">
                 <canvas id="pdfChartCanvas"></canvas>
             </div>
@@ -1349,15 +1350,15 @@ use Carbon\Carbon;
         
         <!-- Transactions Section -->
         <div class="pdf-section" id="pdf-transactions" style="display:none;">
-            <div class="pdf-section-title"><i class="fas fa-list"></i> Recent Transactions</div>
+            <div class="pdf-section-title"><i class="fas fa-list"></i> <span data-i18n="recent_transactions">Recent Transactions</span></div>
             <table class="pdf-table" id="pdfTransactionsTable">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Category</th>
-                        <th>Type</th>
-                        <th style="text-align:right;">Amount</th>
+                        <th data-i18n="date">Date</th>
+                        <th data-i18n="description">Description</th>
+                        <th data-i18n="category">Category</th>
+                        <th data-i18n="type_label">Type</th>
+                        <th style="text-align:right;" data-i18n="amount">Amount</th>
                     </tr>
                 </thead>
                 <tbody id="pdfTransactionsBody">
@@ -1368,7 +1369,7 @@ use Carbon\Carbon;
         
         <!-- Members Section -->
         <div class="pdf-section" id="pdf-members" style="display:none;">
-            <div class="pdf-section-title"><i class="fas fa-users"></i> Recent Members</div>
+            <div class="pdf-section-title"><i class="fas fa-users"></i> <span data-i18n="recent_members">Recent Members</span></div>
             <div id="pdfMembersList">
                 <!-- Filled by JavaScript -->
             </div>
@@ -1376,7 +1377,7 @@ use Carbon\Carbon;
         
         <!-- Birthdays Section -->
         <div class="pdf-section" id="pdf-birthdays" style="display:none;">
-            <div class="pdf-section-title"><i class="fas fa-birthday-cake"></i> Upcoming Birthdays</div>
+            <div class="pdf-section-title"><i class="fas fa-birthday-cake"></i> <span data-i18n="upcoming_birthdays">Upcoming Birthdays</span></div>
             <div id="pdfBirthdaysList">
                 <!-- Filled by JavaScript -->
             </div>
@@ -1384,17 +1385,17 @@ use Carbon\Carbon;
         
         <!-- Choir Section -->
         <div class="pdf-section" id="pdf-choir" style="display:none;">
-            <div class="pdf-section-title"><i class="fas fa-music"></i> Choir Schedule</div>
+            <div class="pdf-section-title"><i class="fas fa-music"></i> <span data-i18n="choir_schedule">Choir Schedule</span></div>
             <div class="pdf-schedule">
                 <span class="pdf-schedule-badge" id="pdfChoirName">Worship Team</span>
-                <span class="pdf-schedule-detail" id="pdfChoirMembers">0 members</span>
-                <span class="pdf-schedule-detail" id="pdfChoirSchedule">Next: {{ isset($nextSun) ? $nextSun->format('F d, Y') : '' }}</span>
+                <span class="pdf-schedule-detail" id="pdfChoirMembers">0 <span data-i18n="members">members</span></span>
+                <span class="pdf-schedule-detail" id="pdfChoirSchedule"><span data-i18n="next_label">Next:</span> {{ isset($nextSun) ? $nextSun->format('F d, Y') : '' }}</span>
             </div>
         </div>
     </div>
     
     <div class="pdf-footer">
-        Generated by <strong>TINC Church Management System</strong> • {{ \Carbon\Carbon::now()->format('Y') }}
+        <span data-i18n="generated_by">Generated by</span> <strong>TINC Church Management System</strong> • {{ \Carbon\Carbon::now()->format('Y') }}
     </div>
 </div>
 
@@ -1460,13 +1461,16 @@ use Carbon\Carbon;
             pdfChartInstance.destroy();
         }
         
+        const incomeLabel = window.t ? window.t('income') : 'Income';
+        const expensesLabel = window.t ? window.t('expenses') : 'Expenses';
+        
         pdfChartInstance = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: months,
                 datasets: [
                     {
-                        label: 'Income',
+                        label: incomeLabel,
                         data: incomeData,
                         borderColor: '#10B981',
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -1479,7 +1483,7 @@ use Carbon\Carbon;
                         pointBorderWidth: 2
                     },
                     {
-                        label: 'Expenses',
+                        label: expensesLabel,
                         data: expenseData,
                         borderColor: '#EF4444',
                         backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -1528,12 +1532,23 @@ use Carbon\Carbon;
         if (sections.includes('stats')) {
             document.getElementById('pdf-stats').style.display = 'block';
             const grid = document.getElementById('pdfStatsGrid');
+            const totalIncomeLabel = window.t ? window.t('total_income') : 'Total Income';
+            const totalExpensesLabel = window.t ? window.t('total_expenses') : 'Total Expenses';
+            const netBalanceLabel = window.t ? window.t('net_balance') : 'Net Balance';
+            const totalMembersLabel = window.t ? window.t('total_members') : 'Total Members';
+            const choirMembersLabel = window.t ? window.t('choir_members') : 'Choir Members';
+            const moneyReceivedLabel = window.t ? window.t('money_received') : 'Money received';
+            const moneySpentLabel = window.t ? window.t('money_spent') : 'Money spent';
+            const surplusLabel = window.t ? window.t('surplus') : 'Surplus';
+            const churchFamilyLabel = window.t ? window.t('church_family') : 'Church family';
+            const voicesOfPraiseLabel = window.t ? window.t('voices_of_praise') : 'Voices of praise';
+            
             const stats = [
-                { label: 'Total Income', value: document.getElementById('totalIncome')?.innerText || '₱0', change: 'Money received', positive: true },
-                { label: 'Total Expenses', value: document.getElementById('totalExpense')?.innerText || '₱0', change: 'Money spent', positive: false },
-                { label: 'Net Balance', value: document.getElementById('netBalance')?.innerText || '₱0', change: 'Surplus', positive: true },
-                { label: 'Total Members', value: document.getElementById('totalMembers')?.innerText || '0', change: 'Church family', positive: true },
-                { label: 'Choir Members', value: document.getElementById('choirMembers')?.innerText || '0', change: 'Voices of praise', positive: true }
+                { label: totalIncomeLabel, value: document.getElementById('totalIncome')?.innerText || '₱0', change: moneyReceivedLabel, positive: true },
+                { label: totalExpensesLabel, value: document.getElementById('totalExpense')?.innerText || '₱0', change: moneySpentLabel, positive: false },
+                { label: netBalanceLabel, value: document.getElementById('netBalance')?.innerText || '₱0', change: surplusLabel, positive: true },
+                { label: totalMembersLabel, value: document.getElementById('totalMembers')?.innerText || '0', change: churchFamilyLabel, positive: true },
+                { label: choirMembersLabel, value: document.getElementById('choirMembers')?.innerText || '0', change: voicesOfPraiseLabel, positive: true }
             ];
             grid.innerHTML = stats.map(s => `
                 <div class="pdf-stat-card">
@@ -1562,6 +1577,8 @@ use Carbon\Carbon;
             const body = document.getElementById('pdfTransactionsBody');
             const rows = document.querySelectorAll('#transactionsTable tbody tr');
             let html = '';
+            const incomeLabel = window.t ? window.t('income') : 'Income';
+            const expenseLabel = window.t ? window.t('expense') : 'Expense';
             rows.forEach(row => {
                 if (row.querySelector('td') && !row.innerText.includes('No transactions')) {
                     const cells = row.querySelectorAll('td');
@@ -1572,13 +1589,13 @@ use Carbon\Carbon;
                             <td>${cells[0]?.innerText || ''}</td>
                             <td>${cells[1]?.innerText || ''}</td>
                             <td>${type}</td>
-                            <td><span class="pdf-badge ${isIncome ? 'income' : 'expense'}">${isIncome ? 'Income' : 'Expense'}</span></td>
+                            <td><span class="pdf-badge ${isIncome ? 'income' : 'expense'}">${isIncome ? incomeLabel : expenseLabel}</span></td>
                             <td style="text-align:right; font-weight:700; color:${isIncome ? '#10B981' : '#EF4444'};">${cells[3]?.innerText || ''}</td>
                         </tr>
                     `;
                 }
             });
-            body.innerHTML = html || '<tr><td colspan="5" style="text-align:center; color:#999; padding:20px;">No transactions found</td></tr>';
+            body.innerHTML = html || '<tr><td colspan="5" style="text-align:center; color:#999; padding:20px;">' + (window.t ? window.t('no_transactions_found') : 'No transactions found') + '</td></tr>';
         } else {
             document.getElementById('pdf-transactions').style.display = 'none';
         }
@@ -1589,6 +1606,7 @@ use Carbon\Carbon;
             const list = document.getElementById('pdfMembersList');
             const items = document.querySelectorAll('#membersList .member-item-modern');
             let html = '';
+            const joinedLabel = window.t ? window.t('joined') : 'Joined';
             items.forEach(item => {
                 const name = item.querySelector('.member-name')?.innerText || '';
                 const meta = item.querySelector('.member-meta')?.innerText || '';
@@ -1603,7 +1621,7 @@ use Carbon\Carbon;
                     </div>
                 `;
             });
-            list.innerHTML = html || '<p style="color:#999; text-align:center; padding:15px;">No members found</p>';
+            list.innerHTML = html || '<p style="color:#999; text-align:center; padding:15px;">' + (window.t ? window.t('no_members_found') : 'No members found') + '</p>';
         } else {
             document.getElementById('pdf-members').style.display = 'none';
         }
@@ -1628,7 +1646,7 @@ use Carbon\Carbon;
                     </div>
                 `;
             });
-            list.innerHTML = html || '<p style="color:#999; text-align:center; padding:15px;">No upcoming birthdays</p>';
+            list.innerHTML = html || '<p style="color:#999; text-align:center; padding:15px;">' + (window.t ? window.t('no_upcoming_birthdays') : 'No upcoming birthdays') + '</p>';
         } else {
             document.getElementById('pdf-birthdays').style.display = 'none';
         }
@@ -1641,7 +1659,7 @@ use Carbon\Carbon;
             const schedule = document.querySelector('.schedule-detail:last-child')?.innerText?.trim() || '';
             document.getElementById('pdfChoirName').textContent = name;
             document.getElementById('pdfChoirMembers').textContent = members;
-            document.getElementById('pdfChoirSchedule').textContent = schedule ? 'Next: ' + schedule : '';
+            document.getElementById('pdfChoirSchedule').textContent = schedule ? (window.t ? window.t('next_label') : 'Next:') + ' ' + schedule : '';
         } else {
             document.getElementById('pdf-choir').style.display = 'none';
         }
@@ -1655,8 +1673,8 @@ use Carbon\Carbon;
         if (sections.length === 0) {
             Swal.fire({
                 icon: 'warning',
-                title: 'No Selection',
-                text: 'Please select at least one section to export.',
+                title: window.t ? window.t('no_selection') : 'No Selection',
+                text: window.t ? window.t('select_section') : 'Please select at least one section to export.',
                 confirmButtonColor: '#4F46E5',
                 background: 'var(--card-bg)',
                 color: 'var(--text-primary)'
@@ -1672,8 +1690,8 @@ use Carbon\Carbon;
         
         setTimeout(function() {
             Swal.fire({
-                title: 'Preparing Print...',
-                text: 'Please wait...',
+                title: window.t ? window.t('preparing_print') : 'Preparing Print...',
+                text: window.t ? window.t('please_wait') : 'Please wait...',
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); },
                 background: 'var(--card-bg)',
@@ -1695,8 +1713,8 @@ use Carbon\Carbon;
         if (sections.length === 0) {
             Swal.fire({
                 icon: 'warning',
-                title: 'No Selection',
-                text: 'Please select at least one section to export.',
+                title: window.t ? window.t('no_selection') : 'No Selection',
+                text: window.t ? window.t('select_section') : 'Please select at least one section to export.',
                 confirmButtonColor: '#4F46E5',
                 background: 'var(--card-bg)',
                 color: 'var(--text-primary)'
@@ -1712,8 +1730,8 @@ use Carbon\Carbon;
         
         setTimeout(function() {
             Swal.fire({
-                title: 'Generating PDF...',
-                text: 'Please wait...',
+                title: window.t ? window.t('generating_pdf') : 'Generating PDF...',
+                text: window.t ? window.t('please_wait') : 'Please wait...',
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); },
                 background: 'var(--card-bg)',
@@ -1743,8 +1761,8 @@ use Carbon\Carbon;
                 Swal.close();
                 Swal.fire({
                     icon: 'success',
-                    title: 'PDF Exported!',
-                    text: 'Your report has been downloaded successfully.',
+                    title: window.t ? window.t('pdf_exported') : 'PDF Exported!',
+                    text: window.t ? window.t('pdf_success') : 'Your report has been downloaded successfully.',
                     timer: 2000,
                     showConfirmButton: false,
                     toast: true,
@@ -1757,8 +1775,8 @@ use Carbon\Carbon;
                 Swal.close();
                 Swal.fire({
                     icon: 'error',
-                    title: 'Export Failed',
-                    text: err.message || 'Something went wrong. Please try again.',
+                    title: window.t ? window.t('export_failed') : 'Export Failed',
+                    text: err.message || (window.t ? window.t('try_again') : 'Something went wrong. Please try again.'),
                     confirmButtonColor: '#EF4444',
                     background: 'var(--card-bg)',
                     color: 'var(--text-primary)'
@@ -1791,13 +1809,16 @@ use Carbon\Carbon;
             const expenseData = @json($expenseData ?? []);
             
             if (months.length > 0) {
+                const incomeLabel = window.t ? window.t('income') : 'Income';
+                const expensesLabel = window.t ? window.t('expenses') : 'Expenses';
+                
                 new Chart(canvas, {
                     type: 'line',
                     data: {
                         labels: months,
                         datasets: [
                             {
-                                label: 'Income',
+                                label: incomeLabel,
                                 data: incomeData,
                                 borderColor: '#10B981',
                                 backgroundColor: 'rgba(16, 185, 129, 0.05)',
@@ -1810,7 +1831,7 @@ use Carbon\Carbon;
                                 pointBorderWidth: 2
                             },
                             {
-                                label: 'Expenses',
+                                label: expensesLabel,
                                 data: expenseData,
                                 borderColor: '#EF4444',
                                 backgroundColor: 'rgba(239, 68, 68, 0.05)',

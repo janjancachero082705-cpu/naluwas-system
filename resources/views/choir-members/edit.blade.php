@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('header', 'Edit Choir Member')
+@section('header')
+    <span data-i18n="edit_choir_member_title">Edit Choir Member</span>
+@endsection
 
 @section('content')
 <style>
@@ -265,9 +267,9 @@
     <div class="form-card">
         <div class="card-header-custom">
             <h4>
-                <i class="fas fa-edit"></i> Edit Choir Member
+                <i class="fas fa-edit"></i> <span data-i18n="edit_choir_member_title">Edit Choir Member</span>
             </h4>
-            <p>Update choir member information</p>
+            <p><span data-i18n="edit_choir_member_desc">Update choir member information</span></p>
         </div>
         
         <div class="card-body-custom">
@@ -279,25 +281,25 @@
                     <!-- First Name -->
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="fas fa-user"></i> First Name <span class="required">*</span>
+                            <i class="fas fa-user"></i> <span data-i18n="first_name">First Name</span> <span class="required">*</span>
                         </label>
                         <input type="text" name="first_name" class="form-control" required 
-                               value="{{ $choir_member->first_name }}" placeholder="Enter first name">
+                               value="{{ $choir_member->first_name }}" placeholder="{{ __('Enter first name') }}">
                     </div>
                     
                     <!-- Last Name -->
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="fas fa-user"></i> Last Name <span class="required">*</span>
+                            <i class="fas fa-user"></i> <span data-i18n="last_name">Last Name</span> <span class="required">*</span>
                         </label>
                         <input type="text" name="last_name" class="form-control" required 
-                               value="{{ $choir_member->last_name }}" placeholder="Enter last name">
+                               value="{{ $choir_member->last_name }}" placeholder="{{ __('Enter last name') }}">
                     </div>
                     
                     <!-- Birthday -->
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="fas fa-birthday-cake"></i> Birthday
+                            <i class="fas fa-birthday-cake"></i> <span data-i18n="birthday">Birthday</span>
                         </label>
                         <input type="date" name="birthday" class="form-control" 
                                value="{{ $choir_member->birthday }}">
@@ -306,24 +308,24 @@
                     <!-- Voice Part -->
                     <div class="form-group">
                         <label class="form-label">
-                            <i class="fas fa-microphone-alt"></i> Voice Part
+                            <i class="fas fa-microphone-alt"></i> <span data-i18n="voice_part">Voice Part</span>
                         </label>
                         <div class="voice-selector">
                             <div class="voice-option {{ $choir_member->voice_part == 'Soprano' ? 'selected' : '' }}" 
                                  data-voice="Soprano" onclick="selectVoice(this, 'Soprano')">
-                                <i class="fas fa-microphone-alt"></i> Soprano
+                                <i class="fas fa-microphone-alt"></i> <span data-i18n="soprano">Soprano</span>
                             </div>
                             <div class="voice-option {{ $choir_member->voice_part == 'Alto' ? 'selected' : '' }}" 
                                  data-voice="Alto" onclick="selectVoice(this, 'Alto')">
-                                <i class="fas fa-microphone-alt"></i> Alto
+                                <i class="fas fa-microphone-alt"></i> <span data-i18n="alto">Alto</span>
                             </div>
                             <div class="voice-option {{ $choir_member->voice_part == 'Tenor' ? 'selected' : '' }}" 
                                  data-voice="Tenor" onclick="selectVoice(this, 'Tenor')">
-                                <i class="fas fa-microphone-alt"></i> Tenor
+                                <i class="fas fa-microphone-alt"></i> <span data-i18n="tenor">Tenor</span>
                             </div>
                             <div class="voice-option {{ $choir_member->voice_part == 'Bass' ? 'selected' : '' }}" 
                                  data-voice="Bass" onclick="selectVoice(this, 'Bass')">
-                                <i class="fas fa-microphone-alt"></i> Bass
+                                <i class="fas fa-microphone-alt"></i> <span data-i18n="bass">Bass</span>
                             </div>
                         </div>
                         <input type="hidden" name="voice_part" id="voicePart" value="{{ $choir_member->voice_part }}">
@@ -332,10 +334,10 @@
                     <!-- Address - Full Width -->
                     <div class="form-group-full">
                         <label class="form-label">
-                            <i class="fas fa-map-marker-alt"></i> Address
+                            <i class="fas fa-map-marker-alt"></i> <span data-i18n="address">Address</span>
                         </label>
                         <textarea name="address" rows="2" class="form-control" 
-                                  placeholder="Complete address of the member">{{ $choir_member->address }}</textarea>
+                                  placeholder="{{ __('Complete address of the member') }}">{{ $choir_member->address }}</textarea>
                     </div>
                     
                     <!-- Choir Status -->
@@ -345,7 +347,7 @@
                                 <input type="checkbox" name="is_choir" class="form-check-input" value="1" 
                                        {{ $choir_member->is_choir ? 'checked' : '' }}>
                                 <label class="form-check-label">
-                                    <i class="fas fa-music"></i> Choir Member
+                                    <i class="fas fa-music"></i> <span data-i18n="choir_member_label">Choir Member</span>
                                 </label>
                             </div>
                         </div>
@@ -355,10 +357,10 @@
                 <!-- Button Group -->
                 <div class="button-group">
                     <a href="{{ route('choir-members.index') }}" class="btn-cancel">
-                        <i class="fas fa-times"></i> Cancel
+                        <i class="fas fa-times"></i> <span data-i18n="cancel">Cancel</span>
                     </a>
                     <button type="submit" class="btn-submit">
-                        <i class="fas fa-save"></i> Update Choir Member
+                        <i class="fas fa-save"></i> <span data-i18n="update_choir_member">Update Choir Member</span>
                     </button>
                 </div>
             </form>
@@ -369,13 +371,10 @@
 <script>
     // Voice Selection
     function selectVoice(element, voice) {
-        // Remove selected class from all voice options
         document.querySelectorAll('.voice-option').forEach(opt => {
             opt.classList.remove('selected');
         });
-        // Add selected class to clicked option
         element.classList.add('selected');
-        // Set hidden input value
         document.getElementById('voicePart').value = voice;
     }
 </script>

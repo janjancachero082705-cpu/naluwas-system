@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('header', 'Inventory Management')
+@section('header')
+    <span data-i18n="inventory_management">Inventory Management</span>
+@endsection
 
 @section('content')
 
@@ -288,7 +290,7 @@
     .stat-card-premium.orange .stat-icon-wrap { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
     .stat-card-premium.red .stat-icon-wrap { background: var(--gradient-danger); box-shadow: var(--shadow-danger); }
     
-    /* Summary Banner */
+    /* Summary Banner - Premium */
     .summary-banner-premium {
         background: #ffffff;
         border: 1px solid #e5e7eb;
@@ -1519,24 +1521,24 @@
     <div class="finance-hero">
         <div class="hero-content">
             <div class="hero-left">
-                <h1><i class="fas fa-boxes"></i> Inventory Management</h1>
+                <h1><i class="fas fa-boxes"></i> <span data-i18n="inventory_management">Inventory Management</span></h1>
                 <p class="hero-sub">
                     <i class="fas fa-circle" style="color: #34D399; font-size: 0.4rem; vertical-align: middle;"></i>
-                    Track church finances, income, expenses, and donations
+                    <span data-i18n="inventory_desc">Track church finances, income, expenses, and donations</span>
                 </p>
             </div>
             <div class="hero-actions">
                 <button class="btn-hero btn-hero-income" data-bs-toggle="modal" data-bs-target="#incomeModal">
-                    <i class="fas fa-plus-circle"></i> Income
+                    <i class="fas fa-plus-circle"></i> <span data-i18n="income_label">Income</span>
                 </button>
                 <button class="btn-hero btn-hero-expense" data-bs-toggle="modal" data-bs-target="#expenseModal">
-                    <i class="fas fa-minus-circle"></i> Expense
+                    <i class="fas fa-minus-circle"></i> <span data-i18n="expense_label">Expense</span>
                 </button>
                 <button class="btn-hero btn-hero-transactions" data-bs-toggle="modal" data-bs-target="#transactionsModal">
-                    <i class="fas fa-list"></i> All Transactions
+                    <i class="fas fa-list"></i> <span data-i18n="all_transactions">All Transactions</span>
                 </button>
                 <button class="btn-hero btn-hero-export" onclick="openExportModal()">
-                    <i class="fas fa-file-pdf"></i> Export PDF
+                    <i class="fas fa-file-pdf"></i> <span data-i18n="export_pdf">Export PDF</span>
                 </button>
             </div>
         </div>
@@ -1546,25 +1548,25 @@
     <div class="stats-grid-premium" id="statsSection">
         <div class="stat-card-premium green">
             <div class="stat-top">
-                <span class="stat-label">Total Income</span>
+                <span class="stat-label" data-i18n="total_income">Total Income</span>
                 <div class="stat-icon-wrap"><i class="fas fa-arrow-down"></i></div>
             </div>
             <div class="stat-value amount-positive-premium" id="totalIncome">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> All time</div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="all_time">All time</span></div>
         </div>
         
         <div class="stat-card-premium red">
             <div class="stat-top">
-                <span class="stat-label">Total Expenses</span>
+                <span class="stat-label" data-i18n="total_expenses">Total Expenses</span>
                 <div class="stat-icon-wrap"><i class="fas fa-arrow-up"></i></div>
             </div>
             <div class="stat-value amount-negative-premium" id="totalExpense">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
-            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> All time</div>
+            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="all_time">All time</span></div>
         </div>
         
         <div class="stat-card-premium blue">
             <div class="stat-top">
-                <span class="stat-label">Net Balance</span>
+                <span class="stat-label" data-i18n="net_balance">Net Balance</span>
                 <div class="stat-icon-wrap"><i class="fas fa-calculator"></i></div>
             </div>
             <div class="stat-value {{ ($balance ?? 0) >= 0 ? 'amount-positive-premium' : 'amount-negative-premium' }}" id="netBalance">
@@ -1577,7 +1579,7 @@
         
         <div class="stat-card-premium purple">
             <div class="stat-top">
-                <span class="stat-label">Church Balance</span>
+                <span class="stat-label" data-i18n="church_balance">Church Balance</span>
                 <div class="stat-icon-wrap"><i class="fas fa-church"></i></div>
             </div>
             <div class="stat-value {{ ($allTimeBalance ?? 0) >= 0 ? 'amount-positive-premium' : 'amount-negative-premium' }}" id="churchBalance">
@@ -1592,14 +1594,14 @@
     {{-- SUMMARY BANNER --}}
     <div class="summary-banner-premium" id="summarySection">
         <div>
-            <h4><i class="fas fa-chart-line me-1" style="color: #10B981;"></i> Financial Summary</h4>
+            <h4><i class="fas fa-chart-line me-1" style="color: #10B981;"></i> <span data-i18n="financial_summary">Financial Summary</span></h4>
             <div class="amount">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
-            <div class="small">Total Income</div>
+            <div class="small" data-i18n="total_income">Total Income</div>
         </div>
         <div style="text-align: right;">
-            <div class="small">Expenses: ₱{{ number_format($totalExpense ?? 0, 2) }}</div>
+            <div class="small"><span data-i18n="expenses">Expenses:</span> ₱{{ number_format($totalExpense ?? 0, 2) }}</div>
             <div class="small" style="font-weight: 700; color: {{ ($balance ?? 0) >= 0 ? '#10B981' : '#EF4444' }};">
-                Net: {{ ($balance ?? 0) >= 0 ? '+' : '' }}₱{{ number_format($balance ?? 0, 2) }}
+                <span data-i18n="net">Net:</span> {{ ($balance ?? 0) >= 0 ? '+' : '' }}₱{{ number_format($balance ?? 0, 2) }}
             </div>
         </div>
     </div>
@@ -1608,7 +1610,7 @@
     <div class="category-grid-premium" id="categorySection">
         <div class="category-card-premium" id="incomeCategoryCard">
             <div class="category-header-premium">
-                <h6><i class="fas fa-chart-pie text-success"></i> Income Breakdown</h6>
+                <h6><i class="fas fa-chart-pie text-success"></i> <span data-i18n="income_breakdown">Income Breakdown</span></h6>
                 <span class="date-range-badge">
                     <i class="fas fa-calendar-alt"></i>
                     @php
@@ -1628,7 +1630,7 @@
                             $lastIncome = end($incomeDates);
                             echo \Carbon\Carbon::parse($firstIncome)->format('M d, Y') . ' - ' . \Carbon\Carbon::parse($lastIncome)->format('M d, Y');
                         } else {
-                            echo 'No records yet';
+                            echo __('No records yet');
                         }
                     @endphp
                 </span>
@@ -1640,19 +1642,19 @@
                 </div>
             @empty
                 <div class="category-item-premium">
-                    <span class="category-name-premium">No income records yet</span>
+                    <span class="category-name-premium" data-i18n="no_income_records">No income records yet</span>
                     <span class="category-amount-premium income">₱0.00</span>
                 </div>
             @endforelse
             <div class="summary-row-premium">
-                <span>Total Income</span>
+                <span data-i18n="total_income">Total Income</span>
                 <span class="amount-positive-premium">₱{{ number_format($allTimeIncome ?? 0, 2) }}</span>
             </div>
         </div>
 
         <div class="category-card-premium" id="expenseCategoryCard">
             <div class="category-header-premium">
-                <h6><i class="fas fa-chart-pie text-danger"></i> Expense Breakdown</h6>
+                <h6><i class="fas fa-chart-pie text-danger"></i> <span data-i18n="expense_breakdown">Expense Breakdown</span></h6>
                 <span class="date-range-badge">
                     <i class="fas fa-calendar-alt"></i>
                     @php
@@ -1672,7 +1674,7 @@
                             $lastExpense = end($expenseDates);
                             echo \Carbon\Carbon::parse($firstExpense)->format('M d, Y') . ' - ' . \Carbon\Carbon::parse($lastExpense)->format('M d, Y');
                         } else {
-                            echo 'No records yet';
+                            echo __('No records yet');
                         }
                     @endphp
                 </span>
@@ -1684,12 +1686,12 @@
                 </div>
             @empty
                 <div class="category-item-premium">
-                    <span class="category-name-premium">No expense records yet</span>
+                    <span class="category-name-premium" data-i18n="no_expense_records">No expense records yet</span>
                     <span class="category-amount-premium expense">₱0.00</span>
                 </div>
             @endforelse
             <div class="summary-row-premium">
-                <span>Total Expenses</span>
+                <span data-i18n="total_expenses">Total Expenses</span>
                 <span class="amount-negative-premium">₱{{ number_format($allTimeExpense ?? 0, 2) }}</span>
             </div>
         </div>
@@ -1698,22 +1700,22 @@
     {{-- RECENT TRANSACTIONS TABLE --}}
     <div class="table-container-premium" id="transactionsSection">
         <div class="table-header-premium">
-            <h6><i class="fas fa-history"></i> Recent Transactions</h6>
+            <h6><i class="fas fa-history"></i> <span data-i18n="recent_transactions">Recent Transactions</span></h6>
             <span style="font-size: 0.65rem; color: #6b7280;">
-                Showing latest {{ count($recentTransactions ?? []) }} entries
+                <span data-i18n="showing_latest">Showing latest</span> {{ count($recentTransactions ?? []) }} <span data-i18n="entries">entries</span>
             </span>
         </div>
         <div class="table-responsive">
             <table class="table-premium table" id="recentTransactionsTable">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Category</th>
-                        <th>Type</th>
-                        <th>Amount</th>
-                        <th>Notes</th>
-                        <th style="width: 100px; text-align: center;">Actions</th>
+                        <th data-i18n="date">Date</th>
+                        <th data-i18n="description">Description</th>
+                        <th data-i18n="category">Category</th>
+                        <th data-i18n="type">Type</th>
+                        <th data-i18n="amount">Amount</th>
+                        <th data-i18n="notes">Notes</th>
+                        <th style="width: 100px; text-align: center;" data-i18n="actions">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1725,9 +1727,9 @@
                         <td style="color: #1a1a2e;">
                             <strong>{{ $transaction->description }}</strong>
                             @if($transaction->type == 'income' && $transaction->donor_name)
-                                <div class="small text-muted"><i class="fas fa-user me-1"></i> Donor: {{ $transaction->donor_name }}</div>
+                                <div class="small text-muted"><i class="fas fa-user me-1"></i> <span data-i18n="donor">Donor</span>: {{ $transaction->donor_name }}</div>
                             @elseif($transaction->type == 'expense' && $transaction->recipient)
-                                <div class="small text-muted"><i class="fas fa-user me-1"></i> Recipient: {{ $transaction->recipient }}</div>
+                                <div class="small text-muted"><i class="fas fa-user me-1"></i> <span data-i18n="recipient">Recipient</span>: {{ $transaction->recipient }}</div>
                             @endif
                         </td>
                         <td style="color: #1a1a2e;">
@@ -1736,7 +1738,9 @@
                         <td>
                             <span class="type-badge-premium {{ $transaction->type == 'income' ? 'badge-income-premium' : 'badge-expense-premium' }}">
                                 <i class="fas {{ $transaction->type == 'income' ? 'fa-arrow-down' : 'fa-arrow-up' }} me-1"></i>
-                                {{ $transaction->type == 'income' ? 'Income' : 'Expense' }}
+                                <span data-i18n="{{ $transaction->type == 'income' ? 'income' : 'expense' }}">
+                                    {{ $transaction->type == 'income' ? 'Income' : 'Expense' }}
+                                </span>
                             </span>
                         </td>
                         <td>
@@ -1762,8 +1766,8 @@
                     <tr>
                         <td colspan="7" class="text-center py-4" style="color: #6b7280;">
                             <i class="fas fa-receipt fa-2x mb-2 d-block" style="color: #6b7280;"></i>
-                            <p class="mb-0" style="color: #6b7280;">No transactions yet</p>
-                            <small style="color: #6b7280;">Click "Income" or "Expense" to get started</small>
+                            <p class="mb-0" style="color: #6b7280;" data-i18n="no_transactions">No transactions yet</p>
+                            <small style="color: #6b7280;" data-i18n="click_to_start">Click "Income" or "Expense" to get started</small>
                         </td>
                     </tr>
                     @endforelse
@@ -1779,24 +1783,24 @@
 <div class="export-modal-overlay" id="exportModal">
     <div class="export-modal-content">
         <div class="modal-header-custom">
-            <h3><i class="fas fa-file-export"></i> Export Inventory Report</h3>
+            <h3><i class="fas fa-file-export"></i> <span data-i18n="export_inventory_report">Export Inventory Report</span></h3>
             <button class="close-btn" onclick="closeExportModal()">&times;</button>
         </div>
         
         <div style="margin-bottom: 1.5rem;">
-            <p style="color: #6b7280; font-size: 0.85rem; margin: 0;">
+            <p style="color: #6b7280; font-size: 0.85rem; margin: 0;" data-i18n="export_desc">
                 Select the date range and sections you want to include in your inventory report.
             </p>
         </div>
 
         {{-- ===================== --}}
-        {{-- EXPORT FILTER SECTION (Multiple Months, Year, Week) --}}
+        {{-- EXPORT FILTER SECTION --}}
         {{-- ===================== --}}
         <div class="modal-filter-container" style="margin-bottom: 1.5rem; padding: 0.8rem 1.2rem; background: #f9fafb; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
             <div style="flex: 1; min-width: 200px;">
-                <label style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #6b7280; font-family: 'Inter', sans-serif;">Select Months (Hold Ctrl for multiple)</label>
+                <label style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #6b7280; font-family: 'Inter', sans-serif;" data-i18n="select_months">Select Months (Hold Ctrl for multiple)</label>
                 <select id="exportFilterMonths" multiple style="width: 100%; padding: 0.3rem 0.8rem; border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; color: #1a1a2e; font-size: 0.75rem; font-family: 'Inter', sans-serif; cursor: pointer; min-height: 80px;">
-                    <option value="">All Months</option>
+                    <option value=""><span data-i18n="all_months">All Months</span></option>
                     @foreach(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'] as $num)
                         <option value="{{ $num }}">{{ \Carbon\Carbon::create()->month((int)$num)->format('F') }}</option>
                     @endforeach
@@ -1804,9 +1808,9 @@
             </div>
             
             <div>
-                <label style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #6b7280; font-family: 'Inter', sans-serif;">Year</label>
+                <label style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #6b7280; font-family: 'Inter', sans-serif;" data-i18n="year_label">Year</label>
                 <select id="exportFilterYear" style="padding: 0.3rem 0.8rem; border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; color: #1a1a2e; font-size: 0.75rem; font-family: 'Inter', sans-serif; cursor: pointer;">
-                    <option value="">All Years</option>
+                    <option value=""><span data-i18n="all_years">All Years</span></option>
                     @php
                         $currentYear = date('Y');
                         for($y = $currentYear - 5; $y <= $currentYear; $y++) {
@@ -1817,13 +1821,13 @@
             </div>
             
             <div>
-                <label style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #6b7280; font-family: 'Inter', sans-serif;">Week</label>
+                <label style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #6b7280; font-family: 'Inter', sans-serif;" data-i18n="week_label">Week</label>
                 <input type="week" id="exportFilterWeek" style="padding: 0.3rem 0.8rem; border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; color: #1a1a2e; font-size: 0.75rem; font-family: 'Inter', sans-serif; cursor: pointer;">
             </div>
             
             <div>
                 <button class="modal-filter-btn" onclick="loadExportData()" style="padding: 0.4rem 1.2rem; background: var(--gradient-primary); color: white; border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    <i class="fas fa-sync-alt me-1"></i> Load Data
+                    <i class="fas fa-sync-alt me-1"></i> <span data-i18n="load_data">Load Data</span>
                 </button>
             </div>
         </div>
@@ -1831,31 +1835,31 @@
         <div class="export-section-group">
             <div class="select-all-row" onclick="toggleAllSections()">
                 <input type="checkbox" id="selectAll" checked>
-                <label for="selectAll"><i class="fas fa-check-circle"></i> Select All Sections</label>
+                <label for="selectAll"><i class="fas fa-check-circle"></i> <span data-i18n="select_all_sections">Select All Sections</span></label>
             </div>
             
             <div class="checkbox-grid">
                 <div class="checkbox-item">
                     <input type="checkbox" class="section-checkbox" value="stats" checked>
-                    <label><i class="fas fa-chart-pie"></i> Stats Cards</label>
+                    <label><i class="fas fa-chart-pie"></i> <span data-i18n="stats_cards">Stats Cards</span></label>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" class="section-checkbox" value="summary" checked>
-                    <label><i class="fas fa-chart-line"></i> Summary</label>
+                    <label><i class="fas fa-chart-line"></i> <span data-i18n="summary_label">Summary</span></label>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" class="section-checkbox" value="categories" checked>
-                    <label><i class="fas fa-tags"></i> Categories</label>
+                    <label><i class="fas fa-tags"></i> <span data-i18n="categories_label">Categories</span></label>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" class="section-checkbox" value="transactions" checked>
-                    <label><i class="fas fa-list"></i> Transactions</label>
+                    <label><i class="fas fa-list"></i> <span data-i18n="transactions_label">Transactions</span></label>
                 </div>
             </div>
         </div>
         
         <div style="padding: 0.8rem 1rem; background: rgba(79,70,229,0.05); border-radius: 10px; border: 1px solid rgba(79,70,229,0.1); margin-bottom: 1.5rem;">
-            <p style="font-size: 0.75rem; color: #6b7280; margin: 0;">
+            <p style="font-size: 0.75rem; color: #6b7280; margin: 0;" data-i18n="export_info">
                 <i class="fas fa-info-circle" style="color: #4F46E5;"></i> 
                 Only the sections you select will appear in the exported PDF/Print.
             </p>
@@ -1863,13 +1867,13 @@
         
         <div class="export-actions">
             <button class="btn-export btn-export-cancel" onclick="closeExportModal()">
-                <i class="fas fa-times"></i> Cancel
+                <i class="fas fa-times"></i> <span data-i18n="cancel">Cancel</span>
             </button>
             <button class="btn-export btn-export-print" onclick="exportPrint()">
-                <i class="fas fa-print"></i> Print
+                <i class="fas fa-print"></i> <span data-i18n="print">Print</span>
             </button>
             <button class="btn-export btn-export-pdf" onclick="exportPDF()">
-                <i class="fas fa-file-pdf"></i> Export PDF
+                <i class="fas fa-file-pdf"></i> <span data-i18n="export_pdf">Export PDF</span>
             </button>
         </div>
     </div>
@@ -1885,9 +1889,9 @@
                 <div>
                     <h5 class="modal-title">
                         <i class="fas fa-arrow-down me-2" style="color: #10B981;"></i>
-                        Record Income
+                        <span data-i18n="record_income">Record Income</span>
                     </h5>
-                    <p>Add money received by the church</p>
+                    <p data-i18n="record_income_desc">Add money received by the church</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -1897,40 +1901,40 @@
                     <input type="hidden" name="type" value="income">
                     
                     <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-tag"></i> Description <span class="text-danger">*</span></label>
+                        <label class="form-label-premium"><i class="fas fa-tag"></i> <span data-i18n="description_label">Description</span> <span class="text-danger">*</span></label>
                         <input type="text" name="description" class="form-control-premium" required 
-                               placeholder="e.g., Sunday Offering, Tithes, Special Donation">
+                               placeholder="{{ __('e.g., Sunday Offering, Tithes, Special Donation') }}">
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-folder"></i> Category <span class="text-danger">*</span></label>
+                        <label class="form-label-premium"><i class="fas fa-folder"></i> <span data-i18n="category_label">Category</span> <span class="text-danger">*</span></label>
                         <div class="category-pills-premium">
                             <div class="category-pill-premium selected" data-category="Sunday Offering" onclick="selectIncomeCategory(this, 'Sunday Offering')">
-                                <i class="fas fa-church"></i> Sunday Offering
+                                <i class="fas fa-church"></i> <span data-i18n="sunday_offering">Sunday Offering</span>
                             </div>
                             <div class="category-pill-premium" data-category="Tithes" onclick="selectIncomeCategory(this, 'Tithes')">
-                                <i class="fas fa-hand-holding-heart"></i> Tithes
+                                <i class="fas fa-hand-holding-heart"></i> <span data-i18n="tithes">Tithes</span>
                             </div>
                             <div class="category-pill-premium" data-category="Special Donation" onclick="selectIncomeCategory(this, 'Special Donation')">
-                                <i class="fas fa-gift"></i> Special Donation
+                                <i class="fas fa-gift"></i> <span data-i18n="special_donation">Special Donation</span>
                             </div>
                             <div class="category-pill-premium" data-category="Building Fund" onclick="selectIncomeCategory(this, 'Building Fund')">
-                                <i class="fas fa-building"></i> Building Fund
+                                <i class="fas fa-building"></i> <span data-i18n="building_fund">Building Fund</span>
                             </div>
                             <div class="category-pill-premium" data-category="Missions" onclick="selectIncomeCategory(this, 'Missions')">
-                                <i class="fas fa-globe"></i> Missions
+                                <i class="fas fa-globe"></i> <span data-i18n="missions">Missions</span>
                             </div>
                             <div class="category-pill-premium" data-category="Benevolence" onclick="selectIncomeCategory(this, 'Benevolence')">
-                                <i class="fas fa-hands-helping"></i> Benevolence
+                                <i class="fas fa-hands-helping"></i> <span data-i18n="benevolence">Benevolence</span>
                             </div>
                             <div class="category-pill-premium" data-category="Thanksgiving" onclick="selectIncomeCategory(this, 'Thanksgiving')">
-                                <i class="fas fa-hands-praying"></i> Thanksgiving
+                                <i class="fas fa-hands-praying"></i> <span data-i18n="thanksgiving">Thanksgiving</span>
                             </div>
                             <div class="category-pill-premium" data-category="Rental Income" onclick="selectIncomeCategory(this, 'Rental Income')">
-                                <i class="fas fa-home"></i> Rental Income
+                                <i class="fas fa-home"></i> <span data-i18n="rental_income">Rental Income</span>
                             </div>
                             <div class="category-pill-premium" data-category="Other Income" onclick="selectIncomeCategory(this, 'Other Income')">
-                                <i class="fas fa-ellipsis-h"></i> Other Income
+                                <i class="fas fa-ellipsis-h"></i> <span data-i18n="other_income">Other Income</span>
                             </div>
                         </div>
                         <input type="hidden" name="category" id="incomeCategory" value="Sunday Offering">
@@ -1938,7 +1942,7 @@
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label-premium"><i class="fas fa-money-bill-wave"></i> Amount (₱) <span class="text-danger">*</span></label>
+                            <label class="form-label-premium"><i class="fas fa-money-bill-wave"></i> <span data-i18n="amount_label">Amount</span> (₱) <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text-premium">₱</span>
                                 <input type="number" name="amount" step="0.01" class="form-control-premium" required 
@@ -1947,38 +1951,38 @@
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label-premium"><i class="fas fa-calendar"></i> Date <span class="text-danger">*</span></label>
+                            <label class="form-label-premium"><i class="fas fa-calendar"></i> <span data-i18n="date_label">Date</span> <span class="text-danger">*</span></label>
                             <input type="date" name="date" class="form-control-premium" value="{{ date('Y-m-d') }}" 
                                    max="{{ date('Y-m-d') }}" required>
                             <small class="text-muted" style="font-size: 0.6rem; display: block; margin-top: 3px;">
-                                <i class="fas fa-info-circle"></i> Only past or today's date allowed
+                                <i class="fas fa-info-circle"></i> <span data-i18n="past_date_only">Only past or today's date allowed</span>
                             </small>
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-user"></i> Donor Name</label>
-                        <input type="text" name="donor_name" class="form-control-premium" placeholder="Optional - Name of the donor">
+                        <label class="form-label-premium"><i class="fas fa-user"></i> <span data-i18n="donor_name">Donor Name</span></label>
+                        <input type="text" name="donor_name" class="form-control-premium" placeholder="{{ __('Optional - Name of the donor') }}">
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-pen"></i> Remarks / Notes</label>
-                        <textarea name="remarks" class="form-control-premium" rows="2" placeholder="Additional notes about this income..." style="min-height: 50px;"></textarea>
+                        <label class="form-label-premium"><i class="fas fa-pen"></i> <span data-i18n="remarks_notes">Remarks / Notes</span></label>
+                        <textarea name="remarks" class="form-control-premium" rows="2" placeholder="{{ __('Additional notes about this income...') }}" style="min-height: 50px;"></textarea>
                     </div>
                     
                     <div class="amount-preview-premium alert-success-premium">
                         <div class="d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-calculator me-2"></i> Amount to Record:</span>
+                            <span><i class="fas fa-calculator me-2"></i> <span data-i18n="amount_to_record">Amount to Record</span>:</span>
                             <strong id="incomePreviewAmount" class="fs-5" style="color: #10B981;">₱0.00</strong>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-secondary-premium" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i> Cancel
+                        <i class="fas fa-times me-1"></i> <span data-i18n="cancel">Cancel</span>
                     </button>
                     <button type="submit" class="btn-success-premium">
-                        <i class="fas fa-save me-1"></i> Save Income
+                        <i class="fas fa-save me-1"></i> <span data-i18n="save_income">Save Income</span>
                     </button>
                 </div>
             </form>
@@ -1996,9 +2000,9 @@
                 <div>
                     <h5 class="modal-title">
                         <i class="fas fa-arrow-up me-2" style="color: #EF4444;"></i>
-                        Record Expense
+                        <span data-i18n="record_expense">Record Expense</span>
                     </h5>
-                    <p>Record money spent by the church</p>
+                    <p data-i18n="record_expense_desc">Record money spent by the church</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -2008,40 +2012,40 @@
                     <input type="hidden" name="type" value="expense">
                     
                     <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-tag"></i> Description <span class="text-danger">*</span></label>
+                        <label class="form-label-premium"><i class="fas fa-tag"></i> <span data-i18n="description_label">Description</span> <span class="text-danger">*</span></label>
                         <input type="text" name="description" class="form-control-premium" required 
-                               placeholder="e.g., Outreach Program, Church Supplies">
+                               placeholder="{{ __('e.g., Outreach Program, Church Supplies') }}">
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-folder"></i> Category <span class="text-danger">*</span></label>
+                        <label class="form-label-premium"><i class="fas fa-folder"></i> <span data-i18n="category_label">Category</span> <span class="text-danger">*</span></label>
                         <div class="category-pills-premium">
                             <div class="category-pill-premium selected" data-category="Church Help" onclick="selectExpenseCategory(this, 'Church Help')">
-                                <i class="fas fa-hands-helping"></i> Church Help
+                                <i class="fas fa-hands-helping"></i> <span data-i18n="church_help">Church Help</span>
                             </div>
                             <div class="category-pill-premium" data-category="Outreach" onclick="selectExpenseCategory(this, 'Outreach')">
-                                <i class="fas fa-hand-holding-heart"></i> Outreach
+                                <i class="fas fa-hand-holding-heart"></i> <span data-i18n="outreach">Outreach</span>
                             </div>
                             <div class="category-pill-premium" data-category="Donation to Others" onclick="selectExpenseCategory(this, 'Donation to Others')">
-                                <i class="fas fa-gift"></i> Donation
+                                <i class="fas fa-gift"></i> <span data-i18n="donation">Donation</span>
                             </div>
                             <div class="category-pill-premium" data-category="Maintenance" onclick="selectExpenseCategory(this, 'Maintenance')">
-                                <i class="fas fa-tools"></i> Maintenance
+                                <i class="fas fa-tools"></i> <span data-i18n="maintenance">Maintenance</span>
                             </div>
                             <div class="category-pill-premium" data-category="Utilities" onclick="selectExpenseCategory(this, 'Utilities')">
-                                <i class="fas fa-bolt"></i> Utilities
+                                <i class="fas fa-bolt"></i> <span data-i18n="utilities">Utilities</span>
                             </div>
                             <div class="category-pill-premium" data-category="Staff Salary" onclick="selectExpenseCategory(this, 'Staff Salary')">
-                                <i class="fas fa-user-tie"></i> Staff Salary
+                                <i class="fas fa-user-tie"></i> <span data-i18n="staff_salary">Staff Salary</span>
                             </div>
                             <div class="category-pill-premium" data-category="Equipment" onclick="selectExpenseCategory(this, 'Equipment')">
-                                <i class="fas fa-microphone"></i> Equipment
+                                <i class="fas fa-microphone"></i> <span data-i18n="equipment">Equipment</span>
                             </div>
                             <div class="category-pill-premium" data-category="Events" onclick="selectExpenseCategory(this, 'Events')">
-                                <i class="fas fa-calendar-check"></i> Events
+                                <i class="fas fa-calendar-check"></i> <span data-i18n="events">Events</span>
                             </div>
                             <div class="category-pill-premium" data-category="Other Expense" onclick="selectExpenseCategory(this, 'Other Expense')">
-                                <i class="fas fa-ellipsis-h"></i> Other Expense
+                                <i class="fas fa-ellipsis-h"></i> <span data-i18n="other_expense">Other Expense</span>
                             </div>
                         </div>
                         <input type="hidden" name="category" id="expenseCategory" value="Church Help">
@@ -2049,7 +2053,7 @@
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label-premium"><i class="fas fa-money-bill-wave"></i> Amount (₱) <span class="text-danger">*</span></label>
+                            <label class="form-label-premium"><i class="fas fa-money-bill-wave"></i> <span data-i18n="amount_label">Amount</span> (₱) <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text-premium">₱</span>
                                 <input type="number" name="amount" step="0.01" class="form-control-premium" required 
@@ -2058,36 +2062,36 @@
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label-premium"><i class="fas fa-calendar"></i> Date <span class="text-danger">*</span></label>
+                            <label class="form-label-premium"><i class="fas fa-calendar"></i> <span data-i18n="date_label">Date</span> <span class="text-danger">*</span></label>
                             <input type="date" name="date" class="form-control-premium" value="{{ date('Y-m-d') }}" 
                                    max="{{ date('Y-m-d') }}" required>
                             <small class="text-muted" style="font-size: 0.6rem; display: block; margin-top: 3px;">
-                                <i class="fas fa-info-circle"></i> Only past or today's date allowed
+                                <i class="fas fa-info-circle"></i> <span data-i18n="past_date_only">Only past or today's date allowed</span>
                             </small>
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-user"></i> Recipient / Beneficiary</label>
-                        <input type="text" name="recipient" class="form-control-premium" placeholder="Optional - Who received this amount?">
+                        <label class="form-label-premium"><i class="fas fa-user"></i> <span data-i18n="recipient_label">Recipient / Beneficiary</span></label>
+                        <input type="text" name="recipient" class="form-control-premium" placeholder="{{ __('Optional - Who received this amount?') }}">
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-pen"></i> Remarks / Notes</label>
-                        <textarea name="remarks" class="form-control-premium" rows="2" placeholder="Additional notes about this expense..." style="min-height: 50px;"></textarea>
+                        <label class="form-label-premium"><i class="fas fa-pen"></i> <span data-i18n="remarks_notes">Remarks / Notes</span></label>
+                        <textarea name="remarks" class="form-control-premium" rows="2" placeholder="{{ __('Additional notes about this expense...') }}" style="min-height: 50px;"></textarea>
                     </div>
                     
                     <div class="amount-preview-premium alert-info-premium">
                         <div class="d-flex justify-content-between mb-2">
-                            <span><i class="fas fa-wallet me-2"></i> Current Balance:</span>
+                            <span><i class="fas fa-wallet me-2"></i> <span data-i18n="current_balance">Current Balance</span>:</span>
                             <strong id="currentBalance" style="font-family: 'Inter', sans-serif;">₱{{ number_format($allTimeBalance ?? 0, 2) }}</strong>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
-                            <span><i class="fas fa-minus-circle me-2" style="color: #EF4444;"></i> Amount to Deduct:</span>
+                            <span><i class="fas fa-minus-circle me-2" style="color: #EF4444;"></i> <span data-i18n="amount_to_deduct">Amount to Deduct</span>:</span>
                             <strong id="expensePreviewAmount" style="color: #EF4444; font-family: 'Inter', sans-serif;">₱0.00</strong>
                         </div>
                         <div class="d-flex justify-content-between pt-2 border-top" style="border-top-color: #e5e7eb;">
-                            <span><i class="fas fa-calculator me-2"></i> Remaining Balance:</span>
+                            <span><i class="fas fa-calculator me-2"></i> <span data-i18n="remaining_balance">Remaining Balance</span>:</span>
                             <strong id="remainingBalance" class="fs-5" style="color: #10B981; font-family: 'Inter', sans-serif;">₱{{ number_format($allTimeBalance ?? 0, 2) }}</strong>
                         </div>
                     </div>
@@ -2095,16 +2099,16 @@
                     @if(($allTimeBalance ?? 0) <= 0)
                         <div class="alert-danger-premium" style="margin-top: 0.8rem;">
                             <i class="fas fa-exclamation-triangle me-2"></i>
-                            Insufficient balance! Current balance: ₱{{ number_format($allTimeBalance ?? 0, 2) }}
+                            <span data-i18n="insufficient_balance">Insufficient balance!</span> <span data-i18n="current_balance">Current balance</span>: ₱{{ number_format($allTimeBalance ?? 0, 2) }}
                         </div>
                     @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-secondary-premium" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i> Cancel
+                        <i class="fas fa-times me-1"></i> <span data-i18n="cancel">Cancel</span>
                     </button>
                     <button type="submit" class="btn-danger-premium" id="expenseSubmitBtn" {{ ($allTimeBalance ?? 0) <= 0 ? 'disabled' : '' }}>
-                        <i class="fas fa-save me-1"></i> Save Expense
+                        <i class="fas fa-save me-1"></i> <span data-i18n="save_expense">Save Expense</span>
                     </button>
                 </div>
             </form>
@@ -2113,7 +2117,7 @@
 </div>
 
 {{-- ============================================ --}}
-{{-- ALL TRANSACTIONS MODAL - WITH FILTER, EDIT/DELETE & CLICKABLE ROWS --}}
+{{-- ALL TRANSACTIONS MODAL --}}
 {{-- ============================================ --}}
 <div class="modal fade" id="transactionsModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -2122,29 +2126,27 @@
                 <div>
                     <h5 class="modal-title">
                         <i class="fas fa-list me-2" style="color: #10B981;"></i>
-                        All Transactions
+                        <span data-i18n="all_transactions">All Transactions</span>
                     </h5>
-                    <p>Complete financial history of your church</p>
+                    <p data-i18n="complete_history">Complete financial history of your church</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body" style="padding: 1.5rem;">
                 
-                {{-- ===================== --}}
-                {{-- FILTER SECTION (Month, Year, Week) --}}
-                {{-- ===================== --}}
+                {{-- FILTER SECTION --}}
                 <div class="modal-filter-container">
-                    <label><i class="fas fa-calendar-alt me-1"></i> Month</label>
+                    <label><i class="fas fa-calendar-alt me-1"></i> <span data-i18n="month_label">Month</span></label>
                     <select id="modalFilterMonth" onchange="applyModalFilters()">
-                        <option value="">All Months</option>
+                        <option value=""><span data-i18n="all_months">All Months</span></option>
                         @foreach(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'] as $num)
                             <option value="{{ $num }}">{{ \Carbon\Carbon::create()->month((int)$num)->format('F') }}</option>
                         @endforeach
                     </select>
                     
-                    <label><i class="fas fa-calendar-year me-1"></i> Year</label>
+                    <label><i class="fas fa-calendar-year me-1"></i> <span data-i18n="year_label">Year</span></label>
                     <select id="modalFilterYear" onchange="applyModalFilters()">
-                        <option value="">All Years</option>
+                        <option value=""><span data-i18n="all_years">All Years</span></option>
                         @php
                             $currentYear = date('Y');
                             for($y = $currentYear - 5; $y <= $currentYear; $y++) {
@@ -2153,19 +2155,19 @@
                         @endphp
                     </select>
                     
-                    <label><i class="fas fa-calendar-week me-1"></i> Week</label>
+                    <label><i class="fas fa-calendar-week me-1"></i> <span data-i18n="week_label">Week</span></label>
                     <input type="week" id="modalFilterWeek" onchange="applyModalFilters()">
                     
                     <button class="modal-filter-btn" onclick="resetModalFilters()">
-                        <i class="fas fa-undo me-1"></i> Reset
+                        <i class="fas fa-undo me-1"></i> <span data-i18n="reset">Reset</span>
                     </button>
                 </div>
 
                 <!-- Filter Tabs -->
                 <div class="filter-tabs-premium mb-3">
-                    <button class="filter-tab-premium active" onclick="filterTransactions('all', event)">All Transactions</button>
-                    <button class="filter-tab-premium" onclick="filterTransactions('income', event)"><i class="fas fa-arrow-down me-1" style="color: #10B981;"></i> Income</button>
-                    <button class="filter-tab-premium" onclick="filterTransactions('expense', event)"><i class="fas fa-arrow-up me-1" style="color: #EF4444;"></i> Expense</button>
+                    <button class="filter-tab-premium active" onclick="filterTransactions('all', event)"><span data-i18n="all_transactions">All Transactions</span></button>
+                    <button class="filter-tab-premium" onclick="filterTransactions('income', event)"><i class="fas fa-arrow-down me-1" style="color: #10B981;"></i> <span data-i18n="income">Income</span></button>
+                    <button class="filter-tab-premium" onclick="filterTransactions('expense', event)"><i class="fas fa-arrow-up me-1" style="color: #EF4444;"></i> <span data-i18n="expense">Expense</span></button>
                 </div>
                 
                 <!-- Summary Stats -->
@@ -2173,28 +2175,28 @@
                     <div class="summary-item-premium">
                         <div class="summary-icon-premium income-bg"><i class="fas fa-arrow-down"></i></div>
                         <div class="summary-info">
-                            <span class="summary-label">Total Income</span>
+                            <span class="summary-label" data-i18n="total_income">Total Income</span>
                             <span class="summary-value amount-positive-premium" id="modalTotalIncome">₱0.00</span>
                         </div>
                     </div>
                     <div class="summary-item-premium">
                         <div class="summary-icon-premium expense-bg"><i class="fas fa-arrow-up"></i></div>
                         <div class="summary-info">
-                            <span class="summary-label">Total Expenses</span>
+                            <span class="summary-label" data-i18n="total_expenses">Total Expenses</span>
                             <span class="summary-value amount-negative-premium" id="modalTotalExpense">₱0.00</span>
                         </div>
                     </div>
                     <div class="summary-item-premium">
                         <div class="summary-icon-premium balance-bg"><i class="fas fa-calculator"></i></div>
                         <div class="summary-info">
-                            <span class="summary-label">Net Balance</span>
+                            <span class="summary-label" data-i18n="net_balance">Net Balance</span>
                             <span class="summary-value" id="modalNetBalance" style="font-weight:800; font-size:0.9rem;">₱0.00</span>
                         </div>
                     </div>
                     <div class="summary-item-premium">
                         <div class="summary-icon-premium total-bg"><i class="fas fa-receipt"></i></div>
                         <div class="summary-info">
-                            <span class="summary-label">Total Transactions</span>
+                            <span class="summary-label" data-i18n="total_transactions">Total Transactions</span>
                             <span class="summary-value" id="modalTotalTransactions">0</span>
                         </div>
                     </div>
@@ -2205,7 +2207,7 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-search"></i></span>
                         <input type="text" id="transactionSearch" class="form-control-premium" 
-                               placeholder="Search transactions..." 
+                               placeholder="{{ __('Search transactions...') }}" 
                                onkeyup="searchTransactions()"
                                style="border-left: none; border-radius: 0 10px 10px 0;">
                     </div>
@@ -2216,34 +2218,33 @@
                     <table class="table-premium table" id="transactionsTable">
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Description</th>
-                                <th>Category</th>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Notes</th>
-                                <th style="width: 100px; text-align: center;">Actions</th>
+                                <th data-i18n="date">Date</th>
+                                <th data-i18n="description">Description</th>
+                                <th data-i18n="category">Category</th>
+                                <th data-i18n="type">Type</th>
+                                <th data-i18n="amount">Amount</th>
+                                <th data-i18n="notes">Notes</th>
+                                <th style="width: 100px; text-align: center;" data-i18n="actions">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="transactionsTableBody">
                             <tr>
                                 <td colspan="7" class="text-center py-4" style="color: #6b7280;">
                                     <i class="fas fa-receipt fa-2x mb-2 d-block" style="color: #6b7280;"></i>
-                                    <p class="mb-0" style="color: #6b7280;">Select a filter to view transactions</p>
+                                    <p class="mb-0" style="color: #6b7280;" data-i18n="select_filter">Select a filter to view transactions</p>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 
-                <!-- Click hint -->
                 <div style="margin-top: 0.5rem; font-size: 0.65rem; color: #6b7280; text-align: center;">
-                    <i class="fas fa-mouse-pointer me-1"></i> Click on any row to edit the transaction
+                    <i class="fas fa-mouse-pointer me-1"></i> <span data-i18n="click_row_edit">Click on any row to edit the transaction</span>
                 </div>
             </div>
             <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid #e5e7eb; background: #f9fafb;">
                 <button type="button" class="btn-primary-premium" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i> Close
+                    <i class="fas fa-times me-1"></i> <span data-i18n="close">Close</span>
                 </button>
             </div>
         </div>
@@ -2255,25 +2256,25 @@
 {{-- ============================================= --}}
 <div class="pdf-export-wrapper" id="pdfExportContainer">
     <div class="pdf-header">
-        <h1>Inventory Management Report</h1>
-        <p>Church financial overview - Income, Expenses, and Transactions</p>
-        <div class="pdf-date">Generated: {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}</div>
+        <h1><span data-i18n="inventory_management">Inventory Management Report</span></h1>
+        <p><span data-i18n="church_financial_overview">Church financial overview - Income, Expenses, and Transactions</span></p>
+        <div class="pdf-date"><span data-i18n="generated">Generated</span>: {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}</div>
     </div>
     
     <div id="pdfContent">
         <div class="pdf-section" id="pdf-stats">
-            <div class="pdf-section-title"><i class="fas fa-chart-pie"></i> Financial Overview</div>
+            <div class="pdf-section-title"><i class="fas fa-chart-pie"></i> <span data-i18n="financial_overview">Financial Overview</span></div>
             <div class="pdf-stats-grid" id="pdfStatsGrid"></div>
         </div>
         
         <div class="pdf-section" id="pdf-summary" style="display:none;">
-            <div class="pdf-section-title"><i class="fas fa-chart-line"></i> Summary</div>
+            <div class="pdf-section-title"><i class="fas fa-chart-line"></i> <span data-i18n="summary_label">Summary</span></div>
             <div id="pdfSummaryContent"></div>
         </div>
         
         <div class="pdf-section" id="pdf-categories" style="display:none;">
             <div class="pdf-section-title">
-                <i class="fas fa-tags"></i> Category Breakdown
+                <i class="fas fa-tags"></i> <span data-i18n="category_breakdown">Category Breakdown</span>
                 <span class="pdf-date-badge" id="pdfCategoryDateRange">
                     @php
                         $allDates = [];
@@ -2288,7 +2289,7 @@
                             sort($allDates);
                             echo \Carbon\Carbon::parse($allDates[0])->format('M d, Y') . ' - ' . \Carbon\Carbon::parse(end($allDates))->format('M d, Y');
                         } else {
-                            echo 'No records yet';
+                            echo __('No records yet');
                         }
                     @endphp
                 </span>
@@ -2297,16 +2298,16 @@
         </div>
         
         <div class="pdf-section" id="pdf-transactions" style="display:none;">
-            <div class="pdf-section-title"><i class="fas fa-list"></i> Recent Transactions</div>
+            <div class="pdf-section-title"><i class="fas fa-list"></i> <span data-i18n="recent_transactions">Recent Transactions</span></div>
             <table class="pdf-table" id="pdfTransactionsTable">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Category</th>
-                        <th>Type</th>
-                        <th style="text-align:right;">Amount</th>
-                        <th>Notes</th>
+                        <th data-i18n="date">Date</th>
+                        <th data-i18n="description">Description</th>
+                        <th data-i18n="category">Category</th>
+                        <th data-i18n="type">Type</th>
+                        <th style="text-align:right;" data-i18n="amount">Amount</th>
+                        <th data-i18n="notes">Notes</th>
                     </tr>
                 </thead>
                 <tbody id="pdfTransactionsBody"></tbody>
@@ -2315,7 +2316,7 @@
     </div>
     
     <div class="pdf-footer">
-        Generated by <strong>TINC Church Management System</strong> • {{ \Carbon\Carbon::now()->format('Y') }}
+        <span data-i18n="generated_by">Generated by</span> <strong>TINC Church Management System</strong> • {{ \Carbon\Carbon::now()->format('Y') }}
     </div>
 </div>
 
@@ -2418,8 +2419,8 @@
         return selected;
     }
     
-        // ============================================
-    // EXPORT DATA LOADING (Realtime AJAX)
+    // ============================================
+    // EXPORT DATA LOADING
     // ============================================
     let exportDataCache = null;
     
@@ -2431,7 +2432,6 @@
         let url = `{{ route('inventory.export-data') }}`;
         let params = [];
         
-        // Only add parameters if they are selected
         if (months.length > 0) {
             params.push(`months[]=${months.join(',')}`);
         }
@@ -2445,12 +2445,13 @@
         if (params.length > 0) {
             url += '?' + params.join('&');
         }
-        // If no params, the URL is just the base route, which returns ALL data
         
-        // Show loading state
+        const loadingText = window.t ? window.t('loading') : 'Loading...';
+        const fetchText = window.t ? window.t('fetching_data') : 'Fetching data for export...';
+        
         Swal.fire({
-            title: 'Loading...',
-            text: 'Fetching data for export...',
+            title: loadingText,
+            text: fetchText,
             allowOutsideClick: false,
             didOpen: () => { Swal.showLoading(); }
         });
@@ -2461,10 +2462,13 @@
                 Swal.close();
                 if (data.success) {
                     exportDataCache = data;
+                    const foundText = window.t ? window.t('found_transactions') : 'Found';
+                    const transactionsText = window.t ? window.t('transactions') : 'transactions';
+                    const periodText = window.t ? window.t('for_period') : 'for the selected period.';
                     Swal.fire({
                         icon: 'success',
-                        title: 'Data Loaded!',
-                        text: `Found ${data.totals.count} transactions for the selected period.`,
+                        title: window.t ? window.t('data_loaded') : 'Data Loaded!',
+                        text: `${foundText} ${data.totals.count} ${transactionsText} ${periodText}`,
                         timer: 1500,
                         showConfirmButton: false,
                         toast: true,
@@ -2473,8 +2477,8 @@
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to load data.',
+                        title: window.t ? window.t('error') : 'Error',
+                        text: window.t ? window.t('failed_to_load') : 'Failed to load data.',
                         confirmButtonColor: '#EF4444'
                     });
                 }
@@ -2483,21 +2487,24 @@
                 Swal.close();
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error',
-                    text: 'Something went wrong. Please try again.',
+                    title: window.t ? window.t('error') : 'Error',
+                    text: window.t ? window.t('something_wrong') : 'Something went wrong. Please try again.',
                     confirmButtonColor: '#EF4444'
                 });
             });
     }
+    
     // ============================================
-    // BUILD PDF CONTENT (Using Cached Data)
+    // BUILD PDF CONTENT
     // ============================================
     function buildPDFContent(sections) {
         if (!exportDataCache) {
+            const noDataText = window.t ? window.t('no_data') : 'No Data';
+            const loadFirstText = window.t ? window.t('load_data_first') : 'Please load the data first by clicking "Load Data".';
             Swal.fire({
                 icon: 'warning',
-                title: 'No Data',
-                text: 'Please load the data first by clicking "Load Data".',
+                title: noDataText,
+                text: loadFirstText,
                 confirmButtonColor: '#4F46E5'
             });
             return false;
@@ -2508,31 +2515,37 @@
         const year = document.getElementById('exportFilterYear').value;
         const week = document.getElementById('exportFilterWeek').value;
         
-        // Build the filter display string
         let filterDisplay = '';
+        const forText = window.t ? window.t('for') : 'for';
         if (months.length > 0 && year) {
-            filterDisplay = ` for ${months.join(', ')} ${year}`;
+            filterDisplay = ` ${forText} ${months.join(', ')} ${year}`;
         } else if (months.length > 0) {
-            filterDisplay = ` for ${months.join(', ')}`;
+            filterDisplay = ` ${forText} ${months.join(', ')}`;
         } else if (year) {
-            filterDisplay = ` for ${year}`;
+            filterDisplay = ` ${forText} ${year}`;
         } else if (week) {
-            filterDisplay = ` for Week ${week}`;
+            filterDisplay = ` ${forText} Week ${week}`;
         }
         
-        // Update the header
-        document.querySelector('#pdfExportContainer .pdf-header h1').textContent = 'Inventory Management Report' + filterDisplay;
-        document.querySelector('#pdfExportContainer .pdf-header .pdf-date').textContent = 'Generated: ' + new Date().toLocaleString();
+        const reportTitle = window.t ? window.t('inventory_management') : 'Inventory Management Report';
+        const generatedText = window.t ? window.t('generated') : 'Generated';
+        document.querySelector('#pdfExportContainer .pdf-header h1').textContent = reportTitle + filterDisplay;
+        document.querySelector('#pdfExportContainer .pdf-header .pdf-date').textContent = generatedText + ': ' + new Date().toLocaleString();
         
+        // Stats
         if (sections.includes('stats')) {
             document.getElementById('pdf-stats').style.display = 'block';
             const grid = document.getElementById('pdfStatsGrid');
+            const incomeLabel = window.t ? window.t('total_income') : 'Total Income';
+            const expensesLabel = window.t ? window.t('total_expenses') : 'Total Expenses';
+            const netLabel = window.t ? window.t('net_balance') : 'Net Balance';
+            const totalLabel = window.t ? window.t('total_transactions') : 'Total Transactions';
             
             const stats = [
-                { label: 'Total Income', value: '₱' + data.totals.income, change: 'Money received', positive: true },
-                { label: 'Total Expenses', value: '₱' + data.totals.expense, change: 'Money spent', positive: false },
-                { label: 'Net Balance', value: (parseFloat(data.totals.balance) >= 0 ? '+' : '-') + ' ₱' + Math.abs(parseFloat(data.totals.balance)).toFixed(2), change: 'Surplus', positive: true },
-                { label: 'Total Transactions', value: data.totals.count, change: 'Records', positive: true }
+                { label: incomeLabel, value: '₱' + data.totals.income, change: 'Money received', positive: true },
+                { label: expensesLabel, value: '₱' + data.totals.expense, change: 'Money spent', positive: false },
+                { label: netLabel, value: (parseFloat(data.totals.balance) >= 0 ? '+' : '-') + ' ₱' + Math.abs(parseFloat(data.totals.balance)).toFixed(2), change: 'Surplus', positive: true },
+                { label: totalLabel, value: data.totals.count, change: 'Records', positive: true }
             ];
             grid.innerHTML = stats.map(s => `
                 <div class="pdf-stat-card">
@@ -2545,21 +2558,25 @@
             document.getElementById('pdf-stats').style.display = 'none';
         }
         
+        // Summary
         if (sections.includes('summary')) {
             document.getElementById('pdf-summary').style.display = 'block';
             const summary = document.getElementById('pdfSummaryContent');
+            const incomeLabel = window.t ? window.t('total_income') : 'Total Income';
+            const expensesLabel = window.t ? window.t('total_expenses') : 'Total Expenses';
+            const netLabel = window.t ? window.t('net_balance') : 'Net Balance';
             summary.innerHTML = `
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:15px;">
                     <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:15px 20px;text-align:center;">
-                        <div style="font-size:11px;text-transform:uppercase;color:#6b7280;font-weight:600;">Total Income</div>
+                        <div style="font-size:11px;text-transform:uppercase;color:#6b7280;font-weight:600;">${incomeLabel}</div>
                         <div style="font-size:22px;font-weight:800;color:#10B981;">₱${data.totals.income}</div>
                     </div>
                     <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:15px 20px;text-align:center;">
-                        <div style="font-size:11px;text-transform:uppercase;color:#6b7280;font-weight:600;">Total Expenses</div>
+                        <div style="font-size:11px;text-transform:uppercase;color:#6b7280;font-weight:600;">${expensesLabel}</div>
                         <div style="font-size:22px;font-weight:800;color:#EF4444;">₱${data.totals.expense}</div>
                     </div>
                     <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:15px 20px;text-align:center;">
-                        <div style="font-size:11px;text-transform:uppercase;color:#6b7280;font-weight:600;">Net Balance</div>
+                        <div style="font-size:11px;text-transform:uppercase;color:#6b7280;font-weight:600;">${netLabel}</div>
                         <div style="font-size:22px;font-weight:800;color:#4F46E5;">${parseFloat(data.totals.balance) >= 0 ? '+' : '-'} ₱${Math.abs(parseFloat(data.totals.balance)).toFixed(2)}</div>
                     </div>
                 </div>
@@ -2568,11 +2585,11 @@
             document.getElementById('pdf-summary').style.display = 'none';
         }
         
+        // Categories
         if (sections.includes('categories')) {
             document.getElementById('pdf-categories').style.display = 'block';
             const content = document.getElementById('pdfCategoriesContent');
             
-            // Calculate category breakdown from transactions
             const incomeCategories = {};
             const expenseCategories = {};
             let totalIncome = 0;
@@ -2588,29 +2605,36 @@
                 }
             });
             
-            let incomeHtml = '<div style="margin-bottom:15px;"><h4 style="font-size:14px;color:#10B981;margin:0 0 10px 0;">Income Categories</h4>';
+            const incomeLabel = window.t ? window.t('income_categories') : 'Income Categories';
+            const expensesLabel = window.t ? window.t('expense_categories') : 'Expense Categories';
+            const totalIncomeLabel = window.t ? window.t('total_income') : 'Total Income';
+            const totalExpensesLabel = window.t ? window.t('total_expenses') : 'Total Expenses';
+            
+            let incomeHtml = `<div style="margin-bottom:15px;"><h4 style="font-size:14px;color:#10B981;margin:0 0 10px 0;">${incomeLabel}</h4>`;
             if (Object.keys(incomeCategories).length > 0) {
                 incomeHtml += '<table class="pdf-table"><thead><tr><th>Category</th><th style="text-align:right;">Amount</th></tr></thead><tbody>';
                 Object.entries(incomeCategories).forEach(([category, amount]) => {
                     incomeHtml += `<tr><td>${category}</td><td style="text-align:right;color:#10B981;">₱${amount.toFixed(2)}</td></tr>`;
                 });
-                incomeHtml += `<tr style="font-weight:700;border-top:2px solid #e5e7eb;"><td>Total Income</td><td style="text-align:right;color:#10B981;">₱${totalIncome.toFixed(2)}</td></tr>`;
+                incomeHtml += `<tr style="font-weight:700;border-top:2px solid #e5e7eb;"><td>${totalIncomeLabel}</td><td style="text-align:right;color:#10B981;">₱${totalIncome.toFixed(2)}</td></tr>`;
                 incomeHtml += '</tbody></table>';
             } else {
-                incomeHtml += '<p style="color:#999;">No income records yet</p>';
+                const noRecords = window.t ? window.t('no_income_records') : 'No income records yet';
+                incomeHtml += `<p style="color:#999;">${noRecords}</p>`;
             }
             incomeHtml += '</div>';
             
-            let expenseHtml = '<div><h4 style="font-size:14px;color:#EF4444;margin:0 0 10px 0;">Expense Categories</h4>';
+            let expenseHtml = `<div><h4 style="font-size:14px;color:#EF4444;margin:0 0 10px 0;">${expensesLabel}</h4>`;
             if (Object.keys(expenseCategories).length > 0) {
                 expenseHtml += '<table class="pdf-table"><thead><tr><th>Category</th><th style="text-align:right;">Amount</th></tr></thead><tbody>';
                 Object.entries(expenseCategories).forEach(([category, amount]) => {
                     expenseHtml += `<tr><td>${category}</td><td style="text-align:right;color:#EF4444;">₱${amount.toFixed(2)}</td></tr>`;
                 });
-                expenseHtml += `<tr style="font-weight:700;border-top:2px solid #e5e7eb;"><td>Total Expenses</td><td style="text-align:right;color:#EF4444;">₱${totalExpense.toFixed(2)}</td></tr>`;
+                expenseHtml += `<tr style="font-weight:700;border-top:2px solid #e5e7eb;"><td>${totalExpensesLabel}</td><td style="text-align:right;color:#EF4444;">₱${totalExpense.toFixed(2)}</td></tr>`;
                 expenseHtml += '</tbody></table>';
             } else {
-                expenseHtml += '<p style="color:#999;">No expense records yet</p>';
+                const noRecords = window.t ? window.t('no_expense_records') : 'No expense records yet';
+                expenseHtml += `<p style="color:#999;">${noRecords}</p>`;
             }
             expenseHtml += '</div>';
             
@@ -2619,14 +2643,18 @@
             document.getElementById('pdf-categories').style.display = 'none';
         }
         
+        // Transactions
         if (sections.includes('transactions')) {
             document.getElementById('pdf-transactions').style.display = 'block';
             const body = document.getElementById('pdfTransactionsBody');
             
             let html = '';
+            const noTransactions = window.t ? window.t('no_transactions_period') : 'No transactions found for the selected period';
             if (data.transactions.length === 0) {
-                html = '<tr><td colspan="6" style="text-align:center; color:#999; padding:20px;">No transactions found for the selected period</td></tr>';
+                html = `<tr><td colspan="6" style="text-align:center; color:#999; padding:20px;">${noTransactions}</td></tr>`;
             } else {
+                const incomeLabel = window.t ? window.t('income') : 'Income';
+                const expensesLabel = window.t ? window.t('expense') : 'Expense';
                 data.transactions.forEach(t => {
                     const date = new Date(t.date || t.created_at);
                     const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -2636,7 +2664,7 @@
                             <td>${formattedDate}</td>
                             <td>${t.description}</td>
                             <td>${t.category || 'Uncategorized'}</td>
-                            <td><span class="pdf-badge ${isIncome ? 'income' : 'expense'}">${isIncome ? 'Income' : 'Expense'}</span></td>
+                            <td><span class="pdf-badge ${isIncome ? 'income' : 'expense'}">${isIncome ? incomeLabel : expensesLabel}</span></td>
                             <td style="text-align:right; font-weight:700; color:${isIncome ? '#10B981' : '#EF4444'};">${isIncome ? '+' : '-'} ₱${parseFloat(t.amount).toFixed(2)}</td>
                             <td>${t.remarks || '—'}</td>
                         </tr>
@@ -2652,30 +2680,32 @@
     }
     
     // ============================================
-    // EXPORT FUNCTIONS (Print & PDF)
+    // EXPORT FUNCTIONS
     // ============================================
     function exportPrint() {
         const sections = getSelectedSections();
         if (sections.length === 0) {
+            const noSelection = window.t ? window.t('no_selection') : 'No Selection';
+            const selectSection = window.t ? window.t('select_section') : 'Please select at least one section to export.';
             Swal.fire({
                 icon: 'warning',
-                title: 'No Selection',
-                text: 'Please select at least one section to export.',
+                title: noSelection,
+                text: selectSection,
                 confirmButtonColor: '#4F46E5'
             });
             return;
         }
         
-        // Load data first
         loadExportData();
         
-        // Wait for data to load
         setTimeout(() => {
             if (!exportDataCache) {
+                const notLoaded = window.t ? window.t('data_not_loaded') : 'Data Not Loaded';
+                const waitText = window.t ? window.t('wait_load_data') : 'Please wait for data to load or click "Load Data" again.';
                 Swal.fire({
                     icon: 'error',
-                    title: 'Data Not Loaded',
-                    text: 'Please wait for data to load or click "Load Data" again.',
+                    title: notLoaded,
+                    text: waitText,
                     confirmButtonColor: '#EF4444'
                 });
                 return;
@@ -2689,9 +2719,11 @@
             const container = document.getElementById('pdfExportContainer');
             container.style.display = 'block';
             
+            const preparing = window.t ? window.t('preparing_print') : 'Preparing Print...';
+            const waitText = window.t ? window.t('please_wait') : 'Please wait...';
             Swal.fire({
-                title: 'Preparing Print...',
-                text: 'Please wait...',
+                title: preparing,
+                text: waitText,
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); }
             });
@@ -2709,25 +2741,27 @@
     function exportPDF() {
         const sections = getSelectedSections();
         if (sections.length === 0) {
+            const noSelection = window.t ? window.t('no_selection') : 'No Selection';
+            const selectSection = window.t ? window.t('select_section') : 'Please select at least one section to export.';
             Swal.fire({
                 icon: 'warning',
-                title: 'No Selection',
-                text: 'Please select at least one section to export.',
+                title: noSelection,
+                text: selectSection,
                 confirmButtonColor: '#4F46E5'
             });
             return;
         }
         
-        // Load data first
         loadExportData();
         
-        // Wait for data to load
         setTimeout(() => {
             if (!exportDataCache) {
+                const notLoaded = window.t ? window.t('data_not_loaded') : 'Data Not Loaded';
+                const waitText = window.t ? window.t('wait_load_data') : 'Please wait for data to load or click "Load Data" again.';
                 Swal.fire({
                     icon: 'error',
-                    title: 'Data Not Loaded',
-                    text: 'Please wait for data to load or click "Load Data" again.',
+                    title: notLoaded,
+                    text: waitText,
                     confirmButtonColor: '#EF4444'
                 });
                 return;
@@ -2741,9 +2775,11 @@
             const container = document.getElementById('pdfExportContainer');
             container.style.display = 'block';
             
+            const generating = window.t ? window.t('generating_pdf') : 'Generating PDF...';
+            const waitText = window.t ? window.t('please_wait') : 'Please wait...';
             Swal.fire({
-                title: 'Generating PDF...',
-                text: 'Please wait...',
+                title: generating,
+                text: waitText,
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); }
             });
@@ -2759,10 +2795,12 @@
             html2pdf().set(opt).from(container).save().then(function() {
                 container.style.display = 'none';
                 Swal.close();
+                const exported = window.t ? window.t('pdf_exported') : 'PDF Exported!';
+                const successMsg = window.t ? window.t('pdf_success') : 'Your inventory report has been downloaded successfully.';
                 Swal.fire({
                     icon: 'success',
-                    title: 'PDF Exported!',
-                    text: 'Your inventory report has been downloaded successfully.',
+                    title: exported,
+                    text: successMsg,
                     timer: 2000,
                     showConfirmButton: false,
                     toast: true,
@@ -2771,10 +2809,12 @@
             }).catch(function(err) {
                 container.style.display = 'none';
                 Swal.close();
+                const failed = window.t ? window.t('export_failed') : 'Export Failed';
+                const tryAgain = window.t ? window.t('try_again') : 'Something went wrong. Please try again.';
                 Swal.fire({
                     icon: 'error',
-                    title: 'Export Failed',
-                    text: err.message || 'Something went wrong. Please try again.',
+                    title: failed,
+                    text: err.message || tryAgain,
                     confirmButtonColor: '#EF4444'
                 });
             });
@@ -2785,20 +2825,30 @@
     // DELETE TRANSACTION
     // ============================================
     function confirmDelete(id) {
+        const deleteTitle = window.t ? window.t('delete_transaction') : 'Delete Transaction?';
+        const deleteMsg = window.t ? window.t('delete_confirm') : 'This action cannot be undone. Are you sure?';
+        const confirmText = window.t ? window.t('yes_delete') : 'Yes, delete it!';
+        const cancelText = window.t ? window.t('cancel') : 'Cancel';
+        const deleting = window.t ? window.t('deleting') : 'Deleting...';
+        const waitText = window.t ? window.t('please_wait') : 'Please wait...';
+        const deletedTitle = window.t ? window.t('deleted') : 'Deleted!';
+        const successMsg = window.t ? window.t('delete_success') : 'Transaction deleted successfully.';
+        const errorTitle = window.t ? window.t('error') : 'Error';
+        
         Swal.fire({
-            title: 'Delete Transaction?',
-            text: 'This action cannot be undone. Are you sure?',
+            title: deleteTitle,
+            text: deleteMsg,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#EF4444',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel'
+            confirmButtonText: confirmText,
+            cancelButtonText: cancelText
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
-                    title: 'Deleting...',
-                    text: 'Please wait...',
+                    title: deleting,
+                    text: waitText,
                     allowOutsideClick: false,
                     didOpen: () => { Swal.showLoading(); }
                 });
@@ -2816,8 +2866,8 @@
                     if (data.success) {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Deleted!',
-                            text: data.message || 'Transaction deleted successfully.',
+                            title: deletedTitle,
+                            text: data.message || successMsg,
                             timer: 2000,
                             showConfirmButton: false,
                             toast: true,
@@ -2829,7 +2879,7 @@
                     } else {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Error',
+                            title: errorTitle,
                             text: data.message || 'Failed to delete transaction.',
                             confirmButtonColor: '#EF4444'
                         });
@@ -2839,8 +2889,8 @@
                     Swal.close();
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error',
-                        text: 'Something went wrong. Please try again.',
+                        title: errorTitle,
+                        text: window.t ? window.t('something_wrong') : 'Something went wrong. Please try again.',
                         confirmButtonColor: '#EF4444'
                     });
                 });
@@ -2905,7 +2955,7 @@
     }
     
     // ============================================
-    // MODAL FILTER FUNCTIONS (Month, Year, Week)
+    // MODAL FILTER FUNCTIONS
     // ============================================
     function applyModalFilters() {
         const month = document.getElementById('modalFilterMonth').value;
@@ -2921,12 +2971,12 @@
         if (params.length > 0) {
             url += '?' + params.join('&');
         } else {
-            // If no filters, show empty state
+            const selectFilter = window.t ? window.t('select_filter') : 'Select a filter to view transactions';
             document.getElementById('transactionsTableBody').innerHTML = `
                 <tr>
                     <td colspan="7" class="text-center py-4" style="color: #6b7280;">
                         <i class="fas fa-receipt fa-2x mb-2 d-block" style="color: #6b7280;"></i>
-                        <p class="mb-0" style="color: #6b7280;">Select a filter to view transactions</p>
+                        <p class="mb-0" style="color: #6b7280;">${selectFilter}</p>
                     </td>
                 </tr>
             `;
@@ -2937,13 +2987,13 @@
             return;
         }
         
-        // Show loading state
         const tbody = document.getElementById('transactionsTableBody');
+        const loading = window.t ? window.t('loading_transactions') : 'Loading transactions...';
         tbody.innerHTML = `
             <tr>
                 <td colspan="7" class="text-center py-4" style="color: #6b7280;">
                     <i class="fas fa-spinner fa-spin fa-2x mb-2 d-block" style="color: #4F46E5;"></i>
-                    <p class="mb-0" style="color: #6b7280;">Loading transactions...</p>
+                    <p class="mb-0" style="color: #6b7280;">${loading}</p>
                 </td>
             </tr>
         `;
@@ -2954,19 +3004,23 @@
                 if (data.success) {
                     updateTransactionsTable(data.transactions, data.totals);
                 } else {
+                    const errorTitle = window.t ? window.t('error') : 'Error';
+                    const failed = window.t ? window.t('failed_load_transactions') : 'Failed to load transactions.';
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to load transactions.',
+                        title: errorTitle,
+                        text: failed,
                         confirmButtonColor: '#EF4444'
                     });
                 }
             })
             .catch(error => {
+                const errorTitle = window.t ? window.t('error') : 'Error';
+                const tryAgain = window.t ? window.t('something_wrong') : 'Something went wrong. Please try again.';
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error',
-                    text: 'Something went wrong. Please try again.',
+                    title: errorTitle,
+                    text: tryAgain,
                     confirmButtonColor: '#EF4444'
                 });
             });
@@ -2986,7 +3040,6 @@
         const netBalanceSpan = document.getElementById('modalNetBalance');
         const totalCountSpan = document.getElementById('modalTotalTransactions');
         
-        // Update totals
         if (totalIncomeSpan) totalIncomeSpan.textContent = '₱' + totals.income;
         if (totalExpenseSpan) totalExpenseSpan.textContent = '₱' + totals.expense;
         if (netBalanceSpan) {
@@ -2996,24 +3049,29 @@
         }
         if (totalCountSpan) totalCountSpan.textContent = totals.count;
         
-        // Build table rows
         let html = '';
+        const noTransactions = window.t ? window.t('no_transactions_filter') : 'No transactions found for this filter';
         if (transactions.length === 0) {
             html = `
                 <tr>
                     <td colspan="7" class="text-center py-4" style="color: #6b7280;">
                         <i class="fas fa-receipt fa-2x mb-2 d-block" style="color: #6b7280;"></i>
-                        <p class="mb-0" style="color: #6b7280;">No transactions found for this filter</p>
+                        <p class="mb-0" style="color: #6b7280;">${noTransactions}</p>
                     </td>
                 </tr>
             `;
         } else {
+            const incomeLabel = window.t ? window.t('income') : 'Income';
+            const expensesLabel = window.t ? window.t('expense') : 'Expense';
+            const donorLabel = window.t ? window.t('donor') : 'Donor';
+            const recipientLabel = window.t ? window.t('recipient') : 'Recipient';
+            
             transactions.forEach(t => {
                 const date = new Date(t.date || t.created_at);
                 const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 const isIncome = t.type === 'income';
-                const donorHtml = (isIncome && t.donor_name) ? `<div class="small text-muted"><i class="fas fa-user me-1"></i> Donor: ${t.donor_name}</div>` : '';
-                const recipientHtml = (!isIncome && t.recipient) ? `<div class="small text-muted"><i class="fas fa-user me-1"></i> Recipient: ${t.recipient}</div>` : '';
+                const donorHtml = (isIncome && t.donor_name) ? `<div class="small text-muted"><i class="fas fa-user me-1"></i> ${donorLabel}: ${t.donor_name}</div>` : '';
+                const recipientHtml = (!isIncome && t.recipient) ? `<div class="small text-muted"><i class="fas fa-user me-1"></i> ${recipientLabel}: ${t.recipient}</div>` : '';
                 
                 html += `
                     <tr data-type="${t.type}" data-search="${(t.description + ' ' + (t.category || '') + ' ' + (t.remarks || '')).toLowerCase()}" data-id="${t.id}" class="clickable-row">
@@ -3028,7 +3086,7 @@
                         <td>
                             <span class="type-badge-premium ${isIncome ? 'badge-income-premium' : 'badge-expense-premium'}">
                                 <i class="fas ${isIncome ? 'fa-arrow-down' : 'fa-arrow-up'} me-1"></i>
-                                ${isIncome ? 'Income' : 'Expense'}
+                                ${isIncome ? incomeLabel : expensesLabel}
                             </span>
                         </td>
                         <td>
@@ -3053,7 +3111,6 @@
         }
         tbody.innerHTML = html;
         
-        // Re-attach click event to rows
         tbody.querySelectorAll('.clickable-row').forEach(row => {
             row.addEventListener('click', function(e) {
                 if (e.target.closest('.action-btns-premium') || e.target.closest('.btn-edit-premium') || e.target.closest('.btn-delete-premium')) {
@@ -3066,11 +3123,9 @@
             });
         });
         
-        // Reset type filter
         document.querySelectorAll('.filter-tab-premium').forEach(tab => tab.classList.remove('active'));
         document.querySelector('.filter-tab-premium[onclick*="all"]')?.classList.add('active');
         
-        // Re-apply search if there's text
         const searchVal = document.getElementById('transactionSearch').value;
         if (searchVal) {
             searchTransactions();
@@ -3078,23 +3133,19 @@
     }
     
     // ============================================
-    // CLICKABLE ROWS - For All Transactions Modal
+    // INITIALIZE
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
-        // Initial empty state
         document.getElementById('transactionsTableBody').innerHTML = `
             <tr>
                 <td colspan="7" class="text-center py-4" style="color: #6b7280;">
                     <i class="fas fa-receipt fa-2x mb-2 d-block" style="color: #6b7280;"></i>
-                    <p class="mb-0" style="color: #6b7280;">Select a filter to view transactions</p>
+                    <p class="mb-0" style="color: #6b7280;">${window.t ? window.t('select_filter') : 'Select a filter to view transactions'}</p>
                 </td>
             </tr>
         `;
     });
     
-    // ============================================
-    // INITIALIZE
-    // ============================================
     document.getElementById('incomeModal')?.addEventListener('shown.bs.modal', function() {
         updateIncomePreview();
     });

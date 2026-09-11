@@ -18,7 +18,7 @@ class ProfilePictureController extends Controller
     $user->deleteProfilePicture();
 
     // ✅ Store new profile picture — DASH folder
-    $imageName = time() . '_' . $user->id . '.' . $request->profile_picture->getClientOriginalExtension();
+    $imageName = time() . '_' . $user->id . '.' . $request->profile_picture->extension();
     $request->profile_picture->storeAs('profile-pictures', $imageName, 'public');
     
     $user->profile_picture = $imageName;

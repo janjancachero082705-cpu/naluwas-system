@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('header', 'Choir Schedule')
+@section('header')
+    <span data-i18n="choir_schedule_title">Choir Schedule</span>
+@endsection
 
 @section('content')
 <style>
@@ -336,7 +338,6 @@
         opacity: 0.4;
     }
     
-    /* Only apply past-month to months BEFORE current month */
     .calendar-day.past-month {
         opacity: 0.6;
         background: var(--bg-tertiary);
@@ -668,11 +669,11 @@
     <!-- Hero Section - Green -->
     <div class="choir-hero">
         <div class="hero-left">
-            <h1><i class="fas fa-calendar-alt"></i> Choir Schedule</h1>
-            <p>Auto-rotating choir groups every Sunday</p>
+            <h1><i class="fas fa-calendar-alt"></i> <span data-i18n="choir_schedule_title">Choir Schedule</span></h1>
+            <p><span data-i18n="choir_schedule_desc">Auto-rotating choir groups every Sunday</span></p>
         </div>
         <a href="{{ route('choir-schedules.groups') }}" class="btn-hero">
-            <i class="fas fa-layer-group me-2"></i> Manage Groups
+            <i class="fas fa-layer-group me-2"></i> <span data-i18n="manage_groups">Manage Groups</span>
         </a>
     </div>
 
@@ -681,25 +682,25 @@
         <div class="stat-card">
             <div class="stat-icon purple"><i class="fas fa-users"></i></div>
             <div class="stat-info">
-                <h4>Total Members</h4>
+                <h4 data-i18n="total_members_label">Total Members</h4>
                 <div class="stat-value">{{ $totalChoirMembers ?? 0 }}</div>
-                <div class="stat-trend">Choir members</div>
+                <div class="stat-trend" data-i18n="choir_members">Choir members</div>
             </div>
         </div>
         <div class="stat-card">
             <div class="stat-icon blue"><i class="fas fa-layer-group"></i></div>
             <div class="stat-info">
-                <h4>Active Groups</h4>
+                <h4 data-i18n="active_groups_label">Active Groups</h4>
                 <div class="stat-value">{{ $totalGroups ?? 0 }}</div>
-                <div class="stat-trend">Groups rotating</div>
+                <div class="stat-trend" data-i18n="groups_rotating">Groups rotating</div>
             </div>
         </div>
         <div class="stat-card">
             <div class="stat-icon green"><i class="fas fa-calendar-week"></i></div>
             <div class="stat-info">
-                <h4>This Month</h4>
+                <h4 data-i18n="this_month_label">This Month</h4>
                 <div class="stat-value">{{ $thisMonthSchedules ?? 0 }}</div>
-                <div class="stat-trend">Schedules this month</div>
+                <div class="stat-trend" data-i18n="schedules_this_month">Schedules this month</div>
             </div>
         </div>
     </div>
@@ -707,7 +708,7 @@
     <!-- Month Selector -->
     <div class="month-selector-container">
         <label for="monthYearSelect">
-            <i class="fas fa-calendar-alt"></i> Select Month:
+            <i class="fas fa-calendar-alt"></i> <span data-i18n="select_month">Select Month:</span>
         </label>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
             <select id="monthYearSelect" onchange="window.location.href='{{ route('choir-schedules.index') }}?month=' + this.value">
@@ -721,11 +722,11 @@
                 <i class="fas fa-info-circle"></i> 
                 {{ \Carbon\Carbon::createFromFormat('Y-m', $selectedMonthYear)->format('F Y') }}
                 @if(\Carbon\Carbon::createFromFormat('Y-m', $selectedMonthYear)->isCurrentMonth())
-                    <span style="color: #10b981;"> (Current)</span>
+                    <span style="color: #10b981;"> (<span data-i18n="current">Current</span>)</span>
                 @elseif(\Carbon\Carbon::createFromFormat('Y-m', $selectedMonthYear)->lt(\Carbon\Carbon::now()->startOfMonth()))
-                    <span style="color: var(--text-muted);"> (Past)</span>
+                    <span style="color: var(--text-muted);"> (<span data-i18n="past">Past</span>)</span>
                 @else
-                    <span style="color: #f59e0b;"> (Future)</span>
+                    <span style="color: #f59e0b;"> (<span data-i18n="future">Future</span>)</span>
                 @endif
             </span>
         </div>
@@ -734,7 +735,7 @@
     <!-- Rotation Order -->
     @if(isset($rotationOrder) && count($rotationOrder) > 0)
     <div class="rotation-container">
-        <h6><i class="fas fa-chart-line"></i> Group Rotation Order</h6>
+        <h6><i class="fas fa-chart-line"></i> <span data-i18n="group_rotation_order">Group Rotation Order</span></h6>
         <div class="rotation-badges">
             @foreach($rotationOrder as $pos)
                 <span class="rotation-badge">
@@ -746,7 +747,7 @@
                 @endif
             @endforeach
         </div>
-        <span class="rotation-small">Groups rotate in this order every Sunday</span>
+        <span class="rotation-small" data-i18n="rotation_desc">Groups rotate in this order every Sunday</span>
     </div>
     @endif
 
@@ -756,18 +757,18 @@
             <h5>{{ \Carbon\Carbon::createFromFormat('Y-m', $selectedMonthYear)->format('F Y') }}</h5>
             <div style="font-size: 0.65rem; color: var(--text-muted);">
                 @if(\Carbon\Carbon::createFromFormat('Y-m', $selectedMonthYear)->isCurrentMonth())
-                    <span style="color: #10b981;"><i class="fas fa-circle"></i> Current Month</span>
+                    <span style="color: #10b981;"><i class="fas fa-circle"></i> <span data-i18n="current_month">Current Month</span></span>
                 @elseif(\Carbon\Carbon::createFromFormat('Y-m', $selectedMonthYear)->lt(\Carbon\Carbon::now()->startOfMonth()))
-                    <span><i class="fas fa-history"></i> Past Month (View Only)</span>
+                    <span><i class="fas fa-history"></i> <span data-i18n="past_month_view_only">Past Month (View Only)</span></span>
                 @else
-                    <span style="color: #f59e0b;"><i class="fas fa-clock"></i> Future Month</span>
+                    <span style="color: #f59e0b;"><i class="fas fa-clock"></i> <span data-i18n="future_month">Future Month</span></span>
                 @endif
             </div>
         </div>
 
         <div class="calendar-grid">
             @foreach(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
-                <div class="calendar-weekday">{{ $day }}</div>
+                <div class="calendar-weekday"><span data-i18n="{{ strtolower($day) }}">{{ $day }}</span></div>
             @endforeach
 
             @php
@@ -778,7 +779,6 @@
                 $currentDay = $startDay->copy();
                 $today = \Carbon\Carbon::today();
                 $isCurrentMonth = $selectedDate->isCurrentMonth();
-                // Only treat as past month if it's BEFORE the current month
                 $isPastMonth = $selectedDate->lt(\Carbon\Carbon::now()->startOfMonth());
             @endphp
 
@@ -789,7 +789,6 @@
                     $isToday = $currentDay->isSameDay($today);
                     $sundayData = collect($sundays)->firstWhere('date', $currentDay->format('Y-m-d'));
                     $hasSchedule = $sundayData && $sundayData['has_schedule'];
-                    // Only clickable if current month AND has schedule
                     $isClickable = $isSunday && $isCurrentMonthDay && $hasSchedule && $isCurrentMonth;
                     $isPastSunday = $isSunday && $currentDay->isPast();
                 @endphp
@@ -804,7 +803,7 @@
                     <div class="day-number">
                         <span>{{ $currentDay->day }}</span>
                         @if($isToday)
-                            <span class="today-badge">Today</span>
+                            <span class="today-badge"><span data-i18n="today">Today</span></span>
                         @endif
                     </div>
 
@@ -815,14 +814,14 @@
                                 <strong>{{ $sundayData['group']->name ?? 'Group' }}</strong>
                             </div>
                             <div class="member-count">
-                                <i class="fas fa-users"></i> {{ count($sundayData['members'] ?? []) }} members
+                                <i class="fas fa-users"></i> {{ count($sundayData['members'] ?? []) }} <span data-i18n="members">members</span>
                                 @if($isPastSunday)
-                                    <span style="display: block; font-size: 0.5rem; color: var(--text-muted);">(Completed)</span>
+                                    <span style="display: block; font-size: 0.5rem; color: var(--text-muted);">(<span data-i18n="completed">Completed</span>)</span>
                                 @endif
                             </div>
                         @elseif($isSunday && $isCurrentMonthDay)
                             <div class="calendar-empty">
-                                <span>No schedule</span>
+                                <span data-i18n="no_schedule">No schedule</span>
                             </div>
                         @endif
                     @elseif($isSunday && !$isCurrentMonthDay)
@@ -836,11 +835,11 @@
         </div>
         
         <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid var(--border-color); display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.65rem; color: var(--text-muted);">
-            <span><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: rgba(16,185,129,0.2); border: 1px solid #10b981; vertical-align: middle; margin-right: 4px;"></span> Scheduled</span>
-            <span><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--bg-tertiary); border: 1px solid var(--border-color); vertical-align: middle; margin-right: 4px;"></span> No Schedule</span>
-            <span><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--bg-tertiary); border: 1px solid var(--border-color); opacity: 0.4; vertical-align: middle; margin-right: 4px;"></span> Other Month</span>
+            <span><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: rgba(16,185,129,0.2); border: 1px solid #10b981; vertical-align: middle; margin-right: 4px;"></span> <span data-i18n="scheduled">Scheduled</span></span>
+            <span><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--bg-tertiary); border: 1px solid var(--border-color); vertical-align: middle; margin-right: 4px;"></span> <span data-i18n="no_schedule_label">No Schedule</span></span>
+            <span><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--bg-tertiary); border: 1px solid var(--border-color); opacity: 0.4; vertical-align: middle; margin-right: 4px;"></span> <span data-i18n="other_month">Other Month</span></span>
             @if($isPastMonth)
-                <span style="color: var(--text-muted);"><i class="fas fa-lock"></i> Past month - View only</span>
+                <span style="color: var(--text-muted);"><i class="fas fa-lock"></i> <span data-i18n="past_month_view_only">Past month - View only</span></span>
             @endif
         </div>
     </div>
@@ -852,7 +851,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <i class="fas fa-users"></i> Manage Members for <span id="modalDateLabel"></span>
+                    <i class="fas fa-users"></i> <span data-i18n="manage_members_for">Manage Members for</span> <span id="modalDateLabel"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -860,24 +859,24 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="member-list-card">
-                            <div class="card-header bg-success">Scheduled Members</div>
+                            <div class="card-header bg-success"><span data-i18n="scheduled_members">Scheduled Members</span></div>
                             <div class="member-list" id="scheduledMembersList">
                                 <div class="empty-members">
                                     <i class="fas fa-spinner fa-spin"></i>
-                                    <p>Loading...</p>
+                                    <p data-i18n="loading">Loading...</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="member-list-card">
-                            <div class="card-header bg-primary">Available Members</div>
+                            <div class="card-header bg-primary"><span data-i18n="available_members">Available Members</span></div>
                             <div class="member-list" id="availableMembersList">
-                                <input type="text" id="memberSearch" class="search-input" placeholder="🔍 Search members...">
+                                <input type="text" id="memberSearch" class="search-input" placeholder="🔍 <span data-i18n="search_members">Search members...</span>">
                                 <div id="availableMembersContainer">
                                     <div class="empty-members">
                                         <i class="fas fa-spinner fa-spin"></i>
-                                        <p>Loading...</p>
+                                        <p data-i18n="loading">Loading...</p>
                                     </div>
                                 </div>
                             </div>
@@ -887,7 +886,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i> Close
+                    <i class="fas fa-times me-1"></i> <span data-i18n="close">Close</span>
                 </button>
             </div>
         </div>
@@ -910,7 +909,7 @@
 
     function loadScheduledMembers(date) {
         const container = document.getElementById('scheduledMembersList');
-        container.innerHTML = `<div class="empty-members"><i class="fas fa-spinner fa-spin"></i><p>Loading...</p></div>`;
+        container.innerHTML = `<div class="empty-members"><i class="fas fa-spinner fa-spin"></i><p>${window.t ? window.t('loading') : 'Loading...'}</p></div>`;
 
         fetch(`/choir-schedules/get-schedule/${date}`)
             .then(res => res.json())
@@ -920,7 +919,7 @@
                         container.innerHTML = `
                             <div class="empty-members">
                                 <i class="fas fa-users"></i>
-                                <p>No members scheduled</p>
+                                <p>${window.t ? window.t('no_members_scheduled') : 'No members scheduled'}</p>
                             </div>
                         `;
                     } else {
@@ -928,10 +927,10 @@
                             <div class="member-item">
                                 <div>
                                     <div class="name">${m.first_name} ${m.last_name}</div>
-                                    <div class="role"><i class="fas fa-microphone-alt me-1"></i> ${m.choir_role || 'Choir Member'}</div>
+                                    <div class="role"><i class="fas fa-microphone-alt me-1"></i> ${m.choir_role || (window.t ? window.t('choir_member') : 'Choir Member')}</div>
                                 </div>
                                 <button class="btn-sm btn-sm-danger" onclick="removeMember(${m.id})">
-                                    <i class="fas fa-times"></i> Remove
+                                    <i class="fas fa-times"></i> ${window.t ? window.t('remove') : 'Remove'}
                                 </button>
                             </div>
                         `).join('');
@@ -942,7 +941,7 @@
                 container.innerHTML = `
                     <div class="empty-members">
                         <i class="fas fa-exclamation-circle"></i>
-                        <p>Error loading members</p>
+                        <p>${window.t ? window.t('error_loading_members') : 'Error loading members'}</p>
                     </div>
                 `;
             });
@@ -950,7 +949,7 @@
 
     function loadAvailableMembers(date) {
         const container = document.getElementById('availableMembersContainer');
-        container.innerHTML = `<div class="empty-members"><i class="fas fa-spinner fa-spin"></i><p>Loading...</p></div>`;
+        container.innerHTML = `<div class="empty-members"><i class="fas fa-spinner fa-spin"></i><p>${window.t ? window.t('loading') : 'Loading...'}</p></div>`;
 
         fetch(`/choir-schedules/get-schedule/${date}`)
             .then(res => res.json())
@@ -960,7 +959,7 @@
                         container.innerHTML = `
                             <div class="empty-members">
                                 <i class="fas fa-user-check"></i>
-                                <p>No available members</p>
+                                <p>${window.t ? window.t('no_available_members') : 'No available members'}</p>
                             </div>
                         `;
                     } else {
@@ -968,10 +967,10 @@
                             <div class="member-item">
                                 <div>
                                     <div class="name">${m.first_name} ${m.last_name}</div>
-                                    <div class="role"><i class="fas fa-microphone-alt me-1"></i> ${m.choir_role || 'Choir Member'}</div>
+                                    <div class="role"><i class="fas fa-microphone-alt me-1"></i> ${m.choir_role || (window.t ? window.t('choir_member') : 'Choir Member')}</div>
                                 </div>
                                 <button class="btn-sm btn-sm-success" onclick="addMember(${m.id})">
-                                    <i class="fas fa-plus"></i> Add
+                                    <i class="fas fa-plus"></i> ${window.t ? window.t('add') : 'Add'}
                                 </button>
                             </div>
                         `).join('');
@@ -982,7 +981,7 @@
                 container.innerHTML = `
                     <div class="empty-members">
                         <i class="fas fa-exclamation-circle"></i>
-                        <p>Error loading members</p>
+                        <p>${window.t ? window.t('error_loading_members') : 'Error loading members'}</p>
                     </div>
                 `;
             });
@@ -1005,8 +1004,8 @@
             if (data.success) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Success!',
-                    text: 'Member added successfully',
+                    title: window.t ? window.t('success') : 'Success!',
+                    text: window.t ? window.t('member_added_success') : 'Member added successfully',
                     timer: 1500,
                     showConfirmButton: false,
                     background: 'var(--card-bg)',
@@ -1017,8 +1016,8 @@
             } else {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error',
-                    text: data.message || 'Something went wrong',
+                    title: window.t ? window.t('error') : 'Error',
+                    text: data.message || (window.t ? window.t('something_wrong') : 'Something went wrong'),
                     confirmButtonColor: '#ef4444',
                     background: 'var(--card-bg)',
                     color: 'var(--text-primary)'
@@ -1028,8 +1027,8 @@
         .catch(() => {
             Swal.fire({
                 icon: 'error',
-                title: 'Error',
-                text: 'Network error. Please try again.',
+                title: window.t ? window.t('error') : 'Error',
+                text: window.t ? window.t('network_error') : 'Network error. Please try again.',
                 confirmButtonColor: '#ef4444',
                 background: 'var(--card-bg)',
                 color: 'var(--text-primary)'
@@ -1039,14 +1038,14 @@
 
     function removeMember(memberId) {
         Swal.fire({
-            title: 'Remove member?',
-            text: 'Remove this member from the schedule?',
+            title: window.t ? window.t('remove_member') : 'Remove member?',
+            text: window.t ? window.t('remove_member_confirm') : 'Remove this member from the schedule?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#ef4444',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, remove',
-            cancelButtonText: 'Cancel',
+            confirmButtonText: window.t ? window.t('yes_remove') : 'Yes, remove',
+            cancelButtonText: window.t ? window.t('cancel') : 'Cancel',
             background: 'var(--card-bg)',
             color: 'var(--text-primary)'
         }).then((result) => {
@@ -1067,8 +1066,8 @@
                     if (data.success) {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Removed!',
-                            text: 'Member removed successfully',
+                            title: window.t ? window.t('removed') : 'Removed!',
+                            text: window.t ? window.t('member_removed_success') : 'Member removed successfully',
                             timer: 1500,
                             showConfirmButton: false,
                             background: 'var(--card-bg)',
@@ -1079,8 +1078,8 @@
                     } else {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Error',
-                            text: data.message || 'Something went wrong',
+                            title: window.t ? window.t('error') : 'Error',
+                            text: data.message || (window.t ? window.t('something_wrong') : 'Something went wrong'),
                             confirmButtonColor: '#ef4444',
                             background: 'var(--card-bg)',
                             color: 'var(--text-primary)'
@@ -1090,8 +1089,8 @@
                 .catch(() => {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error',
-                        text: 'Network error. Please try again.',
+                        title: window.t ? window.t('error') : 'Error',
+                        text: window.t ? window.t('network_error') : 'Network error. Please try again.',
                         confirmButtonColor: '#ef4444',
                         background: 'var(--card-bg)',
                         color: 'var(--text-primary)'

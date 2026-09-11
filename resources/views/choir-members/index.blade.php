@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('header', 'Choir Ministry')
+@section('header')
+    <span data-i18n="choir_ministry_title">Choir Ministry</span>
+@endsection
 
 @section('content')
 <style>
@@ -575,11 +577,11 @@
     <!-- Hero Section - Green -->
     <div class="choir-hero">
         <div class="hero-left">
-            <h1><i class="fas fa-music"></i> Choir Ministry</h1>
-            <p>Manage and organize your church choir members</p>
+            <h1><i class="fas fa-music"></i> <span data-i18n="choir_ministry_title">Choir Ministry</span></h1>
+            <p><span data-i18n="choir_ministry_desc">Manage and organize your church choir members</span></p>
         </div>
         <a href="{{ route('choir-members.create') }}" class="btn-hero">
-            <i class="fas fa-user-plus"></i> Add Choir Member
+            <i class="fas fa-user-plus"></i> <span data-i18n="add_choir_member">Add Choir Member</span>
         </a>
     </div>
 
@@ -588,25 +590,25 @@
         <div class="stat-card">
             <div class="stat-icon purple"><i class="fas fa-users"></i></div>
             <div class="stat-info">
-                <h4>Total Members</h4>
+                <h4 data-i18n="total_members_label">Total Members</h4>
                 <div class="stat-value">{{ $totalChoirMembers ?? $choir_members->total() ?? $choir_members->count() ?? 0 }}</div>
-                <div class="stat-trend">Lifting voices in praise</div>
+                <div class="stat-trend" data-i18n="lifting_voices">Lifting voices in praise</div>
             </div>
         </div>
         <div class="stat-card">
             <div class="stat-icon green"><i class="fas fa-user-check"></i></div>
             <div class="stat-info">
-                <h4>Active Members</h4>
+                <h4 data-i18n="active_members_label">Active Members</h4>
                 <div class="stat-value">{{ $activeCount ?? $choir_members->count() ?? 0 }}</div>
-                <div class="stat-trend">Regular attendees</div>
+                <div class="stat-trend" data-i18n="regular_attendees">Regular attendees</div>
             </div>
         </div>
         <div class="stat-card">
             <div class="stat-icon blue"><i class="fas fa-church"></i></div>
             <div class="stat-info">
-                <h4>Voice Parts</h4>
+                <h4 data-i18n="voice_parts_label">Voice Parts</h4>
                 <div class="stat-value">{{ $voicePartsCount ?? 4 }}</div>
-                <div class="stat-trend">SATB arrangement</div>
+                <div class="stat-trend" data-i18n="satb_arrangement">SATB arrangement</div>
             </div>
         </div>
     </div>
@@ -614,17 +616,17 @@
     <!-- Voice Filter Bar -->
     <div class="voice-filter-bar">
         <div class="filter-label">
-            <i class="fas fa-filter"></i> Filter by Voice Part:
+            <i class="fas fa-filter"></i> <span data-i18n="filter_by_voice">Filter by Voice Part:</span>
         </div>
         <div class="voice-filters" id="voiceFilters">
-            <button class="voice-filter-btn active" data-voice="all">All Voices</button>
-            <button class="voice-filter-btn" data-voice="soprano">🎵 Soprano</button>
-            <button class="voice-filter-btn" data-voice="alto">🎵 Alto</button>
-            <button class="voice-filter-btn" data-voice="tenor">🎵 Tenor</button>
-            <button class="voice-filter-btn" data-voice="bass">🎵 Bass</button>
+            <button class="voice-filter-btn active" data-voice="all"><span data-i18n="all_voices">All Voices</span></button>
+            <button class="voice-filter-btn" data-voice="soprano">🎵 <span data-i18n="soprano">Soprano</span></button>
+            <button class="voice-filter-btn" data-voice="alto">🎵 <span data-i18n="alto">Alto</span></button>
+            <button class="voice-filter-btn" data-voice="tenor">🎵 <span data-i18n="tenor">Tenor</span></button>
+            <button class="voice-filter-btn" data-voice="bass">🎵 <span data-i18n="bass">Bass</span></button>
         </div>
         <div class="members-count">
-            <i class="fas fa-users me-1"></i> <span id="visibleCount">0</span> members
+            <i class="fas fa-users me-1"></i> <span id="visibleCount">0</span> <span data-i18n="members_count_label">members</span>
         </div>
     </div>
 
@@ -632,9 +634,9 @@
     <div class="table-container">
         <div class="card-header-custom">
             <h6>
-                <i class="fas fa-users"></i> Choir Members List
+                <i class="fas fa-users"></i> <span data-i18n="choir_members_list">Choir Members List</span>
                 <span style="font-weight: 400; font-size: 0.7rem; color: var(--text-muted); margin-left: 6px;">
-                    ({{ $choir_members->count() ?? 0 }} members)
+                    ({{ $choir_members->count() ?? 0 }} <span data-i18n="members">members</span>)
                 </span>
             </h6>
         </div>
@@ -642,12 +644,12 @@
             <table class="table" id="choirMembersTable">
                 <thead>
                     <tr>
-                        <th style="width: 50px;"><i class="fas fa-hashtag"></i> No.</th>
-                        <th><i class="fas fa-user"></i> Member</th>
-                        <th><i class="fas fa-microphone-alt"></i> Voice Part</th>
-                        <th><i class="fas fa-birthday-cake"></i> Birthday</th>
-                        <th><i class="fas fa-calendar-alt"></i> Age</th>
-                        <th style="width: 100px;"><i class="fas fa-cog"></i> Actions</th>
+                        <th style="width: 50px;"><i class="fas fa-hashtag"></i> <span data-i18n="no_label">No.</span></th>
+                        <th><i class="fas fa-user"></i> <span data-i18n="member_label">Member</span></th>
+                        <th><i class="fas fa-microphone-alt"></i> <span data-i18n="voice_part_label">Voice Part</span></th>
+                        <th><i class="fas fa-birthday-cake"></i> <span data-i18n="birthday_label">Birthday</span></th>
+                        <th><i class="fas fa-calendar-alt"></i> <span data-i18n="age_label">Age</span></th>
+                        <th style="width: 100px;"><i class="fas fa-cog"></i> <span data-i18n="actions_label">Actions</span></th>
                     </tr>
                 </thead>
                 <tbody id="choirMembersBody">
@@ -687,20 +689,20 @@
                         </td>
                         <td style="font-size: 0.75rem;">
                             @if($age)
-                                {{ $age }} years
+                                {{ $age }} <span data-i18n="years">years</span>
                             @else
                                 <span class="text-muted">—</span>
                             @endif
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <a href="{{ route('choir-members.edit', $member->id) }}" class="btn-icon-action edit" title="Edit Member">
+                                <a href="{{ route('choir-members.edit', $member->id) }}" class="btn-icon-action edit" title="{{ __('Edit Member') }}">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form action="{{ route('choir-members.destroy', $member->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Remove this choir member permanently?')">
+                                <form action="{{ route('choir-members.destroy', $member->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Remove this choir member permanently?') }}')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-icon-action delete" title="Remove Member">
+                                    <button type="submit" class="btn-icon-action delete" title="{{ __('Remove Member') }}">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>
@@ -712,10 +714,10 @@
                         <td colspan="6">
                             <div class="empty-state">
                                 <i class="fas fa-music"></i>
-                                <h5>No Choir Members Yet</h5>
-                                <p>Start building your choir ministry by adding members</p>
+                                <h5 data-i18n="no_choir_members">No Choir Members Yet</h5>
+                                <p data-i18n="no_choir_members_desc">Start building your choir ministry by adding members</p>
                                 <a href="{{ route('choir-members.create') }}" class="btn-add-in-table" style="padding: 0.4rem 1.5rem; font-size: 0.7rem; margin-top: 0.5rem;">
-                                    <i class="fas fa-user-plus me-2"></i> Add First Choir Member
+                                    <i class="fas fa-user-plus me-2"></i> <span data-i18n="add_first_choir_member">Add First Choir Member</span>
                                 </a>
                             </div>
                         </td>
@@ -728,14 +730,14 @@
         @if(isset($choir_members) && $choir_members->count() > 0 && method_exists($choir_members, 'hasPages') && $choir_members->hasPages())
         <div class="pagination-container">
             <div class="pagination-info">
-                Showing <strong>{{ $choir_members->firstItem() }}</strong> to <strong>{{ $choir_members->lastItem() }}</strong> of <strong>{{ $choir_members->total() }}</strong> members
+                <span data-i18n="showing">Showing</span> <strong>{{ $choir_members->firstItem() }}</strong> <span data-i18n="to">to</span> <strong>{{ $choir_members->lastItem() }}</strong> <span data-i18n="of">of</span> <strong>{{ $choir_members->total() }}</strong> <span data-i18n="members">members</span>
             </div>
             {{ $choir_members->links() }}
         </div>
         @elseif(isset($choir_members) && $choir_members->count() > 0)
         <div class="pagination-container">
             <div class="pagination-info">
-                Showing <strong>{{ $choir_members->count() }}</strong> choir members
+                <span data-i18n="showing">Showing</span> <strong>{{ $choir_members->count() }}</strong> <span data-i18n="choir_members_count">choir members</span>
             </div>
         </div>
         @endif
@@ -750,6 +752,7 @@
         function updateVisibleCount() {
             const visibleRows = document.querySelectorAll('#choirMembersBody tr:not([style*="display: none"])').length;
             if (visibleCountSpan) {
+                const label = window.t ? window.t('members') : 'members';
                 visibleCountSpan.textContent = visibleRows;
             }
         }

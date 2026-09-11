@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('header', 'Messages')
+@section('header')
+    <span data-i18n="messages_title">Messages</span>
+@endsection
 
 @section('content')
 
@@ -1380,19 +1382,19 @@
 <div class="msg-hero">
     <div class="hero-content">
         <div class="hero-left">
-            <h1><i class="fas fa-comment-dots"></i> Messages</h1>
-            <p>Communicate with other churches in your network</p>
+            <h1><i class="fas fa-comment-dots"></i> <span data-i18n="messages_title">Messages</span></h1>
+            <p><span data-i18n="messages_desc">Communicate with other churches in your network</span></p>
             <div class="hero-badge">
                 <i class="fas fa-circle" style="color: #34D399; font-size: 0.5rem;"></i>
-                <span id="heroUnreadBadge">{{ $unreadCount ?? 0 }} unread messages</span>
+                <span id="heroUnreadBadge"><span data-i18n="unread_messages">{{ $unreadCount ?? 0 }} unread messages</span></span>
             </div>
         </div>
         <div class="hero-actions">
             <button class="btn-hero-primary" onclick="toggleCompose()">
-                <i class="fas fa-pen"></i> New Message
+                <i class="fas fa-pen"></i> <span data-i18n="new_message">New Message</span>
             </button>
             <button class="btn-hero-secondary" onclick="refreshMessages()">
-                <i class="fas fa-sync-alt"></i> Refresh
+                <i class="fas fa-sync-alt"></i> <span data-i18n="refresh_label">Refresh</span>
             </button>
         </div>
     </div>
@@ -1409,7 +1411,7 @@
         <div class="msg-sidebar-header">
             <div class="header-top">
                 <h5>
-                    <i class="fas fa-comment-dots"></i> Conversations
+                    <i class="fas fa-comment-dots"></i> <span data-i18n="conversations">Conversations</span>
                     <span class="badge-total" id="totalUnreadBadge">{{ $unreadCount ?? 0 }}</span>
                 </h5>
                 <div class="header-actions">
@@ -1423,7 +1425,7 @@
         <div class="msg-sidebar-search">
             <div class="search-wrapper">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" id="searchChurches" placeholder="Search churches..." onkeyup="filterChurches(this.value)">
+                <input type="text" id="searchChurches" placeholder="{{ __('Search churches...') }}" onkeyup="filterChurches(this.value)">
             </div>
         </div>
 
@@ -1436,7 +1438,7 @@
                     </div>
                     <div class="info">
                         <div class="name">{{ $church->name ?? 'Unknown Church' }}</div>
-                        <div class="last-msg" id="lastMsg-{{ $church->id }}">No messages yet</div>
+                        <div class="last-msg" id="lastMsg-{{ $church->id }}"><span data-i18n="no_messages_yet">No messages yet</span></div>
                     </div>
                     <div class="meta">
                         <div class="time" id="lastTime-{{ $church->id }}"></div>
@@ -1451,7 +1453,7 @@
             @empty
                 <div class="msg-empty-state">
                     <i class="fas fa-church"></i>
-                    <p>No other churches found</p>
+                    <p data-i18n="no_churches_found">No other churches found</p>
                 </div>
             @endforelse
         </div>
@@ -1467,9 +1469,9 @@
                 <i class="fas fa-church"></i>
             </div>
             <div class="chat-info">
-                <div class="chat-name" id="chatName">Select a Church</div>
+                <div class="chat-name" id="chatName"><span data-i18n="select_church">Select a Church</span></div>
                 <div class="chat-status" id="chatStatus">
-                    <span class="status-dot"></span> Choose a church to start messaging
+                    <span class="status-dot"></span> <span data-i18n="choose_church_message">Choose a church to start messaging</span>
                 </div>
             </div>
             <div class="chat-actions">
@@ -1483,8 +1485,8 @@
         <div class="msg-messages" id="messageList">
             <div class="msg-empty-state-main" id="emptyState">
                 <i class="fas fa-inbox"></i>
-                <h4>No messages selected</h4>
-                <p>Click on a church from the sidebar to view the conversation</p>
+                <h4 data-i18n="no_messages_selected">No messages selected</h4>
+                <p data-i18n="click_church_view">Click on a church from the sidebar to view the conversation</p>
             </div>
         </div>
 
@@ -1495,9 +1497,9 @@
                 <div class="compose-wrapper">
                     <div class="compose-inputs">
                         <div class="subject-input" id="subjectContainer">
-                            <input type="text" id="subjectInput" placeholder="Subject (optional)" />
+                            <input type="text" id="subjectInput" placeholder="{{ __('Subject (optional)') }}" />
                         </div>
-                        <input type="text" id="messageInput" placeholder="Type a message..." required />
+                        <input type="text" id="messageInput" placeholder="{{ __('Type a message...') }}" required />
                     </div>
                     <div class="compose-actions">
                         <button type="button" onclick="toggleSubject()" title="Add subject">
@@ -1519,8 +1521,8 @@
 <div class="msg-toast" id="msgToast">
     <div class="toast-icon" id="toastIcon">📨</div>
     <div class="toast-content">
-        <div class="toast-title" id="toastTitle">New Message</div>
-        <div class="toast-message" id="toastMessage">You have a new message</div>
+        <div class="toast-title" id="toastTitle" data-i18n="new_message_title">New Message</div>
+        <div class="toast-message" id="toastMessage" data-i18n="new_message_body">You have a new message</div>
     </div>
     <button class="toast-close" onclick="closeToast()">
         <i class="fas fa-times"></i>
@@ -1588,7 +1590,9 @@
     function toggleCompose() {
         const receiverId = document.getElementById('receiverId').value;
         if (!receiverId) {
-            showToast('Please select a church first', 'Click on a church from the sidebar', '💬');
+            const msg = window.t ? window.t('select_church_first') : 'Please select a church first';
+            const icon = '💬';
+            showToast(msg, window.t ? window.t('click_church_sidebar') : 'Click on a church from the sidebar', icon);
             return;
         }
         
@@ -1627,8 +1631,9 @@
             document.getElementById('chatAvatar').style.background = avatarBg || 'var(--gradient-avatar)';
             document.getElementById('chatAvatar').textContent = avatarText || '?';
             document.getElementById('chatName').textContent = currentChurchName;
+            const loadingMsg = window.t ? window.t('loading_messages') : 'Loading messages...';
             document.getElementById('chatStatus').innerHTML = `
-                <span class="status-dot"></span> Loading messages...
+                <span class="status-dot"></span> ${loadingMsg}
             `;
             document.getElementById('chatStatus').className = 'chat-status';
             
@@ -1640,10 +1645,11 @@
         document.getElementById('receiverId').value = churchId;
 
         const list = document.getElementById('messageList');
+        const loadingMsg = window.t ? window.t('loading_messages') : 'Loading messages...';
         list.innerHTML = `
             <div class="msg-empty-state-main">
                 <i class="fas fa-spinner fa-spin" style="font-size:32px;opacity:0.5;color:#4F46E5;"></i>
-                <h4>Loading messages...</h4>
+                <h4>${loadingMsg}</h4>
             </div>
         `;
 
@@ -1653,8 +1659,9 @@
                 if (data.success) {
                     renderMessages(data.messages);
                     const count = data.messages ? data.messages.length : 0;
+                    const countMsg = count > 0 ? `${count} messages` : (window.t ? window.t('no_messages_yet') : 'No messages yet');
                     document.getElementById('chatStatus').innerHTML = `
-                        <span class="status-dot"></span> ${count > 0 ? `${count} messages` : 'No messages yet'}
+                        <span class="status-dot"></span> ${countMsg}
                     `;
                     document.getElementById('chatStatus').className = 'chat-status online';
 
@@ -1684,17 +1691,20 @@
             })
             .catch(error => {
                 console.error('Error loading messages:', error);
+                const failedMsg = window.t ? window.t('failed_load_messages') : 'Failed to load messages';
+                const retryMsg = window.t ? window.t('retry') : 'Retry';
                 document.getElementById('messageList').innerHTML = `
                     <div class="msg-empty-state-main">
                         <i class="fas fa-exclamation-triangle" style="font-size:32px;color:#ef4444;opacity:0.5;"></i>
-                        <h4>Failed to load messages</h4>
+                        <h4>${failedMsg}</h4>
                         <p>${error.message}</p>
                         <button class="btn-compose-empty" onclick="loadConversation(${churchId})">
-                            <i class="fas fa-sync-alt"></i> Retry
+                            <i class="fas fa-sync-alt"></i> ${retryMsg}
                         </button>
                     </div>
                 `;
-                document.getElementById('chatStatus').innerHTML = `<span class="status-dot"></span> Error loading messages`;
+                const errorMsg = window.t ? window.t('error_loading_messages') : 'Error loading messages';
+                document.getElementById('chatStatus').innerHTML = `<span class="status-dot"></span> ${errorMsg}`;
                 document.getElementById('chatStatus').className = 'chat-status';
             });
     }
@@ -1707,11 +1717,13 @@
         const churchId = '{{ Auth::user()->church_id }}';
 
         if (!messages || messages.length === 0) {
+            const noMsg = window.t ? window.t('no_messages_yet') : 'No messages yet';
+            const startConvo = window.t ? window.t('start_conversation') : `Start a conversation with ${currentChurchName}`;
             list.innerHTML = `
                 <div class="msg-empty-state-main">
                     <i class="fas fa-comment-dots"></i>
-                    <h4>No messages yet</h4>
-                    <p>Start a conversation with ${currentChurchName}</p>
+                    <h4>${noMsg}</h4>
+                    <p>${startConvo}</p>
                 </div>
             `;
             return;
@@ -1858,7 +1870,8 @@
         const body = document.getElementById('messageInput').value.trim();
 
         if (!body) {
-            showToast('Please type a message', 'Your message cannot be empty', '⚠️');
+            const msg = window.t ? window.t('type_message') : 'Please type a message';
+            showToast(msg, window.t ? window.t('message_empty') : 'Your message cannot be empty', '⚠️');
             document.getElementById('messageInput').style.animation = 'shake 0.5s ease';
             setTimeout(() => {
                 document.getElementById('messageInput').style.animation = '';
@@ -1867,7 +1880,8 @@
         }
 
         if (!receiverId) {
-            showToast('Please select a church', 'Click on a church from the sidebar', '💬');
+            const msg = window.t ? window.t('select_church_first') : 'Please select a church';
+            showToast(msg, window.t ? window.t('click_church_sidebar') : 'Click on a church from the sidebar', '💬');
             return;
         }
 
@@ -1910,9 +1924,11 @@
             sendBtn.innerHTML = originalHtml;
 
             if (data.success) {
-                showToast('Message sent! ✅', 'Your message was delivered successfully', '✅');
+                const sentMsg = window.t ? window.t('message_sent') : 'Message sent! ✅';
+                showToast(sentMsg, window.t ? window.t('message_delivered') : 'Your message was delivered successfully', '✅');
             } else {
-                showToast('Failed to send ❌', data.message || 'Something went wrong', '❌');
+                const failedMsg = window.t ? window.t('failed_to_send') : 'Failed to send ❌';
+                showToast(failedMsg, data.message || window.t ? window.t('something_wrong') : 'Something went wrong', '❌');
                 if (currentChurchId) {
                     loadConversation(currentChurchId);
                 }
@@ -1922,7 +1938,8 @@
             console.error('Error:', error);
             sendBtn.disabled = false;
             sendBtn.innerHTML = originalHtml;
-            showToast('Error sending message ❌', 'Please check your connection', '❌');
+            const errMsg = window.t ? window.t('error_sending') : 'Error sending message ❌';
+            showToast(errMsg, window.t ? window.t('check_connection') : 'Please check your connection', '❌');
             if (currentChurchId) {
                 loadConversation(currentChurchId);
             }
@@ -1987,7 +2004,8 @@
 
         const heroBadge = document.getElementById('heroUnreadBadge');
         if (heroBadge) {
-            heroBadge.textContent = total + ' unread messages';
+            const label = window.t ? window.t('unread_messages') : 'unread messages';
+            heroBadge.textContent = total + ' ' + label;
         }
     }
 
@@ -2003,7 +2021,8 @@
         
         if (currentChurchId) {
             loadConversation(currentChurchId);
-            showToast('Refreshing... 🔄', 'Getting latest messages', '🔄');
+            const refreshing = window.t ? window.t('refreshing') : 'Refreshing... 🔄';
+            showToast(refreshing, window.t ? window.t('getting_latest') : 'Getting latest messages', '🔄');
         } else {
             location.reload();
         }
@@ -2028,8 +2047,9 @@
             .listen('message.new', (e) => {
                 console.log('📨 New message received:', e);
 
+                const fromLabel = window.t ? window.t('from') : 'From';
                 showToast(
-                    `📨 ${e.sender_name}`,
+                    `📨 ${fromLabel} ${e.sender_name}`,
                     e.subject ? `${e.subject}: ${e.body.substring(0, 50)}${e.body.length > 50 ? '...' : ''}` : e.body.substring(0, 60) + (e.body.length > 60 ? '...' : ''),
                     '📨'
                 );
@@ -2096,7 +2116,8 @@
         if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
             e.preventDefault();
             toggleCompose();
-            showToast('Compose New Message', 'Ctrl+N pressed', '✏️');
+            const composeMsg = window.t ? window.t('compose_new') : 'Compose New Message';
+            showToast(composeMsg, 'Ctrl+N pressed', '✏️');
         }
 
         if (e.key === 'Enter' && !e.shiftKey && document.activeElement?.id === 'messageInput') {
@@ -2126,7 +2147,8 @@
 
         for (const item of items) {
             const lastMsg = item.querySelector('.last-msg');
-            if (lastMsg && lastMsg.textContent !== 'No messages yet') {
+            const noMsgText = window.t ? window.t('no_messages_yet') : 'No messages yet';
+            if (lastMsg && lastMsg.textContent !== noMsgText) {
                 const churchId = item.dataset.churchId;
                 if (churchId) {
                     loadConversation(parseInt(churchId));
@@ -2148,7 +2170,9 @@
         updateHeroBadge();
 
         setTimeout(() => {
-            showToast('💬 Messenger Ready', 'Click a church to start chatting', '💬');
+            const readyMsg = window.t ? window.t('messenger_ready') : '💬 Messenger Ready';
+            const clickMsg = window.t ? window.t('click_chat') : 'Click a church to start chatting';
+            showToast(readyMsg, clickMsg, '💬');
         }, 1000);
 
         console.log('💬 Messenger loaded successfully!');

@@ -69,16 +69,29 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 /*
 |--------------------------------------------------------------------------
-| AUTHENTICATED USER ROUTES
+| AUTHENTICATED USER ROUTES (Profile & Account)
 |--------------------------------------------------------------------------
 */
 
 Route::middleware('auth')->group(function () {
+    // Profile page
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+
+    // Profile update (AJAX — used by the profile page)
     Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::patch('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update.patch');
+
+    // Password update (from security modal)
     Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
+
+    // Account deletion
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
+    // Profile picture (both aliases for compatibility)
+    Route::post('/profile/picture/upload', [ProfilePictureController::class, 'upload'])->name('profile.picture.upload');
+    Route::post('/profile/picture', [ProfilePictureController::class, 'upload'])->name('profile.picture.update');  // alias
+    Route::delete('/profile/picture/remove', [ProfilePictureController::class, 'remove'])->name('profile.picture.remove');
+
     Route::post('/logout', function (Request $request) {
         Auth::logout();
         $request->session()->invalidate();
@@ -94,7 +107,7 @@ Route::middleware('auth')->group(function () {
 */
 
 Route::middleware(['auth'])->group(function () {
-    
+
     // ============================================
     // SETTINGS - Language & Security
     // ============================================
@@ -105,40 +118,40 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/password', [SettingsController::class, 'updatePassword'])->name('password');
         Route::post('/logout-all', [SettingsController::class, 'logoutAllSessions'])->name('logout-all');
     });
-    
+
     // ============================================
     // INVENTORY / FINANCE ROUTES - COMPLETE CRUD
     // ============================================
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
     Route::post('/inventory/store', [InventoryController::class, 'store'])->name('inventory.store');
-    
+
     Route::get('/inventory/{id}/edit', [InventoryController::class, 'edit'])->name('inventory.edit');
     Route::put('/inventory/{id}', [InventoryController::class, 'update'])->name('inventory.update');
     Route::delete('/inventory/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
     Route::delete('/inventory/destroy/{id}', [InventoryController::class, 'destroy'])->name('inventory.destroy.alt');
-    
+
     Route::get('/inventory/transaction/{id}', [InventoryController::class, 'getTransaction'])->name('inventory.transaction.get');
     Route::put('/inventory/transaction/{id}', [InventoryController::class, 'updateTransaction'])->name('inventory.transaction.update');
     Route::delete('/inventory/transaction/{id}', [InventoryController::class, 'destroyTransaction'])->name('inventory.transaction.destroy');
-    
+
     Route::get('/inventory/balance', [InventoryController::class, 'getBalance'])->name('inventory.balance');
     Route::get('/inventory/transactions', [InventoryController::class, 'getTransactions'])->name('inventory.transactions');
     Route::get('/inventory/export-data', [InventoryController::class, 'exportData'])->name('inventory.export-data');
-    
+
     // ============================================
-    // MEMBERS - Full Resource with additional routes
+    // MEMBERS
     // ============================================
     Route::resource('members', MemberController::class);
     Route::put('/members/{member}/deceased', [MemberController::class, 'markAsDeceased'])->name('members.deceased');
     Route::put('/members/{member}/restore', [MemberController::class, 'restoreFromDeceased'])->name('members.restore');
     Route::post('/members/{member}/assign-group', [MemberController::class, 'assignToGroup'])->name('members.assign-group');
     Route::delete('/members/{member}/remove-group', [MemberController::class, 'removeFromGroup'])->name('members.remove-group');
-    
+
     // ============================================
     // CHOIR MEMBERS
     // ============================================
     Route::resource('choir-members', ChoirMemberController::class);
-    
+
     // ============================================
     // CHOIR SCHEDULES & GROUPS
     // ============================================
@@ -159,7 +172,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/choir-schedules/add-member', [ChoirScheduleController::class, 'addMemberToSchedule'])->name('choir-schedules.add-member');
     Route::delete('/choir-schedules/remove-schedule-member', [ChoirScheduleController::class, 'removeMemberFromSchedule'])->name('choir-schedules.remove-schedule-member');
     Route::post('/choir-schedules/store-direct', [ChoirScheduleController::class, 'storeDirect'])->name('choir-schedules.store-direct');
-    
+
     // ============================================
     // SUNDAY ATTENDANCE
     // ============================================
@@ -169,30 +182,30 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sunday-attendance/get-attendance', [SundayAttendanceController::class, 'getAttendance'])->name('sunday-attendance.get-attendance');
     Route::get('/sunday-attendance/report', [SundayAttendanceController::class, 'report'])->name('sunday-attendance.report');
     Route::get('/sunday-attendance/records', [SundayAttendanceController::class, 'records'])->name('sunday-attendance.records');
-    
+
     // ============================================
     // CHURCH SETTINGS
     // ============================================
     Route::post('/settings/profile', [ChurchSettingController::class, 'updateProfile'])->name('settings.profile.update');
     Route::post('/settings/logo', [ChurchSettingController::class, 'updateLogo'])->name('settings.logo.update');
     Route::delete('/settings/logo', [ChurchSettingController::class, 'removeLogo'])->name('settings.logo.remove');
-    
+
     // ============================================
     // CHOIR PRACTICES
     // ============================================
     Route::get('/choir-practices/get', [ChoirPracticeController::class, 'getPractices'])->name('choir.practices.get');
     Route::post('/choir-practices/store', [ChoirPracticeController::class, 'store'])->name('choir.practices.store');
     Route::delete('/choir-practices/{id}', [ChoirPracticeController::class, 'destroy'])->name('choir.practices.delete');
-    
+
     // ============================================
     // WEEKLY SCHEDULES
     // ============================================
     Route::get('/weekly-schedules/get', [WeeklyScheduleController::class, 'getSchedules'])->name('weekly.schedules.get');
     Route::post('/weekly-schedules/store', [WeeklyScheduleController::class, 'store'])->name('weekly.schedules.store');
     Route::delete('/weekly-schedules/{id}', [WeeklyScheduleController::class, 'destroy'])->name('weekly.schedules.delete');
-    
+
     // ============================================
-    // FINANCE - Full CRUD with additional routes
+    // FINANCE
     // ============================================
     Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
     Route::get('/finance/create', [FinanceController::class, 'create'])->name('finance.create');
@@ -201,21 +214,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/finance/{id}/edit', [FinanceController::class, 'edit'])->name('finance.edit');
     Route::put('/finance/{id}', [FinanceController::class, 'update'])->name('finance.update');
     Route::delete('/finance/{id}', [FinanceController::class, 'destroy'])->name('finance.destroy');
-    
+
     Route::get('/reports/analytics', [FinanceController::class, 'reportsAnalytics'])->name('reports.analytics');
-    
+
     // ============================================
     // NOTIFICATIONS
     // ============================================
     Route::get('/notifications', [DashboardController::class, 'getNotifications'])->name('notifications.get');
     Route::post('/notifications/mark-read', [DashboardController::class, 'markNotificationsAsRead'])->name('notifications.mark-read');
-    
-    // ============================================
-    // PROFILE PICTURE
-    // ============================================
-    Route::post('/profile/picture/upload', [ProfilePictureController::class, 'upload'])->name('profile.picture.upload');
-    Route::delete('/profile/picture/remove', [ProfilePictureController::class, 'remove'])->name('profile.picture.remove');
-    
+
     // ============================================
     // MESSAGING SYSTEM
     // ============================================
@@ -252,8 +259,14 @@ Route::middleware('guest')->group(function () {
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             $request->session()->regenerate();
-            
+
             $user = Auth::user();
+
+            // ✅ Track last login
+            $user->last_login_at = now();
+            $user->last_activity = now();
+            $user->save();
+
             if ($user->church_id) {
                 session(['current_church_id' => $user->church_id]);
                 $church = Church::find($user->church_id);
@@ -261,7 +274,7 @@ Route::middleware('guest')->group(function () {
                     session(['current_church_name' => $church->name]);
                 }
             }
-            
+
             return redirect()->intended('/dashboard');
         }
 
@@ -314,7 +327,7 @@ Route::middleware('guest')->group(function () {
         ]);
 
         Auth::login($user);
-        
+
         session([
             'current_church_id' => $church->id,
             'current_church_name' => $request->church_name,
