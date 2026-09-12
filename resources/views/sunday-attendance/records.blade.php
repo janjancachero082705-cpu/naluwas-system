@@ -1,19 +1,12 @@
 @extends('layouts.app')
 
 @section('header')
-    <span data-i18n="attendance_records">Attendance Records</span>
+    <span data-i18n="attendance_records">{{ __("Attendance Records") }}</span>
 @endsection
 
 @section('content')
 
-{{-- ============================================= --}}
-{{-- STYLES SECTION --}}
-{{-- ============================================= --}}
 <style>
-    /* ============================================
-       MODERN DESIGN - MATCHING FINANCIAL MANAGEMENT
-    ============================================ */
-    
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
     
     :root {
@@ -31,7 +24,6 @@
         --shadow-card-hover: 0 24px 80px rgba(0,0,0,0.12);
     }
     
-    /* Hero Section - Gradient */
     .records-hero {
         background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
         border-radius: 20px;
@@ -177,7 +169,6 @@
         text-decoration: none;
     }
     
-    /* Stats Grid - Premium */
     .stats-grid-premium {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -263,7 +254,6 @@
     .stat-card-premium .stat-change.positive { color: #10B981; }
     .stat-card-premium .stat-change.negative { color: #EF4444; }
     
-    /* Gradient variants */
     .stat-card-premium.blue::before { background: var(--gradient-blue); }
     .stat-card-premium.green::before { background: var(--gradient-green); }
     .stat-card-premium.red::before { background: var(--gradient-red); }
@@ -272,7 +262,6 @@
     .stat-card-premium.green .stat-icon-wrap { background: var(--gradient-green); box-shadow: var(--shadow-glow-green); }
     .stat-card-premium.red .stat-icon-wrap { background: var(--gradient-red); box-shadow: var(--shadow-glow-red); }
     
-    /* Date Selector - Premium */
     .date-selector-premium {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
@@ -319,9 +308,7 @@
         font-family: 'Inter', sans-serif;
     }
     
-    .selector-title i {
-        color: #4F46E5;
-    }
+    .selector-title i { color: #4F46E5; }
     
     .selector-title small {
         font-weight: 400;
@@ -409,11 +396,8 @@
         font-family: 'Inter', sans-serif;
     }
     
-    .total-badge-premium i {
-        color: #10B981;
-    }
+    .total-badge-premium i { color: #10B981; }
     
-    /* Table Container - Premium */
     .table-container-premium {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
@@ -470,15 +454,9 @@
         color: var(--text-muted);
     }
     
-    .table-footer-premium strong.text-success {
-        color: #10B981;
-    }
+    .table-footer-premium strong.text-success { color: #10B981; }
+    .table-footer-premium strong.text-danger { color: #EF4444; }
     
-    .table-footer-premium strong.text-danger {
-        color: #EF4444;
-    }
-    
-    /* Table - Premium */
     .table-premium {
         width: 100%;
         border-collapse: collapse;
@@ -507,23 +485,11 @@
         font-size: 0.8rem;
     }
     
-    .table-premium tbody tr {
-        transition: all 0.15s ease;
-    }
+    .table-premium tbody tr { transition: all 0.15s ease; }
+    .table-premium tbody tr:hover { background: var(--bg-tertiary) !important; }
+    .table-premium tbody tr:hover td { background: var(--bg-tertiary) !important; }
+    .table-premium tbody tr:last-child td { border-bottom: none; }
     
-    .table-premium tbody tr:hover {
-        background: var(--bg-tertiary) !important;
-    }
-    
-    .table-premium tbody tr:hover td {
-        background: var(--bg-tertiary) !important;
-    }
-    
-    .table-premium tbody tr:last-child td {
-        border-bottom: none;
-    }
-    
-    /* Member Info */
     .member-info-premium {
         display: flex;
         align-items: center;
@@ -547,7 +513,7 @@
     
     .member-avatar-premium.choir {
         background: var(--gradient-orange);
-        box-shadow: var(--shadow-glow-orange);
+        box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
     }
     
     .member-name-premium {
@@ -566,12 +532,8 @@
         gap: 4px;
     }
     
-    .member-role-premium i {
-        color: #F59E0B;
-        font-size: 0.55rem;
-    }
+    .member-role-premium i { color: #F59E0B; font-size: 0.55rem; }
     
-    /* Status Badge - Premium */
     .status-badge-premium {
         display: inline-flex;
         align-items: center;
@@ -589,9 +551,7 @@
         border: 1px solid rgba(16, 185, 129, 0.15);
     }
     
-    .status-present-premium i {
-        color: #10B981;
-    }
+    .status-present-premium i { color: #10B981; }
     
     .status-absent-premium {
         background: rgba(239, 68, 68, 0.12);
@@ -599,11 +559,8 @@
         border: 1px solid rgba(239, 68, 68, 0.15);
     }
     
-    .status-absent-premium i {
-        color: #EF4444;
-    }
+    .status-absent-premium i { color: #EF4444; }
     
-    /* Empty State */
     .empty-state-premium {
         text-align: center;
         padding: 3rem 1.5rem;
@@ -617,12 +574,8 @@
         color: #10B981;
     }
     
-    .empty-state-premium p {
-        font-size: 0.85rem;
-        margin: 0;
-    }
+    .empty-state-premium p { font-size: 0.85rem; margin: 0; }
     
-    /* Custom Alert */
     .custom-alert-overlay {
         display: none;
         position: fixed;
@@ -638,9 +591,7 @@
         animation: fadeIn 0.25s ease;
     }
     
-    .custom-alert-overlay.active {
-        display: flex;
-    }
+    .custom-alert-overlay.active { display: flex; }
     
     .custom-alert {
         background: var(--card-bg);
@@ -665,10 +616,7 @@
         margin: 0 auto 0.8rem;
     }
     
-    .custom-alert-icon i {
-        font-size: 2rem;
-        color: #EF4444;
-    }
+    .custom-alert-icon i { font-size: 2rem; color: #EF4444; }
     
     .custom-alert h3 {
         font-size: 1.1rem;
@@ -697,10 +645,7 @@
         border: 1px solid var(--border-color);
     }
     
-    .custom-alert .alert-date i {
-        color: #F59E0B;
-        margin-right: 6px;
-    }
+    .custom-alert .alert-date i { color: #F59E0B; margin-right: 6px; }
     
     .btn-alert-close {
         padding: 0.6rem 2rem;
@@ -721,144 +666,51 @@
         box-shadow: 0 12px 40px rgba(79, 70, 229, 0.4);
     }
     
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px) scale(0.96);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
+        from { opacity: 0; transform: translateY(20px) scale(0.96); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
     }
     
-    /* Responsive */
     @media (max-width: 992px) {
-        .records-hero .hero-content {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .records-hero .hero-actions {
-            width: 100%;
-        }
+        .records-hero .hero-content { flex-direction: column; align-items: flex-start; }
+        .records-hero .hero-actions { width: 100%; }
     }
     
     @media (max-width: 768px) {
-        .records-hero {
-            padding: 1.5rem;
-            border-radius: 16px;
-        }
-        
-        .records-hero h1 {
-            font-size: 1.3rem;
-        }
-        
-        .stats-grid-premium {
-            grid-template-columns: 1fr;
-            gap: 0.8rem;
-        }
-        
-        .stat-card-premium {
-            padding: 1rem;
-        }
-        
-        .stat-card-premium .stat-value {
-            font-size: 1.3rem;
-        }
-        
-        .stat-card-premium .stat-icon-wrap {
-            width: 36px;
-            height: 36px;
-            font-size: 0.9rem;
-        }
-        
-        .date-selector-premium {
-            padding: 1rem 1.2rem;
-        }
-        
-        .selector-group {
-            flex-direction: column;
-            align-items: stretch !important;
-        }
-        
-        .selector-item input {
-            width: 100%;
-        }
-        
-        .quick-actions {
-            width: 100%;
-            flex-direction: column;
-        }
-        
-        .btn-quick-premium {
-            width: 100%;
-            justify-content: center;
-        }
-        
-        .btn-hero-primary,
-        .btn-hero-secondary {
-            width: 100%;
-            justify-content: center;
-        }
-        
-        .table-header-premium {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .table-premium thead th,
-        .table-premium tbody td {
-            padding: 0.4rem 0.6rem;
-            font-size: 0.65rem;
-        }
-        
-        .member-avatar-premium {
-            width: 28px;
-            height: 28px;
-            font-size: 0.6rem;
-        }
-        
-        .member-name-premium {
-            font-size: 0.75rem;
-        }
-        
-        .status-badge-premium {
-            font-size: 0.55rem;
-            padding: 2px 8px;
-        }
-        
-        .total-badge-premium {
-            font-size: 0.65rem;
-            padding: 4px 12px;
-        }
+        .records-hero { padding: 1.5rem; border-radius: 16px; }
+        .records-hero h1 { font-size: 1.3rem; }
+        .stats-grid-premium { grid-template-columns: 1fr; gap: 0.8rem; }
+        .stat-card-premium { padding: 1rem; }
+        .stat-card-premium .stat-value { font-size: 1.3rem; }
+        .stat-card-premium .stat-icon-wrap { width: 36px; height: 36px; font-size: 0.9rem; }
+        .date-selector-premium { padding: 1rem 1.2rem; }
+        .selector-group { flex-direction: column; align-items: stretch !important; }
+        .selector-item input { width: 100%; }
+        .quick-actions { width: 100%; flex-direction: column; }
+        .btn-quick-premium { width: 100%; justify-content: center; }
+        .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; }
+        .table-header-premium { flex-direction: column; align-items: flex-start; }
+        .table-premium thead th, .table-premium tbody td { padding: 0.4rem 0.6rem; font-size: 0.65rem; }
+        .member-avatar-premium { width: 28px; height: 28px; font-size: 0.6rem; }
+        .member-name-premium { font-size: 0.75rem; }
+        .status-badge-premium { font-size: 0.55rem; padding: 2px 8px; }
+        .total-badge-premium { font-size: 0.65rem; padding: 4px 12px; }
     }
     
     @media (max-width: 480px) {
-        .records-hero .hero-actions {
-            flex-direction: column;
-        }
+        .records-hero .hero-actions { flex-direction: column; }
     }
 </style>
 
-{{-- ============================================= --}}
-{{-- MAIN CONTENT --}}
-{{-- ============================================= --}}
 <div class="container-fluid px-0">
 
-    {{-- ============================================ --}}
-    {{-- HERO SECTION - GRADIENT --}}
-    {{-- ============================================ --}}
+    {{-- HERO SECTION --}}
     <div class="records-hero">
         <div class="hero-content">
             <div class="hero-left">
-                <h1><i class="fas fa-calendar-check"></i> <span data-i18n="attendance_records">Attendance Records</span></h1>
-                <p><span data-i18n="attendance_records_desc">View and analyze church attendance data</span></p>
+                <h1><i class="fas fa-calendar-check"></i> <span data-i18n="attendance_records">{{ __("Attendance Records") }}</span></h1>
+                <p><span data-i18n="attendance_records_desc">{{ __("View and analyze church attendance data") }}</span></p>
                 <div class="hero-badge">
                     <i class="fas fa-circle" style="color: #34D399; font-size: 0.5rem;"></i>
                     {{ \Carbon\Carbon::parse($selectedDate ?? date('Y-m-d'))->format('F d, Y') }}
@@ -866,7 +718,7 @@
             </div>
             <div class="hero-actions">
                 <a href="{{ route('sunday-attendance.index', ['date' => $selectedDate ?? date('Y-m-d')]) }}" class="btn-hero-primary">
-                    <i class="fas fa-pen-alt"></i> <span data-i18n="input_attendance">Input Attendance</span>
+                    <i class="fas fa-pen-alt"></i> <span data-i18n="input_attendance">{{ __("Input Attendance") }}</span>
                 </a>
                 <span class="btn-hero-secondary">
                     <i class="fas fa-calendar-alt"></i>
@@ -876,47 +728,43 @@
         </div>
     </div>
 
-    {{-- ============================================ --}}
-    {{-- STATS CARDS - PREMIUM --}}
-    {{-- ============================================ --}}
+    {{-- STATS CARDS --}}
     <div class="stats-grid-premium">
         <div class="stat-card-premium blue">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="total_members_label">Total Members</span>
+                <span class="stat-label"><span data-i18n="total_members_label">{{ __("Total Members") }}</span></span>
                 <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
             </div>
             <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-users"></i> <span data-i18n="registered">Registered</span></div>
+            <div class="stat-change positive"><i class="fas fa-users"></i> <span data-i18n="registered">{{ __("Registered") }}</span></div>
         </div>
         
         <div class="stat-card-premium green">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="present_today">Present Today</span>
+                <span class="stat-label"><span data-i18n="present_today">{{ __("Present Today") }}</span></span>
                 <div class="stat-icon-wrap"><i class="fas fa-check-circle"></i></div>
             </div>
             <div class="stat-value" style="color: #10B981;">{{ number_format($presentCount ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="attended">Attended</span></div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="attended">{{ __("Attended") }}</span></div>
         </div>
         
         <div class="stat-card-premium red">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="absent_today">Absent Today</span>
+                <span class="stat-label"><span data-i18n="absent_today">{{ __("Absent Today") }}</span></span>
                 <div class="stat-icon-wrap"><i class="fas fa-times-circle"></i></div>
             </div>
             <div class="stat-value" style="color: #EF4444;">{{ number_format($absentCount ?? 0) }}</div>
-            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="not_attended">Not attended</span></div>
+            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="not_attended">{{ __("Not attended") }}</span></div>
         </div>
     </div>
 
-    {{-- ============================================ --}}
-    {{-- DATE SELECTOR - PREMIUM --}}
-    {{-- ============================================ --}}
+    {{-- DATE SELECTOR --}}
     <div class="date-selector-premium">
         <div class="selector-header">
             <div class="selector-title">
                 <i class="fas fa-calendar-week"></i>
-                <span data-i18n="select_date">Select Date</span>
-                <small><i class="fas fa-info-circle"></i> <span data-i18n="only_sundays">Only Sundays are selectable</span></small>
+                <span data-i18n="select_date">{{ __("Select Date") }}</span>
+                <small><i class="fas fa-info-circle"></i> <span data-i18n="only_sundays">{{ __("Only Sundays are selectable") }}</span></small>
             </div>
             <div class="total-badge-premium">
                 <i class="fas fa-church"></i>
@@ -925,34 +773,32 @@
         </div>
         <div class="selector-group">
             <div class="selector-item">
-                <label><i class="fas fa-calendar-day me-1"></i> <span data-i18n="date_label">DATE</span></label>
+                <label><i class="fas fa-calendar-day me-1"></i> <span data-i18n="date_label">{{ __("DATE") }}</span></label>
                 <input type="date" id="dateSelector" value="{{ $selectedDate ?? date('Y-m-d') }}"
                        min="{{ \Carbon\Carbon::now()->subYears(5)->format('Y-m-d') }}"
                        max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
             </div>
             <div class="quick-actions">
                 <button class="btn-quick-premium" onclick="selectToday()">
-                    <i class="fas fa-calendar-day"></i> <span data-i18n="today">Today</span>
+                    <i class="fas fa-calendar-day"></i> <span data-i18n="today">{{ __("Today") }}</span>
                 </button>
                 <button class="btn-quick-premium" onclick="selectLastSunday()">
-                    <i class="fas fa-calendar-week"></i> <span data-i18n="last_sunday">Last Sunday</span>
+                    <i class="fas fa-calendar-week"></i> <span data-i18n="last_sunday">{{ __("Last Sunday") }}</span>
                 </button>
                 <button class="btn-quick-premium" onclick="selectPrevSunday()">
-                    <i class="fas fa-chevron-left"></i> <span data-i18n="previous">Previous</span>
+                    <i class="fas fa-chevron-left"></i> <span data-i18n="previous">{{ __("Previous") }}</span>
                 </button>
             </div>
         </div>
     </div>
 
-    {{-- ============================================ --}}
-    {{-- ATTENDANCE DETAILS TABLE - PREMIUM --}}
-    {{-- ============================================ --}}
+    {{-- ATTENDANCE DETAILS TABLE --}}
     <div class="table-container-premium">
         <div class="table-header-premium">
             <h6>
                 <i class="fas fa-users"></i>
-                <span data-i18n="attendance_details">Attendance Details</span>
-                <span class="badge-count-premium">{{ $presentCount ?? 0 }} <span data-i18n="present_short">Present</span> / {{ $totalMembers ?? 0 }} <span data-i18n="members_short">Members</span></span>
+                <span data-i18n="attendance_details">{{ __("Attendance Details") }}</span>
+                <span class="badge-count-premium">{{ $presentCount ?? 0 }} <span data-i18n="present_short">{{ __("Present") }}</span> / {{ $totalMembers ?? 0 }} <span data-i18n="members_short">{{ __("Members") }}</span></span>
             </h6>
             <span style="font-size: 0.65rem; color: var(--text-muted);">
                 <i class="fas fa-calendar-alt"></i>
@@ -964,10 +810,10 @@
                 <thead>
                     <tr>
                         <th style="width: 50px;">#</th>
-                        <th data-i18n="member_info">Member Information</th>
-                        <th data-i18n="age_label">Age</th>
-                        <th style="width: 140px;" data-i18n="status_label">Status</th>
-                        <th data-i18n="notes_label">Notes</th>
+                        <th data-i18n="member_info">{{ __("Member Information") }}</th>
+                        <th data-i18n="age_label">{{ __("Age") }}</th>
+                        <th style="width: 140px;" data-i18n="status_label">{{ __("Status") }}</th>
+                        <th data-i18n="notes_label">{{ __("Notes") }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -989,7 +835,7 @@
                                 <div>
                                     <div class="member-name-premium">{{ $member->first_name ?? '' }} {{ $member->last_name ?? '' }}</div>
                                     @if($isChoir)
-                                        <div class="member-role-premium"><i class="fas fa-music"></i> <span data-i18n="choir_member">Choir Member</span></div>
+                                        <div class="member-role-premium"><i class="fas fa-music"></i> <span data-i18n="choir_member">{{ __("Choir Member") }}</span></div>
                                     @endif
                                 </div>
                             </div>
@@ -998,11 +844,11 @@
                         <td>
                             @if($status == 'Present')
                                 <span class="status-badge-premium status-present-premium">
-                                    <i class="fas fa-check-circle"></i> <span data-i18n="present_option">Present</span>
+                                    <i class="fas fa-check-circle"></i> <span data-i18n="present_option">{{ __("Present") }}</span>
                                 </span>
                             @else
                                 <span class="status-badge-premium status-absent-premium">
-                                    <i class="fas fa-times-circle"></i> <span data-i18n="absent_option">Absent</span>
+                                    <i class="fas fa-times-circle"></i> <span data-i18n="absent_option">{{ __("Absent") }}</span>
                                 </span>
                             @endif
                         </td>
@@ -1013,7 +859,7 @@
                         <td colspan="5">
                             <div class="empty-state-premium">
                                 <i class="fas fa-users"></i>
-                                <p data-i18n="no_members_found">No members found. Please add members first.</p>
+                                <p data-i18n="no_members_found">{{ __("No members found. Please add members first.") }}</p>
                             </div>
                         </td>
                     </tr>
@@ -1025,42 +871,44 @@
         @if(($members ?? collect())->count() > 0)
         <div class="table-footer-premium">
             <i class="fas fa-users me-1"></i>
-            <span data-i18n="total_members_footer">Total members:</span> <strong>{{ $members->count() }}</strong> &nbsp;|&nbsp;
+            <span data-i18n="total_members_footer">{{ __("Total members:") }}</span> <strong>{{ $members->count() }}</strong> &nbsp;|&nbsp;
             <i class="fas fa-check-circle me-1" style="color: #10B981;"></i>
-            <span data-i18n="present_footer">Present:</span> <strong class="text-success">{{ $presentCount ?? 0 }}</strong> &nbsp;|&nbsp;
+            <span data-i18n="present_footer">{{ __("Present:") }}</span> <strong class="text-success">{{ $presentCount ?? 0 }}</strong> &nbsp;|&nbsp;
             <i class="fas fa-times-circle me-1" style="color: #EF4444;"></i>
-            <span data-i18n="absent_footer">Absent:</span> <strong class="text-danger">{{ $absentCount ?? 0 }}</strong>
+            <span data-i18n="absent_footer">{{ __("Absent:") }}</span> <strong class="text-danger">{{ $absentCount ?? 0 }}</strong>
         </div>
         @endif
     </div>
 </div>
 
-{{-- ============================================ --}}
 {{-- CUSTOM ALERT - ONLY SUNDAYS --}}
-{{-- ============================================ --}}
 <div class="custom-alert-overlay" id="customAlert">
     <div class="custom-alert">
         <div class="custom-alert-icon">
             <i class="fas fa-exclamation-circle"></i>
         </div>
-        <h3 data-i18n="only_sundays_allowed">Only Sundays Allowed</h3>
-        <p data-i18n="only_sundays_records_desc">Attendance records can only be viewed for Sundays. Please select a Sunday date.</p>
+        <h3 data-i18n="only_sundays_allowed">{{ __("Only Sundays Allowed") }}</h3>
+        <p data-i18n="only_sundays_records_desc">{{ __("Attendance records can only be viewed for Sundays. Please select a Sunday date.") }}</p>
         <div class="alert-date">
             <i class="fas fa-calendar-day"></i>
-            <span id="alertSelectedDate"><span data-i18n="select_date_label">Select a date</span></span>
+            <span id="alertSelectedDate"><span data-i18n="select_date_label">{{ __("Select a date") }}</span></span>
         </div>
         <button class="btn-alert-close" onclick="closeCustomAlert()">
-            <i class="fas fa-check me-1"></i> <span data-i18n="ok_understand">OK, I Understand</span>
+            <i class="fas fa-check me-1"></i> <span data-i18n="ok_understand">{{ __("OK, I Understand") }}</span>
         </button>
     </div>
 </div>
 
-{{-- ============================================= --}}
-{{-- SCRIPTS SECTION --}}
-{{-- ============================================= --}}
 <script>
+    // ⭐ Translation helper
+    function t(key, fallback) {
+        if (typeof window.t === 'function') return window.t(key, fallback);
+        if (typeof window.__t === 'function') return window.__t(key, fallback);
+        return fallback || key;
+    }
+
     // =============================================
-    // CUSTOM ALERT FUNCTIONS
+    // CUSTOM ALERT
     // =============================================
     function showCustomAlert(date) {
         const overlay = document.getElementById('customAlert');
@@ -1068,14 +916,16 @@
         
         if (date) {
             const d = new Date(date);
-            dateSpan.textContent = d.toLocaleDateString('en-US', { 
+            const localeMap = { 'en': 'en-US', 'ceb': 'en-PH', 'tl': 'en-PH' };
+            const locale = window.__currentLocale || 'en';
+            dateSpan.textContent = d.toLocaleDateString(localeMap[locale] || 'en-US', { 
                 weekday: 'long', 
                 year: 'numeric', 
                 month: 'long', 
                 day: 'numeric' 
             });
         } else {
-            dateSpan.textContent = window.t ? window.t('invalid_date') : 'Invalid date selected';
+            dateSpan.textContent = t('invalid_date', 'Invalid date selected');
         }
         
         overlay.classList.add('active');
@@ -1089,23 +939,17 @@
         
         const dateSelector = document.getElementById('dateSelector');
         const currentDate = "{{ $selectedDate ?? date('Y-m-d') }}";
-        if (dateSelector && currentDate) {
-            dateSelector.value = currentDate;
-        }
+        if (dateSelector && currentDate) dateSelector.value = currentDate;
     }
     
     document.addEventListener('DOMContentLoaded', function() {
         const overlay = document.getElementById('customAlert');
         overlay.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeCustomAlert();
-            }
+            if (e.target === this) closeCustomAlert();
         });
         
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && overlay.classList.contains('active')) {
-                closeCustomAlert();
-            }
+            if (e.key === 'Escape' && overlay.classList.contains('active')) closeCustomAlert();
         });
     });
     
@@ -1172,5 +1016,13 @@
         let day = String(date.getDate()).padStart(2, '0');
         window.location.href = "{{ route('sunday-attendance.records', ['date' => '']) }}" + year + '-' + month + '-' + day;
     }
+
+    // ⭐ LISTEN FOR LANGUAGE CHANGES
+    window.addEventListener('localeChanged', function(e) {
+        if (typeof window.applyTranslations === 'function') {
+            window.applyTranslations();
+        }
+        console.log('[Attendance Records] Locale changed to:', e.detail.locale);
+    });
 </script>
 @endsection

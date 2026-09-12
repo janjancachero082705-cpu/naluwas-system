@@ -1,20 +1,15 @@
 @extends('layouts.app')
 
 @section('header')
-    <span data-i18n="member_management">Member Management</span>
+    <span data-i18n="member_management">{{ __("Member Management") }}</span>
 @endsection
 
 @section('content')
 
-{{-- ============================================= --}}
-{{-- STYLES SECTION --}}
-{{-- ============================================= --}}
 <style>
     /* ============================================
        MODERN DESIGN - MATCHING PROFILE STYLE
     ============================================ */
-    
-    /* Import Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
     
     :root {
@@ -32,7 +27,6 @@
         --shadow-glow: 0 8px 32px rgba(79, 70, 229, 0.3);
     }
     
-    /* Hero Section - Same as Profile */
     .member-hero {
         background: var(--gradient-primary);
         border-radius: 24px;
@@ -153,7 +147,6 @@
         text-decoration: none;
     }
     
-    /* Stats Grid - Premium Cards (Same as Profile) */
     .stats-grid-premium {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -240,7 +233,6 @@
     .stat-card-premium .stat-change.positive { color: #10B981; }
     .stat-card-premium .stat-change.negative { color: #EF4444; }
     
-    /* Gradient variants */
     .stat-card-premium.green::before { background: linear-gradient(135deg, #10B981, #34D399); }
     .stat-card-premium.blue::before { background: var(--gradient-primary); }
     .stat-card-premium.purple::before { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
@@ -253,7 +245,6 @@
     .stat-card-premium.orange .stat-icon-wrap { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
     .stat-card-premium.red .stat-icon-wrap { background: linear-gradient(135deg, #EF4444, #F87171); }
     
-    /* Filter Section - Same as Profile Cards */
     .filter-card-modern {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
@@ -315,7 +306,6 @@
         border: 1px solid var(--border-color);
     }
     
-    /* Tabs - Same as Profile Style */
     .member-tabs-modern {
         display: flex;
         gap: 0.5rem;
@@ -372,7 +362,6 @@
         color: white;
     }
     
-    /* Table Container - Same as Profile Cards */
     .table-container-modern {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
@@ -429,7 +418,6 @@
         background: transparent;
     }
     
-    /* Member Avatar - Same as Profile */
     .member-avatar-modern {
         width: 36px;
         height: 36px;
@@ -471,7 +459,6 @@
         margin-top: 2px;
     }
     
-    /* Gender Badge - Small for index */
     .gender-badge-small {
         display: inline-flex;
         align-items: center;
@@ -504,7 +491,6 @@
         font-size: 0.5rem;
     }
     
-    /* Role Tags - Same as Profile */
     .role-tag-modern {
         display: inline-flex;
         align-items: center;
@@ -553,7 +539,6 @@
         border-color: #991b1b;
     }
     
-    /* Action Buttons - Same as Profile */
     .btn-icon-action-modern {
         width: 32px;
         height: 32px;
@@ -609,7 +594,6 @@
         flex-wrap: wrap;
     }
     
-    /* Add Button - Same as Profile */
     .btn-add-modern {
         background: var(--gradient-primary);
         color: white;
@@ -635,7 +619,6 @@
         text-decoration: none;
     }
     
-    /* Table Sections */
     .table-section-modern {
         display: none;
     }
@@ -644,7 +627,6 @@
         display: block;
     }
     
-    /* Pagination - Same as Profile */
     .pagination-container-modern {
         padding: 0.8rem 1.2rem;
         border-top: 1px solid var(--border-color);
@@ -689,7 +671,6 @@
         color: white;
     }
     
-    /* Empty State - Same as Profile */
     .empty-state-modern {
         text-align: center;
         padding: 3rem 1.5rem;
@@ -733,7 +714,6 @@
         to { transform: rotate(360deg); }
     }
     
-    /* Responsive */
     @media (max-width: 1200px) {
         .stats-grid-premium {
             grid-template-columns: repeat(2, 1fr);
@@ -821,9 +801,6 @@
     }
 </style>
 
-{{-- ============================================= --}}
-{{-- MAIN CONTENT --}}
-{{-- ============================================= --}}
 <div class="container-fluid px-0">
 
     {{-- ============================================ --}}
@@ -832,23 +809,23 @@
     <div class="member-hero">
         <div class="hero-content">
             <div class="hero-left">
-                <h1><i class="fas fa-users"></i> <span data-i18n="member_management">Member Management</span></h1>
+                <h1><i class="fas fa-users"></i> <span data-i18n="member_management">{{ __("Member Management") }}</span></h1>
                 <p class="hero-sub">
                     <i class="fas fa-circle" style="color: #34D399; font-size: 0.4rem; vertical-align: middle;"></i>
-                    <span data-i18n="member_management_desc">Manage your church members, roles, and choir assignments</span>
+                    <span data-i18n="member_management_desc">{{ __("Manage your church members, roles, and choir assignments") }}</span>
                 </p>
             </div>
             <div class="hero-actions">
                 <a href="{{ route('members.create') }}" class="btn-hero btn-hero-white">
-                    <i class="fas fa-user-plus"></i> <span data-i18n="add_member">Add Member</span>
+                    <i class="fas fa-user-plus"></i> <span data-i18n="add_member">{{ __("Add Member") }}</span>
                 </a>
                 @if($isDeceasedFilter)
                     <a href="{{ route('members.index') }}" class="btn-hero btn-hero-ghost">
-                        <i class="fas fa-arrow-left"></i> <span data-i18n="back_to_active">Back to Active</span>
+                        <i class="fas fa-arrow-left"></i> <span data-i18n="back_to_active">{{ __("Back to Active") }}</span>
                     </a>
                 @else
                     <a href="{{ route('members.index', ['filter' => 'deceased']) }}" class="btn-hero btn-hero-ghost">
-                        <i class="fas fa-cross"></i> <span data-i18n="view_deceased">View Deceased</span>
+                        <i class="fas fa-cross"></i> <span data-i18n="view_deceased">{{ __("View Deceased") }}</span>
                     </a>
                 @endif
             </div>
@@ -861,38 +838,38 @@
     <div class="stats-grid-premium">
         <div class="stat-card-premium green">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="active_members_label">Active Members</span>
+                <span class="stat-label" data-i18n="active_members_label">{{ __("Active Members") }}</span>
                 <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
             </div>
             <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="active_members">Active members</span></div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="active_members">{{ __("Active members") }}</span></div>
         </div>
         
         <div class="stat-card-premium purple">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="choir_members_label">Choir Members</span>
+                <span class="stat-label" data-i18n="choir_members_label">{{ __("Choir Members") }}</span>
                 <div class="stat-icon-wrap"><i class="fas fa-music"></i></div>
             </div>
             <div class="stat-value">{{ number_format($choirCount ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="music_ministry">Music ministry</span></div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="music_ministry">{{ __("Music ministry") }}</span></div>
         </div>
         
         <div class="stat-card-premium orange">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="birthdays_this_month">Birthdays This Month</span>
+                <span class="stat-label" data-i18n="birthdays_this_month">{{ __("Birthdays This Month") }}</span>
                 <div class="stat-icon-wrap"><i class="fas fa-birthday-cake"></i></div>
             </div>
             <div class="stat-value">{{ number_format($birthdaysThisMonth ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="celebrating_soon">Celebrating soon</span></div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="celebrating_soon">{{ __("Celebrating soon") }}</span></div>
         </div>
         
         <div class="stat-card-premium red">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="deceased_label">Deceased</span>
+                <span class="stat-label" data-i18n="deceased_label">{{ __("Deceased") }}</span>
                 <div class="stat-icon-wrap"><i class="fas fa-cross"></i></div>
             </div>
             <div class="stat-value">{{ number_format($deceasedCount ?? 0) }}</div>
-            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="at_rest">At rest</span></div>
+            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="at_rest">{{ __("At rest") }}</span></div>
         </div>
     </div>
 
@@ -902,10 +879,10 @@
     <div class="filter-card-modern">
         <div class="row align-items-center">
             <div class="col-md-6">
-                <span class="filter-label-modern"><i class="fas fa-filter me-1"></i> <span data-i18n="filter_by_ministry">Filter by Ministry</span></span>
+                <span class="filter-label-modern"><i class="fas fa-filter me-1"></i> <span data-i18n="filter_by_ministry">{{ __("Filter by Ministry") }}</span></span>
                 <select id="roleFilter" class="filter-select-modern" onchange="window.location.href=this.value">
                     <option value="{{ route('members.index', ['role' => 'all']) }}" {{ ($currentFilter ?? 'all') == 'all' ? 'selected' : '' }}>
-                        📋 <span data-i18n="all_members">All Members</span>
+                        📋 {{ __("All Members") }}
                     </option>
                     @php
                         $uniqueRoles = collect($allRoles ?? [])->unique('name')->values()->all();
@@ -921,9 +898,9 @@
                 <span class="total-badge-modern">
                     <i class="fas fa-church"></i>
                     @if($isDeceasedFilter)
-                        <span data-i18n="total_deceased">Total Deceased:</span> {{ number_format($deceasedMembers->total() ?? 0) }}
+                        <span data-i18n="total_deceased">{{ __("Total Deceased:") }}</span> {{ number_format($deceasedMembers->total() ?? 0) }}
                     @else
-                        <span data-i18n="total_active">Total Active:</span> {{ number_format($members->total() ?? 0) }}
+                        <span data-i18n="total_active">{{ __("Total Active:") }}</span> {{ number_format($members->total() ?? 0) }}
                     @endif
                 </span>
             </div>
@@ -935,11 +912,11 @@
     {{-- ============================================ --}}
     <div class="member-tabs-modern">
         <button class="member-tab-modern {{ !$isDeceasedFilter ? 'active' : '' }}" onclick="window.location.href='{{ route('members.index') }}'">
-            <i class="fas fa-user-friends me-2"></i><span data-i18n="active">Active</span>
+            <i class="fas fa-user-friends me-2"></i><span data-i18n="active">{{ __("Active") }}</span>
             <span class="badge-modern">{{ number_format($totalMembers ?? 0) }}</span>
         </button>
         <button class="member-tab-modern {{ $isDeceasedFilter ? 'active' : '' }}" onclick="window.location.href='{{ route('members.index', ['filter' => 'deceased']) }}'">
-            <i class="fas fa-cross me-2"></i><span data-i18n="deceased">Deceased</span>
+            <i class="fas fa-cross me-2"></i><span data-i18n="deceased">{{ __("Deceased") }}</span>
             <span class="badge-modern">{{ number_format($deceasedCount ?? 0) }}</span>
         </button>
     </div>
@@ -954,12 +931,12 @@
                     <thead>
                         <tr>
                             <th style="width: 50px;">#</th>
-                            <th data-i18n="member">Member</th>
-                            <th style="width: 80px;" data-i18n="gender">Gender</th>
-                            <th data-i18n="roles">Roles</th>
-                            <th data-i18n="birthday">Birthday</th>
-                            <th data-i18n="age">Age</th>
-                            <th style="width: 150px;" data-i18n="actions">Actions</th>
+                            <th data-i18n="member">{{ __("Member") }}</th>
+                            <th style="width: 80px;" data-i18n="gender">{{ __("Gender") }}</th>
+                            <th data-i18n="roles">{{ __("Roles") }}</th>
+                            <th data-i18n="birthday">{{ __("Birthday") }}</th>
+                            <th data-i18n="age">{{ __("Age") }}</th>
+                            <th style="width: 150px;" data-i18n="actions">{{ __("Actions") }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -978,7 +955,6 @@
                                 $memberRoles = $member->roles ?? [];
                                 $uniqueRoles = collect($memberRoles)->unique('name')->values()->all();
                                 
-                                // Gender display
                                 $genderValue = $member->gender ?? null;
                                 if ($genderValue === 'male') {
                                     $genderIcon = 'fa-mars';
@@ -1024,15 +1000,11 @@
                                     </div>
                                 </td>
                                 
-                                {{-- Gender Column --}}
                                 <td>
                                     <span class="gender-badge-small {{ $genderClass }}">
                                         <i class="fas {{ $genderIcon }}"></i>
                                         {{ $genderLabel }}
                                     </span>
-                                    @if($genderValue === null)
-                                        <span style="font-size: 0.5rem; color: #EF4444; margin-left: 2px;">(null)</span>
-                                    @endif
                                 </td>
                                 
                                 <td>
@@ -1040,10 +1012,10 @@
                                         @forelse($uniqueRoles as $role)
                                             <span class="role-tag-modern"><i class="fas fa-tag"></i> {{ $role['name'] ?? $role }}</span>
                                         @empty
-                                            <span class="role-tag-modern"><i class="fas fa-user"></i> <span data-i18n="regular">Regular</span></span>
+                                            <span class="role-tag-modern"><i class="fas fa-user"></i> <span data-i18n="regular">{{ __("Regular") }}</span></span>
                                         @endforelse
                                         @if($member->is_choir)
-                                            <span class="role-tag-modern choir"><i class="fas fa-music"></i> <span data-i18n="choir">Choir</span></span>
+                                            <span class="role-tag-modern choir"><i class="fas fa-music"></i> <span data-i18n="choir">{{ __("Choir") }}</span></span>
                                         @endif
                                     </div>
                                 </td>
@@ -1080,10 +1052,10 @@
                                 <td colspan="7">
                                     <div class="empty-state-modern">
                                         <i class="fas fa-users"></i>
-                                        <h5 data-i18n="no_active_members">No Active Members Yet</h5>
-                                        <p data-i18n="no_active_members_desc">Get started by adding your first church member to the system.</p>
+                                        <h5 data-i18n="no_active_members">{{ __("No Active Members Yet") }}</h5>
+                                        <p data-i18n="no_active_members_desc">{{ __("Get started by adding your first church member to the system.") }}</p>
                                         <a href="{{ route('members.create') }}" class="btn-add-modern">
-                                            <i class="fas fa-plus me-2"></i><span data-i18n="add_first_member">Add Your First Member</span>
+                                            <i class="fas fa-plus me-2"></i><span data-i18n="add_first_member">{{ __("Add Your First Member") }}</span>
                                         </a>
                                     </div>
                                 </td>
@@ -1096,7 +1068,7 @@
             @if($members->hasPages())
             <div class="pagination-container-modern">
                 <div class="pagination-info-modern">
-                    <span data-i18n="showing">Showing</span> <strong>{{ $members->firstItem() }}</strong> <span data-i18n="to">to</span> <strong>{{ $members->lastItem() }}</strong> <span data-i18n="of">of</span> <strong>{{ $members->total() }}</strong> <span data-i18n="active_members">active members</span>
+                    <span data-i18n="showing">{{ __("Showing") }}</span> <strong>{{ $members->firstItem() }}</strong> <span data-i18n="to">{{ __("to") }}</span> <strong>{{ $members->lastItem() }}</strong> <span data-i18n="of">{{ __("of") }}</span> <strong>{{ $members->total() }}</strong> <span data-i18n="active_members">{{ __("active members") }}</span>
                 </div>
                 {{ $members->links('pagination::bootstrap-5') }}
             </div>
@@ -1114,12 +1086,12 @@
                     <thead>
                         <tr>
                             <th style="width: 50px;">#</th>
-                            <th data-i18n="member">Member</th>
-                            <th style="width: 80px;" data-i18n="gender">Gender</th>
-                            <th data-i18n="roles">Roles</th>
-                            <th data-i18n="birthday">Birthday</th>
-                            <th data-i18n="age">Age</th>
-                            <th style="width: 120px;" data-i18n="actions">Actions</th>
+                            <th data-i18n="member">{{ __("Member") }}</th>
+                            <th style="width: 80px;" data-i18n="gender">{{ __("Gender") }}</th>
+                            <th data-i18n="roles">{{ __("Roles") }}</th>
+                            <th data-i18n="birthday">{{ __("Birthday") }}</th>
+                            <th data-i18n="age">{{ __("Age") }}</th>
+                            <th style="width: 120px;" data-i18n="actions">{{ __("Actions") }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1177,15 +1149,11 @@
                                     </div>
                                 </td>
                                 
-                                {{-- Gender Column for Deceased --}}
                                 <td>
                                     <span class="gender-badge-small {{ $genderClass }}">
                                         <i class="fas {{ $genderIcon }}"></i>
                                         {{ $genderLabel }}
                                     </span>
-                                    @if($genderValue === null)
-                                        <span style="font-size: 0.5rem; color: #EF4444; margin-left: 2px;">(null)</span>
-                                    @endif
                                 </td>
                                 
                                 <td>
@@ -1193,12 +1161,12 @@
                                         @forelse($uniqueRoles as $role)
                                             <span class="role-tag-modern"><i class="fas fa-tag"></i> {{ $role['name'] ?? $role }}</span>
                                         @empty
-                                            <span class="role-tag-modern"><i class="fas fa-user"></i> <span data-i18n="regular">Regular</span></span>
+                                            <span class="role-tag-modern"><i class="fas fa-user"></i> <span data-i18n="regular">{{ __("Regular") }}</span></span>
                                         @endforelse
                                         @if($member->is_choir)
-                                            <span class="role-tag-modern choir"><i class="fas fa-music"></i> <span data-i18n="choir">Choir</span></span>
+                                            <span class="role-tag-modern choir"><i class="fas fa-music"></i> <span data-i18n="choir">{{ __("Choir") }}</span></span>
                                         @endif
-                                        <span class="role-tag-modern deceased-tag"><i class="fas fa-cross"></i> <span data-i18n="deceased">Deceased</span></span>
+                                        <span class="role-tag-modern deceased-tag"><i class="fas fa-cross"></i> <span data-i18n="deceased">{{ __("Deceased") }}</span></span>
                                     </div>
                                 </td>
                                 
@@ -1229,8 +1197,8 @@
                                 <td colspan="7">
                                     <div class="empty-state-modern">
                                         <i class="fas fa-cross"></i>
-                                        <h5 data-i18n="no_deceased_members">No Deceased Members</h5>
-                                        <p data-i18n="no_deceased_members_desc">Click the cross button <i class="fas fa-cross"></i> on any active member to move them here.</p>
+                                        <h5 data-i18n="no_deceased_members">{{ __("No Deceased Members") }}</h5>
+                                        <p data-i18n="no_deceased_members_desc">{{ __("Click the cross button on any active member to move them here.") }}</p>
                                     </div>
                                 </td>
                             </tr>
@@ -1242,7 +1210,7 @@
             @if($deceasedMembers->hasPages())
             <div class="pagination-container-modern">
                 <div class="pagination-info-modern">
-                    <span data-i18n="showing">Showing</span> <strong>{{ $deceasedMembers->firstItem() }}</strong> <span data-i18n="to">to</span> <strong>{{ $deceasedMembers->lastItem() }}</strong> <span data-i18n="of">of</span> <strong>{{ $deceasedMembers->total() }}</strong> <span data-i18n="deceased_members">deceased members</span>
+                    <span data-i18n="showing">{{ __("Showing") }}</span> <strong>{{ $deceasedMembers->firstItem() }}</strong> <span data-i18n="to">{{ __("to") }}</span> <strong>{{ $deceasedMembers->lastItem() }}</strong> <span data-i18n="of">{{ __("of") }}</span> <strong>{{ $deceasedMembers->total() }}</strong> <span data-i18n="deceased_members">{{ __("deceased members") }}</span>
                 </div>
                 {{ $deceasedMembers->links('pagination::bootstrap-5') }}
             </div>
@@ -1251,38 +1219,36 @@
     </div>
 </div>
 
-{{-- ============================================= --}}
-{{-- SCRIPTS SECTION --}}
-{{-- ============================================= --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    // ⭐ Helper: Get translated string
+    function t(key, fallback) {
+        if (typeof window.__t === 'function') {
+            return window.__t(key, fallback);
+        }
+        return fallback || key;
+    }
+
     // =============================================
     // DELETE ACTIVE MEMBER
     // =============================================
     function confirmDelete(memberId, memberName) {
-        const title = window.t ? window.t('delete_member') : 'Delete Member?';
-        const html = (window.t ? window.t('delete_member_confirm') : 'Are you sure you want to permanently delete <strong>{memberName}</strong>?<br><small>This action cannot be undone.</small>').replace('{memberName}', memberName);
-        const confirmText = window.t ? window.t('yes_delete') : 'Yes, delete!';
-        const cancelText = window.t ? window.t('cancel') : 'Cancel';
-        const deletingText = window.t ? window.t('deleting') : 'Deleting...';
-        const pleaseWait = window.t ? window.t('please_wait') : 'Please wait';
-        
         Swal.fire({
-            title: title,
-            html: html,
+            title: t('delete_member', 'Delete Member?'),
+            html: t('delete_member_confirm', 'Are you sure you want to permanently delete <strong>{memberName}</strong>?<br><small>This action cannot be undone.</small>').replace('{memberName}', memberName),
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#ef4444',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: confirmText,
-            cancelButtonText: cancelText,
+            confirmButtonText: t('yes_delete', 'Yes, delete!'),
+            cancelButtonText: t('cancel', 'Cancel'),
             background: 'var(--card-bg)',
             color: 'var(--text-primary)'
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
-                    title: deletingText,
-                    html: '<div class="loading-spinner"></div><p class="mt-2">' + pleaseWait + '</p>',
+                    title: t('deleting', 'Deleting...'),
+                    html: '<div class="loading-spinner"></div><p class="mt-2">' + t('please_wait', 'Please wait') + '</p>',
                     showConfirmButton: false,
                     allowOutsideClick: false,
                     background: 'var(--card-bg)'
@@ -1296,29 +1262,22 @@
     // DELETE DECEASED MEMBER (PERMANENT)
     // =============================================
     function confirmDeletePermanent(memberId, memberName) {
-        const title = window.t ? window.t('permanently_delete') : 'Permanently Delete?';
-        const html = (window.t ? window.t('permanently_delete_confirm') : 'Are you sure you want to permanently delete <strong>{memberName}</strong>?<br><small>All records will be lost forever.</small>').replace('{memberName}', memberName);
-        const confirmText = window.t ? window.t('yes_delete') : 'Yes, delete!';
-        const cancelText = window.t ? window.t('cancel') : 'Cancel';
-        const deletingText = window.t ? window.t('deleting') : 'Deleting...';
-        const pleaseWait = window.t ? window.t('please_wait') : 'Please wait';
-        
         Swal.fire({
-            title: title,
-            html: html,
+            title: t('permanently_delete', 'Permanently Delete?'),
+            html: t('permanently_delete_confirm', 'Are you sure you want to permanently delete <strong>{memberName}</strong>?<br><small>All records will be lost forever.</small>').replace('{memberName}', memberName),
             icon: 'error',
             showCancelButton: true,
             confirmButtonColor: '#ef4444',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: confirmText,
-            cancelButtonText: cancelText,
+            confirmButtonText: t('yes_delete', 'Yes, delete!'),
+            cancelButtonText: t('cancel', 'Cancel'),
             background: 'var(--card-bg)',
             color: 'var(--text-primary)'
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
-                    title: deletingText,
-                    html: '<div class="loading-spinner"></div><p class="mt-2">' + pleaseWait + '</p>',
+                    title: t('deleting', 'Deleting...'),
+                    html: '<div class="loading-spinner"></div><p class="mt-2">' + t('please_wait', 'Please wait') + '</p>',
                     showConfirmButton: false,
                     allowOutsideClick: false,
                     background: 'var(--card-bg)'
@@ -1332,29 +1291,22 @@
     // RESTORE DECEASED MEMBER
     // =============================================
     function confirmRestore(memberId, memberName) {
-        const title = window.t ? window.t('restore_member') : 'Restore Member?';
-        const html = (window.t ? window.t('restore_member_confirm') : 'Are you sure you want to restore <strong>{memberName}</strong> to active members?').replace('{memberName}', memberName);
-        const confirmText = window.t ? window.t('yes_restore') : 'Yes, restore!';
-        const cancelText = window.t ? window.t('cancel') : 'Cancel';
-        const restoringText = window.t ? window.t('restoring') : 'Restoring...';
-        const pleaseWait = window.t ? window.t('please_wait') : 'Please wait';
-        
         Swal.fire({
-            title: title,
-            html: html,
+            title: t('restore_member', 'Restore Member?'),
+            html: t('restore_member_confirm', 'Are you sure you want to restore <strong>{memberName}</strong> to active members?').replace('{memberName}', memberName),
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#10b981',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: confirmText,
-            cancelButtonText: cancelText,
+            confirmButtonText: t('yes_restore', 'Yes, restore!'),
+            cancelButtonText: t('cancel', 'Cancel'),
             background: 'var(--card-bg)',
             color: 'var(--text-primary)'
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
-                    title: restoringText,
-                    html: '<div class="loading-spinner"></div><p class="mt-2">' + pleaseWait + '</p>',
+                    title: t('restoring', 'Restoring...'),
+                    html: '<div class="loading-spinner"></div><p class="mt-2">' + t('please_wait', 'Please wait') + '</p>',
                     showConfirmButton: false,
                     allowOutsideClick: false,
                     background: 'var(--card-bg)'
@@ -1371,10 +1323,9 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        const successTitle = window.t ? window.t('restored') : 'Restored!';
                         Swal.fire({
                             icon: 'success',
-                            title: successTitle,
+                            title: t('restored', 'Restored!'),
                             text: data.message,
                             timer: 2000,
                             showConfirmButton: false,
@@ -1386,10 +1337,9 @@
                     }
                 })
                 .catch(error => {
-                    const errorTitle = window.t ? window.t('error') : 'Error!';
                     Swal.fire({
                         icon: 'error',
-                        title: errorTitle,
+                        title: t('error', 'Error!'),
                         text: error.message,
                         confirmButtonColor: '#ef4444',
                         background: 'var(--card-bg)',
@@ -1404,39 +1354,30 @@
     // MARK AS DECEASED MODAL
     // =============================================
     function openDeceasedModal(memberId, memberName) {
-        const title = window.t ? window.t('mark_as_deceased') : 'Mark as Deceased';
-        const dateLabel = window.t ? window.t('date_of_death') : 'Date of Death:';
-        const confirmText = window.t ? window.t('mark_deceased') : 'Mark as Deceased';
-        const cancelText = window.t ? window.t('cancel') : 'Cancel';
-        const processingText = window.t ? window.t('processing') : 'Processing...';
-        const pleaseWait = window.t ? window.t('please_wait') : 'Please wait';
-        const successTitle = window.t ? window.t('marked_deceased') : 'Marked as Deceased';
-        const errorTitle = window.t ? window.t('error') : 'Error!';
-        
         Swal.fire({
-            title: title,
+            title: t('mark_as_deceased', 'Mark as Deceased'),
             html: `
                 <div style="text-align: left;">
-                    <p>${(window.t ? window.t('mark_deceased_confirm') : 'Mark <strong>{memberName}</strong> as deceased?').replace('{memberName}', memberName)}</p>
+                    <p>${t('mark_deceased_confirm', 'Mark <strong>{memberName}</strong> as deceased?').replace('{memberName}', memberName)}</p>
                     <div class="mb-3">
-                        <label class="form-label" style="display: block; text-align: left; margin-bottom: 5px;">${dateLabel}</label>
+                        <label class="form-label" style="display: block; text-align: left; margin-bottom: 5px;">${t('date_of_death', 'Date of Death:')}</label>
                         <input type="date" id="date_deceased_input" class="swal2-input" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #d1d5db;" max="${new Date().toISOString().split('T')[0]}" required>
                     </div>
-                    <small style="color: #6b7280;">${window.t ? window.t('deceased_move_note') : 'This member will be moved to the Deceased Members section.'}</small>
+                    <small style="color: #6b7280;">${t('deceased_move_note', 'This member will be moved to the Deceased Members section.')}</small>
                 </div>
             `,
             icon: 'info',
             showCancelButton: true,
             confirmButtonColor: '#6b7280',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: confirmText,
-            cancelButtonText: cancelText,
+            confirmButtonText: t('mark_deceased', 'Mark as Deceased'),
+            cancelButtonText: t('cancel', 'Cancel'),
             background: 'var(--card-bg)',
             color: 'var(--text-primary)',
             preConfirm: () => {
                 const dateDeceased = document.getElementById('date_deceased_input').value;
                 if (!dateDeceased) {
-                    Swal.showValidationMessage(window.t ? window.t('select_death_date') : 'Please select the date of death');
+                    Swal.showValidationMessage(t('select_death_date', 'Please select the date of death'));
                     return false;
                 }
                 return { date_deceased: dateDeceased };
@@ -1445,8 +1386,8 @@
             if (result.isConfirmed) {
                 const dateDeceased = result.value.date_deceased;
                 Swal.fire({
-                    title: processingText,
-                    html: '<div class="loading-spinner"></div><p class="mt-2">' + pleaseWait + '</p>',
+                    title: t('processing', 'Processing...'),
+                    html: '<div class="loading-spinner"></div><p class="mt-2">' + t('please_wait', 'Please wait') + '</p>',
                     showConfirmButton: false,
                     allowOutsideClick: false,
                     background: 'var(--card-bg)'
@@ -1466,7 +1407,7 @@
                     if (data.success) {
                         Swal.fire({
                             icon: 'success',
-                            title: successTitle,
+                            title: t('marked_deceased', 'Marked as Deceased'),
                             text: data.message,
                             timer: 2000,
                             showConfirmButton: false,
@@ -1480,7 +1421,7 @@
                 .catch(error => {
                     Swal.fire({
                         icon: 'error',
-                        title: errorTitle,
+                        title: t('error', 'Error!'),
                         text: error.message,
                         confirmButtonColor: '#ef4444',
                         background: 'var(--card-bg)',
@@ -1490,5 +1431,13 @@
             }
         });
     }
+
+    // ⭐ LISTEN FOR LANGUAGE CHANGES
+    window.addEventListener('localeChanged', function(e) {
+        if (typeof window.applyTranslations === 'function') {
+            window.applyTranslations();
+        }
+        console.log('[Members] Locale changed to:', e.detail.locale);
+    });
 </script>
 @endsection

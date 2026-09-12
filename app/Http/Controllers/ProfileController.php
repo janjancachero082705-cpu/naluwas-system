@@ -125,6 +125,49 @@ class ProfileController extends Controller
     }
 
     // ============================================
+    // LANGUAGE UPDATE (from profile dropdown)  ✅ NEW
+    // ============================================
+
+    /**
+     * Update the user's preferred language.
+     * Called by the language dropdown on the profile page.
+     */
+    public function updateLanguage(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'preferred_language' => ['required', 'string', 'in:en,tl,ceb'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+                'errors'  => $validator->errors(),
+            ], 422);
+        }
+
+        $user = $request->user();
+        $user->preferred_language = $request->input('preferred_language');
+        $user->save();
+
+        // ✅ Refresh auth session so $user->preferred_language is up to date
+        Auth::setUser($user->fresh());
+
+        $labels = [
+            'en'  => 'English',
+            'tl'  => 'Tagalog',
+            'ceb' => 'Bisaya',
+        ];
+
+        return response()->json([
+            'success'  => true,
+            'message'  => 'Language preference updated!',
+            'language' => $user->preferred_language,
+            'label'    => $labels[$user->preferred_language] ?? 'English',
+        ]);
+    }
+
+    // ============================================
     // PROFILE PICTURE UPLOAD
     // ============================================
 
@@ -135,12 +178,12 @@ class ProfileController extends Controller
     public function updatePicture(Request $request): JsonResponse
     {
         $request->validate([
-           'profile_picture' => ['required', 'file', 'max:10240'],
+            'profile_picture' => ['required', 'file', 'max:10240'],
         ]);
 
         $user = $request->user();
 
-        // ✅ Delete old picture (extracted to helper for reuse)
+        // ✅ Delete old picture
         $this->deleteOldProfilePicture($user);
 
         // ✅ Store new picture
@@ -150,12 +193,10 @@ class ProfileController extends Controller
         $user->profile_picture = $path;
         $user->save();
 
-        // ✅ CRITICAL FIX: Refresh the authenticated user in session
-        // Without this, Auth::user()->profile_picture still returns the OLD path
-        // until the user logs out and logs back in.
+        // ✅ Refresh auth session
         Auth::setUser($user->fresh());
 
-        // ✅ Build URL with cache-buster so browser fetches the NEW image
+        // ✅ Build URL with cache-buster
         $url = Storage::disk('public')->url($path);
         $urlWithCacheBuster = $url . '?v=' . $user->updated_at->timestamp;
 

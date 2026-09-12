@@ -1,6 +1,8 @@
 @extends('layouts.sidebar')
 
-@section('header', 'Reports & Analytics')
+@section('header')
+    <span data-i18n="reports_analytics">{{ __("Reports & Analytics") }}</span>
+@endsection
 
 @section('content')
 
@@ -29,7 +31,6 @@
     margin: 0;
 }
 
-/* Print Styles */
 @media print {
     .no-print, .filter-section, .action-buttons, .print-modal, .btn, .modal {
         display: none !important;
@@ -41,7 +42,6 @@
 
 .print-header, .print-footer { display: none; }
 
-/* Professional Card Design */
 .pro-card {
     background: white;
     border-radius: 20px;
@@ -80,7 +80,6 @@
     padding: 1.5rem;
 }
 
-/* KPI Cards */
 .kpi-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -145,7 +144,6 @@
 .trend-up { color: #10b981; }
 .trend-down { color: #ef4444; }
 
-/* Filter Section */
 .filter-section {
     background: white;
     border-radius: 20px;
@@ -189,7 +187,6 @@
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Buttons */
 .btn-pro {
     padding: 0.5rem 1.25rem;
     border-radius: 10px;
@@ -233,7 +230,6 @@
     box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
 }
 
-/* Tables */
 .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -261,7 +257,6 @@
     background: var(--gray-50);
 }
 
-/* Category Items */
 .category-list {
     display: flex;
     flex-direction: column;
@@ -310,7 +305,6 @@
     font-weight: 700;
 }
 
-/* Chart Container */
 .chart-wrapper {
     background: white;
     border-radius: 16px;
@@ -322,7 +316,6 @@
     position: relative;
 }
 
-/* Badges */
 .badge-pro {
     padding: 4px 10px;
     border-radius: 20px;
@@ -333,7 +326,6 @@
 .badge-income { background: #d1fae5; color: #065f46; }
 .badge-expense { background: #fee2e2; color: #991b1b; }
 
-/* Print Modal */
 .print-modal {
     display: none;
     position: fixed;
@@ -440,7 +432,6 @@
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .filter-section {
         flex-direction: column;
@@ -471,7 +462,6 @@
     $churchId = session('current_church_id', auth()->user()->church_id);
     $churchName = auth()->user()->church->name ?? 'My Church';
     
-    // Build query
     $query = App\Models\MoneyTransaction::where('church_id', $churchId);
     if ($selectedMonth && $selectedMonth != '') $query->whereMonth('date', $selectedMonth);
     if ($selectedYear && $selectedYear != '') $query->whereYear('date', $selectedYear);
@@ -487,7 +477,6 @@
     $allTimeExpense = App\Models\MoneyTransaction::where('church_id', $churchId)->where('type', 'expense')->sum('amount');
     $allTimeBalance = $allTimeIncome - $allTimeExpense;
     
-    // Category breakdowns
     $incomeByCategory = App\Models\MoneyTransaction::where('church_id', $churchId)
         ->where('type', 'income')
         ->selectRaw('category, SUM(amount) as total')
@@ -500,7 +489,6 @@
         ->groupBy('category')
         ->get();
     
-    // Top transactions
     $topIncome = App\Models\MoneyTransaction::where('church_id', $churchId)
         ->where('type', 'income')
         ->orderBy('amount', 'desc')
@@ -513,7 +501,6 @@
         ->limit(5)
         ->get();
     
-    // Monthly data for chart (last 12 months)
     $months = [];
     $monthlyIncome = [];
     $monthlyExpense = [];
@@ -543,26 +530,26 @@
 {{-- Print Header --}}
 <div class="print-header">
     <h2>{{ $churchName }}</h2>
-    <p>Financial Report - {{ now()->format('F d, Y') }}</p>
-    <p>Period: {{ $displayMonth }} {{ $displayYear }}</p>
+    <p>{{ __("Financial Report") }} - {{ now()->format('F d, Y') }}</p>
+    <p>{{ __("Period:") }} {{ $displayMonth }} {{ $displayYear }}</p>
     <hr>
 </div>
 
 {{-- Filter Section --}}
 <div class="filter-section no-print">
     <div class="filter-group">
-        <label><i class="fas fa-calendar-alt"></i> Month</label>
+        <label><i class="fas fa-calendar-alt"></i> <span data-i18n="month">{{ __("Month") }}</span></label>
         <select id="monthFilter">
-            <option value="">All Months</option>
+            <option value="">{{ __("All Months") }}</option>
             @foreach(range(1,12) as $m)
                 <option value="{{ $m }}" {{ $selectedMonth == $m ? 'selected' : '' }}>{{ date('F', mktime(0,0,0,$m,1)) }}</option>
             @endforeach
         </select>
     </div>
     <div class="filter-group">
-        <label><i class="fas fa-calendar-year"></i> Year</label>
+        <label><i class="fas fa-calendar-year"></i> <span data-i18n="year">{{ __("Year") }}</span></label>
         <select id="yearFilter">
-            <option value="">All Years</option>
+            <option value="">{{ __("All Years") }}</option>
             @php $currentYear = date('Y'); @endphp
             @for($y = $currentYear; $y >= $currentYear - 5; $y--)
                 <option value="{{ $y }}" {{ $selectedYear == $y ? 'selected' : '' }}>{{ $y }}</option>
@@ -570,22 +557,22 @@
         </select>
     </div>
     <div class="filter-group">
-        <label><i class="fas fa-chart-line"></i> Type</label>
+        <label><i class="fas fa-chart-line"></i> <span data-i18n="type">{{ __("Type") }}</span></label>
         <select id="typeFilter">
-            <option value="">All Types</option>
-            <option value="income" {{ $selectedType == 'income' ? 'selected' : '' }}>Income Only</option>
-            <option value="expense" {{ $selectedType == 'expense' ? 'selected' : '' }}>Expense Only</option>
+            <option value="">{{ __("All Types") }}</option>
+            <option value="income" {{ $selectedType == 'income' ? 'selected' : '' }}>{{ __("Income Only") }}</option>
+            <option value="expense" {{ $selectedType == 'expense' ? 'selected' : '' }}>{{ __("Expense Only") }}</option>
         </select>
     </div>
     <div class="action-buttons">
         <button class="btn-pro btn-pro-primary" onclick="applyFilters()">
-            <i class="fas fa-search"></i> Apply
+            <i class="fas fa-search"></i> <span data-i18n="apply">{{ __("Apply") }}</span>
         </button>
         <button class="btn-pro btn-pro-secondary" onclick="resetFilters()">
-            <i class="fas fa-undo"></i> Reset
+            <i class="fas fa-undo"></i> <span data-i18n="reset">{{ __("Reset") }}</span>
         </button>
         <button class="btn-pro btn-pro-info" onclick="openPrintModal()">
-            <i class="fas fa-print"></i> Export
+            <i class="fas fa-print"></i> <span data-i18n="export">{{ __("Export") }}</span>
         </button>
     </div>
 </div>
@@ -593,32 +580,40 @@
 {{-- KPI Cards --}}
 <div class="kpi-grid print-section" id="stats-section">
     <div class="kpi-card income">
-        <div class="kpi-label">Total Income</div>
+        <div class="kpi-label"><span data-i18n="total_income">{{ __("Total Income") }}</span></div>
         <div class="kpi-value">₱{{ number_format($totalIncome, 2) }}</div>
         <div class="kpi-trend trend-up">
-            <i class="fas fa-arrow-up"></i> {{ $isFiltered ? 'Filtered Period' : 'All Time' }}
+            <i class="fas fa-arrow-up"></i> 
+            <span data-i18n="{{ $isFiltered ? 'filtered_period' : 'all_time' }}">
+                {{ $isFiltered ? __("Filtered Period") : __("All Time") }}
+            </span>
         </div>
     </div>
     <div class="kpi-card expense">
-        <div class="kpi-label">Total Expenses</div>
+        <div class="kpi-label"><span data-i18n="total_expenses">{{ __("Total Expenses") }}</span></div>
         <div class="kpi-value">₱{{ number_format($totalExpense, 2) }}</div>
         <div class="kpi-trend trend-down">
-            <i class="fas fa-arrow-down"></i> {{ $isFiltered ? 'Filtered Period' : 'All Time' }}
+            <i class="fas fa-arrow-down"></i> 
+            <span data-i18n="{{ $isFiltered ? 'filtered_period' : 'all_time' }}">
+                {{ $isFiltered ? __("Filtered Period") : __("All Time") }}
+            </span>
         </div>
     </div>
     <div class="kpi-card balance">
-        <div class="kpi-label">Net Balance</div>
+        <div class="kpi-label"><span data-i18n="net_balance">{{ __("Net Balance") }}</span></div>
         <div class="kpi-value {{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
             {{ $balance >= 0 ? '+' : '-' }}₱{{ number_format(abs($balance), 2) }}
         </div>
         <div class="kpi-trend">
-            {{ $balance >= 0 ? 'Surplus' : 'Deficit' }}
+            <span data-i18n="{{ $balance >= 0 ? 'surplus' : 'deficit' }}">
+                {{ $balance >= 0 ? __("Surplus") : __("Deficit") }}
+            </span>
         </div>
     </div>
     <div class="kpi-card avg">
-        <div class="kpi-label">Church Balance</div>
+        <div class="kpi-label"><span data-i18n="church_balance">{{ __("Church Balance") }}</span></div>
         <div class="kpi-value">₱{{ number_format($allTimeBalance, 2) }}</div>
-        <div class="kpi-trend">Lifetime Balance</div>
+        <div class="kpi-trend"><span data-i18n="lifetime_balance">{{ __("Lifetime Balance") }}</span></div>
     </div>
 </div>
 
@@ -626,10 +621,10 @@
 <div class="pro-card print-section" id="chart-section">
     <div class="pro-card-header">
         <div class="pro-card-title">
-            <i class="fas fa-chart-line"></i> Income vs Expenses Trend
+            <i class="fas fa-chart-line"></i> <span data-i18n="income_vs_expenses_trend">{{ __("Income vs Expenses Trend") }}</span>
         </div>
         <div>
-            <span class="badge-pro badge-income"><i class="fas fa-chart-line"></i> Last 12 Months</span>
+            <span class="badge-pro badge-income"><i class="fas fa-chart-line"></i> <span data-i18n="last_12_months">{{ __("Last 12 Months") }}</span></span>
         </div>
     </div>
     <div class="pro-card-body">
@@ -647,7 +642,7 @@
         <div class="pro-card">
             <div class="pro-card-header">
                 <div class="pro-card-title">
-                    <i class="fas fa-arrow-down text-success"></i> Income by Category
+                    <i class="fas fa-arrow-down text-success"></i> <span data-i18n="income_by_category">{{ __("Income by Category") }}</span>
                 </div>
             </div>
             <div class="pro-card-body">
@@ -656,15 +651,15 @@
                         <div class="category-item">
                             <div class="category-name">
                                 <span class="category-dot income"></span>
-                                {{ $category->category ?? 'Uncategorized' }}
+                                {{ $category->category ?? __("Uncategorized") }}
                             </div>
                             <div class="category-amount income-color">₱{{ number_format($category->total, 2) }}</div>
                         </div>
                     @empty
-                        <div class="text-center text-muted py-4">No income records found</div>
+                        <div class="text-center text-muted py-4"><span data-i18n="no_income_records">{{ __("No income records found") }}</span></div>
                     @endforelse
                     <div class="summary-row">
-                        <span>Total Income</span>
+                        <span data-i18n="total_income">{{ __("Total Income") }}</span>
                         <span class="income-color">₱{{ number_format($totalIncome, 2) }}</span>
                     </div>
                 </div>
@@ -675,7 +670,7 @@
         <div class="pro-card">
             <div class="pro-card-header">
                 <div class="pro-card-title">
-                    <i class="fas fa-arrow-up text-danger"></i> Expense by Category
+                    <i class="fas fa-arrow-up text-danger"></i> <span data-i18n="expense_by_category">{{ __("Expense by Category") }}</span>
                 </div>
             </div>
             <div class="pro-card-body">
@@ -684,15 +679,15 @@
                         <div class="category-item">
                             <div class="category-name">
                                 <span class="category-dot expense"></span>
-                                {{ $category->category ?? 'Uncategorized' }}
+                                {{ $category->category ?? __("Uncategorized") }}
                             </div>
                             <div class="category-amount expense-color">₱{{ number_format($category->total, 2) }}</div>
                         </div>
                     @empty
-                        <div class="text-center text-muted py-4">No expense records found</div>
+                        <div class="text-center text-muted py-4"><span data-i18n="no_expense_records">{{ __("No expense records found") }}</span></div>
                     @endforelse
                     <div class="summary-row">
-                        <span>Total Expenses</span>
+                        <span data-i18n="total_expenses">{{ __("Total Expenses") }}</span>
                         <span class="expense-color">₱{{ number_format($totalExpense, 2) }}</span>
                     </div>
                 </div>
@@ -707,18 +702,28 @@
         <div class="pro-card">
             <div class="pro-card-header">
                 <div class="pro-card-title">
-                    <i class="fas fa-trophy text-warning"></i> Top 5 Income
+                    <i class="fas fa-trophy text-warning"></i> <span data-i18n="top_5_income">{{ __("Top 5 Income") }}</span>
                 </div>
             </div>
             <div class="pro-card-body">
                 <table class="data-table">
                     <thead>
-                        <tr><th>Date</th><th>Description</th><th>Amount</th></tr>
+                        <tr>
+                            <th data-i18n="date">{{ __("Date") }}</th>
+                            <th data-i18n="description">{{ __("Description") }}</th>
+                            <th data-i18n="amount">{{ __("Amount") }}</th>
+                        </tr>
                     </thead>
                     <tbody>
                         @forelse($topIncome as $t)
-                        <tr><td>{{ \Carbon\Carbon::parse($t->date)->format('M d, Y') }}</td><td>{{ Str::limit($t->description, 25) }}</td><td class="text-success">+₱{{ number_format($t->amount, 2) }}</td></tr>
-                        @empty<tr><td colspan="3" class="text-center text-muted">No records</td></tr>@endforelse
+                        <tr>
+                            <td>{{ \Carbon\Carbon::parse($t->date)->format('M d, Y') }}</td>
+                            <td>{{ Str::limit($t->description, 25) }}</td>
+                            <td class="text-success">+₱{{ number_format($t->amount, 2) }}</td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="3" class="text-center text-muted"><span data-i18n="no_records">{{ __("No records") }}</span></td></tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -728,18 +733,28 @@
         <div class="pro-card">
             <div class="pro-card-header">
                 <div class="pro-card-title">
-                    <i class="fas fa-exclamation-triangle text-warning"></i> Top 5 Expenses
+                    <i class="fas fa-exclamation-triangle text-warning"></i> <span data-i18n="top_5_expenses">{{ __("Top 5 Expenses") }}</span>
                 </div>
             </div>
             <div class="pro-card-body">
                 <table class="data-table">
                     <thead>
-                        <tr><th>Date</th><th>Description</th><th>Amount</th></tr>
+                        <tr>
+                            <th data-i18n="date">{{ __("Date") }}</th>
+                            <th data-i18n="description">{{ __("Description") }}</th>
+                            <th data-i18n="amount">{{ __("Amount") }}</th>
+                        </tr>
                     </thead>
                     <tbody>
                         @forelse($topExpense as $t)
-                        <tr><td>{{ \Carbon\Carbon::parse($t->date)->format('M d, Y') }}</td><td>{{ Str::limit($t->description, 25) }}</td><td class="text-danger">-₱{{ number_format($t->amount, 2) }}</td></tr>
-                        @empty<tr><td colspan="3" class="text-center text-muted">No records</td></tr>@endforelse
+                        <tr>
+                            <td>{{ \Carbon\Carbon::parse($t->date)->format('M d, Y') }}</td>
+                            <td>{{ Str::limit($t->description, 25) }}</td>
+                            <td class="text-danger">-₱{{ number_format($t->amount, 2) }}</td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="3" class="text-center text-muted"><span data-i18n="no_records">{{ __("No records") }}</span></td></tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -751,15 +766,21 @@
 <div class="pro-card print-section" id="all-transactions-section">
     <div class="pro-card-header">
         <div class="pro-card-title">
-            <i class="fas fa-list-ul"></i> All Transactions
+            <i class="fas fa-list-ul"></i> <span data-i18n="all_transactions">{{ __("All Transactions") }}</span>
         </div>
-        <div><span class="badge-pro badge-income">{{ $transactions->count() }} records</span></div>
+        <div><span class="badge-pro badge-income">{{ $transactions->count() }} <span data-i18n="records">{{ __("records") }}</span></span></div>
     </div>
     <div class="pro-card-body">
         <div class="table-responsive">
             <table class="data-table">
                 <thead>
-                    <tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th></tr>
+                    <tr>
+                        <th data-i18n="date">{{ __("Date") }}</th>
+                        <th data-i18n="description">{{ __("Description") }}</th>
+                        <th data-i18n="category">{{ __("Category") }}</th>
+                        <th data-i18n="type">{{ __("Type") }}</th>
+                        <th data-i18n="amount">{{ __("Amount") }}</th>
+                    </tr>
                 </thead>
                 <tbody>
                     @forelse($transactions as $t)
@@ -767,10 +788,12 @@
                         <td>{{ \Carbon\Carbon::parse($t->date)->format('M d, Y') }}</td>
                         <td>{{ Str::limit($t->description, 30) }}</td>
                         <td>{{ $t->category ?? '-' }}</td>
-                        <td><span class="badge-pro {{ $t->type == 'income' ? 'badge-income' : 'badge-expense' }}">{{ ucfirst($t->type) }}</span></td>
+                        <td><span class="badge-pro {{ $t->type == 'income' ? 'badge-income' : 'badge-expense' }}" data-i18n="{{ $t->type }}">{{ $t->type == 'income' ? __("Income") : __("Expense") }}</span></td>
                         <td class="{{ $t->type == 'income' ? 'text-success' : 'text-danger' }}">{{ $t->type == 'income' ? '+' : '-' }} ₱{{ number_format($t->amount, 2) }}</td>
                     </tr>
-                    @empty<tr><td colspan="5" class="text-center text-muted py-4">No transactions found</td></tr>@endforelse
+                    @empty
+                    <tr><td colspan="5" class="text-center text-muted py-4"><span data-i18n="no_transactions_found">{{ __("No transactions found") }}</span></td></tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -779,8 +802,8 @@
 
 {{-- Print Footer --}}
 <div class="print-footer">
-    <p>Generated on {{ now()->format('F d, Y h:i A') }} | {{ $churchName }} Financial Report</p>
-    <p>This is a computer-generated document. No signature required.</p>
+    <p>{{ __("Generated on") }} {{ now()->format('F d, Y h:i A') }} | {{ $churchName }} {{ __("Financial Report") }}</p>
+    <p>{{ __("This is a computer-generated document. No signature required.") }}</p>
 </div>
 
 </div>
@@ -789,52 +812,52 @@
 <div id="printModal" class="print-modal no-print">
     <div class="print-modal-content">
         <div class="print-modal-header">
-            <h3><i class="fas fa-print me-2"></i> Export Report</h3>
+            <h3><i class="fas fa-print me-2"></i> <span data-i18n="export_report">{{ __("Export Report") }}</span></h3>
         </div>
         <div class="print-modal-body">
             <div class="print-option selected" onclick="togglePrintSection('stats')">
                 <div class="print-option-title">
-                    <input type="checkbox" id="chk-stats" checked class="me-2"> 📊 Key Metrics
+                    <input type="checkbox" id="chk-stats" checked class="me-2"> 📊 <span data-i18n="key_metrics">{{ __("Key Metrics") }}</span>
                 </div>
-                <div class="print-option-desc">Income, Expenses, Balance summary cards</div>
+                <div class="print-option-desc"><span data-i18n="key_metrics_desc">{{ __("Income, Expenses, Balance summary cards") }}</span></div>
             </div>
             <div class="print-option selected" onclick="togglePrintSection('chart')">
                 <div class="print-option-title">
-                    <input type="checkbox" id="chk-chart" checked class="me-2"> 📈 Trend Chart
+                    <input type="checkbox" id="chk-chart" checked class="me-2"> 📈 <span data-i18n="trend_chart">{{ __("Trend Chart") }}</span>
                 </div>
-                <div class="print-option-desc">12-month income vs expense visualization</div>
+                <div class="print-option-desc"><span data-i18n="trend_chart_desc">{{ __("12-month income vs expense visualization") }}</span></div>
             </div>
             <div class="print-option selected" onclick="togglePrintSection('category')">
                 <div class="print-option-title">
-                    <input type="checkbox" id="chk-category" checked class="me-2"> 📂 Category Breakdown
+                    <input type="checkbox" id="chk-category" checked class="me-2"> 📂 <span data-i18n="category_breakdown">{{ __("Category Breakdown") }}</span>
                 </div>
-                <div class="print-option-desc">Income and expense by category</div>
+                <div class="print-option-desc"><span data-i18n="category_breakdown_desc">{{ __("Income and expense by category") }}</span></div>
             </div>
             <div class="print-option selected" onclick="togglePrintSection('transactions')">
                 <div class="print-option-title">
-                    <input type="checkbox" id="chk-transactions" checked class="me-2"> 🏆 Top Transactions
+                    <input type="checkbox" id="chk-transactions" checked class="me-2"> 🏆 <span data-i18n="top_transactions">{{ __("Top Transactions") }}</span>
                 </div>
-                <div class="print-option-desc">Top 5 income and expense transactions</div>
+                <div class="print-option-desc"><span data-i18n="top_transactions_desc">{{ __("Top 5 income and expense transactions") }}</span></div>
             </div>
             <div class="print-option selected" onclick="togglePrintSection('all-transactions')">
                 <div class="print-option-title">
-                    <input type="checkbox" id="chk-all-transactions" checked class="me-2"> 📋 All Transactions
+                    <input type="checkbox" id="chk-all-transactions" checked class="me-2"> 📋 <span data-i18n="all_transactions">{{ __("All Transactions") }}</span>
                 </div>
-                <div class="print-option-desc">Complete transaction history</div>
+                <div class="print-option-desc"><span data-i18n="all_transactions_desc">{{ __("Complete transaction history") }}</span></div>
             </div>
             <div class="format-group">
-                <div class="format-label">Export Format:</div>
+                <div class="format-label"><span data-i18n="export_format">{{ __("Export Format:") }}</span></div>
                 <div class="format-options">
-                    <label class="format-option"><input type="radio" name="exportFormat" value="print" checked> 🖨️ Print</label>
-                    <label class="format-option"><input type="radio" name="exportFormat" value="pdf"> 📄 PDF</label>
-                    <label class="format-option"><input type="radio" name="exportFormat" value="excel"> 📊 Excel</label>
-                    <label class="format-option"><input type="radio" name="exportFormat" value="csv"> 📎 CSV</label>
+                    <label class="format-option"><input type="radio" name="exportFormat" value="print" checked> 🖨️ <span data-i18n="print">{{ __("Print") }}</span></label>
+                    <label class="format-option"><input type="radio" name="exportFormat" value="pdf"> 📄 <span data-i18n="pdf">{{ __("PDF") }}</span></label>
+                    <label class="format-option"><input type="radio" name="exportFormat" value="excel"> 📊 <span data-i18n="excel">{{ __("Excel") }}</span></label>
+                    <label class="format-option"><input type="radio" name="exportFormat" value="csv"> 📎 <span data-i18n="csv">{{ __("CSV") }}</span></label>
                 </div>
             </div>
         </div>
         <div class="print-modal-footer">
-            <button class="btn-pro btn-pro-secondary" onclick="closePrintModal()">Cancel</button>
-            <button class="btn-pro btn-pro-primary" onclick="executeExport()">Export</button>
+            <button class="btn-pro btn-pro-secondary" onclick="closePrintModal()"><span data-i18n="cancel">{{ __("Cancel") }}</span></button>
+            <button class="btn-pro btn-pro-primary" onclick="executeExport()"><span data-i18n="export">{{ __("Export") }}</span></button>
         </div>
     </div>
 </div>
@@ -844,25 +867,120 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
-// Financial Chart
-new Chart(document.getElementById('financialChart'), {
-    type: 'line',
-    data: {
-        labels: @json($months),
-        datasets: [
-            { label: 'Income', data: @json($monthlyIncome), borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.05)', fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#10b981', pointBorderColor: '#fff', pointBorderWidth: 2 },
-            { label: 'Expenses', data: @json($monthlyExpense), borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.05)', fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#ef4444', pointBorderColor: '#fff', pointBorderWidth: 2 }
-        ]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8 } }, tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ₱${ctx.parsed.y.toLocaleString()}` } } }, scales: { y: { beginAtZero: true, ticks: { callback: (v) => '₱' + v.toLocaleString() } } } }
-});
+// ⭐ Helper function for translations
+function t(key, fallback) {
+    if (typeof window.t === 'function') return window.t(key, fallback);
+    if (typeof window.__t === 'function') return window.__t(key, fallback);
+    return fallback || key;
+}
+
+let financialChart = null;
+
+function buildFinancialChart() {
+    const canvas = document.getElementById('financialChart');
+    if (!canvas) return;
+    
+    if (financialChart) financialChart.destroy();
+    
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const tickColor = isDark ? 'rgba(255,255,255,0.4)' : '#888';
+    const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+    const ptBorderColor = isDark ? '#1e1e1e' : '#fff';
+    
+    const incomeLabel = t('income', 'Income');
+    const expensesLabel = t('expenses', 'Expenses');
+    
+    financialChart = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels: @json($months),
+            datasets: [
+                { 
+                    label: incomeLabel, 
+                    data: @json($monthlyIncome), 
+                    borderColor: '#10b981', 
+                    backgroundColor: 'rgba(16,185,129,0.05)', 
+                    fill: true, 
+                    tension: 0.4, 
+                    pointRadius: 4, 
+                    pointBackgroundColor: '#10b981', 
+                    pointBorderColor: ptBorderColor, 
+                    pointBorderWidth: 2 
+                },
+                { 
+                    label: expensesLabel, 
+                    data: @json($monthlyExpense), 
+                    borderColor: '#ef4444', 
+                    backgroundColor: 'rgba(239,68,68,0.05)', 
+                    fill: true, 
+                    tension: 0.4, 
+                    pointRadius: 4, 
+                    pointBackgroundColor: '#ef4444', 
+                    pointBorderColor: ptBorderColor, 
+                    pointBorderWidth: 2 
+                }
+            ]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false, 
+            plugins: { 
+                legend: { 
+                    position: 'top', 
+                    labels: { 
+                        usePointStyle: true, 
+                        boxWidth: 8,
+                        color: tickColor
+                    } 
+                }, 
+                tooltip: { 
+                    callbacks: { 
+                        label: (ctx) => `${ctx.dataset.label}: ₱${ctx.parsed.y.toLocaleString()}` 
+                    } 
+                } 
+            }, 
+            scales: { 
+                y: { 
+                    beginAtZero: true, 
+                    ticks: { 
+                        callback: (v) => '₱' + v.toLocaleString(),
+                        color: tickColor
+                    },
+                    grid: { color: gridColor }
+                },
+                x: {
+                    ticks: { color: tickColor },
+                    grid: { display: false }
+                }
+            } 
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', buildFinancialChart);
 
 let selectedSections = { stats: true, chart: true, category: true, transactions: true, allTransactions: true };
+
 function openPrintModal() { document.getElementById('printModal').style.display = 'flex'; }
 function closePrintModal() { document.getElementById('printModal').style.display = 'none'; }
-function togglePrintSection(section) { let cb = document.getElementById(`chk-${section}`); cb.checked = !cb.checked; selectedSections[section] = cb.checked; cb.closest('.print-option').classList.toggle('selected', cb.checked); }
-function applyFilters() { let url = "{{ route('reports.analytics') }}?"; if (document.getElementById('monthFilter').value) url += 'month=' + document.getElementById('monthFilter').value + '&'; if (document.getElementById('yearFilter').value) url += 'year=' + document.getElementById('yearFilter').value + '&'; if (document.getElementById('typeFilter').value) url += 'type=' + document.getElementById('typeFilter').value + '&'; window.location.href = url; }
+
+function togglePrintSection(section) { 
+    let cb = document.getElementById(`chk-${section}`); 
+    cb.checked = !cb.checked; 
+    selectedSections[section] = cb.checked; 
+    cb.closest('.print-option').classList.toggle('selected', cb.checked); 
+}
+
+function applyFilters() { 
+    let url = "{{ route('reports.analytics') }}?"; 
+    if (document.getElementById('monthFilter').value) url += 'month=' + document.getElementById('monthFilter').value + '&'; 
+    if (document.getElementById('yearFilter').value) url += 'year=' + document.getElementById('yearFilter').value + '&'; 
+    if (document.getElementById('typeFilter').value) url += 'type=' + document.getElementById('typeFilter').value + '&'; 
+    window.location.href = url; 
+}
+
 function resetFilters() { window.location.href = "{{ route('reports.analytics') }}"; }
+
 function executeExport() {
     let format = document.querySelector('input[name="exportFormat"]:checked').value;
     closePrintModal();
@@ -871,40 +989,87 @@ function executeExport() {
     else if (format === 'excel') exportToExcel();
     else if (format === 'csv') exportToCSV();
 }
+
 function printSelected() {
-    let content = '<div class="print-header"><h2>{{ $churchName }}</h2><p>Financial Report - ' + new Date().toLocaleDateString() + '</p><hr></div>';
+    let content = '<div class="print-header"><h2>{{ $churchName }}</h2><p>' + t('financial_report', 'Financial Report') + ' - ' + new Date().toLocaleDateString() + '</p><hr></div>';
     if (selectedSections.stats) content += document.getElementById('stats-section').innerHTML;
     if (selectedSections.chart) content += document.getElementById('chart-section').innerHTML;
     if (selectedSections.category) content += document.getElementById('category-section').innerHTML;
     if (selectedSections.transactions) content += document.getElementById('transactions-section').innerHTML;
     if (selectedSections.allTransactions) content += document.getElementById('all-transactions-section').innerHTML;
-    content += '<div class="print-footer"><p>Generated on ' + new Date().toLocaleString() + '</p></div>';
+    content += '<div class="print-footer"><p>' + t('generated_on', 'Generated on') + ' ' + new Date().toLocaleString() + '</p></div>';
     let w = window.open('', '_blank');
-    w.document.write(`<!DOCTYPE html><html><head><title>{{ $churchName }} Report</title><style>body{font-family:Arial,sans-serif;margin:20px}.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.kpi-card{border:1px solid #ddd;border-radius:10px;padding:15px;text-align:center}.kpi-value{font-size:24px;font-weight:bold}.text-success{color:#10b981}.text-danger{color:#ef4444}.data-table{width:100%;border-collapse:collapse}.data-table th,.data-table td{border:1px solid #ddd;padding:8px;text-align:left}.data-table th{background:#f5f5f5}.category-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee}.summary-row{display:flex;justify-content:space-between;padding:10px 0;border-top:2px solid #ddd;font-weight:bold}.print-header{text-align:center;margin-bottom:20px;border-bottom:2px solid #333}.print-footer{text-align:center;margin-top:20px;border-top:1px solid #ccc;padding-top:10px;font-size:10px}.badge-pro{padding:3px 8px;border-radius:5px;font-size:11px}.badge-income{background:#d1fae5;color:#065f46}.badge-expense{background:#fee2e2;color:#991b1b}</style></head><body>${content}</body></html>`);
-    w.document.close(); w.print();
+    w.document.write(`<!DOCTYPE html><html><head><title>{{ $churchName }} ` + t('report', 'Report') + `</title><style>body{font-family:Arial,sans-serif;margin:20px}.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.kpi-card{border:1px solid #ddd;border-radius:10px;padding:15px;text-align:center}.kpi-value{font-size:24px;font-weight:bold}.text-success{color:#10b981}.text-danger{color:#ef4444}.data-table{width:100%;border-collapse:collapse}.data-table th,.data-table td{border:1px solid #ddd;padding:8px;text-align:left}.data-table th{background:#f5f5f5}.category-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee}.summary-row{display:flex;justify-content:space-between;padding:10px 0;border-top:2px solid #ddd;font-weight:bold}.print-header{text-align:center;margin-bottom:20px;border-bottom:2px solid #333}.print-footer{text-align:center;margin-top:20px;border-top:1px solid #ccc;padding-top:10px;font-size:10px}.badge-pro{padding:3px 8px;border-radius:5px;font-size:11px}.badge-income{background:#d1fae5;color:#065f46}.badge-expense{background:#fee2e2;color:#991b1b}</style></head><body>${content}</body></html>`);
+    w.document.close(); 
+    w.print();
 }
+
 function generatePDF() {
-    let element = document.createElement('div'); element.style.padding = '20px';
-    let content = '<div class="print-header"><h2>{{ $churchName }}</h2><p>Financial Report - ' + new Date().toLocaleDateString() + '</p><hr></div>';
+    let element = document.createElement('div'); 
+    element.style.padding = '20px';
+    let content = '<div class="print-header"><h2>{{ $churchName }}</h2><p>' + t('financial_report', 'Financial Report') + ' - ' + new Date().toLocaleDateString() + '</p><hr></div>';
     if (selectedSections.stats) content += document.getElementById('stats-section').innerHTML;
     if (selectedSections.chart) content += document.getElementById('chart-section').innerHTML;
     if (selectedSections.category) content += document.getElementById('category-section').innerHTML;
     if (selectedSections.transactions) content += document.getElementById('transactions-section').innerHTML;
     if (selectedSections.allTransactions) content += document.getElementById('all-transactions-section').innerHTML;
-    content += '<div class="print-footer"><p>Generated on ' + new Date().toLocaleString() + '</p></div>';
+    content += '<div class="print-footer"><p>' + t('generated_on', 'Generated on') + ' ' + new Date().toLocaleString() + '</p></div>';
     element.innerHTML = content;
-    html2pdf().set({ margin: [0.5,0.5,0.5,0.5], filename: '{{ preg_replace('/[^a-zA-Z0-9]/', '_', $churchName) }}_Report.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(element).save();
+    html2pdf().set({ 
+        margin: [0.5,0.5,0.5,0.5], 
+        filename: '{{ preg_replace('/[^a-zA-Z0-9]/', '_', $churchName) }}_Report.pdf', 
+        image: { type: 'jpeg', quality: 0.98 }, 
+        html2canvas: { scale: 2 }, 
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } 
+    }).from(element).save();
 }
+
 function exportToExcel() {
-    let data = [['Date', 'Description', 'Category', 'Type', 'Amount', 'Remarks']];
-    @foreach($transactions as $t) data.push(['{{ $t->date }}', '{{ addslashes($t->description) }}', '{{ $t->category ?? "-" }}', '{{ ucfirst($t->type) }}', {{ $t->amount }}, '{{ addslashes($t->remarks ?? "-") }}']); @endforeach
-    let ws = XLSX.utils.aoa_to_sheet(data); let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Financial Report'); XLSX.writeFile(wb, `{{ preg_replace('/[^a-zA-Z0-9]/', '_', $churchName) }}_Report_${new Date().toISOString().slice(0,10)}.xlsx`);
+    let data = [[
+        t('date', 'Date'),
+        t('description', 'Description'),
+        t('category', 'Category'),
+        t('type', 'Type'),
+        t('amount', 'Amount'),
+        t('remarks', 'Remarks')
+    ]];
+    @foreach($transactions as $t)
+    data.push(['{{ $t->date }}', '{{ addslashes($t->description) }}', '{{ $t->category ?? "-" }}', '{{ ucfirst($t->type) }}', {{ $t->amount }}, '{{ addslashes($t->remarks ?? "-") }}']); 
+    @endforeach
+    let ws = XLSX.utils.aoa_to_sheet(data); 
+    let wb = XLSX.utils.book_new(); 
+    XLSX.utils.book_append_sheet(wb, ws, t('financial_report', 'Financial Report')); 
+    XLSX.writeFile(wb, `{{ preg_replace('/[^a-zA-Z0-9]/', '_', $churchName) }}_Report_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
+
 function exportToCSV() {
-    let csv = 'Date,Description,Category,Type,Amount,Remarks\n';
-    @foreach($transactions as $t) csv += `"{{ $t->date }}","{{ addslashes($t->description) }}","{{ $t->category ?? "-" }}","{{ ucfirst($t->type) }}",{{ $t->amount }},"{{ addslashes($t->remarks ?? "-") }}"\n`; @endforeach
-    let blob = new Blob([csv], { type: 'text/csv' }); let link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `{{ preg_replace('/[^a-zA-Z0-9]/', '_', $churchName) }}_Report_${new Date().toISOString().slice(0,10)}.csv`; link.click(); URL.revokeObjectURL(link.href);
+    let csv = t('date', 'Date') + ',' + t('description', 'Description') + ',' + t('category', 'Category') + ',' + t('type', 'Type') + ',' + t('amount', 'Amount') + ',' + t('remarks', 'Remarks') + '\n';
+    @foreach($transactions as $t)
+    csv += `"{{ $t->date }}","{{ addslashes($t->description) }}","{{ $t->category ?? "-" }}","{{ ucfirst($t->type) }}",{{ $t->amount }},"{{ addslashes($t->remarks ?? "-") }}"\n`; 
+    @endforeach
+    let blob = new Blob([csv], { type: 'text/csv' }); 
+    let link = document.createElement('a'); 
+    link.href = URL.createObjectURL(blob); 
+    link.download = `{{ preg_replace('/[^a-zA-Z0-9]/', '_', $churchName) }}_Report_${new Date().toISOString().slice(0,10)}.csv`; 
+    link.click(); 
+    URL.revokeObjectURL(link.href);
 }
+
+// ⭐ LISTEN FOR LANGUAGE CHANGES
+window.addEventListener('localeChanged', function(e) {
+    if (typeof window.applyTranslations === 'function') {
+        window.applyTranslations();
+    }
+    buildFinancialChart();
+    console.log('[Reports] Locale changed to:', e.detail.locale);
+});
+
+// ⭐ Rebuild chart on theme change
+document.addEventListener('click', function(e) {
+    if (e.target.closest('#themeToggleBtn')) {
+        setTimeout(buildFinancialChart, 150);
+    }
+});
 </script>
 
 @endsection

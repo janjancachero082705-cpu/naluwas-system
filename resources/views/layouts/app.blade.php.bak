@@ -15,120 +15,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-    {{-- ⭐ TRANSLATIONS INJECTOR — Inline for real-time switching --}}
-    @php
-        $langs = ['en', 'tl', 'ceb'];
-        $allTranslations = [];
-        foreach ($langs as $lang) {
-            $path = base_path("lang/{$lang}.json");
-            if (file_exists($path)) {
-                $content = file_get_contents($path);
-                $content = preg_replace('/^\xEF\xBB\xBF/', '', $content);
-                $allTranslations[$lang] = json_decode($content, true) ?: [];
-            } else {
-                $allTranslations[$lang] = [];
-            }
-        }
-    @endphp
-    <script>
-        window.__translations = {!! json_encode($allTranslations, JSON_UNESCAPED_UNICODE) !!};
-        window.__currentLocale = '{{ app()->getLocale() }}';
-
-        /**
-         * Translate a key. Priority:
-         * 1. Translation sa current locale
-         * 2. Translation sa 'en' (fallback)
-         * 3. Fallback param
-         * 4. Key itself
-         */
-        window.__t = function(key, fallback) {
-            var current = window.__translations[window.__currentLocale] || {};
-            var english = window.__translations['en'] || {};
-            return current[key] || english[key] || fallback || key;
-        };
-
-        /**
-         * Alias — para sa ubang views nga nagamit og window.t()
-         */
-        window.t = function(key, fallback) {
-            return window.__t(key, fallback);
-        };
-
-        /**
-         * Apply translations sa tanan [data-i18n] elements.
-         * Preserve ang icons (i elements) sulod sa span.
-         */
-        window.applyTranslations = function() {
-            document.querySelectorAll('[data-i18n]').forEach(function(el) {
-                var key = el.getAttribute('data-i18n');
-                var translated = window.__t(key);
-
-                if (translated && translated !== key) {
-                    // Kung naay icons (i, svg) sulod — replace text nodes lang
-                    var hasChildElements = el.querySelector('i, svg, img');
-                    if (hasChildElements) {
-                        // Update text nodes only
-                        var textUpdated = false;
-                        for (var i = 0; i < el.childNodes.length; i++) {
-                            var node = el.childNodes[i];
-                            if (node.nodeType === 3 && node.textContent.trim()) {
-                                node.textContent = translated;
-                                textUpdated = true;
-                                break;
-                            }
-                        }
-                        if (!textUpdated) {
-                            el.appendChild(document.createTextNode(translated));
-                        }
-                    } else {
-                        el.textContent = translated;
-                    }
-                }
-            });
-
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
-                var key = el.getAttribute('data-i18n-placeholder');
-                var translated = window.__t(key);
-                if (translated) el.placeholder = translated;
-            });
-
-            document.querySelectorAll('[data-i18n-title]').forEach(function(el) {
-                var key = el.getAttribute('data-i18n-title');
-                var translated = window.__t(key);
-                if (translated) el.title = translated;
-            });
-        };
-
-        /**
-         * Change locale + apply translations + dispatch event.
-         * Called from profile page kung mag-change language.
-         */
-        window.setLocale = function(locale) {
-            window.__currentLocale = locale;
-            document.documentElement.setAttribute('lang', locale);
-            window.applyTranslations();
-
-            // ⭐ Dispatch event para ma-notify ang ubang components
-            window.dispatchEvent(new CustomEvent('localeChanged', {
-                detail: { locale: locale }
-            }));
-
-            console.log('[i18n] Locale changed to:', locale);
-        };
-
-        // Apply translations on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            window.applyTranslations();
-        });
-
-        // Also apply immediately in case DOMContentLoaded already fired
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', window.applyTranslations);
-        } else {
-            window.applyTranslations();
-        }
-    </script>
-
     <style>
         /* ============================================================
            DESIGN TOKENS
@@ -243,6 +129,9 @@
             75%      { transform: translate(50px, 40px) scale(1.05); }
         }
 
+        /* ============================================================
+           PROFILE IMAGE HELPERS (NEW)
+           ============================================================ */
         [data-profile-image],
         [data-profile-initials] {
             transition: opacity 0.3s var(--ease-out);
@@ -251,6 +140,9 @@
             opacity: 0.5;
         }
 
+        /* ============================================================
+           SIDEBAR
+           ============================================================ */
         .sidebar-container {
             position: fixed;
             left: 0; top: 0;
@@ -449,6 +341,9 @@
             50% { opacity: 0.65; }
         }
 
+        /* ============================================================
+           CHURCH ADMIN SECTION
+           ============================================================ */
         .user-section {
             flex-shrink: 0;
             padding: 0.9rem;
@@ -590,6 +485,7 @@
         }
         .admin-card:hover .admin-role-pill i { color: #E8C277; }
 
+        /* ---- Sign Out Button ---- */
         .logout-btn {
             position: relative;
             width: 100%;
@@ -638,6 +534,9 @@
             box-shadow: 0 4px 10px -6px rgba(176,59,52,0.6);
         }
 
+        /* ============================================================
+           MAIN
+           ============================================================ */
         .main-content {
             margin-left: 264px;
             height: 100vh;
@@ -677,79 +576,41 @@
 
         .header-right { display: flex; align-items: center; gap: 10px; position: relative; }
 
-        /* ============================================================
-           LIVE INDICATOR — COLOR DOT ONLY
-           ============================================================ */
         .live-indicator {
-            width: 42px;
-            height: 42px;
-            border-radius: var(--r-md);
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
+            gap: 6px;
+            font-size: 0.64rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border-radius: 30px;
+            background: rgba(22,160,117,0.1);
+            color: #16805E;
+            border: 1px solid rgba(22,160,117,0.18);
             transition: all 0.3s var(--ease-out);
-            position: relative;
-            box-shadow: 0 1px 2px rgba(15,27,45,0.03);
-            cursor: default;
+            text-transform: uppercase;
         }
-
-        .live-indicator .status-dot {
+        .live-indicator .pulse {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 6px; height: 6px;
             border-radius: 50%;
             background: #16A075;
-            box-shadow: 0 0 0 0 rgba(22,160,117,0.7);
-            animation: pulseStatusDot 2s infinite;
-            transition: background 0.3s ease, box-shadow 0.3s ease;
+            animation: pulseDot 1.5s infinite;
+            box-shadow: 0 0 0 0 rgba(22,160,117,0.5);
         }
-
-        @keyframes pulseStatusDot {
-            0%   { box-shadow: 0 0 0 0 rgba(22,160,117,0.7); }
-            70%  { box-shadow: 0 0 0 10px rgba(22,160,117,0); }
-            100% { box-shadow: 0 0 0 0 rgba(22,160,117,0); }
-        }
-
-        .live-indicator.connected {
-            background: rgba(22,160,117,0.08);
-            border-color: rgba(22,160,117,0.25);
-        }
-        .live-indicator.connected .status-dot {
-            background: #16A075;
-            animation: pulseStatusDot 2s infinite;
-        }
-
-        .live-indicator.connecting {
-            background: rgba(225,161,0,0.08);
-            border-color: rgba(225,161,0,0.25);
-        }
-        .live-indicator.connecting .status-dot {
-            background: #E1A100;
-            box-shadow: 0 0 0 0 rgba(225,161,0,0.7);
-            animation: pulseStatusDotAmber 1.2s infinite;
-        }
-        @keyframes pulseStatusDotAmber {
-            0%   { box-shadow: 0 0 0 0 rgba(225,161,0,0.7); }
-            70%  { box-shadow: 0 0 0 10px rgba(225,161,0,0); }
-            100% { box-shadow: 0 0 0 0 rgba(225,161,0,0); }
-        }
-
         .live-indicator.disconnected {
-            background: rgba(208,85,78,0.08);
-            border-color: rgba(208,85,78,0.25);
+            background: rgba(208,85,78,0.1);
+            color: #B03B34;
+            border-color: rgba(208,85,78,0.2);
         }
-        .live-indicator.disconnected .status-dot {
-            background: #D0554E;
-            box-shadow: 0 0 0 0 rgba(208,85,78,0.7);
-            animation: pulseStatusDotRed 1s infinite;
+        .live-indicator.disconnected .pulse { background: #D0554E; animation: none; }
+        .live-indicator.connecting {
+            background: rgba(225,161,0,0.1);
+            color: #96691F;
+            border-color: rgba(225,161,0,0.2);
         }
-        @keyframes pulseStatusDotRed {
-            0%   { box-shadow: 0 0 0 0 rgba(208,85,78,0.7); }
-            70%  { box-shadow: 0 0 0 10px rgba(208,85,78,0); }
-            100% { box-shadow: 0 0 0 0 rgba(208,85,78,0); }
-        }
+        .live-indicator.connecting .pulse { background: #E1A100; animation: pulseDot 0.8s infinite; }
 
         .header-message-btn,
         .header-notif {
@@ -1330,8 +1191,8 @@
             .logo-toast { bottom: 84px; right: 16px; left: 16px; }
             .notification-dropdown { width: calc(100vw - 32px); right: -16px; }
             .toast-container { max-width: calc(100vw - 32px); right: 16px; }
-            .live-indicator { width: 38px; height: 38px; }
-            .live-indicator .status-dot { width: 10px; height: 10px; }
+            .live-indicator span:not(.pulse) { display: none; }
+            .live-indicator { padding: 6px; }
             .user-dropdown-menu { min-width: 280px; right: -10px; }
         }
     </style>
@@ -1423,35 +1284,35 @@
         <div class="nav-menu-wrap">
             <nav class="nav-menu">
                 <div class="nav-section">
-                    <div class="nav-section-title"><i class="fas fa-th-large"></i> <span data-i18n="Main">{{ __("Main") }}</span></div>
+                    <div class="nav-section-title"><i class="fas fa-th-large"></i> Main</div>
 
                     <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('Dashboard') ? 'active' : '' }}">
-                        <i class="fas fa-tachometer-alt"></i> <span data-i18n="Dashboard">{{ __("Dashboard") }}</span>
+                        <i class="fas fa-tachometer-alt"></i> <span>Dashboard</span>
                     </a>
 
                     <a href="{{ route('members.index') }}" class="nav-item {{ request()->routeIs('Members.*') ? 'active' : '' }}">
-                        <i class="fas fa-users"></i> <span data-i18n="Members">{{ __("Members") }}</span>
+                        <i class="fas fa-users"></i> <span>Members</span>
                     </a>
 
                     <a href="{{ route('finance.index') }}" class="nav-item {{ request()->routeIs('Finance.*') ? 'active' : '' }}">
-                        <i class="fas fa-coins"></i> <span data-i18n="Finance">{{ __("Finance") }}</span>
+                        <i class="fas fa-coins"></i> <span>Finance</span>
                         <span class="nav-badge finance"><i class="fas fa-arrow-trend-up"></i></span>
                     </a>
 
                     <a href="{{ route('sunday-attendance.index') }}" class="nav-item {{ request()->routeIs('Sunday Attendance.*') ? 'active' : '' }}">
-                        <i class="fas fa-church"></i> <span data-i18n="Sunday Attendance">{{ __("Sunday Attendance") }}</span>
+                        <i class="fas fa-church"></i> <span>Sunday Attendance</span>
                     </a>
 
                     <a href="{{ route('inventory.index') }}" class="nav-item {{ request()->routeIs('Inventory.*') ? 'active' : '' }}">
-                        <i class="fas fa-boxes"></i> <span data-i18n="Inventory">{{ __("Inventory") }}</span>
+                        <i class="fas fa-boxes"></i> <span>Inventory</span>
                     </a>
                 </div>
 
                 <div class="nav-section">
-                    <div class="nav-section-title"><i class="fas fa-comment-dots"></i> <span data-i18n="Communication">{{ __("Communication") }}</span></div>
+                    <div class="nav-section-title"><i class="fas fa-comment-dots"></i> Communication</div>
 
                     <a href="{{ route('messages.index') }}" class="nav-item {{ request()->routeIs('Messages.*') ? 'active' : '' }}">
-                        <i class="fas fa-envelope"></i> <span data-i18n="Messages">{{ __("Messages") }}</span>
+                        <i class="fas fa-envelope"></i> <span>Messages</span>
                         @if($unreadMsgCount > 0)
                             <span class="nav-badge message-badge">{{ $unreadMsgCount > 99 ? '99+' : $unreadMsgCount }}</span>
                         @endif
@@ -1459,25 +1320,25 @@
                 </div>
 
                 <div class="nav-section">
-                    <div class="nav-section-title"><i class="fas fa-music"></i> <span data-i18n="Choir Ministry">{{ __("Choir Ministry") }}</span></div>
+                    <div class="nav-section-title"><i class="fas fa-music"></i> Choir Ministry</div>
 
                     <a href="{{ route('choir-members.index') }}" class="nav-item {{ request()->routeIs('Choir Members.*') ? 'active' : '' }}">
-                        <i class="fas fa-music"></i> <span data-i18n="Choir Members">{{ __("Choir Members") }}</span>
+                        <i class="fas fa-music"></i> <span>Choir Members</span>
                         @if($choirCount > 0)
                             <span class="nav-badge">{{ $choirCount }}</span>
                         @endif
                     </a>
 
                     <a href="{{ route('choir-schedules.index') }}" class="nav-item {{ request()->routeIs('choir-schedules.*') ? 'active' : '' }}">
-                        <i class="fas fa-calendar-alt"></i> <span data-i18n="Schedules">{{ __("Schedules") }}</span>
+                        <i class="fas fa-calendar-alt"></i> <span>Schedules</span>
                     </a>
                 </div>
 
                 <div class="nav-section">
-                    <div class="nav-section-title"><i class="fas fa-chart-line"></i> <span data-i18n="Reports">{{ __("Reports") }}</span></div>
+                    <div class="nav-section-title"><i class="fas fa-chart-line"></i> Reports</div>
 
                     <a href="{{ route('reports.analytics') }}" class="nav-item {{ request()->routeIs('reports.analytics') ? 'active' : '' }}">
-                        <i class="fas fa-chart-pie"></i> <span data-i18n="Reports &amp; Analytics">{{ __("Reports & Analytics") }}</span>
+                        <i class="fas fa-chart-pie"></i> <span>Reports & Analytics</span>
                     </a>
                 </div>
             </nav>
@@ -1488,17 +1349,20 @@
             <div class="admin-card">
                 <div class="admin-avatar-wrap" id="sidebar-avatar-wrap">
                     @if($user && $user->profile_picture)
+                        {{-- ✅ Profile image with data attribute for JS targeting --}}
                         <img src="{{ $user->profile_picture_url }}"
                              alt="{{ $user->name }}"
                              class="admin-avatar-img"
                              data-profile-image="sidebar"
                              onerror="handleProfileImageError(this, 'sidebar');">
+                        {{-- ✅ Hidden fallback initials (shown only if image fails) --}}
                         <div class="admin-avatar-initials"
                              data-profile-initials="sidebar"
                              style="background: linear-gradient(135deg, #D3A24C, #B9862F); display: none;">
                             {{ $user?->initials ?? 'A' }}
                         </div>
                     @else
+                        {{-- ✅ No picture: show initials directly --}}
                         <div class="admin-avatar-initials"
                              data-profile-initials="sidebar"
                              style="background: linear-gradient(135deg, #D3A24C, #B9862F);">
@@ -1512,7 +1376,7 @@
 
                 <span class="admin-role-pill">
                     <i class="fas fa-crown"></i>
-                    <span data-i18n="{{ $user->role ?? 'church_admin' }}">{{ ucwords(str_replace('_', ' ', $user->role ?? 'church admin')) }}</span>
+                    {{ ucwords(str_replace('_', ' ', $user->role ?? 'church admin')) }}
                 </span>
             </div>
 
@@ -1520,7 +1384,7 @@
                 @csrf
                 <button type="submit" class="logout-btn">
                     <i class="fas fa-arrow-right-from-bracket"></i>
-                    <span data-i18n="Sign Out">{{ __("Sign Out") }}</span>
+                    <span>Sign Out</span>
                 </button>
             </form>
         </div>
@@ -1534,11 +1398,12 @@
             </div>
 
             <div class="header-right">
-                <div class="live-indicator connected" id="liveIndicator" title="Connected">
-                    <span class="status-dot"></span>
+                <div class="live-indicator connected" id="liveIndicator">
+                    <span class="pulse"></span>
+                    <span>Live</span>
                 </div>
 
-                <a href="{{ route('messages.index') }}" class="header-message-btn" title="Messages" data-i18n-title="Messages">
+                <a href="{{ route('messages.index') }}" class="header-message-btn" title="Messages">
                     <i class="fas fa-envelope"></i>
                     @if($unreadMsgCount > 0)
                         <span class="msg-dot">{{ $unreadMsgCount > 99 ? '99+' : $unreadMsgCount }}</span>
@@ -1546,7 +1411,7 @@
                 </a>
 
                 <div style="position: relative;">
-                    <button class="header-notif" id="notificationBell" title="Notifications" data-i18n-title="Notifications">
+                    <button class="header-notif" id="notificationBell" title="Notifications">
                         <i class="fas fa-bell"></i>
                         <span class="notif-dot {{ $unreadMsgCount > 0 ? 'has-messages' : '' }}" id="notifCount" style="{{ $unreadMsgCount > 0 ? 'display: flex;' : 'display: none;' }}">
                             {{ $unreadMsgCount > 0 ? ($unreadMsgCount > 99 ? '99+' : $unreadMsgCount) : '0' }}
@@ -1555,18 +1420,18 @@
 
                     <div class="notification-dropdown" id="notificationDropdown">
                         <div class="dropdown-header">
-                            <span data-i18n="Notifications">{{ __("Notifications") }}</span>
+                            <span>Notifications</span>
                             <span class="notif-total" id="notifTotalCount">{{ $unreadMsgCount }}</span>
                         </div>
                         <div class="dropdown-list" id="notificationList">
                             <div class="dropdown-empty">
                                 <i class="fas fa-bell-slash"></i>
-                                <span data-i18n="No notifications">{{ __("No notifications") }}</span>
+                                <span>No notifications</span>
                             </div>
                         </div>
                         <div class="dropdown-footer">
                             <a href="{{ route('messages.index') }}">
-                                <i class="fas fa-envelope"></i> <span data-i18n="Go to Messages">{{ __("Go to Messages") }}</span>
+                                <i class="fas fa-envelope"></i> <span>Go to Messages</span>
                                 @if($unreadMsgCount > 0)
                                     <span class="msg-count-badge">{{ $unreadMsgCount }}</span>
                                 @endif
@@ -1630,20 +1495,20 @@
 
                         <a href="{{ route('profile.edit') }}" class="dropdown-menu-item">
                             <i class="fas fa-user-cog"></i>
-                            <span data-i18n="My Profile">{{ __("My Profile") }}</span>
+                            <span>My Profile</span>
                         </a>
 
                         <button class="dropdown-menu-item" id="securitySettingsBtn">
                             <i class="fas fa-shield-alt"></i>
-                            <span data-i18n="Security">{{ __("Security") }}</span>
-                            <span class="badge" data-i18n="Secure">{{ __("Secure") }}</span>
+                            <span>Security</span>
+                            <span class="badge">Secure</span>
                         </button>
 
                         <div class="dropdown-divider"></div>
 
                         <button class="dropdown-menu-item danger" onclick="document.getElementById('logout-form').submit();">
                             <i class="fas fa-sign-out-alt"></i>
-                            <span data-i18n="Sign Out">{{ __("Sign Out") }}</span>
+                            <span>Sign Out</span>
                         </button>
                     </div>
                 </div>
@@ -1675,30 +1540,30 @@
                 <div class="modal-header">
                     <h5 class="modal-title">
                         <i class="fas fa-shield-alt me-2" style="color: var(--brass-2);"></i>
-                        <span data-i18n="Security">{{ __("Security") }}</span>
+                        <span>Security</span>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="password-section">
-                        <h6><i class="fas fa-key"></i> <span data-i18n="Change Password">{{ __("Change Password") }}</span></h6>
+                        <h6><i class="fas fa-key"></i> Change Password</h6>
                         <form id="passwordChangeForm">
                             @csrf
                             <div class="form-group">
-                                <label data-i18n="Current Password">{{ __("Current Password") }}</label>
-                                <input type="password" class="form-control" id="currentPassword" required placeholder="Enter current password" data-i18n-placeholder="Enter current password">
+                                <label>Current Password</label>
+                                <input type="password" class="form-control" id="currentPassword" required placeholder="Enter current password">
                             </div>
                             <div class="form-group">
-                                <label data-i18n="New Password">{{ __("New Password") }}</label>
-                                <input type="password" class="form-control" id="newPassword" required minlength="8" placeholder="Enter new password" data-i18n-placeholder="Enter new password">
+                                <label>New Password</label>
+                                <input type="password" class="form-control" id="newPassword" required minlength="8" placeholder="Enter new password">
                             </div>
                             <div class="form-group">
-                                <label data-i18n="Confirm Password">{{ __("Confirm Password") }}</label>
-                                <input type="password" class="form-control" id="confirmPassword" required placeholder="Confirm new password" data-i18n-placeholder="Confirm new password">
+                                <label>Confirm Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" required placeholder="Confirm new password">
                             </div>
                             <div id="passwordStrength" class="mt-2" style="font-size:0.8rem;color:var(--text-muted);">
-                                <span data-i18n="Password Strength:">{{ __("Password Strength:") }}</span>
-                                <span id="strengthText" data-i18n="Weak">{{ __("Weak") }}</span>
+                                <span>Password Strength:</span>
+                                <span id="strengthText">Weak</span>
                                 <div class="progress mt-1" style="height:4px;border-radius:10px;background:var(--border-light);">
                                     <div id="strengthBar" class="progress-bar" style="width:0%;background:#B03B34;border-radius:10px;" role="progressbar"></div>
                                 </div>
@@ -1707,8 +1572,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="Cancel">{{ __("Cancel") }}</button>
-                    <button type="button" class="btn btn-primary" id="saveSecuritySettings" data-i18n="Update Password">{{ __("Update Password") }}</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveSecuritySettings">Update Password</button>
                 </div>
             </div>
         </div>
@@ -1723,8 +1588,12 @@
 
     <script>
         // ============================================
-        // PROFILE IMAGE HELPERS
+        // PROFILE IMAGE HELPERS (NEW)
         // ============================================
+
+        /**
+         * Handle broken profile images — swap to initials fallback.
+         */
         function handleProfileImageError(imgEl, key) {
             if (!imgEl) return;
             imgEl.style.display = 'none';
@@ -1735,15 +1604,27 @@
         }
         window.handleProfileImageError = handleProfileImageError;
 
+        /**
+         * Update ALL profile images across the layout.
+         * Called after successful AJAX upload on the profile page.
+         *
+         * @param {string} url - The new profile picture URL (with cache-buster)
+         */
         function updateProfileImages(url) {
             if (!url) return;
+
+            // Update every [data-profile-image] element
             document.querySelectorAll('[data-profile-image]').forEach(img => {
                 img.classList.add('is-loading');
+
+                // Preload to avoid flicker
                 const preload = new Image();
                 preload.onload = () => {
                     img.src = url;
-                    img.style.display = '';
+                    img.style.display = ''; // show image
                     img.classList.remove('is-loading');
+
+                    // Hide the corresponding initials fallback
                     const key = img.getAttribute('data-profile-image');
                     const fallback = document.querySelector(`[data-profile-initials="${key}"]`);
                     if (fallback) fallback.style.display = 'none';
@@ -1757,6 +1638,9 @@
         }
         window.updateProfileImages = updateProfileImages;
 
+        /**
+         * Remove profile images and show initials (after delete).
+         */
         function removeProfileImages() {
             document.querySelectorAll('[data-profile-image]').forEach(img => {
                 img.style.display = 'none';
@@ -2024,13 +1908,13 @@
                     liveIndicator.classList.remove('connected', 'disconnected', 'connecting');
                     if (status === 'connected') {
                         liveIndicator.classList.add('connected');
-                        liveIndicator.setAttribute('title', 'Connected');
+                        liveIndicator.innerHTML = '<span class="pulse"></span><span>Live</span>';
                     } else if (status === 'connecting') {
                         liveIndicator.classList.add('connecting');
-                        liveIndicator.setAttribute('title', 'Connecting...');
+                        liveIndicator.innerHTML = '<span class="pulse"></span><span>Connecting...</span>';
                     } else {
                         liveIndicator.classList.add('disconnected');
-                        liveIndicator.setAttribute('title', 'Disconnected');
+                        liveIndicator.innerHTML = '<span class="pulse"></span><span>Offline</span>';
                     }
                 }
                 updateConnectionStatus('connecting');

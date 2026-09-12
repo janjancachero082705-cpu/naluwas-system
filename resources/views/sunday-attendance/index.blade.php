@@ -1,19 +1,12 @@
 @extends('layouts.app')
 
 @section('header')
-    <span data-i18n="sunday_attendance">Sunday Service Attendance</span>
+    <span data-i18n="sunday_attendance">{{ __("Sunday Service Attendance") }}</span>
 @endsection
 
 @section('content')
 
-{{-- ============================================= --}}
-{{-- STYLES SECTION --}}
-{{-- ============================================= --}}
 <style>
-    /* ============================================
-       MODERN DESIGN - MATCHING FINANCIAL MANAGEMENT
-    ============================================ */
-    
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
     
     :root {
@@ -31,7 +24,6 @@
         --shadow-card-hover: 0 24px 80px rgba(0,0,0,0.12);
     }
     
-    /* Hero Section - Gradient */
     .attendance-hero {
         background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
         border-radius: 20px;
@@ -177,7 +169,6 @@
         text-decoration: none;
     }
     
-    /* Stats Grid - Premium */
     .stats-grid-premium {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -263,7 +254,6 @@
     .stat-card-premium .stat-change.positive { color: #10B981; }
     .stat-card-premium .stat-change.negative { color: #EF4444; }
     
-    /* Gradient variants */
     .stat-card-premium.blue::before { background: var(--gradient-blue); }
     .stat-card-premium.green::before { background: var(--gradient-green); }
     .stat-card-premium.red::before { background: var(--gradient-red); }
@@ -272,7 +262,6 @@
     .stat-card-premium.green .stat-icon-wrap { background: var(--gradient-green); box-shadow: var(--shadow-glow-green); }
     .stat-card-premium.red .stat-icon-wrap { background: var(--gradient-red); box-shadow: var(--shadow-glow-red); }
     
-    /* Date Selector - Premium */
     .date-selector-premium {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
@@ -393,19 +382,10 @@
         border-color: #4F46E5;
     }
     
-    .btn-week-premium i {
-        transition: transform 0.2s ease;
-    }
+    .btn-week-premium i { transition: transform 0.2s ease; }
+    .btn-week-prev:hover i { transform: translateX(-3px); }
+    .btn-week-next:hover i { transform: translateX(3px); }
     
-    .btn-week-prev:hover i {
-        transform: translateX(-3px);
-    }
-    
-    .btn-week-next:hover i {
-        transform: translateX(3px);
-    }
-    
-    /* Table Container - Premium */
     .table-container-premium {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
@@ -465,11 +445,8 @@
         border: 1px solid var(--border-color);
     }
     
-    .auto-save-status .fa-check-circle {
-        color: #10B981;
-    }
+    .auto-save-status .fa-check-circle { color: #10B981; }
     
-    /* Table - Premium */
     .table-premium {
         width: 100%;
         border-collapse: collapse;
@@ -498,19 +475,10 @@
         font-size: 0.8rem;
     }
     
-    .table-premium tbody tr {
-        transition: all 0.15s ease;
-    }
+    .table-premium tbody tr { transition: all 0.15s ease; }
+    .table-premium tbody tr:hover { background: var(--bg-tertiary) !important; }
+    .table-premium tbody tr:hover td { background: var(--bg-tertiary) !important; }
     
-    .table-premium tbody tr:hover {
-        background: var(--bg-tertiary) !important;
-    }
-    
-    .table-premium tbody tr:hover td {
-        background: var(--bg-tertiary) !important;
-    }
-    
-    /* Member Info */
     .member-info-premium {
         display: flex;
         align-items: center;
@@ -548,12 +516,8 @@
         gap: 4px;
     }
     
-    .member-role-premium i {
-        color: #10B981;
-        font-size: 0.55rem;
-    }
+    .member-role-premium i { color: #10B981; font-size: 0.55rem; }
     
-    /* Status Select - Premium */
     .status-select-premium {
         padding: 4px 12px;
         border-radius: 8px;
@@ -573,20 +537,13 @@
         box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
     }
     
+    .status-select-premium option { background: var(--card-bg); color: var(--text-primary); }
     .status-select-premium option[value="Present"] { color: #10B981; }
     .status-select-premium option[value="Absent"] { color: #EF4444; }
     
-    .status-select-premium.changed {
-        border-color: #F59E0B;
-        background: rgba(245, 158, 11, 0.05);
-    }
+    .status-select-premium.changed { border-color: #F59E0B; background: rgba(245, 158, 11, 0.05); }
+    .status-select-premium.saved { border-color: #10B981; background: rgba(16, 185, 129, 0.05); }
     
-    .status-select-premium.saved {
-        border-color: #10B981;
-        background: rgba(16, 185, 129, 0.05);
-    }
-    
-    /* Notes Input - Premium */
     .notes-input-premium {
         width: 100%;
         padding: 4px 12px;
@@ -605,21 +562,10 @@
         box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
     }
     
-    .notes-input-premium::placeholder {
-        color: var(--text-muted);
-    }
+    .notes-input-premium::placeholder { color: var(--text-muted); }
+    .notes-input-premium.changed { border-color: #F59E0B; background: rgba(245, 158, 11, 0.05); }
+    .notes-input-premium.saved { border-color: #10B981; background: rgba(16, 185, 129, 0.05); }
     
-    .notes-input-premium.changed {
-        border-color: #F59E0B;
-        background: rgba(245, 158, 11, 0.05);
-    }
-    
-    .notes-input-premium.saved {
-        border-color: #10B981;
-        background: rgba(16, 185, 129, 0.05);
-    }
-    
-    /* Alerts */
     .alert-box-premium {
         border-radius: 12px;
         padding: 0.8rem 1.2rem;
@@ -633,14 +579,10 @@
         color: var(--text-primary);
     }
     
-    .alert-box-premium i {
-        font-size: 1rem;
-    }
-    
+    .alert-box-premium i { font-size: 1rem; }
     .alert-box-premium .fa-check-circle { color: #10B981; }
     .alert-box-premium .fa-exclamation-triangle { color: #F59E0B; }
     
-    /* Empty State */
     .empty-state-premium {
         text-align: center;
         padding: 3rem 1.5rem;
@@ -654,12 +596,8 @@
         color: #10B981;
     }
     
-    .empty-state-premium p {
-        font-size: 0.85rem;
-        margin: 0;
-    }
+    .empty-state-premium p { font-size: 0.85rem; margin: 0; }
     
-    /* Toast */
     .auto-save-toast {
         position: fixed;
         bottom: 30px;
@@ -680,28 +618,12 @@
         font-weight: 500;
     }
     
-    .auto-save-toast.show {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    .auto-save-toast.show { transform: translateY(0); opacity: 1; }
+    .auto-save-toast.success { border-left: 4px solid #10B981; }
+    .auto-save-toast.success i { color: #10B981; }
+    .auto-save-toast.error { border-left: 4px solid #EF4444; }
+    .auto-save-toast.error i { color: #EF4444; }
     
-    .auto-save-toast.success {
-        border-left: 4px solid #10B981;
-    }
-    
-    .auto-save-toast.success i {
-        color: #10B981;
-    }
-    
-    .auto-save-toast.error {
-        border-left: 4px solid #EF4444;
-    }
-    
-    .auto-save-toast.error i {
-        color: #EF4444;
-    }
-    
-    /* Custom Alert */
     .custom-alert-overlay {
         display: none;
         position: fixed;
@@ -717,9 +639,7 @@
         animation: fadeIn 0.25s ease;
     }
     
-    .custom-alert-overlay.active {
-        display: flex;
-    }
+    .custom-alert-overlay.active { display: flex; }
     
     .custom-alert {
         background: var(--card-bg);
@@ -744,10 +664,7 @@
         margin: 0 auto 0.8rem;
     }
     
-    .custom-alert-icon i {
-        font-size: 2rem;
-        color: #EF4444;
-    }
+    .custom-alert-icon i { font-size: 2rem; color: #EF4444; }
     
     .custom-alert h3 {
         font-size: 1.1rem;
@@ -776,10 +693,7 @@
         border: 1px solid var(--border-color);
     }
     
-    .custom-alert .alert-date i {
-        color: #F59E0B;
-        margin-right: 6px;
-    }
+    .custom-alert .alert-date i { color: #F59E0B; margin-right: 6px; }
     
     .btn-alert-close {
         padding: 0.6rem 2rem;
@@ -800,147 +714,58 @@
         box-shadow: 0 12px 40px rgba(79, 70, 229, 0.4);
     }
     
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px) scale(0.96);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
+        from { opacity: 0; transform: translateY(20px) scale(0.96); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
     }
     
-    /* Responsive */
     @media (max-width: 992px) {
-        .attendance-hero .hero-content {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .attendance-hero .hero-actions {
-            width: 100%;
-        }
+        .attendance-hero .hero-content { flex-direction: column; align-items: flex-start; }
+        .attendance-hero .hero-actions { width: 100%; }
     }
     
     @media (max-width: 768px) {
-        .attendance-hero {
-            padding: 1.5rem;
-            border-radius: 16px;
-        }
-        
-        .attendance-hero h1 {
-            font-size: 1.3rem;
-        }
-        
-        .stats-grid-premium {
-            grid-template-columns: 1fr;
-            gap: 0.8rem;
-        }
-        
-        .stat-card-premium {
-            padding: 1rem;
-        }
-        
-        .stat-card-premium .stat-value {
-            font-size: 1.3rem;
-        }
-        
-        .stat-card-premium .stat-icon-wrap {
-            width: 36px;
-            height: 36px;
-            font-size: 0.9rem;
-        }
-        
-        .date-selector-premium {
-            padding: 1rem 1.2rem;
-        }
-        
-        .selector-group {
-            flex-direction: column;
-            align-items: stretch !important;
-        }
-        
-        .selector-item input {
-            width: 100%;
-        }
-        
-        .week-nav {
-            width: 100%;
-            flex-direction: column;
-        }
-        
-        .btn-week-premium {
-            width: 100%;
-            justify-content: center;
-        }
-        
-        .btn-hero-primary,
-        .btn-hero-secondary {
-            width: 100%;
-            justify-content: center;
-        }
-        
-        .table-header-premium {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .table-premium thead th,
-        .table-premium tbody td {
-            padding: 0.4rem 0.6rem;
-            font-size: 0.65rem;
-        }
-        
-        .member-avatar-premium {
-            width: 28px;
-            height: 28px;
-            font-size: 0.6rem;
-        }
-        
-        .member-name-premium {
-            font-size: 0.75rem;
-        }
-        
-        .status-select-premium {
-            width: 100px;
-            font-size: 0.65rem;
-        }
+        .attendance-hero { padding: 1.5rem; border-radius: 16px; }
+        .attendance-hero h1 { font-size: 1.3rem; }
+        .stats-grid-premium { grid-template-columns: 1fr; gap: 0.8rem; }
+        .stat-card-premium { padding: 1rem; }
+        .stat-card-premium .stat-value { font-size: 1.3rem; }
+        .stat-card-premium .stat-icon-wrap { width: 36px; height: 36px; font-size: 0.9rem; }
+        .date-selector-premium { padding: 1rem 1.2rem; }
+        .selector-group { flex-direction: column; align-items: stretch !important; }
+        .selector-item input { width: 100%; }
+        .week-nav { width: 100%; flex-direction: column; }
+        .btn-week-premium { width: 100%; justify-content: center; }
+        .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; }
+        .table-header-premium { flex-direction: column; align-items: flex-start; }
+        .table-premium thead th, .table-premium tbody td { padding: 0.4rem 0.6rem; font-size: 0.65rem; }
+        .member-avatar-premium { width: 28px; height: 28px; font-size: 0.6rem; }
+        .member-name-premium { font-size: 0.75rem; }
+        .status-select-premium { width: 100px; font-size: 0.65rem; }
     }
     
     @media (max-width: 480px) {
-        .attendance-hero .hero-actions {
-            flex-direction: column;
-        }
+        .attendance-hero .hero-actions { flex-direction: column; }
     }
 </style>
 
-{{-- ============================================= --}}
-{{-- MAIN CONTENT --}}
-{{-- ============================================= --}}
 <div class="container-fluid px-0">
 
-    {{-- ============================================ --}}
-    {{-- HERO SECTION - GRADIENT --}}
-    {{-- ============================================ --}}
+    {{-- HERO SECTION --}}
     <div class="attendance-hero">
         <div class="hero-content">
             <div class="hero-left">
-                <h1><i class="fas fa-church"></i> <span data-i18n="sunday_attendance">Sunday Service Attendance</span></h1>
-                <p><span data-i18n="sunday_attendance_desc">Record and manage attendance for Sunday worship services</span></p>
+                <h1><i class="fas fa-church"></i> <span data-i18n="sunday_attendance">{{ __("Sunday Service Attendance") }}</span></h1>
+                <p><span data-i18n="sunday_attendance_desc">{{ __("Record and manage attendance for Sunday worship services") }}</span></p>
                 <div class="hero-badge">
                     <i class="fas fa-circle" style="color: #34D399; font-size: 0.5rem;"></i>
-                    <span data-i18n="sunday_service_label">Sunday Service</span> • {{ \Carbon\Carbon::parse($selectedDate)->format('F d, Y') }}
+                    <span data-i18n="sunday_service_label">{{ __("Sunday Service") }}</span> • {{ \Carbon\Carbon::parse($selectedDate)->format('F d, Y') }}
                 </div>
             </div>
             <div class="hero-actions">
                 <a href="{{ route('sunday-attendance.records', ['date' => $selectedDate]) }}" class="btn-hero-primary">
-                    <i class="fas fa-history"></i> <span data-i18n="view_records">View Records</span>
+                    <i class="fas fa-history"></i> <span data-i18n="view_records">{{ __("View Records") }}</span>
                 </a>
                 <span class="btn-hero-secondary">
                     <i class="fas fa-calendar-alt"></i>
@@ -950,9 +775,6 @@
         </div>
     </div>
 
-    {{-- ============================================ --}}
-    {{-- FLASH MESSAGES --}}
-    {{-- ============================================ --}}
     @if(session('success'))
     <div class="alert-box-premium">
         <i class="fas fa-check-circle"></i>
@@ -967,74 +789,68 @@
     </div>
     @endif
 
-    {{-- ============================================ --}}
-    {{-- STATS CARDS - PREMIUM --}}
-    {{-- ============================================ --}}
+    {{-- STATS CARDS --}}
     <div class="stats-grid-premium">
         <div class="stat-card-premium blue">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="total_members">Total Members</span>
+                <span class="stat-label"><span data-i18n="total_members">{{ __("Total Members") }}</span></span>
                 <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
             </div>
             <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-users"></i> <span data-i18n="church_family">Church family</span></div>
+            <div class="stat-change positive"><i class="fas fa-users"></i> <span data-i18n="church_family">{{ __("Church family") }}</span></div>
         </div>
         
         <div class="stat-card-premium green">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="present_label">Present</span>
+                <span class="stat-label"><span data-i18n="present_label">{{ __("Present") }}</span></span>
                 <div class="stat-icon-wrap"><i class="fas fa-check-circle"></i></div>
             </div>
             <div class="stat-value amount-positive-premium">{{ number_format($presentCount ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="attended_today">Attended today</span></div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="attended_today">{{ __("Attended today") }}</span></div>
         </div>
         
         <div class="stat-card-premium red">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="absent_label">Absent</span>
+                <span class="stat-label"><span data-i18n="absent_label">{{ __("Absent") }}</span></span>
                 <div class="stat-icon-wrap"><i class="fas fa-times-circle"></i></div>
             </div>
             <div class="stat-value amount-negative-premium">{{ number_format($absentCount ?? 0) }}</div>
-            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="not_attended">Not attended</span></div>
+            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="not_attended">{{ __("Not attended") }}</span></div>
         </div>
     </div>
 
-    {{-- ============================================ --}}
-    {{-- DATE SELECTOR - PREMIUM --}}
-    {{-- ============================================ --}}
+    {{-- DATE SELECTOR --}}
     <div class="date-selector-premium">
         <div class="selector-header">
             <div class="selector-title">
                 <i class="fas fa-calendar-week"></i>
-                <span data-i18n="select_date">Select Date</span>
-                <small><i class="fas fa-info-circle"></i> <span data-i18n="only_sundays">Only Sundays are selectable</span></small>
+                <span data-i18n="select_date">{{ __("Select Date") }}</span>
+                <small><i class="fas fa-info-circle"></i> <span data-i18n="only_sundays">{{ __("Only Sundays are selectable") }}</span></small>
             </div>
             <div class="auto-save-status">
                 <i class="fas fa-sync-alt fa-fw" id="autoSaveSpinner"></i>
-                <span id="autoSaveLabel" data-i18n="auto_save_enabled">Auto-save enabled</span>
+                <span id="autoSaveLabel" data-i18n="auto_save_enabled">{{ __("Auto-save enabled") }}</span>
             </div>
         </div>
         <div class="selector-group">
             <div class="selector-item">
-                <label><i class="fas fa-calendar-day me-1"></i> <span data-i18n="date_label">DATE</span></label>
+                <label><i class="fas fa-calendar-day me-1"></i> <span data-i18n="date_label">{{ __("DATE") }}</span></label>
                 <input type="date" id="datePicker" value="{{ $selectedDate }}" 
                        min="{{ \Carbon\Carbon::now()->subYears(5)->format('Y-m-d') }}"
                        max="{{ \Carbon\Carbon::now()->addYears(1)->format('Y-m-d') }}">
             </div>
             <div class="week-nav">
                 <button type="button" class="btn-week-premium btn-week-prev" onclick="goToPrevWeek()">
-                    <i class="fas fa-chevron-left"></i> <span data-i18n="prev_week">Prev Week</span>
+                    <i class="fas fa-chevron-left"></i> <span data-i18n="prev_week">{{ __("Prev Week") }}</span>
                 </button>
                 <button type="button" class="btn-week-premium btn-week-next" onclick="goToNextWeek()">
-                    <span data-i18n="next_week">Next Week</span> <i class="fas fa-chevron-right"></i>
+                    <span data-i18n="next_week">{{ __("Next Week") }}</span> <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    {{-- ============================================ --}}
-    {{-- ATTENDANCE TABLE - PREMIUM --}}
-    {{-- ============================================ --}}
+    {{-- ATTENDANCE TABLE --}}
     <form id="attendanceForm" action="{{ route('sunday-attendance.store') }}" method="POST">
         @csrf
         <input type="hidden" name="service_date" id="serviceDate" value="{{ $selectedDate }}">
@@ -1043,11 +859,11 @@
             <div class="table-header-premium">
                 <h6>
                     <i class="fas fa-users"></i>
-                    <span data-i18n="member_attendance">Member Attendance</span>
-                    <span class="badge-count-premium">{{ $presentCount ?? 0 }} / {{ $totalMembers ?? 0 }} <span data-i18n="recorded">Recorded</span></span>
+                    <span data-i18n="member_attendance">{{ __("Member Attendance") }}</span>
+                    <span class="badge-count-premium">{{ $presentCount ?? 0 }} / {{ $totalMembers ?? 0 }} <span data-i18n="recorded">{{ __("Recorded") }}</span></span>
                 </h6>
                 <span style="font-size: 0.65rem; color: var(--text-muted);">
-                    <i class="fas fa-edit"></i> <span data-i18n="changes_auto_save">Changes auto-save</span>
+                    <i class="fas fa-edit"></i> <span data-i18n="changes_auto_save">{{ __("Changes auto-save") }}</span>
                 </span>
             </div>
             <div class="table-responsive">
@@ -1055,9 +871,9 @@
                     <thead>
                         <tr>
                             <th style="width: 50px;">#</th>
-                            <th data-i18n="member_info">Member Information</th>
-                            <th style="width: 140px;" data-i18n="status_label">Status</th>
-                            <th data-i18n="notes_label">Notes</th>
+                            <th data-i18n="member_info">{{ __("Member Information") }}</th>
+                            <th style="width: 140px;" data-i18n="status_label">{{ __("Status") }}</th>
+                            <th data-i18n="notes_label">{{ __("Notes") }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1077,7 +893,7 @@
                                     <div>
                                         <div class="member-name-premium">{{ $member->first_name }} {{ $member->last_name }}</div>
                                         @if(($member->is_choir ?? false))
-                                            <div class="member-role-premium"><i class="fas fa-music"></i> <span data-i18n="choir_member">Choir Member</span></div>
+                                            <div class="member-role-premium"><i class="fas fa-music"></i> <span data-i18n="choir_member">{{ __("Choir Member") }}</span></div>
                                         @endif
                                     </div>
                                 </div>
@@ -1087,8 +903,8 @@
                                         class="status-select-premium" 
                                         data-member="{{ $member->id }}"
                                         onchange="autoSave(this)">
-                                    <option value="Present" {{ $status == 'Present' ? 'selected' : '' }}>✅ <span data-i18n="present_option">Present</span></option>
-                                    <option value="Absent" {{ $status == 'Absent' ? 'selected' : '' }}>❌ <span data-i18n="absent_option">Absent</span></option>
+                                    <option value="Present" {{ $status == 'Present' ? 'selected' : '' }}>✅ {{ __("Present") }}</option>
+                                    <option value="Absent" {{ $status == 'Absent' ? 'selected' : '' }}>❌ {{ __("Absent") }}</option>
                                 </select>
                             </td>
                             <td>
@@ -1097,6 +913,7 @@
                                        placeholder="{{ __('Add notes...') }}" 
                                        value="{{ $notes }}"
                                        data-member="{{ $member->id }}"
+                                       data-i18n-placeholder="Add notes..."
                                        onchange="autoSave(this)"
                                        onkeyup="autoSaveDebounce(this)">
                             </td>
@@ -1106,7 +923,7 @@
                             <td colspan="4">
                                 <div class="empty-state-premium">
                                     <i class="fas fa-users"></i>
-                                    <p data-i18n="no_members_found">No members found. Please add members first.</p>
+                                    <p data-i18n="no_members_found">{{ __("No members found. Please add members first.") }}</p>
                                 </div>
                             </td>
                         </tr>
@@ -1120,40 +937,40 @@
     </form>
 </div>
 
-{{-- ============================================ --}}
 {{-- CUSTOM ALERT - ONLY SUNDAYS --}}
-{{-- ============================================ --}}
 <div class="custom-alert-overlay" id="customAlert">
     <div class="custom-alert">
         <div class="custom-alert-icon">
             <i class="fas fa-exclamation-circle"></i>
         </div>
-        <h3 data-i18n="only_sundays_allowed">Only Sundays Allowed</h3>
-        <p data-i18n="only_sundays_desc">Attendance can only be recorded on Sundays. Please select a Sunday date.</p>
+        <h3 data-i18n="only_sundays_allowed">{{ __("Only Sundays Allowed") }}</h3>
+        <p data-i18n="only_sundays_desc">{{ __("Attendance can only be recorded on Sundays. Please select a Sunday date.") }}</p>
         <div class="alert-date">
             <i class="fas fa-calendar-day"></i>
-            <span id="alertSelectedDate"><span data-i18n="select_date_label">Select a date</span></span>
+            <span id="alertSelectedDate"><span data-i18n="select_date_label">{{ __("Select a date") }}</span></span>
         </div>
         <button class="btn-alert-close" onclick="closeCustomAlert()">
-            <i class="fas fa-check me-1"></i> <span data-i18n="ok_understand">OK, I Understand</span>
+            <i class="fas fa-check me-1"></i> <span data-i18n="ok_understand">{{ __("OK, I Understand") }}</span>
         </button>
     </div>
 </div>
 
-{{-- ============================================ --}}
 {{-- AUTO-SAVE TOAST --}}
-{{-- ============================================ --}}
 <div class="auto-save-toast" id="autoSaveToast">
     <i class="fas fa-check-circle"></i>
-    <span id="autoSaveMessage" data-i18n="changes_saved">Changes saved automatically</span>
+    <span id="autoSaveMessage" data-i18n="changes_saved">{{ __("Changes saved automatically") }}</span>
 </div>
 
-{{-- ============================================= --}}
-{{-- SCRIPTS SECTION --}}
-{{-- ============================================= --}}
 <script>
+    // ⭐ Translation helper
+    function t(key, fallback) {
+        if (typeof window.t === 'function') return window.t(key, fallback);
+        if (typeof window.__t === 'function') return window.__t(key, fallback);
+        return fallback || key;
+    }
+
     // =============================================
-    // CUSTOM ALERT FUNCTIONS
+    // CUSTOM ALERT
     // =============================================
     function showCustomAlert(date) {
         const overlay = document.getElementById('customAlert');
@@ -1161,14 +978,16 @@
         
         if (date) {
             const d = new Date(date);
-            dateSpan.textContent = d.toLocaleDateString('en-US', { 
+            const localeMap = { 'en': 'en-US', 'ceb': 'en-PH', 'tl': 'en-PH' };
+            const locale = window.__currentLocale || 'en';
+            dateSpan.textContent = d.toLocaleDateString(localeMap[locale] || 'en-US', { 
                 weekday: 'long', 
                 year: 'numeric', 
                 month: 'long', 
                 day: 'numeric' 
             });
         } else {
-            dateSpan.textContent = window.t ? window.t('invalid_date') : 'Invalid date selected';
+            dateSpan.textContent = t('invalid_date', 'Invalid date selected');
         }
         
         overlay.classList.add('active');
@@ -1182,28 +1001,22 @@
         
         const datePicker = document.getElementById('datePicker');
         const currentDate = document.getElementById('serviceDate').value;
-        if (datePicker && currentDate) {
-            datePicker.value = currentDate;
-        }
+        if (datePicker && currentDate) datePicker.value = currentDate;
     }
     
     document.addEventListener('DOMContentLoaded', function() {
         const overlay = document.getElementById('customAlert');
         overlay.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeCustomAlert();
-            }
+            if (e.target === this) closeCustomAlert();
         });
         
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && overlay.classList.contains('active')) {
-                closeCustomAlert();
-            }
+            if (e.key === 'Escape' && overlay.classList.contains('active')) closeCustomAlert();
         });
     });
     
     // =============================================
-    // AUTO-SAVE FUNCTIONALITY
+    // AUTO-SAVE
     // =============================================
     let saveTimeout = null;
     let isSaving = false;
@@ -1216,44 +1029,28 @@
         toast.className = 'auto-save-toast ' + type;
         toastMessage.textContent = message;
         toast.classList.add('show');
-        
         clearTimeout(toast._hideTimeout);
-        toast._hideTimeout = setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
+        toast._hideTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
     }
     
     function autoSave(element) {
         clearTimeout(saveTimeout);
-        
-        if (element) {
-            element.classList.add('changed');
-        }
+        if (element) element.classList.add('changed');
         spinner.className = 'fas fa-spinner fa-spin fa-fw';
-        autoSaveLabel.textContent = window.t ? window.t('saving') : 'Saving...';
-        
-        saveTimeout = setTimeout(() => {
-            saveAttendance();
-        }, 500);
+        autoSaveLabel.textContent = t('saving', 'Saving...');
+        saveTimeout = setTimeout(saveAttendance, 500);
     }
     
     function autoSaveDebounce(element) {
         clearTimeout(saveTimeout);
-        
-        if (element) {
-            element.classList.add('changed');
-        }
+        if (element) element.classList.add('changed');
         spinner.className = 'fas fa-spinner fa-spin fa-fw';
-        autoSaveLabel.textContent = window.t ? window.t('saving') : 'Saving...';
-        
-        saveTimeout = setTimeout(() => {
-            saveAttendance();
-        }, 800);
+        autoSaveLabel.textContent = t('saving', 'Saving...');
+        saveTimeout = setTimeout(saveAttendance, 800);
     }
     
     function saveAttendance() {
         if (isSaving) return;
-        
         isSaving = true;
         
         const serviceDate = document.getElementById('serviceDate').value;
@@ -1265,17 +1062,13 @@
         
         statusSelects.forEach(select => {
             const memberId = select.dataset.member;
-            if (!attendances[memberId]) {
-                attendances[memberId] = {};
-            }
+            if (!attendances[memberId]) attendances[memberId] = {};
             attendances[memberId]['status'] = select.value;
         });
         
         notesInputs.forEach(input => {
             const memberId = input.dataset.member;
-            if (!attendances[memberId]) {
-                attendances[memberId] = {};
-            }
+            if (!attendances[memberId]) attendances[memberId] = {};
             attendances[memberId]['notes'] = input.value;
         });
         
@@ -1304,13 +1097,11 @@
                 document.querySelectorAll('.status-select-premium.changed, .notes-input-premium.changed').forEach(el => {
                     el.classList.remove('changed');
                     el.classList.add('saved');
-                    setTimeout(() => {
-                        el.classList.remove('saved');
-                    }, 1000);
+                    setTimeout(() => el.classList.remove('saved'), 1000);
                 });
                 
                 spinner.className = 'fas fa-check-circle fa-fw';
-                autoSaveLabel.textContent = window.t ? window.t('auto_saved') : 'Auto-saved';
+                autoSaveLabel.textContent = t('auto_saved', 'Auto-saved');
                 
                 if (data.stats) {
                     const presentEl = document.querySelector('.stat-card-premium.green .stat-value');
@@ -1319,31 +1110,30 @@
                     
                     if (presentEl) presentEl.textContent = data.stats.present;
                     if (absentEl) absentEl.textContent = data.stats.absent;
-                    if (badgeEl) badgeEl.textContent = data.stats.present + ' / ' + data.stats.total + ' ' + (window.t ? window.t('recorded') : 'Recorded');
+                    if (badgeEl) badgeEl.textContent = data.stats.present + ' / ' + data.stats.total + ' ' + t('recorded', 'Recorded');
                 }
                 
-                showToast(data.message || (window.t ? window.t('changes_saved') : 'Changes saved automatically'), 'success');
+                showToast(data.message || t('changes_saved', 'Changes saved automatically'), 'success');
             } else {
-                showToast(data.message || (window.t ? window.t('save_error') : 'Error saving changes'), 'error');
+                showToast(data.message || t('save_error', 'Error saving changes'), 'error');
                 spinner.className = 'fas fa-exclamation-circle fa-fw';
-                autoSaveLabel.textContent = window.t ? window.t('save_failed') : 'Auto-save failed';
+                autoSaveLabel.textContent = t('save_failed', 'Auto-save failed');
             }
             
             setTimeout(() => {
                 spinner.className = 'fas fa-sync-alt fa-fw';
-                autoSaveLabel.textContent = window.t ? window.t('auto_save_enabled') : 'Auto-save enabled';
+                autoSaveLabel.textContent = t('auto_save_enabled', 'Auto-save enabled');
             }, 3000);
         })
         .catch(error => {
             isSaving = false;
             console.error('Auto-save error:', error);
-            showToast(window.t ? window.t('network_error') : 'Network error. Please check your connection.', 'error');
+            showToast(t('network_error', 'Network error. Please check your connection.'), 'error');
             spinner.className = 'fas fa-exclamation-circle fa-fw';
-            autoSaveLabel.textContent = window.t ? window.t('save_failed') : 'Auto-save failed';
-            
+            autoSaveLabel.textContent = t('save_failed', 'Auto-save failed');
             setTimeout(() => {
                 spinner.className = 'fas fa-sync-alt fa-fw';
-                autoSaveLabel.textContent = window.t ? window.t('auto_save_enabled') : 'Auto-save enabled';
+                autoSaveLabel.textContent = t('auto_save_enabled', 'Auto-save enabled');
             }, 3000);
         });
     }
@@ -1374,20 +1164,16 @@
             const selectedDate = new Date(this.value);
             if (selectedDate.getDay() !== 0) {
                 showCustomAlert(this.value);
-                const currentDate = document.getElementById('serviceDate').value;
-                this.value = currentDate;
+                this.value = document.getElementById('serviceDate').value;
             } else {
                 const date = this.value;
-                if (date) {
-                    window.location.href = "{{ route('sunday-attendance.index') }}?date=" + date;
-                }
+                if (date) window.location.href = "{{ route('sunday-attendance.index') }}?date=" + date;
             }
         });
     }
     
     function goToPrevWeek() {
-        let currentDate = document.getElementById('datePicker').value;
-        let date = new Date(currentDate);
+        let date = new Date(document.getElementById('datePicker').value);
         date.setDate(date.getDate() - 7);
         let year = date.getFullYear();
         let month = String(date.getMonth() + 1).padStart(2, '0');
@@ -1396,8 +1182,7 @@
     }
     
     function goToNextWeek() {
-        let currentDate = document.getElementById('datePicker').value;
-        let date = new Date(currentDate);
+        let date = new Date(document.getElementById('datePicker').value);
         date.setDate(date.getDate() + 7);
         let year = date.getFullYear();
         let month = String(date.getMonth() + 1).padStart(2, '0');
@@ -1412,14 +1197,26 @@
                 const text = badge.textContent;
                 if (text && !text.includes('0 /')) {
                     spinner.className = 'fas fa-check-circle fa-fw';
-                    autoSaveLabel.textContent = window.t ? window.t('auto_saved') : 'Auto-saved';
+                    autoSaveLabel.textContent = t('auto_saved', 'Auto-saved');
                     setTimeout(() => {
                         spinner.className = 'fas fa-sync-alt fa-fw';
-                        autoSaveLabel.textContent = window.t ? window.t('auto_save_enabled') : 'Auto-save enabled';
+                        autoSaveLabel.textContent = t('auto_save_enabled', 'Auto-save enabled');
                     }, 2000);
                 }
             }
         }, 1000);
+    });
+
+    // ⭐ LISTEN FOR LANGUAGE CHANGES
+    window.addEventListener('localeChanged', function(e) {
+        if (typeof window.applyTranslations === 'function') {
+            window.applyTranslations();
+        }
+        // Update auto-save label text
+        if (autoSaveLabel && spinner.classList.contains('fa-sync-alt')) {
+            autoSaveLabel.textContent = t('auto_save_enabled', 'Auto-save enabled');
+        }
+        console.log('[Attendance] Locale changed to:', e.detail.locale);
     });
 </script>
 @endsection

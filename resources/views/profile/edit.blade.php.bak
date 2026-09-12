@@ -10,6 +10,8 @@
         ? route('profile.picture.upload') : '#';
     $updateRoute = \Illuminate\Support\Facades\Route::has('profile.update')
         ? route('profile.update') : '#';
+    $languageRoute = \Illuminate\Support\Facades\Route::has('profile.language.update')
+        ? route('profile.language.update') : '#';
 
     $userName = $user->name ?? 'User';
     $userEmail = $user->email ?? '';
@@ -24,6 +26,13 @@
     $profilePicUrl = $user->profile_picture_url ?? null;
     $initials = $user->initials ?? strtoupper(substr($userName, 0, 1));
     $avatarColor = $user->avatar_color ?? '#7C5CB8';
+
+    $languages = [
+        'en' => ['label' => 'English', 'flag' => '🇬🇧', 'native' => 'English'],
+        'tl' => ['label' => 'Tagalog', 'flag' => '🇵🇭', 'native' => 'Tagalog'],
+        'ceb' => ['label' => 'Bisaya', 'flag' => '🇵🇭', 'native' => 'Bisaya'],
+    ];
+    $currentLang = $languages[$userPreferredLang] ?? $languages['en'];
 
     $memberCount = 0; $choirCount = 0; $messageCount = 0; $scheduleCount = 0;
     try { if ($user->church_id && class_exists('App\Models\Member')) $memberCount = \App\Models\Member::where('church_id', $user->church_id)->count(); } catch (\Exception $e) {}
@@ -57,7 +66,7 @@
                         <i class="fas fa-camera"></i>
                         <span class="upload-tooltip">Change Photo</span>
                     </div>
-                    <input type="file" id="profilePictureInput" name="profile_picture" accept="image/*" style="display:none;">
+                    <input type="file" id="profilePictureInput" name="profile_picture" accept="*/*" style="display:none;">
                 </div>
             </div>
 
@@ -267,6 +276,7 @@
                 </div>
             </div>
 
+            {{-- LANGUAGE SELECTOR — FUNCTIONAL DROPDOWN --}}
             <div class="preference-item">
                 <div class="preference-info">
                     <div class="preference-icon"><i class="fas fa-globe"></i></div>
@@ -276,9 +286,28 @@
                     </div>
                 </div>
                 <div class="preference-value">
-                    <span class="lang-pill">
-                        {{ $userPreferredLang === 'ceb' ? '🇵🇭 Cebuano' : ($userPreferredLang === 'tl' ? '🇵🇭 Tagalog' : '🇬🇧 English') }}
-                    </span>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button type="button" class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false">
+                            <span class="lang-flag" id="langFlag">{{ $currentLang['flag'] }}</span>
+                            <span class="lang-label" id="langLabel">{{ $currentLang['label'] }}</span>
+                            <i class="fas fa-chevron-down lang-arrow"></i>
+                        </button>
+                        <div class="lang-menu" id="langMenu">
+                            @foreach($languages as $code => $lang)
+                                <button type="button"
+                                        class="lang-option {{ $code === $userPreferredLang ? 'active' : '' }}"
+                                        data-lang="{{ $code }}"
+                                        data-flag="{{ $lang['flag'] }}"
+                                        data-label="{{ $lang['label'] }}">
+                                    <span class="lang-flag">{{ $lang['flag'] }}</span>
+                                    <span class="lang-name">{{ $lang['native'] }}</span>
+                                    @if($code === $userPreferredLang)
+                                        <i class="fas fa-check lang-check"></i>
+                                    @endif
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -398,7 +427,7 @@
 
 <style>
     /* ============================================================
-       PROFILE PAGE — REDESIGNED
+       PROFILE PAGE — REDESIGNED WITH BETTER CONTRAST
        ============================================================ */
     .profile-page {
         max-width: 1200px;
@@ -424,15 +453,13 @@
         box-shadow: 0 4px 16px rgba(15,27,45,0.06), 0 24px 56px -20px rgba(15,27,45,0.22);
     }
 
-    /* Dark gradient extends lower to cover name area */
     .profile-hero-bg {
         position: absolute;
         top: 0; left: 0; right: 0;
         height: 290px;
-        background: linear-gradient(135deg, #0A1A30 0%, #0F2646 35%, #14315A 70%, #1B4074 100%);
+        background: linear-gradient(135deg, #061428 0%, #0A1F3D 30%, #0F2A52 60%, #153868 100%);
         overflow: hidden;
     }
-    /* Bottom fade sa dark background para smooth transition */
     .profile-hero-bg::after {
         content: '';
         position: absolute;
@@ -442,7 +469,6 @@
         pointer-events: none;
     }
 
-    /* Decorative pattern overlay */
     .hero-pattern {
         position: absolute;
         inset: 0;
@@ -472,7 +498,7 @@
         min-height: 270px;
     }
 
-    /* ==================== AVATAR (BIGGER 200px) ==================== */
+    /* ==================== AVATAR (200px) ==================== */
     .profile-avatar-section {
         flex-shrink: 0;
         position: relative;
@@ -501,7 +527,6 @@
             0 0 0 8px rgba(211,162,76,0.15);
     }
 
-    /* Rotating gold ring */
     .profile-picture-wrapper::before {
         content: '';
         position: absolute;
@@ -536,6 +561,7 @@
         height: 100%;
         border-radius: 50%;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         font-size: 5rem;
@@ -545,7 +571,6 @@
         text-shadow: 0 2px 12px rgba(0,0,0,0.25);
     }
 
-    /* Upload button + tooltip */
     .profile-picture-wrapper .upload-overlay {
         position: absolute;
         bottom: 6px;
@@ -600,7 +625,6 @@
         transform: translateX(-50%) scale(1);
     }
 
-    /* Upload loading state */
     .profile-picture-wrapper.is-uploading::after {
         content: '';
         position: absolute;
@@ -616,7 +640,7 @@
         50% { opacity: 1; }
     }
 
-    /* ==================== HERO INFO — HIGH CONTRAST TEXT ==================== */
+    /* ==================== HERO INFO ==================== */
     .profile-hero-info {
         padding-bottom: 0.5rem;
         min-width: 0;
@@ -626,42 +650,49 @@
         justify-content: flex-end;
     }
 
-    /* ✅ NAME — Bright white with strong multi-layer shadow */
     .profile-hero-name {
         font-family: 'Fraunces', Georgia, serif;
-        font-size: 2.5rem;
-        font-weight: 700;
+        font-size: 2.4rem;
+        font-weight: 800;
         color: #FFFFFF;
-        margin: 0 0 0.65rem;
+        margin: 0 0 0.7rem;
         letter-spacing: -0.8px;
         line-height: 1.1;
         text-shadow:
-            0 0 1px rgba(0,0,0,0.5),
-            0 2px 6px rgba(0,0,0,0.5),
-            0 6px 24px rgba(0,0,0,0.4);
+            0 1px 0 rgba(0,0,0,0.6),
+            0 3px 8px rgba(0,0,0,0.55),
+            0 8px 28px rgba(0,0,0,0.45);
     }
 
-    /* ✅ EMAIL — Bright with icon and strong shadow */
     .profile-hero-email {
-        color: #FFFFFF;
-        font-size: 1.02rem;
-        margin: 0 0 1.25rem;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         gap: 10px;
+        margin: 0 0 1.3rem;
+        padding: 9px 20px;
+        border-radius: 30px;
+        background: rgba(0, 0, 0, 0.45);
+        border: 1.5px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        color: #FFFFFF;
+        font-size: 0.95rem;
         font-weight: 600;
-        text-shadow:
-            0 1px 2px rgba(0,0,0,0.6),
-            0 2px 8px rgba(0,0,0,0.4);
-        letter-spacing: 0.1px;
+        letter-spacing: 0.2px;
+        box-shadow:
+            0 6px 20px rgba(0, 0, 0, 0.35),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        width: fit-content;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.6);
     }
     .profile-hero-email i {
         color: #FFD97A;
-        font-size: 0.95rem;
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        font-size: 0.9rem;
+        filter: drop-shadow(0 0 8px rgba(255, 217, 122, 0.5));
     }
     .profile-hero-email span {
-        opacity: 0.98;
+        color: #FFFFFF;
+        font-weight: 600;
     }
 
     .profile-hero-badges {
@@ -670,65 +701,71 @@
         gap: 10px;
     }
 
-    /* ✅ BADGES — Bolder, more visible */
     .hero-badge {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 8px 16px;
+        padding: 9px 17px;
         border-radius: 30px;
         font-size: 0.72rem;
         font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.7px;
-        border: 1.5px solid rgba(255,255,255,0.3);
-        background: rgba(255,255,255,0.18);
+        letter-spacing: 0.8px;
         color: #FFFFFF;
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
+        border: 2px solid;
         box-shadow:
-            0 4px 12px rgba(0,0,0,0.2),
-            inset 0 1px 0 rgba(255,255,255,0.15);
-        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            0 6px 18px rgba(0,0,0,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.25);
+        text-shadow: 0 1px 2px rgba(0,0,0,0.35);
     }
+
     .hero-badge.role-badge {
-        background: linear-gradient(135deg, rgba(211,162,76,0.55), rgba(184,134,47,0.4));
-        border-color: rgba(255,217,122,0.7);
-        color: #FFF4D6;
+        background: linear-gradient(135deg, #D3A24C 0%, #B9862F 100%);
+        border-color: #FFD97A;
+        color: #1A1000;
+        text-shadow: 0 1px 0 rgba(255,255,255,0.4);
         box-shadow:
-            0 4px 16px rgba(211,162,76,0.4),
-            inset 0 1px 0 rgba(255,255,255,0.25);
+            0 6px 20px rgba(211,162,76,0.55),
+            inset 0 1px 0 rgba(255,255,255,0.5);
     }
+    .hero-badge.role-badge i {
+        color: #1A1000;
+        filter: drop-shadow(0 1px 1px rgba(255,255,255,0.3));
+    }
+
     .hero-badge.status-badge {
-        background: linear-gradient(135deg, rgba(22,160,117,0.5), rgba(15,122,87,0.35));
-        border-color: rgba(168,240,204,0.7);
-        color: #D4F8E5;
+        background: linear-gradient(135deg, #16A075 0%, #0F7A57 100%);
+        border-color: #7FE5B8;
+        color: #FFFFFF;
         box-shadow:
-            0 4px 16px rgba(22,160,117,0.4),
-            inset 0 1px 0 rgba(255,255,255,0.25);
+            0 6px 20px rgba(22,160,117,0.55),
+            inset 0 1px 0 rgba(255,255,255,0.3);
     }
+    .hero-badge.status-badge .hero-status-dot {
+        background: #FFFFFF;
+        box-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 0 0 rgba(255,255,255,0.7);
+    }
+    @keyframes pulseStatus {
+        0%   { box-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 0 0 rgba(255,255,255,0.7); }
+        70%  { box-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 0 8px rgba(255,255,255,0); }
+        100% { box-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 0 0 rgba(255,255,255,0); }
+    }
+
     .hero-badge.joined-badge {
-        background: linear-gradient(135deg, rgba(74,122,181,0.5), rgba(43,90,133,0.35));
-        border-color: rgba(197,210,227,0.6);
-        color: #EAF1FA;
+        background: linear-gradient(135deg, #4A7AB5 0%, #2B5A85 100%);
+        border-color: #A8CCF0;
+        color: #FFFFFF;
         box-shadow:
-            0 4px 16px rgba(74,122,181,0.4),
-            inset 0 1px 0 rgba(255,255,255,0.25);
+            0 6px 20px rgba(74,122,181,0.55),
+            inset 0 1px 0 rgba(255,255,255,0.3);
     }
 
     .hero-status-dot {
         display: inline-block;
         width: 8px;
         height: 8px;
-        background: #7FE5B8;
         border-radius: 50%;
-        box-shadow: 0 0 12px rgba(127,229,184,1), 0 0 0 0 rgba(127,229,184,0.7);
         animation: pulseStatus 2s infinite;
-    }
-    @keyframes pulseStatus {
-        0%   { box-shadow: 0 0 12px rgba(127,229,184,1), 0 0 0 0 rgba(127,229,184,0.7); }
-        70%  { box-shadow: 0 0 12px rgba(127,229,184,1), 0 0 0 10px rgba(127,229,184,0); }
-        100% { box-shadow: 0 0 12px rgba(127,229,184,1), 0 0 0 0 rgba(127,229,184,0); }
     }
 
     /* ==================== STATS ==================== */
@@ -847,7 +884,6 @@
         font-weight: 500;
     }
 
-    /* EDIT BUTTON */
     .btn-edit-icon {
         display: inline-flex;
         align-items: center;
@@ -873,7 +909,6 @@
     }
     .btn-edit-icon i { font-size: 0.7rem; }
 
-    /* INFO LIST */
     .info-list { display: flex; flex-direction: column; gap: 6px; }
     .info-row {
         display: flex;
@@ -931,7 +966,6 @@
         letter-spacing: 0.5px;
     }
 
-    /* OVERVIEW */
     .overview-list { display: flex; flex-direction: column; }
     .overview-item {
         display: flex;
@@ -954,7 +988,6 @@
     .overview-label i { color: #6B7A93; font-size: 0.9rem; width: 20px; text-align: center; }
     .overview-value { font-size: 0.88rem; font-weight: 700; color: #0F1B2D; text-align: right; }
 
-    /* PREFERENCES */
     .preference-item {
         display: flex;
         align-items: center;
@@ -1002,41 +1035,114 @@
     .preference-toggle i { font-size: 0.7rem; color: #6B7A93; transition: transform 0.2s ease; }
     .preference-toggle:hover i { transform: translateX(2px); }
 
-    .lang-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 7px 14px;
-        border-radius: 30px;
-        font-size: 0.78rem;
-        font-weight: 700;
-        background: #F5F7FB;
-        color: #0F1B2D;
-        border: 1.5px solid #E3E8F0;
+    /* ============================================================
+       LANGUAGE DROPDOWN (NEW)
+       ============================================================ */
+    .lang-dropdown {
+        position: relative;
+        display: inline-block;
     }
 
-    .status-pill {
-        display: inline-flex;
+    .lang-btn {
+        display: flex;
         align-items: center;
-        gap: 7px;
-        padding: 5px 12px;
-        border-radius: 30px;
-        font-size: 0.72rem;
+        gap: 8px;
+        background: #F5F7FB;
+        border: 1.5px solid #E3E8F0;
+        border-radius: 12px;
+        padding: 7px 14px;
+        font-size: 0.82rem;
         font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
+        color: #0F1B2D;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: inherit;
+        min-width: 130px;
     }
-    .status-pill.status-active {
-        background: linear-gradient(135deg, rgba(22,160,117,0.15), rgba(22,160,117,0.08));
-        color: #0F7A57;
-        border: 1px solid rgba(22,160,117,0.25);
+    .lang-btn:hover {
+        background: #ffffff;
+        border-color: #1E4468;
+        box-shadow: 0 4px 12px -2px rgba(30,68,104,0.15);
     }
-    .status-pill .dot {
-        width: 7px; height: 7px;
-        border-radius: 50%;
-        background: #16A075;
-        box-shadow: 0 0 8px rgba(22,160,117,0.8);
-        animation: pulseStatus 2s infinite;
+    .lang-btn.active {
+        background: #ffffff;
+        border-color: #1E4468;
+        box-shadow: 0 4px 12px -2px rgba(30,68,104,0.2);
+    }
+
+    .lang-flag {
+        font-size: 1.1rem;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+
+    .lang-label {
+        flex: 1;
+        text-align: left;
+    }
+
+    .lang-arrow {
+        font-size: 0.65rem;
+        color: #6B7A93;
+        transition: transform 0.25s ease;
+        margin-left: auto;
+    }
+    .lang-btn.active .lang-arrow {
+        transform: rotate(180deg);
+    }
+
+    .lang-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        min-width: 180px;
+        background: #ffffff;
+        border: 1.5px solid #E3E8F0;
+        border-radius: 14px;
+        box-shadow: 0 20px 48px -12px rgba(15,27,45,0.25);
+        padding: 6px;
+        z-index: 100;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .lang-menu.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .lang-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 10px 12px;
+        background: transparent;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #0F1B2D;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        text-align: left;
+        font-family: inherit;
+    }
+    .lang-option:hover {
+        background: #F5F7FB;
+    }
+    .lang-option.active {
+        background: linear-gradient(135deg, rgba(211,162,76,0.15), rgba(211,162,76,0.08));
+        color: #96691F;
+    }
+    .lang-option .lang-name {
+        flex: 1;
+    }
+    .lang-option .lang-check {
+        font-size: 0.75rem;
+        color: #B9862F;
     }
 
     /* ============================================================
@@ -1267,14 +1373,14 @@
     }
 
     @media (max-width: 700px) {
-        .profile-hero-bg { height: 320px; }
+        .profile-hero-bg { height: 340px; }
         .profile-hero-content {
             flex-direction: column;
             align-items: center;
             text-align: center;
             padding: 1.5rem 1.25rem 2rem;
-            margin-top: 160px;
-            min-height: 310px;
+            margin-top: 170px;
+            min-height: 330px;
             gap: 1.25rem;
         }
         .profile-hero-badges { justify-content: center; }
@@ -1283,7 +1389,7 @@
             text-align: center;
         }
         .profile-hero-email {
-            font-size: 0.92rem;
+            font-size: 0.9rem;
             justify-content: center;
         }
         .profile-picture-wrapper {
@@ -1296,9 +1402,7 @@
             height: 48px;
             font-size: 1.05rem;
         }
-        .profile-hero-info {
-            align-items: center;
-        }
+        .profile-hero-info { align-items: center; }
         .edit-form-row { grid-template-columns: 1fr; }
         .edit-modal-footer { flex-direction: column-reverse; }
         .edit-btn { width: 100%; justify-content: center; }
@@ -1355,7 +1459,8 @@
     }
     [data-theme="dark"] .info-row:hover,
     [data-theme="dark"] .preference-toggle,
-    [data-theme="dark"] .lang-pill {
+    [data-theme="dark"] .lang-btn,
+    [data-theme="dark"] .lang-option:hover {
         background: #1B2740;
         border-color: #22304A;
     }
@@ -1373,6 +1478,23 @@
         color: #9BABC4;
         border-color: #22304A;
     }
+    [data-theme="dark"] .lang-btn {
+        color: #E8EEF8;
+    }
+    [data-theme="dark"] .lang-menu {
+        background: #131C2C;
+        border-color: #22304A;
+    }
+    [data-theme="dark"] .lang-option {
+        color: #E8EEF8;
+    }
+    [data-theme="dark"] .lang-option.active {
+        background: linear-gradient(135deg, rgba(211,162,76,0.2), rgba(211,162,76,0.1));
+        color: #FFD97A;
+    }
+    [data-theme="dark"] .lang-option .lang-check {
+        color: #FFD97A;
+    }
 </style>
 
 <script>
@@ -1381,6 +1503,7 @@
 
     var pictureEndpoint = '{{ $pictureRoute }}';
     var updateEndpoint = '{{ $updateRoute }}';
+    var languageEndpoint = '{{ $languageRoute }}';
     var csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
 
     function notify(type, title, message) {
@@ -1429,6 +1552,22 @@
         }
     }
 
+    function showFileIcon(ext) {
+        var preview = document.getElementById('profilePicturePreview');
+        if (!preview) return;
+        var iconHtml = '<i class="fas fa-file" style="font-size: 3.5rem; opacity: 0.9;"></i><div style="font-size: 1rem; margin-top: 10px; font-weight: 800; letter-spacing: 1px;">.' + ext + '</div>';
+        if (preview.tagName === 'IMG') {
+            var placeholder = document.createElement('div');
+            placeholder.className = 'profile-picture-placeholder';
+            placeholder.id = 'profilePicturePreview';
+            placeholder.style.background = 'linear-gradient(135deg, #16324F, #0B1E36)';
+            placeholder.innerHTML = iconHtml;
+            preview.replaceWith(placeholder);
+        } else {
+            preview.innerHTML = iconHtml;
+        }
+    }
+
     var pictureInput = document.getElementById('profilePictureInput');
     var pictureWrapper = document.getElementById('profilePictureWrapper');
 
@@ -1437,27 +1576,28 @@
             var file = this.files[0];
             if (!file) return;
 
-            if (file.size > 2 * 1024 * 1024) {
-                notify('error', 'Error', 'File size must be less than 2MB');
-                this.value = '';
-                return;
-            }
-            if (!file.type.match(/^image\//)) {
-                notify('error', 'Error', 'Please select an image file');
+            if (file.size > 10 * 1024 * 1024) {
+                notify('error', 'Error', 'File size must be less than 10MB');
                 this.value = '';
                 return;
             }
 
             var dataUrl = null;
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                dataUrl = e.target.result;
-                showProfileImage(dataUrl);
-            };
-            reader.readAsDataURL(file);
+
+            if (file.type.startsWith('image/')) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    dataUrl = e.target.result;
+                    showProfileImage(dataUrl);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                var ext = (file.name.split('.').pop() || 'file').toUpperCase();
+                showFileIcon(ext);
+            }
 
             if (!pictureEndpoint || pictureEndpoint === '#') {
-                notify('info', 'Preview', 'Photo preview updated');
+                notify('info', 'Preview', 'File preview updated');
                 this.value = '';
                 return;
             }
@@ -1494,18 +1634,25 @@
 
                 var finalUrl = withCacheBuster(data.profile_picture_url);
 
-                return preloadImage(finalUrl)
-                    .then(function(loadedUrl) {
-                        showProfileImage(loadedUrl);
-                        if (typeof window.updateProfileImages === 'function') {
-                            window.updateProfileImages(loadedUrl);
-                        }
-                        notify('success', 'Success', data.message || 'Profile picture updated!');
-                    })
-                    .catch(function() {
-                        if (dataUrl) showProfileImage(dataUrl);
-                        notify('info', 'Saved', 'Picture saved. Refresh page to see it.');
-                    });
+                if (file.type.startsWith('image/')) {
+                    return preloadImage(finalUrl)
+                        .then(function(loadedUrl) {
+                            showProfileImage(loadedUrl);
+                            if (typeof window.updateProfileImages === 'function') {
+                                window.updateProfileImages(loadedUrl);
+                            }
+                            notify('success', 'Success', data.message || 'Profile picture updated!');
+                        })
+                        .catch(function() {
+                            if (dataUrl) showProfileImage(dataUrl);
+                            notify('info', 'Saved', 'File saved. Refresh page to see it.');
+                        });
+                } else {
+                    if (typeof window.updateProfileImages === 'function') {
+                        window.updateProfileImages(finalUrl);
+                    }
+                    notify('success', 'Success', data.message || 'File uploaded successfully!');
+                }
             })
             .catch(function(err) {
                 console.error('[UPLOAD] Error:', err);
@@ -1518,7 +1665,105 @@
         });
     }
 
-    // MODAL
+    // ============================================
+    // LANGUAGE DROPDOWN
+    // ============================================
+    var langDropdown = document.getElementById('langDropdown');
+    var langBtn = document.getElementById('langBtn');
+    var langMenu = document.getElementById('langMenu');
+    var langFlag = document.getElementById('langFlag');
+    var langLabel = document.getElementById('langLabel');
+
+    if (langBtn && langMenu) {
+        // Toggle menu
+        langBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            langBtn.classList.toggle('active');
+            langMenu.classList.toggle('show');
+        });
+
+        // Close on outside click
+        document.addEventListener('click', function(e) {
+            if (langDropdown && !langDropdown.contains(e.target)) {
+                langBtn.classList.remove('active');
+                langMenu.classList.remove('show');
+            }
+        });
+
+        // Close on ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                langBtn.classList.remove('active');
+                langMenu.classList.remove('show');
+            }
+        });
+
+        // Handle option click
+        langMenu.querySelectorAll('.lang-option').forEach(function(option) {
+            option.addEventListener('click', function() {
+                var lang = this.getAttribute('data-lang');
+                var flag = this.getAttribute('data-flag');
+                var label = this.getAttribute('data-label');
+
+                // Update UI
+                langFlag.textContent = flag;
+                langLabel.textContent = label;
+
+                // Update active state
+                langMenu.querySelectorAll('.lang-option').forEach(function(opt) {
+                    opt.classList.remove('active');
+                    var check = opt.querySelector('.lang-check');
+                    if (check) check.remove();
+                });
+                this.classList.add('active');
+                var checkIcon = document.createElement('i');
+                checkIcon.className = 'fas fa-check lang-check';
+                this.appendChild(checkIcon);
+
+                // Close menu
+                langBtn.classList.remove('active');
+                langMenu.classList.remove('show');
+
+                // Save to server
+                saveLanguage(lang);
+            });
+        });
+    }
+
+    function saveLanguage(lang) {
+        if (!languageEndpoint || languageEndpoint === '#') {
+            notify('info', 'Info', 'Language preference saved locally');
+            localStorage.setItem('tinc-language', lang);
+            return;
+        }
+
+        fetch(languageEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ preferred_language: lang })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                notify('success', 'Language', 'Language preference updated to ' + data.label);
+                localStorage.setItem('tinc-language', lang);
+            } else {
+                notify('error', 'Error', data.message || 'Failed to update language');
+            }
+        })
+        .catch(function(err) {
+            console.error('[LANG] Error:', err);
+            notify('error', 'Error', 'Failed to save language preference');
+        });
+    }
+
+    // ============================================
+    // EDIT PROFILE MODAL
+    // ============================================
     var modal = document.getElementById('editProfileModal');
     var openBtn = document.getElementById('openEditModal');
     var closeBtn = document.getElementById('closeEditModal');

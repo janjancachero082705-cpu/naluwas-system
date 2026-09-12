@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('header', 'Profile Settings')
 
@@ -10,6 +10,8 @@
         ? route('profile.picture.upload') : '#';
     $updateRoute = \Illuminate\Support\Facades\Route::has('profile.update')
         ? route('profile.update') : '#';
+    $languageRoute = \Illuminate\Support\Facades\Route::has('profile.language.update')
+        ? route('profile.language.update') : '#';
 
     $userName = $user->name ?? 'User';
     $userEmail = $user->email ?? '';
@@ -24,6 +26,13 @@
     $profilePicUrl = $user->profile_picture_url ?? null;
     $initials = $user->initials ?? strtoupper(substr($userName, 0, 1));
     $avatarColor = $user->avatar_color ?? '#7C5CB8';
+
+    $languages = [
+        'en' => ['label' => 'English', 'flag' => '🇬🇧', 'native' => 'English'],
+        'tl' => ['label' => 'Tagalog', 'flag' => '🇵🇭', 'native' => 'Tagalog'],
+        'ceb' => ['label' => 'Bisaya', 'flag' => '🇵🇭', 'native' => 'Bisaya'],
+    ];
+    $currentLang = $languages[$userPreferredLang] ?? $languages['en'];
 
     $memberCount = 0; $choirCount = 0; $messageCount = 0; $scheduleCount = 0;
     try { if ($user->church_id && class_exists('App\Models\Member')) $memberCount = \App\Models\Member::where('church_id', $user->church_id)->count(); } catch (\Exception $e) {}
@@ -55,7 +64,7 @@
                     @endif
                     <div class="upload-overlay" onclick="document.getElementById('profilePictureInput').click()" title="Change photo">
                         <i class="fas fa-camera"></i>
-                        <span class="upload-tooltip">Change Photo</span>
+                        <span class="upload-tooltip" data-i18n="Change Photo">{{ __("Change Photo") }}</span>
                     </div>
                     <input type="file" id="profilePictureInput" name="profile_picture" accept="*/*" style="display:none;">
                 </div>
@@ -74,12 +83,12 @@
                     </span>
                     <span class="hero-badge status-badge">
                         <span class="hero-status-dot"></span>
-                        Active
+                        <span data-i18n="Active">{{ __("Active") }}</span>
                     </span>
                     @if($userCreatedAt)
                     <span class="hero-badge joined-badge">
                         <i class="fas fa-calendar-alt"></i>
-                        Joined {{ \Carbon\Carbon::parse($userCreatedAt)->format('M Y') }}
+                        <span data-i18n="Joined">{{ __("Joined") }}</span> {{ \Carbon\Carbon::parse($userCreatedAt)->format('M Y') }}
                     </span>
                     @endif
                 </div>
@@ -93,28 +102,28 @@
             <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
             <div class="stat-info">
                 <div class="stat-value">{{ $memberCount }}</div>
-                <div class="stat-label">Church Members</div>
+                <div class="stat-label"><span data-i18n="Church Members">{{ __("Church Members") }}</span></div>
             </div>
         </div>
         <div class="profile-stat-card stat-violet">
             <div class="stat-icon-wrap"><i class="fas fa-music"></i></div>
             <div class="stat-info">
                 <div class="stat-value">{{ $choirCount }}</div>
-                <div class="stat-label">Choir Members</div>
+                <div class="stat-label"><span data-i18n="Choir Members">{{ __("Choir Members") }}</span></div>
             </div>
         </div>
         <div class="profile-stat-card stat-emerald">
             <div class="stat-icon-wrap"><i class="fas fa-envelope"></i></div>
             <div class="stat-info">
                 <div class="stat-value">{{ $messageCount }}</div>
-                <div class="stat-label">Messages</div>
+                <div class="stat-label"><span data-i18n="Messages">{{ __("Messages") }}</span></div>
             </div>
         </div>
         <div class="profile-stat-card stat-amber">
             <div class="stat-icon-wrap"><i class="fas fa-calendar-check"></i></div>
             <div class="stat-info">
                 <div class="stat-value">{{ $scheduleCount }}</div>
-                <div class="stat-label">Schedules</div>
+                <div class="stat-label"><span data-i18n="Schedules">{{ __("Schedules") }}</span></div>
             </div>
         </div>
     </div>
@@ -127,12 +136,12 @@
             <div class="profile-card-header">
                 <div class="card-header-icon icon-blue"><i class="fas fa-user"></i></div>
                 <div style="flex:1;">
-                    <h3 class="profile-card-title">Personal Information</h3>
-                    <p class="profile-card-subtitle">Your basic account details</p>
+                    <h3 class="profile-card-title"><span data-i18n="Personal Information">{{ __("Personal Information") }}</span></h3>
+                    <p class="profile-card-subtitle"><span data-i18n="Your basic account details">{{ __("Your basic account details") }}</span></p>
                 </div>
                 <button type="button" class="btn-edit-icon" id="openEditModal" title="Edit Profile">
                     <i class="fas fa-pen"></i>
-                    <span>Edit</span>
+                    <span data-i18n="Edit">{{ __("Edit") }}</span>
                 </button>
             </div>
 
@@ -140,28 +149,28 @@
                 <div class="info-row">
                     <div class="info-icon icon-blue-bg"><i class="fas fa-user"></i></div>
                     <div class="info-content">
-                        <div class="info-label">Full Name</div>
+                        <div class="info-label"><span data-i18n="Full Name">{{ __("Full Name") }}</span></div>
                         <div class="info-value" id="viewName">{{ $userName }}</div>
                     </div>
                 </div>
                 <div class="info-row">
                     <div class="info-icon icon-violet-bg"><i class="fas fa-envelope"></i></div>
                     <div class="info-content">
-                        <div class="info-label">Email Address</div>
+                        <div class="info-label"><span data-i18n="Email Address">{{ __("Email Address") }}</span></div>
                         <div class="info-value" id="viewEmail">{{ $userEmail }}</div>
                     </div>
                 </div>
                 <div class="info-row">
                     <div class="info-icon icon-emerald-bg"><i class="fas fa-phone"></i></div>
                     <div class="info-content">
-                        <div class="info-label">Phone Number</div>
+                        <div class="info-label"><span data-i18n="Phone Number">{{ __("Phone Number") }}</span></div>
                         <div class="info-value" id="viewPhone">{{ $userPhone ?: 'Not set' }}</div>
                     </div>
                 </div>
                 <div class="info-row">
                     <div class="info-icon icon-amber-bg"><i class="fas fa-birthday-cake"></i></div>
                     <div class="info-content">
-                        <div class="info-label">Birthday</div>
+                        <div class="info-label"><span data-i18n="Birthday">{{ __("Birthday") }}</span></div>
                         <div class="info-value" id="viewBirthday">
                             {{ $userBirthday ? \Carbon\Carbon::parse($userBirthday)->format('F d, Y') : 'Not set' }}
                         </div>
@@ -170,7 +179,7 @@
                 <div class="info-row">
                     <div class="info-icon icon-blue-bg"><i class="fas fa-map-marker-alt"></i></div>
                     <div class="info-content">
-                        <div class="info-label">Address</div>
+                        <div class="info-label"><span data-i18n="Address">{{ __("Address") }}</span></div>
                         <div class="info-value" id="viewAddress">{{ $userAddress ?: 'Not set' }}</div>
                     </div>
                 </div>
@@ -182,8 +191,8 @@
             <div class="profile-card-header">
                 <div class="card-header-icon icon-amber"><i class="fas fa-church"></i></div>
                 <div>
-                    <h3 class="profile-card-title">Church Information</h3>
-                    <p class="profile-card-subtitle">Your church affiliation</p>
+                    <h3 class="profile-card-title"><span data-i18n="Church Information">{{ __("Church Information") }}</span></h3>
+                    <p class="profile-card-subtitle"><span data-i18n="Your church affiliation">{{ __("Your church affiliation") }}</span></p>
                 </div>
             </div>
 
@@ -191,14 +200,14 @@
                 <div class="info-row">
                     <div class="info-icon icon-amber-bg"><i class="fas fa-building-columns"></i></div>
                     <div class="info-content">
-                        <div class="info-label">Church Name</div>
+                        <div class="info-label"><span data-i18n="Church Name">{{ __("Church Name") }}</span></div>
                         <div class="info-value">{{ optional($user->church)->name ?? 'Not assigned' }}</div>
                     </div>
                 </div>
                 <div class="info-row">
                     <div class="info-icon icon-violet-bg"><i class="fas fa-user-shield"></i></div>
                     <div class="info-content">
-                        <div class="info-label">Role</div>
+                        <div class="info-label"><span data-i18n="Role">{{ __("Role") }}</span></div>
                         <div class="info-value">
                             <span class="role-pill">{{ ucfirst(str_replace('_', ' ', $userRole)) }}</span>
                         </div>
@@ -207,7 +216,7 @@
                 <div class="info-row">
                     <div class="info-icon icon-emerald-bg"><i class="fas fa-calendar-plus"></i></div>
                     <div class="info-content">
-                        <div class="info-label">Member Since</div>
+                        <div class="info-label"><span data-i18n="Member Since">{{ __("Member Since") }}</span></div>
                         <div class="info-value">
                             {{ $userCreatedAt ? \Carbon\Carbon::parse($userCreatedAt)->format('F d, Y') : 'N/A' }}
                         </div>
@@ -216,7 +225,7 @@
                 <div class="info-row">
                     <div class="info-icon icon-blue-bg"><i class="fas fa-id-badge"></i></div>
                     <div class="info-content">
-                        <div class="info-label">Account ID</div>
+                        <div class="info-label"><span data-i18n="Account ID">{{ __("Account ID") }}</span></div>
                         <div class="info-value mono">#{{ str_pad($user->id ?? 0, 6, '0', STR_PAD_LEFT) }}</div>
                     </div>
                 </div>
@@ -228,30 +237,30 @@
             <div class="profile-card-header">
                 <div class="card-header-icon icon-emerald"><i class="fas fa-chart-pie"></i></div>
                 <div>
-                    <h3 class="profile-card-title">Account Overview</h3>
-                    <p class="profile-card-subtitle">Your account activity</p>
+                    <h3 class="profile-card-title"><span data-i18n="Account Overview">{{ __("Account Overview") }}</span></h3>
+                    <p class="profile-card-subtitle"><span data-i18n="Your account activity">{{ __("Your account activity") }}</span></p>
                 </div>
             </div>
 
             <div class="overview-list">
                 <div class="overview-item">
-                    <div class="overview-label"><i class="fas fa-clock"></i> Last Login</div>
+                    <div class="overview-label"><i class="fas fa-clock"></i> <span data-i18n="Last Login">{{ __("Last Login") }}</span></div>
                     <div class="overview-value">
                         {{ $userLastLogin ? \Carbon\Carbon::parse($userLastLogin)->diffForHumans() : 'Just now' }}
                     </div>
                 </div>
                 <div class="overview-item">
-                    <div class="overview-label"><i class="fas fa-shield-alt"></i> Account Status</div>
+                    <div class="overview-label"><i class="fas fa-shield-alt"></i> <span data-i18n="Account Status">{{ __("Account Status") }}</span></div>
                     <div class="overview-value">
-                        <span class="status-pill status-active"><span class="dot"></span> Active</span>
+                        <span class="status-pill status-active"><span class="dot"></span> <span data-i18n="Active">{{ __("Active") }}</span></span>
                     </div>
                 </div>
                 <div class="overview-item">
-                    <div class="overview-label"><i class="fas fa-envelope"></i> Messages Received</div>
+                    <div class="overview-label"><i class="fas fa-envelope"></i> <span data-i18n="Messages Received">{{ __("Messages Received") }}</span></div>
                     <div class="overview-value">{{ $messageCount }}</div>
                 </div>
                 <div class="overview-item">
-                    <div class="overview-label"><i class="fas fa-users"></i> Members Managed</div>
+                    <div class="overview-label"><i class="fas fa-users"></i> <span data-i18n="Members Managed">{{ __("Members Managed") }}</span></div>
                     <div class="overview-value">{{ $memberCount }}</div>
                 </div>
             </div>
@@ -262,23 +271,43 @@
             <div class="profile-card-header">
                 <div class="card-header-icon icon-violet"><i class="fas fa-sliders-h"></i></div>
                 <div>
-                    <h3 class="profile-card-title">Preferences</h3>
-                    <p class="profile-card-subtitle">Customize your experience</p>
+                    <h3 class="profile-card-title"><span data-i18n="Preferences">{{ __("Preferences") }}</span></h3>
+                    <p class="profile-card-subtitle"><span data-i18n="Customize your experience">{{ __("Customize your experience") }}</span></p>
                 </div>
             </div>
 
+            {{-- LANGUAGE SELECTOR --}}
             <div class="preference-item">
                 <div class="preference-info">
                     <div class="preference-icon"><i class="fas fa-globe"></i></div>
                     <div>
-                        <div class="preference-name">Language</div>
-                        <div class="preference-desc">Preferred language for the app</div>
+                        <div class="preference-name"><span data-i18n="Language">{{ __("Language") }}</span></div>
+                        <div class="preference-desc"><span data-i18n="Preferred language for the app">{{ __("Preferred language for the app") }}</span></div>
                     </div>
                 </div>
                 <div class="preference-value">
-                    <span class="lang-pill">
-                        {{ $userPreferredLang === 'ceb' ? '🇵🇭 Cebuano' : ($userPreferredLang === 'tl' ? '🇵🇭 Tagalog' : '🇬🇧 English') }}
-                    </span>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <button type="button" class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false">
+                            <span class="lang-flag" id="langFlag">{{ $currentLang['flag'] }}</span>
+                            <span class="lang-label" id="langLabel">{{ $currentLang['label'] }}</span>
+                            <i class="fas fa-chevron-down lang-arrow"></i>
+                        </button>
+                        <div class="lang-menu" id="langMenu">
+                            @foreach($languages as $code => $lang)
+                                <button type="button"
+                                        class="lang-option {{ $code === $userPreferredLang ? 'active' : '' }}"
+                                        data-lang="{{ $code }}"
+                                        data-flag="{{ $lang['flag'] }}"
+                                        data-label="{{ $lang['label'] }}">
+                                    <span class="lang-flag">{{ $lang['flag'] }}</span>
+                                    <span class="lang-name">{{ $lang['native'] }}</span>
+                                    @if($code === $userPreferredLang)
+                                        <i class="fas fa-check lang-check"></i>
+                                    @endif
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -286,13 +315,13 @@
                 <div class="preference-info">
                     <div class="preference-icon"><i class="fas fa-moon"></i></div>
                     <div>
-                        <div class="preference-name">Dark Mode</div>
-                        <div class="preference-desc">Theme preference</div>
+                        <div class="preference-name"><span data-i18n="Dark Mode">{{ __("Dark Mode") }}</span></div>
+                        <div class="preference-desc"><span data-i18n="Theme preference">{{ __("Theme preference") }}</span></div>
                     </div>
                 </div>
                 <div class="preference-value">
                     <button type="button" class="preference-toggle" id="themeToggleBtn">
-                        <span class="theme-current">Light</span>
+                        <span class="theme-current" data-i18n="Light">{{ __("Light") }}</span>
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
@@ -302,12 +331,12 @@
                 <div class="preference-info">
                     <div class="preference-icon"><i class="fas fa-bell"></i></div>
                     <div>
-                        <div class="preference-name">Notifications</div>
-                        <div class="preference-desc">Email & in-app alerts</div>
+                        <div class="preference-name"><span data-i18n="Notifications">{{ __("Notifications") }}</span></div>
+                        <div class="preference-desc"><span data-i18n="Email & in-app alerts">{{ __("Email & in-app alerts") }}</span></div>
                     </div>
                 </div>
                 <div class="preference-value">
-                    <span class="status-pill status-active"><span class="dot"></span> Enabled</span>
+                    <span class="status-pill status-active"><span class="dot"></span> <span data-i18n="Enabled">{{ __("Enabled") }}</span></span>
                 </div>
             </div>
         </div>
@@ -316,9 +345,7 @@
 
 </div>
 
-{{-- ============================================================
-     EDIT PROFILE MODAL
-     ============================================================ --}}
+{{-- EDIT PROFILE MODAL --}}
 <div class="edit-modal-overlay" id="editProfileModal" aria-hidden="true">
     <div class="edit-modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
 
@@ -328,8 +355,8 @@
                     <i class="fas fa-user-pen"></i>
                 </div>
                 <div>
-                    <h3 class="edit-modal-title" id="editModalTitle">Edit Profile</h3>
-                    <p class="edit-modal-subtitle">Update your personal information</p>
+                    <h3 class="edit-modal-title" id="editModalTitle"><span data-i18n="Edit Profile">{{ __("Edit Profile") }}</span></h3>
+                    <p class="edit-modal-subtitle"><span data-i18n="Update your personal information">{{ __("Update your personal information") }}</span></p>
                 </div>
             </div>
             <button type="button" class="edit-modal-close" id="closeEditModal" aria-label="Close">
@@ -343,14 +370,14 @@
             <div class="edit-form-row">
                 <div class="edit-form-group">
                     <label for="editName">
-                        <i class="fas fa-user"></i> Full Name
+                        <i class="fas fa-user"></i> <span data-i18n="Full Name">{{ __("Full Name") }}</span>
                     </label>
                     <input type="text" id="editName" name="name" class="edit-input"
                            value="{{ $userName }}" required>
                 </div>
                 <div class="edit-form-group">
                     <label for="editEmail">
-                        <i class="fas fa-envelope"></i> Email Address
+                        <i class="fas fa-envelope"></i> <span data-i18n="Email Address">{{ __("Email Address") }}</span>
                     </label>
                     <input type="email" id="editEmail" name="email" class="edit-input"
                            value="{{ $userEmail }}" required>
@@ -360,14 +387,14 @@
             <div class="edit-form-row">
                 <div class="edit-form-group">
                     <label for="editPhone">
-                        <i class="fas fa-phone"></i> Phone Number
+                        <i class="fas fa-phone"></i> <span data-i18n="Phone Number">{{ __("Phone Number") }}</span>
                     </label>
                     <input type="text" id="editPhone" name="phone" class="edit-input"
                            value="{{ $userPhone }}" placeholder="+63 9XX XXX XXXX">
                 </div>
                 <div class="edit-form-group">
                     <label for="editBirthday">
-                        <i class="fas fa-birthday-cake"></i> Birthday
+                        <i class="fas fa-birthday-cake"></i> <span data-i18n="Birthday">{{ __("Birthday") }}</span>
                     </label>
                     <input type="date" id="editBirthday" name="birthday" class="edit-input"
                            value="{{ $userBirthday ? \Carbon\Carbon::parse($userBirthday)->format('Y-m-d') : '' }}">
@@ -376,7 +403,7 @@
 
             <div class="edit-form-group">
                 <label for="editAddress">
-                    <i class="fas fa-map-marker-alt"></i> Address
+                    <i class="fas fa-map-marker-alt"></i> <span data-i18n="Address">{{ __("Address") }}</span>
                 </label>
                 <textarea id="editAddress" name="address" class="edit-input edit-textarea" rows="3"
                           placeholder="Enter your complete address">{{ $userAddress }}</textarea>
@@ -386,10 +413,10 @@
 
         <div class="edit-modal-footer">
             <button type="button" class="edit-btn edit-btn-cancel" id="cancelEditModal">
-                <i class="fas fa-times"></i> Cancel
+                <i class="fas fa-times"></i> <span data-i18n="Cancel">{{ __("Cancel") }}</span>
             </button>
             <button type="submit" class="edit-btn edit-btn-save" id="saveEditProfile" form="editProfileForm">
-                <i class="fas fa-save"></i> Save Changes
+                <i class="fas fa-save"></i> <span data-i18n="Save Changes">{{ __("Save Changes") }}</span>
             </button>
         </div>
 
@@ -398,7 +425,7 @@
 
 <style>
     /* ============================================================
-       PROFILE PAGE — REDESIGNED WITH BETTER CONTRAST
+       PROFILE PAGE — ENHANCED DESIGN
        ============================================================ */
     .profile-page {
         max-width: 1200px;
@@ -424,7 +451,6 @@
         box-shadow: 0 4px 16px rgba(15,27,45,0.06), 0 24px 56px -20px rgba(15,27,45,0.22);
     }
 
-    /* Darker gradient for better text contrast */
     .profile-hero-bg {
         position: absolute;
         top: 0; left: 0; right: 0;
@@ -470,7 +496,7 @@
         min-height: 270px;
     }
 
-    /* ==================== AVATAR (200px) ==================== */
+    /* AVATAR */
     .profile-avatar-section {
         flex-shrink: 0;
         position: relative;
@@ -499,7 +525,6 @@
             0 0 0 8px rgba(211,162,76,0.15);
     }
 
-    /* Rotating gold ring */
     .profile-picture-wrapper::before {
         content: '';
         position: absolute;
@@ -544,7 +569,6 @@
         text-shadow: 0 2px 12px rgba(0,0,0,0.25);
     }
 
-    /* Upload button + tooltip */
     .profile-picture-wrapper .upload-overlay {
         position: absolute;
         bottom: 6px;
@@ -599,7 +623,6 @@
         transform: translateX(-50%) scale(1);
     }
 
-    /* Upload loading state */
     .profile-picture-wrapper.is-uploading::after {
         content: '';
         position: absolute;
@@ -615,7 +638,7 @@
         50% { opacity: 1; }
     }
 
-    /* ==================== HERO INFO — HIGH CONTRAST ==================== */
+    /* HERO INFO */
     .profile-hero-info {
         padding-bottom: 0.5rem;
         min-width: 0;
@@ -625,7 +648,6 @@
         justify-content: flex-end;
     }
 
-    /* ✅ NAME — Bold white with 3-layer shadow */
     .profile-hero-name {
         font-family: 'Fraunces', Georgia, serif;
         font-size: 2.4rem;
@@ -640,7 +662,6 @@
             0 8px 28px rgba(0,0,0,0.45);
     }
 
-    /* ✅ EMAIL — Dark pill background, VERY VISIBLE */
     .profile-hero-email {
         display: inline-flex;
         align-items: center;
@@ -678,7 +699,6 @@
         gap: 10px;
     }
 
-    /* ✅ BADGES — SOLID colors with strong contrast */
     .hero-badge {
         display: inline-flex;
         align-items: center;
@@ -697,7 +717,6 @@
         text-shadow: 0 1px 2px rgba(0,0,0,0.35);
     }
 
-    /* Role — SOLID GOLD */
     .hero-badge.role-badge {
         background: linear-gradient(135deg, #D3A24C 0%, #B9862F 100%);
         border-color: #FFD97A;
@@ -712,7 +731,6 @@
         filter: drop-shadow(0 1px 1px rgba(255,255,255,0.3));
     }
 
-    /* Status — SOLID GREEN */
     .hero-badge.status-badge {
         background: linear-gradient(135deg, #16A075 0%, #0F7A57 100%);
         border-color: #7FE5B8;
@@ -731,7 +749,6 @@
         100% { box-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 0 0 rgba(255,255,255,0); }
     }
 
-    /* Joined — SOLID BLUE */
     .hero-badge.joined-badge {
         background: linear-gradient(135deg, #4A7AB5 0%, #2B5A85 100%);
         border-color: #A8CCF0;
@@ -749,7 +766,7 @@
         animation: pulseStatus 2s infinite;
     }
 
-    /* ==================== STATS ==================== */
+    /* STATS */
     .profile-stats-row {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -811,7 +828,7 @@
         margin-top: 5px;
     }
 
-    /* ==================== GRID ==================== */
+    /* GRID */
     .profile-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1016,46 +1033,115 @@
     .preference-toggle i { font-size: 0.7rem; color: #6B7A93; transition: transform 0.2s ease; }
     .preference-toggle:hover i { transform: translateX(2px); }
 
-    .lang-pill {
-        display: inline-flex;
+    /* LANGUAGE DROPDOWN */
+    .lang-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .lang-btn {
+        display: flex;
         align-items: center;
-        gap: 6px;
-        padding: 7px 14px;
-        border-radius: 30px;
-        font-size: 0.78rem;
-        font-weight: 700;
+        gap: 8px;
         background: #F5F7FB;
-        color: #0F1B2D;
         border: 1.5px solid #E3E8F0;
-    }
-
-    .status-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 5px 12px;
-        border-radius: 30px;
-        font-size: 0.72rem;
+        border-radius: 12px;
+        padding: 7px 14px;
+        font-size: 0.82rem;
         font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
+        color: #0F1B2D;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: inherit;
+        min-width: 130px;
     }
-    .status-pill.status-active {
-        background: linear-gradient(135deg, rgba(22,160,117,0.15), rgba(22,160,117,0.08));
-        color: #0F7A57;
-        border: 1px solid rgba(22,160,117,0.25);
+    .lang-btn:hover {
+        background: #ffffff;
+        border-color: #1E4468;
+        box-shadow: 0 4px 12px -2px rgba(30,68,104,0.15);
     }
-    .status-pill .dot {
-        width: 7px; height: 7px;
-        border-radius: 50%;
-        background: #16A075;
-        box-shadow: 0 0 8px rgba(22,160,117,0.8);
-        animation: pulseStatus 2s infinite;
+    .lang-btn.active {
+        background: #ffffff;
+        border-color: #1E4468;
+        box-shadow: 0 4px 12px -2px rgba(30,68,104,0.2);
     }
 
-    /* ============================================================
-       EDIT PROFILE MODAL
-       ============================================================ */
+    .lang-flag {
+        font-size: 1.1rem;
+        line-height: 1;
+        flex-shrink: 0;
+    }
+
+    .lang-label {
+        flex: 1;
+        text-align: left;
+    }
+
+    .lang-arrow {
+        font-size: 0.65rem;
+        color: #6B7A93;
+        transition: transform 0.25s ease;
+        margin-left: auto;
+    }
+    .lang-btn.active .lang-arrow {
+        transform: rotate(180deg);
+    }
+
+    .lang-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        min-width: 180px;
+        background: #ffffff;
+        border: 1.5px solid #E3E8F0;
+        border-radius: 14px;
+        box-shadow: 0 20px 48px -12px rgba(15,27,45,0.25);
+        padding: 6px;
+        z-index: 100;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .lang-menu.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .lang-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 10px 12px;
+        background: transparent;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #0F1B2D;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        text-align: left;
+        font-family: inherit;
+    }
+    .lang-option:hover {
+        background: #F5F7FB;
+    }
+    .lang-option.active {
+        background: linear-gradient(135deg, rgba(211,162,76,0.15), rgba(211,162,76,0.08));
+        color: #96691F;
+    }
+    .lang-option .lang-name {
+        flex: 1;
+    }
+    .lang-option .lang-check {
+        font-size: 0.75rem;
+        color: #B9862F;
+    }
+
+    /* EDIT MODAL */
     .edit-modal-overlay {
         position: fixed;
         inset: 0;
@@ -1275,7 +1361,7 @@
         transform: none;
     }
 
-    /* ==================== RESPONSIVE ==================== */
+    /* RESPONSIVE */
     @media (max-width: 900px) {
         .profile-grid { grid-template-columns: 1fr; }
     }
@@ -1332,7 +1418,7 @@
         .profile-hero-name { font-size: 1.6rem; }
     }
 
-    /* ==================== DARK MODE ==================== */
+    /* DARK MODE */
     [data-theme="dark"] .profile-hero,
     [data-theme="dark"] .profile-stat-card,
     [data-theme="dark"] .profile-card,
@@ -1367,7 +1453,8 @@
     }
     [data-theme="dark"] .info-row:hover,
     [data-theme="dark"] .preference-toggle,
-    [data-theme="dark"] .lang-pill {
+    [data-theme="dark"] .lang-btn,
+    [data-theme="dark"] .lang-option:hover {
         background: #1B2740;
         border-color: #22304A;
     }
@@ -1385,6 +1472,23 @@
         color: #9BABC4;
         border-color: #22304A;
     }
+    [data-theme="dark"] .lang-btn {
+        color: #E8EEF8;
+    }
+    [data-theme="dark"] .lang-menu {
+        background: #131C2C;
+        border-color: #22304A;
+    }
+    [data-theme="dark"] .lang-option {
+        color: #E8EEF8;
+    }
+    [data-theme="dark"] .lang-option.active {
+        background: linear-gradient(135deg, rgba(211,162,76,0.2), rgba(211,162,76,0.1));
+        color: #FFD97A;
+    }
+    [data-theme="dark"] .lang-option .lang-check {
+        color: #FFD97A;
+    }
 </style>
 
 <script>
@@ -1393,6 +1497,7 @@
 
     var pictureEndpoint = '{{ $pictureRoute }}';
     var updateEndpoint = '{{ $updateRoute }}';
+    var languageEndpoint = '{{ $languageRoute }}';
     var csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
 
     function notify(type, title, message) {
@@ -1457,6 +1562,9 @@
         }
     }
 
+    // ============================================
+    // PROFILE PICTURE UPLOAD
+    // ============================================
     var pictureInput = document.getElementById('profilePictureInput');
     var pictureWrapper = document.getElementById('profilePictureWrapper');
 
@@ -1473,7 +1581,6 @@
 
             var dataUrl = null;
 
-            // Preview — images show, others show icon
             if (file.type.startsWith('image/')) {
                 var reader = new FileReader();
                 reader.onload = function(e) {
@@ -1524,7 +1631,6 @@
 
                 var finalUrl = withCacheBuster(data.profile_picture_url);
 
-                // Only try to preload if it's an image
                 if (file.type.startsWith('image/')) {
                     return preloadImage(finalUrl)
                         .then(function(loadedUrl) {
@@ -1556,7 +1662,113 @@
         });
     }
 
-    // MODAL
+    // ============================================
+    // LANGUAGE DROPDOWN — Real-time switching
+    // ============================================
+    var langDropdown = document.getElementById('langDropdown');
+    var langBtn = document.getElementById('langBtn');
+    var langMenu = document.getElementById('langMenu');
+    var langFlag = document.getElementById('langFlag');
+    var langLabel = document.getElementById('langLabel');
+
+    if (langBtn && langMenu) {
+        langBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            langBtn.classList.toggle('active');
+            langMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (langDropdown && !langDropdown.contains(e.target)) {
+                langBtn.classList.remove('active');
+                langMenu.classList.remove('show');
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                langBtn.classList.remove('active');
+                langMenu.classList.remove('show');
+            }
+        });
+
+        langMenu.querySelectorAll('.lang-option').forEach(function(option) {
+            option.addEventListener('click', function() {
+                var lang = this.getAttribute('data-lang');
+                var flag = this.getAttribute('data-flag');
+                var label = this.getAttribute('data-label');
+
+                langFlag.textContent = flag;
+                langLabel.textContent = label;
+
+                langMenu.querySelectorAll('.lang-option').forEach(function(opt) {
+                    opt.classList.remove('active');
+                    var check = opt.querySelector('.lang-check');
+                    if (check) check.remove();
+                });
+                this.classList.add('active');
+                var checkIcon = document.createElement('i');
+                checkIcon.className = 'fas fa-check lang-check';
+                this.appendChild(checkIcon);
+
+                langBtn.classList.remove('active');
+                langMenu.classList.remove('show');
+
+                saveLanguage(lang);
+            });
+        });
+    }
+
+    // ⭐ REAL-TIME LANGUAGE SWITCHING
+    function saveLanguage(lang) {
+        if (!languageEndpoint || languageEndpoint === '#') {
+            notify('info', 'Info', 'Language preference saved locally');
+            localStorage.setItem('tinc-language', lang);
+            if (typeof window.setLocale === 'function') {
+                window.setLocale(lang);
+            }
+            return;
+        }
+
+        fetch(languageEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ preferred_language: lang })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                notify('success', 'Language', 'Language changed to ' + data.label + '!');
+                localStorage.setItem('tinc-language', lang);
+
+                // ⭐ REAL-TIME — walay page reload
+                if (typeof window.setLocale === 'function') {
+                    window.setLocale(lang);
+                } else {
+                    window.__currentLocale = lang;
+                    if (typeof window.applyTranslations === 'function') {
+                        window.applyTranslations();
+                    }
+                }
+
+                document.documentElement.setAttribute('lang', lang);
+            } else {
+                notify('error', 'Error', data.message || 'Failed to update language');
+            }
+        })
+        .catch(function(err) {
+            console.error('[LANG] Error:', err);
+            notify('error', 'Error', 'Failed to save language preference');
+        });
+    }
+
+    // ============================================
+    // EDIT PROFILE MODAL
+    // ============================================
     var modal = document.getElementById('editProfileModal');
     var openBtn = document.getElementById('openEditModal');
     var closeBtn = document.getElementById('closeEditModal');
@@ -1686,22 +1898,47 @@
         if (viewAddress) viewAddress.textContent = data.address || 'Not set';
     }
 
+    // ============================================
+    // THEME TOGGLE (with translation)
+    // ============================================
     var themeBtn = document.getElementById('themeToggleBtn');
     if (themeBtn) {
         var html = document.documentElement;
         var label = themeBtn.querySelector('.theme-current');
         var currentTheme = html.getAttribute('data-theme') || 'light';
-        if (label) label.textContent = currentTheme === 'dark' ? 'Dark' : 'Light';
+
+        if (label) {
+            label.textContent = currentTheme === 'dark' ? 'Dark' : 'Light';
+            label.setAttribute('data-i18n', currentTheme === 'dark' ? 'Dark' : 'Light');
+        }
 
         themeBtn.addEventListener('click', function() {
             var current = html.getAttribute('data-theme') || 'light';
             var next = current === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', next);
             localStorage.setItem('tinc-theme', next);
-            if (label) label.textContent = next === 'dark' ? 'Dark' : 'Light';
+
+            if (label) {
+                label.textContent = next === 'dark' ? 'Dark' : 'Light';
+                label.setAttribute('data-i18n', next === 'dark' ? 'Dark' : 'Light');
+            }
             notify('info', 'Theme', (next === 'dark' ? 'Dark' : 'Light') + ' mode activated');
         });
     }
+
+    // ⭐ Listen for language changes → update theme toggle text
+    window.addEventListener('localeChanged', function(e) {
+        var themeBtn = document.getElementById('themeToggleBtn');
+        if (!themeBtn) return;
+        var html = document.documentElement;
+        var current = html.getAttribute('data-theme') || 'light';
+        var label = themeBtn.querySelector('.theme-current');
+        if (label) {
+            var key = current === 'dark' ? 'Dark' : 'Light';
+            var translated = (typeof window.__t === 'function') ? window.__t(key) : key;
+            label.textContent = translated;
+        }
+    });
 })();
 </script>
 @endsection

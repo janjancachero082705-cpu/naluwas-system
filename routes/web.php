@@ -81,6 +81,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::patch('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update.patch');
 
+    // ✅ NEW: Language update from profile page
+    Route::post('/profile/language/update', [ProfileController::class, 'updateLanguage'])->name('profile.language.update');
+
     // Password update (from security modal)
     Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
 

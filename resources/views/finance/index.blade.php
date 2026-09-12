@@ -1,20 +1,15 @@
 @extends('layouts.app')
 
 @section('header')
-    <span data-i18n="finance_dashboard">Finance Dashboard</span>
+    <span data-i18n="finance_dashboard">{{ __("Finance Dashboard") }}</span>
 @endsection
 
 @section('content')
 
-{{-- ============================================= --}}
-{{-- STYLES SECTION --}}
-{{-- ============================================= --}}
 <style>
     /* ============================================
        MODERN DESIGN - MATCHING MEMBER PROFILE STYLE
     ============================================ */
-    
-    /* Import Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
     
     :root {
@@ -32,7 +27,6 @@
         --shadow-glow: 0 8px 32px rgba(79, 70, 229, 0.3);
     }
     
-    /* Hero Section - Same as Member */
     .finance-hero {
         background: var(--gradient-primary);
         border-radius: 24px;
@@ -153,7 +147,6 @@
         text-decoration: none;
     }
     
-    /* Stats Grid - Premium Cards (Same as Member) */
     .stats-grid-premium {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -240,7 +233,6 @@
     .stat-card-premium .stat-change.positive { color: #10B981; }
     .stat-card-premium .stat-change.negative { color: #EF4444; }
     
-    /* Gradient variants */
     .stat-card-premium.green::before { background: linear-gradient(135deg, #10B981, #34D399); }
     .stat-card-premium.blue::before { background: var(--gradient-primary); }
     .stat-card-premium.purple::before { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
@@ -253,7 +245,6 @@
     .stat-card-premium.orange .stat-icon-wrap { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
     .stat-card-premium.red .stat-icon-wrap { background: linear-gradient(135deg, #EF4444, #F87171); }
     
-    /* Filter Card - Same as Member */
     .filter-card-modern {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
@@ -315,7 +306,6 @@
         border: 1px solid var(--border-color);
     }
     
-    /* Church Detail Card - Premium */
     .church-detail-premium {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
@@ -409,25 +399,11 @@
         font-family: 'Inter', sans-serif;
     }
     
-    .church-detail-item .value.income {
-        color: #10B981;
-    }
-    
-    .church-detail-item .value.expense {
-        color: #EF4444;
-    }
-    
-    .church-detail-item .value.balance {
-        color: #4F46E5;
-    }
-    
-    .church-detail-item .value.balance.positive {
-        color: #10B981;
-    }
-    
-    .church-detail-item .value.balance.negative {
-        color: #EF4444;
-    }
+    .church-detail-item .value.income { color: #10B981; }
+    .church-detail-item .value.expense { color: #EF4444; }
+    .church-detail-item .value.balance { color: #4F46E5; }
+    .church-detail-item .value.balance.positive { color: #10B981; }
+    .church-detail-item .value.balance.negative { color: #EF4444; }
     
     .church-detail-item .sub-text {
         font-size: 0.6rem;
@@ -487,7 +463,6 @@
         border-color: rgba(239, 68, 68, 0.2);
     }
     
-    /* Chart Container - Premium */
     .chart-container-premium {
         background: var(--card-bg);
         border: 1px solid var(--border-color);
@@ -561,7 +536,6 @@
         height: 100% !important;
     }
     
-    /* All Churches Grid - Premium Cards */
     .all-churches-grid-premium {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -617,13 +591,8 @@
         letter-spacing: -0.3px;
     }
     
-    .church-mini-card-premium .mini-balance.positive {
-        color: #10B981;
-    }
-    
-    .church-mini-card-premium .mini-balance.negative {
-        color: #EF4444;
-    }
+    .church-mini-card-premium .mini-balance.positive { color: #10B981; }
+    .church-mini-card-premium .mini-balance.negative { color: #EF4444; }
     
     .church-mini-card-premium .mini-details {
         display: flex;
@@ -692,7 +661,6 @@
         text-decoration: none;
     }
     
-    /* Empty State - Same as Member */
     .empty-state-modern {
         text-align: center;
         padding: 3rem 1.5rem;
@@ -718,34 +686,6 @@
         margin-bottom: 1rem;
     }
     
-    .empty-state-modern .btn-add-modern {
-        padding: 0.6rem 2rem;
-        font-size: 0.8rem;
-    }
-    
-    .btn-add-modern {
-        background: var(--gradient-primary);
-        color: white;
-        border: none;
-        padding: 0.5rem 1.5rem;
-        border-radius: 10px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .btn-add-modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
-        color: white;
-        text-decoration: none;
-    }
-    
     .info-message-modern {
         background: var(--bg-tertiary);
         border: 1px solid var(--border-color);
@@ -764,7 +704,6 @@
         font-size: 1.1rem;
     }
     
-    /* Responsive */
     @media (max-width: 1200px) {
         .stats-grid-premium {
             grid-template-columns: repeat(2, 1fr);
@@ -787,161 +726,104 @@
     }
     
     @media (max-width: 768px) {
-        .finance-hero {
-            padding: 1.5rem;
-        }
-        
-        .finance-hero h1 {
-            font-size: 1.3rem;
-        }
-        
-        .stats-grid-premium {
-            grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
-        }
-        
-        .stat-card-premium {
-            padding: 1rem;
-        }
-        
-        .stat-card-premium .stat-value {
-            font-size: 1.3rem;
-        }
-        
-        .stat-card-premium .stat-icon-wrap {
-            width: 36px;
-            height: 36px;
-            font-size: 0.9rem;
-        }
-        
-        .church-detail-grid {
-            grid-template-columns: 1fr 1fr;
-        }
-        
-        .all-churches-grid-premium {
-            grid-template-columns: 1fr 1fr;
-        }
-        
-        .chart-box {
-            height: 180px;
-        }
+        .finance-hero { padding: 1.5rem; }
+        .finance-hero h1 { font-size: 1.3rem; }
+        .stats-grid-premium { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+        .stat-card-premium { padding: 1rem; }
+        .stat-card-premium .stat-value { font-size: 1.3rem; }
+        .stat-card-premium .stat-icon-wrap { width: 36px; height: 36px; font-size: 0.9rem; }
+        .church-detail-grid { grid-template-columns: 1fr 1fr; }
+        .all-churches-grid-premium { grid-template-columns: 1fr 1fr; }
+        .chart-box { height: 180px; }
     }
     
     @media (max-width: 480px) {
-        .stats-grid-premium {
-            grid-template-columns: 1fr;
-        }
-        
-        .church-detail-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .all-churches-grid-premium {
-            grid-template-columns: 1fr;
-        }
-        
-        .filter-card-modern .row {
-            flex-direction: column;
-            align-items: stretch;
-        }
-        
-        .filter-select-modern {
-            width: 100%;
-        }
-        
-        .total-badge-modern {
-            justify-content: center;
-        }
-        
-        .church-detail-header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
+        .stats-grid-premium { grid-template-columns: 1fr; }
+        .church-detail-grid { grid-template-columns: 1fr; }
+        .all-churches-grid-premium { grid-template-columns: 1fr; }
+        .filter-card-modern .row { flex-direction: column; align-items: stretch; }
+        .filter-select-modern { width: 100%; }
+        .total-badge-modern { justify-content: center; }
+        .church-detail-header { flex-direction: column; align-items: flex-start; }
     }
 </style>
 
-{{-- ============================================= --}}
-{{-- MAIN CONTENT --}}
-{{-- ============================================= --}}
 <div class="container-fluid px-0">
 
-    {{-- ============================================ --}}
-    {{-- HERO SECTION - SAME AS MEMBER --}}
-    {{-- ============================================ --}}
+    {{-- HERO SECTION --}}
     <div class="finance-hero">
         <div class="hero-content">
             <div class="hero-left">
-                <h1><i class="fas fa-coins"></i> <span data-i18n="finance_dashboard">Finance Dashboard</span></h1>
+                <h1><i class="fas fa-coins"></i> <span data-i18n="finance_dashboard">{{ __("Finance Dashboard") }}</span></h1>
                 <p class="hero-sub">
                     <i class="fas fa-circle" style="color: #34D399; font-size: 0.4rem; vertical-align: middle;"></i>
-                    <span data-i18n="finance_dashboard_desc">Track income, expenses, and financial health across all churches</span>
+                    <span data-i18n="finance_dashboard_desc">{{ __("Track income, expenses, and financial health across all churches") }}</span>
                 </p>
             </div>
             <div class="hero-actions">
                 <a href="{{ route('finance.index') }}?church=all" class="btn-hero btn-hero-white">
-                    <i class="fas fa-chart-simple"></i> <span data-i18n="view_all">View All</span>
+                    <i class="fas fa-chart-simple"></i> <span data-i18n="view_all">{{ __("View All") }}</span>
                 </a>
                 <a href="{{ route('finance.index') }}" class="btn-hero btn-hero-ghost">
-                    <i class="fas fa-sync-alt"></i> <span data-i18n="refresh">Refresh</span>
+                    <i class="fas fa-sync-alt"></i> <span data-i18n="refresh">{{ __("Refresh") }}</span>
                 </a>
             </div>
         </div>
     </div>
 
-    {{-- ============================================ --}}
-    {{-- STATS CARDS - SAME AS MEMBER --}}
-    {{-- ============================================ --}}
+    {{-- STATS CARDS --}}
     <div class="stats-grid-premium">
         <div class="stat-card-premium green">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="total_income">Total Income</span>
+                <span class="stat-label"><span data-i18n="total_income">{{ __("Total Income") }}</span></span>
                 <div class="stat-icon-wrap"><i class="fas fa-arrow-down"></i></div>
             </div>
             <div class="stat-value">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="all_churches">All churches</span></div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="all_churches">{{ __("All churches") }}</span></div>
         </div>
         
         <div class="stat-card-premium red">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="total_expenses">Total Expenses</span>
+                <span class="stat-label"><span data-i18n="total_expenses">{{ __("Total Expenses") }}</span></span>
                 <div class="stat-icon-wrap"><i class="fas fa-arrow-up"></i></div>
             </div>
             <div class="stat-value">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
-            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="all_churches">All churches</span></div>
+            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="all_churches">{{ __("All churches") }}</span></div>
         </div>
         
         <div class="stat-card-premium blue">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="overall_balance">Overall Balance</span>
+                <span class="stat-label"><span data-i18n="overall_balance">{{ __("Overall Balance") }}</span></span>
                 <div class="stat-icon-wrap"><i class="fas fa-scale-balanced"></i></div>
             </div>
             <div class="stat-value" style="color: {{ ($overallBalance ?? 0) >= 0 ? '#10B981' : '#EF4444' }}">
                 ₱{{ number_format(abs($overallBalance ?? 0), 2) }}
             </div>
             <div class="stat-change {{ ($overallBalance ?? 0) >= 0 ? 'positive' : 'negative' }}">
-                {{ ($overallBalance ?? 0) >= 0 ? '↑ Surplus' : '↓ Deficit' }}
+                {{ ($overallBalance ?? 0) >= 0 ? '↑ ' : '↓ ' }}
+                <span data-i18n="{{ ($overallBalance ?? 0) >= 0 ? 'surplus' : 'deficit' }}">
+                    {{ ($overallBalance ?? 0) >= 0 ? __("Surplus") : __("Deficit") }}
+                </span>
             </div>
         </div>
         
         <div class="stat-card-premium purple">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="churches">Churches</span>
+                <span class="stat-label"><span data-i18n="churches">{{ __("Churches") }}</span></span>
                 <div class="stat-icon-wrap"><i class="fas fa-church"></i></div>
             </div>
             <div class="stat-value">{{ $churches->count() ?? 0 }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="connected_churches">Connected churches</span></div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="connected_churches">{{ __("Connected churches") }}</span></div>
         </div>
     </div>
 
-    {{-- ============================================ --}}
-    {{-- FILTER SECTION - SAME AS MEMBER CARDS --}}
-    {{-- ============================================ --}}
+    {{-- FILTER SECTION --}}
     <div class="filter-card-modern">
         <div class="row align-items-center">
             <div class="col-md-6">
-                <span class="filter-label-modern"><i class="fas fa-church me-1"></i> <span data-i18n="select_church">Select Church</span></span>
+                <span class="filter-label-modern"><i class="fas fa-church me-1"></i> <span data-i18n="select_church">{{ __("Select Church") }}</span></span>
                 <select id="churchSelect" class="filter-select-modern" onchange="window.location.href='{{ route('finance.index') }}?church=' + this.value">
-                    <option value="">-- <span data-i18n="choose_church">Choose a Church</span> --</option>
+                    <option value="">-- {{ __("Choose a Church") }} --</option>
                     @foreach($churches as $church)
                         <option value="{{ $church->id }}" {{ ($selectedChurchId ?? '') == $church->id ? 'selected' : '' }}>
                             {{ $church->name }}
@@ -953,9 +835,9 @@
                 <span class="total-badge-modern">
                     <i class="fas fa-building"></i>
                     @if($selectedChurch)
-                        <span data-i18n="viewing">Viewing:</span> <strong>{{ $selectedChurch->name }}</strong>
+                        <span data-i18n="viewing">{{ __("Viewing:") }}</span> <strong>{{ $selectedChurch->name }}</strong>
                     @else
-                        <span data-i18n="all_churches_label">All Churches</span>
+                        <span data-i18n="all_churches_label">{{ __("All Churches") }}</span>
                     @endif
                 </span>
             </div>
@@ -963,9 +845,7 @@
     </div>
 
     @if($selectedChurch)
-        {{-- ============================================ --}}
-        {{-- CHURCH DETAIL - FILTERED BY SELECTED CHURCH --}}
-        {{-- ============================================ --}}
+        {{-- CHURCH DETAIL --}}
         <div class="church-detail-premium">
             <div class="church-detail-header">
                 <div class="church-name-large">
@@ -978,66 +858,69 @@
             
             <div class="church-detail-grid">
                 <div class="church-detail-item">
-                    <div class="label"><i class="fas fa-arrow-down" style="color: #10B981;"></i> <span data-i18n="total_income">Total Income</span></div>
+                    <div class="label"><i class="fas fa-arrow-down" style="color: #10B981;"></i> <span data-i18n="total_income">{{ __("Total Income") }}</span></div>
                     <div class="value income">₱{{ number_format($churchIncome ?? 0, 2) }}</div>
                 </div>
                 <div class="church-detail-item">
-                    <div class="label"><i class="fas fa-arrow-up" style="color: #EF4444;"></i> <span data-i18n="total_expenses">Total Expenses</span></div>
+                    <div class="label"><i class="fas fa-arrow-up" style="color: #EF4444;"></i> <span data-i18n="total_expenses">{{ __("Total Expenses") }}</span></div>
                     <div class="value expense">₱{{ number_format($churchExpenses ?? 0, 2) }}</div>
                 </div>
                 <div class="church-detail-item">
-                    <div class="label"><i class="fas fa-scale-balanced" style="color: #4F46E5;"></i> <span data-i18n="balance">Balance</span></div>
+                    <div class="label"><i class="fas fa-scale-balanced" style="color: #4F46E5;"></i> <span data-i18n="balance">{{ __("Balance") }}</span></div>
                     <div class="value balance {{ ($churchBalance ?? 0) >= 0 ? 'positive' : 'negative' }}">
                         ₱{{ number_format(abs($churchBalance ?? 0), 2) }}
                     </div>
                     <div class="sub-text">
-                        {{ ($churchBalance ?? 0) >= 0 ? '↑ Surplus' : '↓ Deficit' }}
+                        {{ ($churchBalance ?? 0) >= 0 ? '↑ ' : '↓ ' }}
+                        <span data-i18n="{{ ($churchBalance ?? 0) >= 0 ? 'surplus' : 'deficit' }}">
+                            {{ ($churchBalance ?? 0) >= 0 ? __("Surplus") : __("Deficit") }}
+                        </span>
                     </div>
                 </div>
             </div>
             
             <div class="category-section">
                 <div>
-                    <span class="cat-label"><i class="fas fa-tags" style="color: #10B981;"></i> <span data-i18n="income_categories">Income Categories</span></span>
+                    <span class="cat-label"><i class="fas fa-tags" style="color: #10B981;"></i> <span data-i18n="income_categories">{{ __("Income Categories") }}</span></span>
                     <div class="category-tags">
                         @forelse($incomeTypes ?? [] as $type)
                             <span class="category-tag income-tag">
-                                {{ $type->category ?? 'Uncategorized' }}: ₱{{ number_format($type->total, 2) }}
+                                {{ $type->category ?? __("Uncategorized") }}: ₱{{ number_format($type->total, 2) }}
                             </span>
                         @empty
-                            <span style="font-size: 0.7rem; color: var(--text-muted);"><span data-i18n="no_income_categories">No income categories</span></span>
+                            <span style="font-size: 0.7rem; color: var(--text-muted);"><span data-i18n="no_income_categories">{{ __("No income categories") }}</span></span>
                         @endforelse
                     </div>
                 </div>
                 <div>
-                    <span class="cat-label"><i class="fas fa-tags" style="color: #EF4444;"></i> <span data-i18n="expense_categories">Expense Categories</span></span>
+                    <span class="cat-label"><i class="fas fa-tags" style="color: #EF4444;"></i> <span data-i18n="expense_categories">{{ __("Expense Categories") }}</span></span>
                     <div class="category-tags">
                         @forelse($expenseTypes ?? [] as $type)
                             <span class="category-tag expense-tag">
-                                {{ $type->category ?? 'Uncategorized' }}: ₱{{ number_format($type->total, 2) }}
+                                {{ $type->category ?? __("Uncategorized") }}: ₱{{ number_format($type->total, 2) }}
                             </span>
                         @empty
-                            <span style="font-size: 0.7rem; color: var(--text-muted);"><span data-i18n="no_expense_categories">No expense categories</span></span>
+                            <span style="font-size: 0.7rem; color: var(--text-muted);"><span data-i18n="no_expense_categories">{{ __("No expense categories") }}</span></span>
                         @endforelse
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- CHART - FILTERED BY SELECTED CHURCH --}}
+        {{-- CHART --}}
         <div class="chart-container-premium">
             <div class="chart-header">
                 <h6>
-                    <i class="fas fa-chart-line"></i> <span data-i18n="monthly_income_expenses">Monthly Income vs Expenses</span> - {{ $selectedChurch->name }}
+                    <i class="fas fa-chart-line"></i> <span data-i18n="monthly_income_expenses">{{ __("Monthly Income vs Expenses") }}</span> - {{ $selectedChurch->name }}
                 </h6>
-                <span style="font-size: 0.65rem; color: var(--text-muted);"><span data-i18n="last_6_months">Last 6 months</span></span>
+                <span style="font-size: 0.65rem; color: var(--text-muted);"><span data-i18n="last_6_months">{{ __("Last 6 months") }}</span></span>
             </div>
             <div class="chart-legend-premium">
                 <span class="leg-item">
-                    <span class="leg-dot" style="background: #10B981;"></span> <span data-i18n="income">Income</span>
+                    <span class="leg-dot" style="background: #10B981;"></span> <span data-i18n="income">{{ __("Income") }}</span>
                 </span>
                 <span class="leg-item">
-                    <span class="leg-dot" style="background: #EF4444; border: 2px dashed #EF4444; background: none; width: 20px; height: 2px; border-radius: 0;"></span> <span data-i18n="expenses">Expenses</span>
+                    <span class="leg-dot" style="background: #EF4444; border: 2px dashed #EF4444; background: none; width: 20px; height: 2px; border-radius: 0;"></span> <span data-i18n="expenses">{{ __("Expenses") }}</span>
                 </span>
             </div>
             <div class="chart-box">
@@ -1045,12 +928,10 @@
             </div>
         </div>
     @else
-        {{-- ============================================ --}}
-        {{-- ALL CHURCHES OVERVIEW (When No Church Selected) --}}
-        {{-- ============================================ --}}
+        {{-- ALL CHURCHES OVERVIEW --}}
         <div class="info-message-modern">
             <i class="fas fa-info-circle"></i>
-            <span data-i18n="select_church_hint">Select a church above to view its detailed financial information.</span>
+            <span data-i18n="select_church_hint">{{ __("Select a church above to view its detailed financial information.") }}</span>
         </div>
         
         <div class="all-churches-grid-premium">
@@ -1069,7 +950,7 @@
                     <span><i class="fas fa-arrow-up" style="color: #EF4444;"></i> ₱{{ number_format($data['expense'], 2) }}</span>
                 </div>
                 <a href="{{ route('finance.index') }}?church={{ $data['church']->id }}" class="btn-view-church-premium">
-                    <i class="fas fa-eye"></i> <span data-i18n="view_details">View Details</span>
+                    <i class="fas fa-eye"></i> <span data-i18n="view_details">{{ __("View Details") }}</span>
                 </a>
             </div>
             @endforeach
@@ -1077,136 +958,148 @@
     @endif
 </div>
 
-{{-- ============================================= --}}
-{{-- SCRIPTS SECTION --}}
-{{-- ============================================= --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // CHART - FILTERED BY SELECTED CHURCH
+    // ⭐ Helper
+    function t(key, fallback) {
+        if (typeof window.t === 'function') return window.t(key, fallback);
+        if (typeof window.__t === 'function') return window.__t(key, fallback);
+        return fallback || key;
+    }
+
+    let financeChartInstance = null;
+
+    function buildFinanceChart() {
         const canvas = document.getElementById('financeChart');
-        if (canvas) {
-            let monthlyData = @json($monthlyData ?? []);
-            let months = monthlyData.map(item => item.month);
-            let incomeData = monthlyData.map(item => item.income);
-            let expenseData = monthlyData.map(item => item.expense);
+        if (!canvas) return;
 
-            if (!Array.isArray(months) || months.length === 0) {
-                months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-                incomeData = [0, 0, 0, 0, 0, 0];
-                expenseData = [0, 0, 0, 0, 0, 0];
-            }
+        let monthlyData = @json($monthlyData ?? []);
+        let months = monthlyData.map(item => item.month);
+        let incomeData = monthlyData.map(item => item.income);
+        let expenseData = monthlyData.map(item => item.expense);
 
-            while (incomeData.length < months.length) incomeData.push(0);
-            while (expenseData.length < months.length) expenseData.push(0);
+        if (!Array.isArray(months) || months.length === 0) {
+            months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            incomeData = [0, 0, 0, 0, 0, 0];
+            expenseData = [0, 0, 0, 0, 0, 0];
+        }
 
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
-            const tickColor = isDark ? 'rgba(255,255,255,0.4)' : '#888';
-            const ttBg = isDark ? '#2a2a2a' : '#ffffff';
-            const ttTitle = isDark ? '#e0e0e0' : '#1e293b';
-            const ttBody = isDark ? '#aaaaaa' : '#475569';
-            const ttBorder = isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0';
-            const ptBorder = isDark ? '#1e1e1e' : '#ffffff';
+        while (incomeData.length < months.length) incomeData.push(0);
+        while (expenseData.length < months.length) expenseData.push(0);
 
-            // Get translated labels
-            const incomeLabel = window.t ? window.t('income') : 'Income';
-            const expensesLabel = window.t ? window.t('expenses') : 'Expenses';
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+        const tickColor = isDark ? 'rgba(255,255,255,0.4)' : '#888';
+        const ttBg = isDark ? '#2a2a2a' : '#ffffff';
+        const ttTitle = isDark ? '#e0e0e0' : '#1e293b';
+        const ttBody = isDark ? '#aaaaaa' : '#475569';
+        const ttBorder = isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0';
+        const ptBorder = isDark ? '#1e1e1e' : '#ffffff';
 
-            new Chart(canvas, {
-                type: 'line',
-                data: {
-                    labels: months,
-                    datasets: [
-                        {
-                            label: incomeLabel,
-                            data: incomeData,
-                            borderColor: '#10B981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.07)',
-                            borderWidth: 2.5,
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 3,
-                            pointBackgroundColor: '#10B981',
-                            pointBorderColor: ptBorder,
-                            pointBorderWidth: 2,
-                            pointHoverRadius: 5,
-                            pointHoverBackgroundColor: '#10B981',
-                            pointHoverBorderColor: ptBorder,
-                            pointHoverBorderWidth: 2
-                        },
-                        {
-                            label: expensesLabel,
-                            data: expenseData,
-                            borderColor: '#EF4444',
-                            backgroundColor: 'rgba(239, 68, 68, 0.05)',
-                            borderWidth: 2,
-                            borderDash: [5, 3],
-                            fill: true,
-                            tension: 0.4,
-                            pointRadius: 3,
-                            pointBackgroundColor: '#EF4444',
-                            pointBorderColor: ptBorder,
-                            pointBorderWidth: 2,
-                            pointHoverRadius: 5,
-                            pointHoverBackgroundColor: '#EF4444',
-                            pointHoverBorderColor: ptBorder,
-                            pointHoverBorderWidth: 2
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: ttBg,
-                            titleColor: ttTitle,
-                            bodyColor: ttBody,
-                            borderColor: ttBorder,
-                            borderWidth: 1,
-                            cornerRadius: 8,
-                            padding: 10,
-                            callbacks: {
-                                label: function(ctx) {
-                                    return ctx.dataset.label + ': ₱' + ctx.parsed.y.toLocaleString();
-                                }
-                            }
-                        }
+        const incomeLabel = t('income', 'Income');
+        const expensesLabel = t('expenses', 'Expenses');
+
+        if (financeChartInstance) financeChartInstance.destroy();
+
+        financeChartInstance = new Chart(canvas, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        label: incomeLabel,
+                        data: incomeData,
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.07)',
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#10B981',
+                        pointBorderColor: ptBorder,
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: '#10B981',
+                        pointHoverBorderColor: ptBorder,
+                        pointHoverBorderWidth: 2
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '₱' + value.toLocaleString();
-                                },
-                                font: { size: 10 },
-                                color: tickColor
-                            },
-                            grid: {
-                                color: gridColor,
-                                drawBorder: false
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                font: { size: 10 },
-                                color: tickColor
-                            },
-                            grid: {
-                                display: false,
-                                drawBorder: false
-                            }
-                        }
-                    },
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
+                    {
+                        label: expensesLabel,
+                        data: expenseData,
+                        borderColor: '#EF4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                        borderWidth: 2,
+                        borderDash: [5, 3],
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#EF4444',
+                        pointBorderColor: ptBorder,
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: '#EF4444',
+                        pointHoverBorderColor: ptBorder,
+                        pointHoverBorderWidth: 2
                     }
-                }
-            });
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: ttBg,
+                        titleColor: ttTitle,
+                        bodyColor: ttBody,
+                        borderColor: ttBorder,
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        padding: 10,
+                        callbacks: {
+                            label: function(ctx) {
+                                return ctx.dataset.label + ': ₱' + ctx.parsed.y.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₱' + value.toLocaleString();
+                            },
+                            font: { size: 10 },
+                            color: tickColor
+                        },
+                        grid: { color: gridColor, drawBorder: false }
+                    },
+                    x: {
+                        ticks: { font: { size: 10 }, color: tickColor },
+                        grid: { display: false, drawBorder: false }
+                    }
+                },
+                interaction: { intersect: false, mode: 'index' }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', buildFinanceChart);
+
+    // ⭐ LISTEN FOR LANGUAGE CHANGES — rebuild chart with new labels
+    window.addEventListener('localeChanged', function(e) {
+        if (typeof window.applyTranslations === 'function') {
+            window.applyTranslations();
+        }
+        buildFinanceChart();
+        console.log('[Finance] Locale changed to:', e.detail.locale);
+    });
+
+    // ⭐ Rebuild chart on theme change
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('#themeToggleBtn')) {
+            setTimeout(buildFinanceChart, 150);
         }
     });
 </script>

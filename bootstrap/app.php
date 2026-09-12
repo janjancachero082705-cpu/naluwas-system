@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Runs on EVERY web request
         $middleware->web(append: [
             AutoSetChurchContext::class,
+            \App\Http\Middleware\SetLocale::class,  // ⭐ ADD THIS
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

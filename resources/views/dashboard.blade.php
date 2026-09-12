@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('header')
-    <span data-i18n="Dashboard">Dashboard</span>
+    <span data-i18n="Dashboard">{{ __("Dashboard") }}</span>
 @endsection
 
 @section('content')
 <style>
-    /* Dashboard Styles - same as before */
+    /* Dashboard Styles */
     :root {
         --dash-primary: #4F46E5;
         --dash-success: #10B981;
@@ -324,29 +324,29 @@
     <div class="dash-hero">
         <div class="hero-content">
             <div class="hero-left">
-                <h1><i class="fas fa-church"></i> <span data-i18n="Dashboard">Dashboard</span></h1>
+                <h1><i class="fas fa-church"></i> <span data-i18n="Dashboard">{{ __("Dashboard") }}</span></h1>
                 <p class="hero-sub">
                     <i class="fas fa-circle" style="color: #34D399; font-size: 0.4rem; vertical-align: middle;"></i>
-                    <span data-i18n="welcome_back">Welcome back! Here's your church overview</span>
+                    <span data-i18n="welcome_back">{{ __("Welcome back! Here's your church overview") }}</span>
                 </p>
             </div>
             <div class="hero-stats">
                 <div class="hero-stat-item">
                     <span class="num">{{ number_format($totalMembers ?? 0) }}</span>
-                    <span class="label" data-i18n="members">Members</span>
+                    <span class="label" data-i18n="members">{{ __("Members") }}</span>
                 </div>
                 <div class="hero-stat-item">
                     <span class="num">{{ number_format($choirMembers ?? 0) }}</span>
-                    <span class="label" data-i18n="choir">Choir</span>
+                    <span class="label" data-i18n="choir">{{ __("Choir") }}</span>
                 </div>
                 <div class="hero-stat-item">
                     <span class="num">{{ number_format($todayAttendance ?? 0) }}</span>
-                    <span class="label" data-i18n="today">Today</span>
+                    <span class="label" data-i18n="today">{{ __("Today") }}</span>
                 </div>
             </div>
             <div class="hero-actions">
                 <a href="{{ route('reports.analytics') }}" class="btn-hero btn-hero-white">
-                    <i class="fas fa-chart-line"></i> <span data-i18n="analytics">Analytics</span>
+                    <i class="fas fa-chart-line"></i> <span data-i18n="analytics">{{ __("Analytics") }}</span>
                 </a>
             </div>
         </div>
@@ -356,25 +356,25 @@
     <div class="stats-grid-premium">
         <div class="stat-card-premium green">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="total_members">Total Members</span>
+                <span class="stat-label" data-i18n="total_members">{{ __("Total Members") }}</span>
                 <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
             </div>
             <div class="stat-value" id="stat-total-members">{{ number_format($totalMembers ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="active_members">Active members</span></div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="active_members">{{ __("Active members") }}</span></div>
         </div>
         
         <div class="stat-card-premium purple">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="choir_members">Choir Members</span>
+                <span class="stat-label" data-i18n="choir_members">{{ __("Choir Members") }}</span>
                 <div class="stat-icon-wrap"><i class="fas fa-music"></i></div>
             </div>
             <div class="stat-value" id="stat-choir-members">{{ number_format($choirMembers ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="music_ministry">Music ministry</span></div>
+            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="music_ministry">{{ __("Music ministry") }}</span></div>
         </div>
         
         <div class="stat-card-premium blue">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="today_attendance">Today's Attendance</span>
+                <span class="stat-label" data-i18n="today_attendance">{{ __("Today's Attendance") }}</span>
                 <div class="stat-icon-wrap"><i class="fas fa-calendar-check"></i></div>
             </div>
             <div class="stat-value" id="stat-today-attendance">{{ number_format($todayAttendance ?? 0) }}</div>
@@ -383,13 +383,13 @@
             @endphp
             <div class="stat-change {{ $rate >= 50 ? 'positive' : 'negative' }}" id="stat-attendance-rate">
                 <i class="fas fa-{{ $rate >= 50 ? 'arrow-up' : 'arrow-down' }}"></i>
-                {{ number_format($rate, 1) }}% <span data-i18n="present">present</span>
+                {{ number_format($rate, 1) }}% <span data-i18n="present">{{ __("present") }}</span>
             </div>
         </div>
         
         <div class="stat-card-premium orange">
             <div class="stat-top">
-                <span class="stat-label" data-i18n="monthly_balance">Monthly Balance</span>
+                <span class="stat-label" data-i18n="monthly_balance">{{ __("Monthly Balance") }}</span>
                 <div class="stat-icon-wrap"><i class="fas fa-wallet"></i></div>
             </div>
             <div class="stat-value" id="stat-monthly-balance" style="color: {{ ($monthlyBalance ?? 0) >= 0 ? '#10B981' : '#EF4444' }};">
@@ -398,7 +398,7 @@
             <div class="stat-change {{ ($monthlyBalance ?? 0) >= 0 ? 'positive' : 'negative' }}" id="stat-balance-trend">
                 <i class="fas fa-{{ ($monthlyBalance ?? 0) >= 0 ? 'arrow-up' : 'arrow-down' }}"></i>
                 <span data-i18n="{{ ($monthlyBalance ?? 0) >= 0 ? 'surplus' : 'deficit' }}">
-                    {{ ($monthlyBalance ?? 0) >= 0 ? 'Surplus' : 'Deficit' }}
+                    {{ ($monthlyBalance ?? 0) >= 0 ? __("Surplus") : __("Deficit") }}
                 </span>
             </div>
         </div>
@@ -407,8 +407,8 @@
     <!-- ===== CHART ===== -->
     <div class="chart-modern-dash">
         <div class="chart-header-dash">
-            <h5><i class="fas fa-chart-line"></i> <span data-i18n="income_vs_expenses">Income vs Expenses</span></h5>
-            <span class="badge-modern"><i class="fas fa-calendar-alt"></i> <span data-i18n="last_6_months">Last 6 Months</span></span>
+            <h5><i class="fas fa-chart-line"></i> <span data-i18n="income_vs_expenses">{{ __("Income vs Expenses") }}</span></h5>
+            <span class="badge-modern"><i class="fas fa-calendar-alt"></i> <span data-i18n="last_6_months">{{ __("Last 6 Months") }}</span></span>
         </div>
         <div class="chart-body-dash">
             <canvas id="financeChart"></canvas>
@@ -421,9 +421,9 @@
         <!-- Transactions -->
         <div class="card-modern-dash">
             <div class="card-header-dash">
-                <h6><i class="fas fa-arrows-alt-v"></i> <span data-i18n="recent_transactions">Recent Transactions</span></h6>
+                <h6><i class="fas fa-arrows-alt-v"></i> <span data-i18n="recent_transactions">{{ __("Recent Transactions") }}</span></h6>
                 <a href="{{ route('finance.index') }}" style="font-size: 0.65rem; color: var(--text-muted); text-decoration: none;">
-                    <span data-i18n="view_all">View all</span> <i class="fas fa-arrow-right"></i>
+                    <span data-i18n="view_all">{{ __("View all") }}</span> <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
             <div class="card-body-dash" id="transactions-list">
@@ -437,7 +437,7 @@
                             <div class="tx-name">{{ $item->description ?? $item->name ?? 'Transaction' }}</div>
                             <div class="tx-meta">
                                 <span>{{ \Carbon\Carbon::parse($item->date ?? $item->created_at ?? now())->format('M d, Y') }}</span>
-                                <span class="tx-badge {{ $isIncome ? 'income' : 'expense' }}">{{ ucfirst($item->type ?? 'expense') }}</span>
+                                <span class="tx-badge {{ $isIncome ? 'income' : 'expense' }}" data-i18n="{{ $isIncome ? 'income' : 'expense' }}">{{ $isIncome ? __("Income") : __("Expense") }}</span>
                             </div>
                         </div>
                         <div class="tx-amount-modern {{ $isIncome ? 'positive' : 'negative' }}">
@@ -447,8 +447,8 @@
                 @empty
                     <div class="empty-state-modern">
                         <i class="fas fa-receipt"></i>
-                        <p data-i18n="no_transactions">No transactions yet</p>
-                        <a href="{{ route('finance.index') }}" class="btn-ghost-sm" data-i18n="add_transaction">Add transaction</a>
+                        <p data-i18n="no_transactions">{{ __("No transactions yet") }}</p>
+                        <a href="{{ route('finance.index') }}" class="btn-ghost-sm" data-i18n="add_transaction">{{ __("Add transaction") }}</a>
                     </div>
                 @endforelse
             </div>
@@ -459,8 +459,8 @@
             <!-- Birthdays -->
             <div class="card-modern-dash">
                 <div class="card-header-dash">
-                    <h6><i class="fas fa-birthday-cake" style="color: #F59E0B;"></i> <span data-i18n="upcoming_birthdays">Upcoming Birthdays</span></h6>
-                    <span class="badge-modern" data-i18n="this_month">This month</span>
+                    <h6><i class="fas fa-birthday-cake" style="color: #F59E0B;"></i> <span data-i18n="upcoming_birthdays">{{ __("Upcoming Birthdays") }}</span></h6>
+                    <span class="badge-modern" data-i18n="this_month">{{ __("This month") }}</span>
                 </div>
                 <div class="card-body-dash" id="birthdays-list">
                     @forelse(($upcomingBirthdays ?? []) as $birthday)
@@ -478,11 +478,11 @@
                                 <div class="name">{{ $birthday->first_name ?? '' }} {{ $birthday->last_name ?? '' }}</div>
                                 <div class="meta">
                                     @if($isToday)
-                                        <span class="today-badge">🎉 <span data-i18n="today_label">Today!</span></span>
+                                        <span class="today-badge">🎉 <span data-i18n="today_label">{{ __("Today!") }}</span></span>
                                     @elseif($isTomorrow)
-                                        <span class="today-badge" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">🎂 <span data-i18n="tomorrow_label">Tomorrow!</span></span>
+                                        <span class="today-badge" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">🎂 <span data-i18n="tomorrow_label">{{ __("Tomorrow!") }}</span></span>
                                     @elseif($daysUntil !== null)
-                                        <span data-i18n="turning_in_days">Turning</span> {{ $birthday->age ?? '?' }} <span data-i18n="in">in</span> {{ $daysUntil }} <span data-i18n="days">days</span>
+                                        <span data-i18n="turning_in_days">{{ __("Turning") }}</span> {{ $birthday->age ?? '?' }} <span data-i18n="in">{{ __("in") }}</span> {{ $daysUntil }} <span data-i18n="days">{{ __("days") }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -493,7 +493,7 @@
                     @empty
                         <div class="empty-state-modern">
                             <i class="fas fa-birthday-cake"></i>
-                            <p data-i18n="no_upcoming_birthdays">No upcoming birthdays</p>
+                            <p data-i18n="no_upcoming_birthdays">{{ __("No upcoming birthdays") }}</p>
                         </div>
                     @endforelse
                 </div>
@@ -502,8 +502,8 @@
             <!-- Choir Schedule -->
             <div class="card-modern-dash" style="margin-bottom: 0;">
                 <div class="card-header-dash">
-                    <h6><i class="fas fa-music" style="color: #8B5CF6;"></i> <span data-i18n="choir_schedule">Choir Schedule</span></h6>
-                    <span class="badge-modern" data-i18n="upcoming_label">Upcoming</span>
+                    <h6><i class="fas fa-music" style="color: #8B5CF6;"></i> <span data-i18n="choir_schedule">{{ __("Choir Schedule") }}</span></h6>
+                    <span class="badge-modern" data-i18n="upcoming_label">{{ __("Upcoming") }}</span>
                 </div>
                 <div class="card-body-dash" id="choir-schedule-container">
                     @if(isset($upcomingSunday) && $upcomingSunday)
@@ -514,7 +514,7 @@
                             </div>
                             <div class="choir-meta">
                                 <i class="fas fa-users"></i>
-                                {{ $upcomingSunday['members_count'] ?? 0 }} <span data-i18n="members">members</span> ·
+                                {{ $upcomingSunday['members_count'] ?? 0 }} <span data-i18n="members">{{ __("Members") }}</span> ·
                                 {{ \Carbon\Carbon::parse($upcomingSunday['date'] ?? now())->format('M d, Y') }}
                             </div>
                             <div class="choir-chips" id="choir-members-chips">
@@ -523,11 +523,11 @@
                                         {{ $member->first_name ?? '' }} {{ substr($member->last_name ?? '', 0, 1) }}.
                                     </span>
                                 @empty
-                                    <span class="chip" data-i18n="no_members_assigned">No members assigned</span>
+                                    <span class="chip" data-i18n="no_members_assigned">{{ __("No members assigned") }}</span>
                                 @endforelse
                             </div>
                             <a href="{{ route('choir-schedules.index', ['date' => $upcomingSunday['date'] ?? '']) }}" class="btn-choir">
-                                <i class="fas fa-calendar-alt"></i> <span data-i18n="view_full_schedule">View Full Schedule</span>
+                                <i class="fas fa-calendar-alt"></i> <span data-i18n="view_full_schedule">{{ __("View Full Schedule") }}</span>
                             </a>
 
                             @if(isset($nextWeeks) && count($nextWeeks) > 0)
@@ -545,8 +545,8 @@
                     @else
                         <div class="empty-state-modern">
                             <i class="fas fa-music"></i>
-                            <p data-i18n="no_upcoming_schedule">No upcoming schedule</p>
-                            <a href="{{ route('choir-schedules.index') }}" class="btn-ghost-sm" data-i18n="create_schedule">Create schedule</a>
+                            <p data-i18n="no_upcoming_schedule">{{ __("No upcoming schedule") }}</p>
+                            <a href="{{ route('choir-schedules.index') }}" class="btn-ghost-sm" data-i18n="create_schedule">{{ __("Create schedule") }}</a>
                         </div>
                     @endif
                 </div>
@@ -565,7 +565,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     // ===== FINANCE CHART =====
     const canvas = document.getElementById('financeChart');
-    if (canvas) {
+    let chart = null;
+
+    function buildChart() {
+        if (!canvas) return;
+
         const monthsData = @json($months ?? []);
         const incomeData = @json($incomeData ?? []);
         const expenseData = @json($expenseData ?? []);
@@ -581,11 +585,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
         const tickColor = isDark ? 'rgba(255,255,255,0.4)' : '#888';
 
-        // Get translated labels
-        const incomeLabel = window.t ? window.t('income') : 'Income';
-        const expensesLabel = window.t ? window.t('expenses') : 'Expenses';
+        // ⭐ Get translated labels
+        const incomeLabel = (typeof window.__t === 'function') ? window.__t('income', 'Income') : 'Income';
+        const expensesLabel = (typeof window.__t === 'function') ? window.__t('expenses', 'Expenses') : 'Expenses';
 
-        const chart = new Chart(canvas, {
+        // Destroy existing chart
+        if (chart) chart.destroy();
+
+        chart = new Chart(canvas, {
             type: 'line',
             data: {
                 labels: months,
@@ -685,6 +692,20 @@ document.addEventListener('DOMContentLoaded', function() {
         window.financeChart = chart;
     }
 
+    buildChart();
+
+    // ⭐ Rebuild chart on language change
+    window.addEventListener('localeChanged', function() {
+        buildChart();
+    });
+
+    // ⭐ Rebuild chart on theme change
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('#themeToggleBtn')) {
+            setTimeout(buildChart, 100);
+        }
+    });
+
     // ===== TOAST FUNCTION =====
     function showDashboardToast(title, message, icon) {
         icon = icon || '📊';
@@ -738,7 +759,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const rateEl = document.getElementById('stat-attendance-rate');
                 if (rateEl) {
                     const rate = total > 0 ? Math.round((present / total) * 100 * 10) / 10 : 0;
-                    const presentText = window.t ? window.t('present') : 'present';
+                    const presentText = (typeof window.__t === 'function') ? window.__t('present', 'present') : 'present';
                     rateEl.innerHTML = rate + '% ' + presentText;
                 }
                 
@@ -757,8 +778,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 if (trendEl) {
-                    const surplusText = window.t ? window.t('surplus') : 'Surplus';
-                    const deficitText = window.t ? window.t('deficit') : 'Deficit';
+                    const surplusText = (typeof window.__t === 'function') ? window.__t('surplus', 'Surplus') : 'Surplus';
+                    const deficitText = (typeof window.__t === 'function') ? window.__t('deficit', 'Deficit') : 'Deficit';
                     trendEl.innerHTML = `<i class="fas fa-${balance >= 0 ? 'arrow-up' : 'arrow-down'}"></i> ${balance >= 0 ? surplusText : deficitText}`;
                     trendEl.className = 'stat-change ' + (balance >= 0 ? 'positive' : 'negative');
                 }
