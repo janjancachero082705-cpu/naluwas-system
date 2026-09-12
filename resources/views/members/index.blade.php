@@ -7,936 +7,845 @@
 @section('content')
 
 <style>
-    /* ============================================
-       MODERN DESIGN - MATCHING PROFILE STYLE
-    ============================================ */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-    
-    :root {
-        --profile-primary: #4F46E5;
-        --profile-primary-light: #818CF8;
-        --profile-primary-dark: #4338CA;
-        --profile-success: #10B981;
-        --profile-warning: #F59E0B;
-        --profile-danger: #EF4444;
-        --profile-purple: #8B5CF6;
-        --profile-pink: #EC4899;
-        --gradient-primary: linear-gradient(135deg, #4F46E5, #7C3AED);
-        --shadow-profile-lg: 0 20px 60px rgba(0,0,0,0.08);
-        --shadow-profile-hover: 0 24px 80px rgba(0,0,0,0.12);
-        --shadow-glow: 0 8px 32px rgba(79, 70, 229, 0.3);
+    /* ==========================================================
+       MEMBER DIRECTORY — 2025 REDESIGN
+       Flat · bordered · airy · Inter
+    ========================================================== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    .mm {
+        --mm-card: var(--card-bg, #ffffff);
+        --mm-border: var(--border-color, #e8eaf0);
+        --mm-text: var(--text-primary, #0f172a);
+        --mm-muted: var(--text-muted, #7c8494);
+        --mm-soft: var(--bg-tertiary, #f5f6fa);
+
+        --mm-primary: #4f46e5;
+        --mm-primary-soft: rgba(79, 70, 229, .08);
+        --mm-primary-ring: rgba(79, 70, 229, .18);
+
+        --mm-green: #059669;
+        --mm-green-soft: rgba(5, 150, 105, .10);
+        --mm-rose: #e11d48;
+        --mm-rose-soft: rgba(225, 29, 72, .09);
+        --mm-amber: #d97706;
+        --mm-amber-soft: rgba(217, 119, 6, .10);
+        --mm-violet: #7c3aed;
+        --mm-violet-soft: rgba(124, 58, 237, .10);
+
+        --mm-shadow-sm: 0 1px 2px rgba(15, 23, 42, .04);
+        --mm-shadow-md: 0 10px 28px -14px rgba(15, 23, 42, .22);
+        --mm-radius: 16px;
+
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: var(--mm-text);
+        padding-bottom: 2rem;
     }
-    
-    .member-hero {
-        background: var(--gradient-primary);
-        border-radius: 24px;
-        padding: 2rem 2.5rem;
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
-        box-shadow: var(--shadow-glow);
+
+    [data-theme="dark"] .mm {
+        --mm-primary: #6366f1;
+        --mm-primary-soft: rgba(99, 102, 241, .16);
+        --mm-primary-ring: rgba(99, 102, 241, .28);
+        --mm-green: #34d399;
+        --mm-green-soft: rgba(16, 185, 129, .14);
+        --mm-rose: #fb7185;
+        --mm-rose-soft: rgba(244, 63, 94, .14);
+        --mm-amber: #fbbf24;
+        --mm-amber-soft: rgba(245, 158, 11, .14);
+        --mm-violet: #a78bfa;
+        --mm-violet-soft: rgba(139, 92, 246, .16);
+        --mm-shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+        --mm-shadow-md: 0 14px 30px -16px rgba(0, 0, 0, .75);
     }
-    
-    .member-hero::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -20%;
-        width: 60%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-        animation: heroPulse 6s ease-in-out infinite;
-    }
-    
-    .member-hero::after {
-        content: '';
-        position: absolute;
-        bottom: -40%;
-        left: -10%;
-        width: 40%;
-        height: 180%;
-        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
-        animation: heroPulse 8s ease-in-out infinite reverse;
-    }
-    
-    @keyframes heroPulse {
-        0%, 100% { transform: scale(1); opacity: 0.5; }
-        50% { transform: scale(1.1); opacity: 1; }
-    }
-    
-    .member-hero .hero-content {
-        position: relative;
-        z-index: 1;
+
+    .mm * { box-sizing: border-box; }
+
+    /* ---------------- HEADER ---------------- */
+    .mm-head {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+        gap: 1.25rem;
         flex-wrap: wrap;
-        gap: 1rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid var(--mm-border);
+        margin-bottom: 1.5rem;
     }
-    
-    .member-hero .hero-left {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-    
-    .member-hero h1 {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: white;
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        letter-spacing: -0.5px;
-    }
-    
-    .member-hero h1 i {
-        margin-right: 12px;
-        opacity: 0.8;
-    }
-    
-    .member-hero .hero-sub {
-        color: rgba(255,255,255,0.8);
-        font-size: 0.85rem;
-        margin: 0;
-    }
-    
-    .member-hero .hero-actions {
-        display: flex;
-        gap: 0.6rem;
-        flex-wrap: wrap;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .btn-hero {
-        padding: 0.5rem 1.5rem;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 0.75rem;
-        transition: all 0.3s ease;
+
+    .mm-eyebrow {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        border: none;
-        text-decoration: none;
-    }
-    
-    .btn-hero-white {
-        background: white;
-        color: #4F46E5;
-    }
-    
-    .btn-hero-white:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        color: #4F46E5;
-        text-decoration: none;
-    }
-    
-    .btn-hero-ghost {
-        background: rgba(255,255,255,0.15);
-        color: white;
-        border: 1px solid rgba(255,255,255,0.2);
-    }
-    
-    .btn-hero-ghost:hover {
-        background: rgba(255,255,255,0.25);
-        transform: translateY(-2px);
-        color: white;
-        text-decoration: none;
-    }
-    
-    .stats-grid-premium {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.2rem;
-        margin-bottom: 2rem;
-    }
-    
-    .stat-card-premium {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.2rem 1.5rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-        box-shadow: var(--shadow-profile-lg);
-    }
-    
-    .stat-card-premium::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: var(--gradient-primary);
-    }
-    
-    .stat-card-premium:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-profile-hover);
-        border-color: transparent;
-    }
-    
-    .stat-card-premium .stat-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 0.5rem;
-    }
-    
-    .stat-card-premium .stat-label {
-        font-size: 0.6rem;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        color: var(--text-muted);
+        gap: .45rem;
+        font-size: .66rem;
         font-weight: 700;
-        margin: 0;
-    }
-    
-    .stat-card-premium .stat-icon-wrap {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        color: white;
-        flex-shrink: 0;
-    }
-    
-    .stat-card-premium .stat-value {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: var(--text-primary);
-        font-family: 'Inter', sans-serif;
-        letter-spacing: -0.5px;
-        line-height: 1.2;
-    }
-    
-    .stat-card-premium .stat-change {
-        font-size: 0.65rem;
-        color: var(--text-muted);
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        margin-top: 2px;
-        padding: 2px 8px;
-        border-radius: 20px;
-        background: var(--bg-tertiary);
-    }
-    
-    .stat-card-premium .stat-change.positive { color: #10B981; }
-    .stat-card-premium .stat-change.negative { color: #EF4444; }
-    
-    .stat-card-premium.green::before { background: linear-gradient(135deg, #10B981, #34D399); }
-    .stat-card-premium.blue::before { background: var(--gradient-primary); }
-    .stat-card-premium.purple::before { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
-    .stat-card-premium.orange::before { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
-    .stat-card-premium.red::before { background: linear-gradient(135deg, #EF4444, #F87171); }
-    
-    .stat-card-premium.green .stat-icon-wrap { background: linear-gradient(135deg, #10B981, #34D399); }
-    .stat-card-premium.blue .stat-icon-wrap { background: var(--gradient-primary); }
-    .stat-card-premium.purple .stat-icon-wrap { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
-    .stat-card-premium.orange .stat-icon-wrap { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
-    .stat-card-premium.red .stat-icon-wrap { background: linear-gradient(135deg, #EF4444, #F87171); }
-    
-    .filter-card-modern {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.2rem 1.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: var(--shadow-profile-lg);
-        transition: all 0.3s ease;
-    }
-    
-    .filter-card-modern:hover {
-        box-shadow: var(--shadow-profile-hover);
-        border-color: transparent;
-    }
-    
-    .filter-label-modern {
-        font-size: 0.65rem;
-        font-weight: 600;
+        letter-spacing: .13em;
         text-transform: uppercase;
-        letter-spacing: 0.8px;
-        color: var(--text-muted);
-        margin-bottom: 0.4rem;
-        display: block;
+        color: var(--mm-muted);
+        margin-bottom: .55rem;
     }
-    
-    .filter-select-modern {
-        background: var(--bg-tertiary);
-        border: 1px solid var(--border-color);
-        border-radius: 10px;
-        padding: 0.5rem 1rem;
-        color: var(--text-primary);
-        font-size: 0.8rem;
-        cursor: pointer;
-        min-width: 200px;
-        transition: all 0.2s ease;
-    }
-    
-    .filter-select-modern:focus {
-        outline: none;
-        border-color: var(--profile-primary);
-        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-    }
-    
-    .filter-select-modern option {
-        background: var(--card-bg);
-        color: var(--text-primary);
-    }
-    
-    .total-badge-modern {
-        background: var(--bg-tertiary);
-        color: var(--text-secondary);
-        padding: 6px 16px;
-        border-radius: 30px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        border: 1px solid var(--border-color);
-    }
-    
-    .member-tabs-modern {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 1.5rem;
-        padding-bottom: 0;
-        border-bottom: 2px solid var(--border-color);
-    }
-    
-    .member-tab-modern {
-        padding: 0.6rem 1.5rem;
-        border-radius: 12px 12px 0 0;
-        font-size: 0.8rem;
-        font-weight: 600;
-        cursor: pointer;
-        background: transparent;
-        color: var(--text-muted);
-        border: none;
-        position: relative;
-        transition: all 0.2s ease;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .member-tab-modern:hover {
-        color: var(--text-primary);
-    }
-    
-    .member-tab-modern.active {
-        color: var(--text-primary);
-    }
-    
-    .member-tab-modern.active::after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: var(--gradient-primary);
-        border-radius: 3px 3px 0 0;
-    }
-    
-    .member-tab-modern .badge-modern {
-        margin-left: 8px;
-        background: var(--bg-tertiary);
-        color: var(--text-muted);
-        padding: 1px 8px;
-        border-radius: 20px;
-        font-size: 0.55rem;
-        font-weight: 600;
-    }
-    
-    .member-tab-modern.active .badge-modern {
-        background: var(--gradient-primary);
-        color: white;
-    }
-    
-    .table-container-modern {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        overflow: hidden;
-        margin-bottom: 1.5rem;
-        box-shadow: var(--shadow-profile-lg);
-        transition: all 0.3s ease;
-    }
-    
-    .table-container-modern:hover {
-        box-shadow: var(--shadow-profile-hover);
-    }
-    
-    .table-modern {
-        margin-bottom: 0;
-        color: var(--text-primary);
-        background: var(--card-bg);
-        border-collapse: collapse;
-    }
-    
-    .table-modern thead th {
-        background: var(--bg-tertiary);
-        border-bottom: 2px solid var(--border-color);
-        color: var(--text-muted);
-        font-size: 0.65rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        padding: 0.8rem 1.2rem;
-        white-space: nowrap;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .table-modern tbody td {
-        padding: 0.7rem 1.2rem;
-        vertical-align: middle;
-        border-bottom: 1px solid var(--border-color);
-        background: var(--card-bg);
-        color: var(--text-primary);
-        font-size: 0.8rem;
-    }
-    
-    .table-modern tbody tr {
-        transition: all 0.15s ease;
-        cursor: pointer;
-    }
-    
-    .table-modern tbody tr:hover {
-        background: var(--bg-tertiary);
-    }
-    
-    .table-modern tbody tr:hover td {
-        background: transparent;
-    }
-    
-    .member-avatar-modern {
-        width: 36px;
-        height: 36px;
+
+    .mm-eyebrow .mm-dot {
+        width: 6px; height: 6px;
         border-radius: 50%;
-        background: var(--bg-tertiary);
-        border: 2px solid var(--border-color);
+        background: var(--mm-green);
+        box-shadow: 0 0 0 3px var(--mm-green-soft);
+    }
+
+    .mm-title {
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-size: 0.8rem;
-        color: var(--text-muted);
-        flex-shrink: 0;
-        transition: all 0.2s ease;
-        font-weight: 600;
+        gap: .65rem;
+        margin: 0;
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -.035em;
+        line-height: 1.15;
     }
-    
-    .member-avatar-modern.deceased {
-        opacity: 0.5;
-        border-color: #ef4444;
-        background: #fef2f2;
-        color: #ef4444;
+
+    .mm-title i { font-size: 1.2rem; color: var(--mm-primary); }
+
+    .mm-sub {
+        margin: .5rem 0 0;
+        font-size: .84rem;
+        color: var(--mm-muted);
+        max-width: 62ch;
+        line-height: 1.5;
     }
-    
-    .member-name-modern {
-        font-weight: 600;
-        font-size: 0.85rem;
-        color: var(--text-primary);
-        margin-bottom: 2px;
-    }
-    
-    .member-phone-modern {
-        font-size: 0.6rem;
-        color: var(--text-muted);
-    }
-    
-    .deceased-date-modern {
-        font-size: 0.6rem;
-        color: var(--text-muted);
-        margin-top: 2px;
-    }
-    
-    .gender-badge-small {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 2px 10px;
-        border-radius: 20px;
-        font-size: 0.6rem;
-        font-weight: 600;
-    }
-    
-    .gender-badge-small.male {
-        background: rgba(59, 130, 246, 0.12);
-        color: #3B82F6;
-        border: 1px solid rgba(59, 130, 246, 0.15);
-    }
-    
-    .gender-badge-small.female {
-        background: rgba(236, 72, 153, 0.12);
-        color: #EC4899;
-        border: 1px solid rgba(236, 72, 153, 0.15);
-    }
-    
-    .gender-badge-small.unspecified {
-        background: var(--bg-tertiary);
-        color: var(--text-muted);
-        border: 1px solid var(--border-color);
-    }
-    
-    .gender-badge-small i {
-        font-size: 0.5rem;
-    }
-    
-    .role-tag-modern {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 2px 10px;
-        border-radius: 20px;
-        font-size: 0.6rem;
-        font-weight: 500;
-        background: var(--bg-tertiary);
-        color: var(--text-secondary);
-        border: 1px solid var(--border-color);
-        transition: all 0.2s ease;
-    }
-    
-    .role-tag-modern i {
-        font-size: 0.5rem;
-        opacity: 0.6;
-    }
-    
-    .role-tag-modern:hover {
-        transform: translateY(-1px);
-        border-color: var(--profile-primary);
-    }
-    
-    .role-tag-modern.choir {
-        background: #fef3c7;
-        color: #92400e;
-        border-color: #fcd34d;
-    }
-    
-    [data-theme="dark"] .role-tag-modern.choir {
-        background: #78350f;
-        color: #fde68a;
-        border-color: #92400e;
-    }
-    
-    .role-tag-modern.deceased-tag {
-        background: #fef2f2;
-        color: #dc2626;
-        border-color: #fca5a5;
-    }
-    
-    [data-theme="dark"] .role-tag-modern.deceased-tag {
-        background: #7f1d1d;
-        color: #fca5a5;
-        border-color: #991b1b;
-    }
-    
-    .btn-icon-action-modern {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: transparent;
-        border: 1px solid var(--border-color);
-        color: var(--text-muted);
-        transition: all 0.2s ease;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 0.7rem;
-        position: relative;
-        z-index: 5;
-    }
-    
-    .btn-icon-action-modern:hover {
-        background: var(--bg-tertiary);
-        color: var(--text-primary);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-profile-lg);
-    }
-    
-    .btn-icon-action-modern.delete:hover {
-        background: #fef2f2;
-        color: #ef4444;
-        border-color: #fecaca;
-    }
-    
-    .btn-icon-action-modern.deceased:hover {
-        background: #f1f5f9;
-        color: #64748b;
-        border-color: #e2e8f0;
-    }
-    
-    .btn-icon-action-modern.restore:hover {
-        background: #ecfdf5;
-        color: #10b981;
-        border-color: #a7f3d0;
-    }
-    
-    .btn-icon-action-modern.view:hover {
-        background: #eff6ff;
-        color: #3b82f6;
-        border-color: #bfdbfe;
-    }
-    
-    .action-buttons-modern {
+
+    .mm-head-actions {
         display: flex;
-        gap: 4px;
+        gap: .6rem;
         flex-wrap: wrap;
     }
-    
-    .btn-add-modern {
-        background: var(--gradient-primary);
-        color: white;
-        border: none;
-        padding: 0.4rem 1.2rem;
-        border-radius: 8px;
-        font-size: 0.7rem;
-        font-weight: 600;
+
+    /* ---------------- BUTTONS ---------------- */
+    .mm-btn {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        transition: all 0.3s ease;
+        gap: .5rem;
+        padding: .6rem 1.1rem;
+        border-radius: 11px;
+        font-size: .79rem;
+        font-weight: 600;
+        font-family: inherit;
+        line-height: 1.2;
         text-decoration: none;
-        position: relative;
-        z-index: 5;
-        font-family: 'Inter', sans-serif;
+        border: 1px solid transparent;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease;
     }
-    
-    .btn-add-modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
-        color: white;
-        text-decoration: none;
+
+    .mm-btn-primary {
+        background: var(--mm-primary);
+        color: #fff;
+        box-shadow: 0 8px 18px -10px rgba(79, 70, 229, .9);
     }
-    
-    .table-section-modern {
-        display: none;
+    .mm-btn-primary:hover {
+        background: #4338ca;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 12px 22px -10px rgba(79, 70, 229, .9);
     }
-    
-    .table-section-modern.active-section {
-        display: block;
+
+    .mm-btn-ghost {
+        background: var(--mm-card);
+        color: var(--mm-text);
+        border-color: var(--mm-border);
     }
-    
-    .pagination-container-modern {
-        padding: 0.8rem 1.2rem;
-        border-top: 1px solid var(--border-color);
+    .mm-btn-ghost:hover {
+        background: var(--mm-soft);
+        color: var(--mm-text);
+        transform: translateY(-1px);
+    }
+
+    /* ---------------- STATS ---------------- */
+    .mm-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .mm-stat {
+        display: flex;
+        align-items: center;
+        gap: .9rem;
+        padding: 1.05rem 1.15rem;
+        background: var(--mm-card);
+        border: 1px solid var(--mm-border);
+        border-radius: var(--mm-radius);
+        transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+
+    .mm-stat:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--mm-shadow-md);
+        border-color: transparent;
+    }
+
+    .mm-stat-icon {
+        width: 44px; height: 44px;
+        border-radius: 13px;
+        display: grid;
+        place-items: center;
+        font-size: 1rem;
+        flex: 0 0 auto;
+    }
+
+    .mm-stat-icon.green  { background: var(--mm-green-soft);  color: var(--mm-green); }
+    .mm-stat-icon.violet { background: var(--mm-violet-soft); color: var(--mm-violet); }
+    .mm-stat-icon.amber  { background: var(--mm-amber-soft);  color: var(--mm-amber); }
+    .mm-stat-icon.rose   { background: var(--mm-rose-soft);   color: var(--mm-rose); }
+
+    .mm-stat-body { min-width: 0; }
+
+    .mm-stat-value {
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -.035em;
+        line-height: 1.1;
+    }
+
+    .mm-stat-label {
+        font-size: .72rem;
+        font-weight: 600;
+        color: var(--mm-text);
+        margin-top: .18rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .mm-stat-cap {
+        font-size: .65rem;
+        color: var(--mm-muted);
+        margin-top: .1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* ---------------- PANEL ---------------- */
+    .mm-panel {
+        background: var(--mm-card);
+        border: 1px solid var(--mm-border);
+        border-radius: var(--mm-radius);
+        overflow: hidden;
+    }
+
+    .mm-panel-head {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 1rem;
         flex-wrap: wrap;
-        gap: 0.5rem;
-        background: var(--card-bg);
+        padding: .9rem 1.15rem;
+        border-bottom: 1px solid var(--mm-border);
     }
-    
-    .pagination-info-modern {
-        font-size: 0.65rem;
-        color: var(--text-muted);
+
+    /* segmented tabs */
+    .mm-seg {
+        display: inline-flex;
+        gap: 2px;
+        padding: 4px;
+        background: var(--mm-soft);
+        border-radius: 12px;
     }
-    
-    .pagination-modern {
-        margin: 0;
-        gap: 4px;
+
+    .mm-seg-item {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .45rem .95rem;
+        border-radius: 9px;
+        font-size: .77rem;
+        font-weight: 600;
+        color: var(--mm-muted);
+        text-decoration: none;
+        transition: background .18s ease, color .18s ease, box-shadow .18s ease;
     }
-    
-    .pagination-modern .page-link {
+
+    .mm-seg-item:hover { color: var(--mm-text); text-decoration: none; }
+
+    .mm-seg-item.active {
+        background: var(--mm-card);
+        color: var(--mm-text);
+        box-shadow: var(--mm-shadow-sm);
+    }
+
+    .mm-seg-count {
+        font-size: .64rem;
+        font-weight: 700;
+        padding: .08rem .42rem;
+        border-radius: 20px;
+        background: rgba(125, 130, 150, .16);
+        color: inherit;
+    }
+
+    .mm-seg-item.active .mm-seg-count {
+        background: var(--mm-primary-soft);
+        color: var(--mm-primary);
+    }
+
+    /* toolbar */
+    .mm-tools {
+        display: flex;
+        align-items: center;
+        gap: .55rem;
+        flex-wrap: wrap;
+    }
+
+    .mm-search,
+    .mm-select { position: relative; display: flex; align-items: center; }
+
+    .mm-search > i,
+    .mm-select > .mm-select-icon {
+        position: absolute;
+        left: .8rem;
+        font-size: .72rem;
+        color: var(--mm-muted);
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .mm-search input {
+        width: 230px;
+        padding: .5rem .9rem .5rem 2.15rem;
+        border-radius: 10px;
+        border: 1px solid var(--mm-border);
+        background: var(--mm-soft);
+        color: var(--mm-text);
+        font-size: .78rem;
+        font-family: inherit;
+        transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .mm-search input::placeholder { color: var(--mm-muted); }
+
+    .mm-search input:focus {
+        outline: none;
+        background: var(--mm-card);
+        border-color: var(--mm-primary);
+        box-shadow: 0 0 0 3px var(--mm-primary-ring);
+    }
+
+    .mm-select select {
+        appearance: none;
+        -webkit-appearance: none;
+        padding: .5rem 2.2rem .5rem 2.05rem;
+        border-radius: 10px;
+        border: 1px solid var(--mm-border);
+        background: var(--mm-soft);
+        color: var(--mm-text);
+        font-size: .78rem;
+        font-family: inherit;
+        cursor: pointer;
+        max-width: 230px;
+        transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .mm-select select:focus {
+        outline: none;
+        background: var(--mm-card);
+        border-color: var(--mm-primary);
+        box-shadow: 0 0 0 3px var(--mm-primary-ring);
+    }
+
+    .mm-select select option { background: var(--mm-card); color: var(--mm-text); }
+
+    .mm-select .mm-select-caret {
+        position: absolute;
+        right: .8rem;
+        font-size: .6rem;
+        color: var(--mm-muted);
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    /* ---------------- TABLE ---------------- */
+    .mm-section { display: none; }
+    .mm-section.is-active { display: block; }
+
+    .mm-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    .mm-table {
+        width: 100%;
+        min-width: 780px;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .mm-table thead th {
+        text-align: left;
+        padding: .8rem 1.15rem;
+        font-size: .65rem;
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--mm-muted);
+        background: var(--mm-card);
+        border-bottom: 1px solid var(--mm-border);
+        white-space: nowrap;
+    }
+
+    .mm-table tbody td {
+        padding: .8rem 1.15rem;
+        font-size: .82rem;
+        color: var(--mm-text);
+        border-bottom: 1px solid var(--mm-border);
+        vertical-align: middle;
+    }
+
+    .mm-table tbody tr:last-child td { border-bottom: none; }
+
+    .mm-row {
+        cursor: pointer;
+        transition: background .16s ease;
+    }
+
+    .mm-row:hover { background: var(--mm-soft); }
+
+    .mm-row td:first-child { position: relative; }
+
+    .mm-row:hover td:first-child::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 3px;
+        background: var(--mm-primary);
+        border-radius: 0 3px 3px 0;
+    }
+
+    .mm-idx {
+        font-size: .72rem;
+        font-weight: 600;
+        color: var(--mm-muted);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .mm-muted { color: var(--mm-muted); }
+
+    /* person cell */
+    .mm-person {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        min-width: 0;
+    }
+
+    .mm-avatar {
+        width: 38px; height: 38px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .02em;
+        background: var(--mm-primary-soft);
+        color: var(--mm-primary);
+    }
+
+    .mm-avatar.muted {
+        background: var(--mm-rose-soft);
+        color: var(--mm-rose);
+    }
+
+    .mm-person-name {
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+        font-size: .85rem;
+        font-weight: 600;
+        line-height: 1.25;
+    }
+
+    .mm-person-meta {
+        display: flex;
+        align-items: center;
+        gap: .3rem;
+        font-size: .68rem;
+        color: var(--mm-muted);
+        margin-top: .15rem;
+    }
+
+    /* pills */
+    .mm-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        padding: .24rem .6rem;
         border-radius: 8px;
-        border: 1px solid var(--border-color);
-        background: var(--card-bg);
-        color: var(--text-secondary);
-        font-size: 0.65rem;
-        padding: 4px 12px;
-        transition: all 0.2s ease;
+        font-size: .67rem;
+        font-weight: 600;
+        line-height: 1.4;
+        white-space: nowrap;
+        background: var(--mm-soft);
+        color: var(--mm-muted);
+        border: 1px solid var(--mm-border);
     }
-    
-    .pagination-modern .page-link:hover {
-        background: var(--bg-tertiary);
-        border-color: var(--border-color);
-        color: var(--text-primary);
+
+    .mm-pill i { font-size: .58rem; opacity: .85; }
+
+    .mm-pill.male {
+        background: rgba(59, 130, 246, .10);
+        color: #2563eb;
+        border-color: rgba(59, 130, 246, .18);
+    }
+
+    .mm-pill.female {
+        background: rgba(236, 72, 153, .10);
+        color: #db2777;
+        border-color: rgba(236, 72, 153, .18);
+    }
+
+    .mm-pill.choir {
+        background: var(--mm-amber-soft);
+        color: var(--mm-amber);
+        border-color: transparent;
+    }
+
+    .mm-pill.deceased {
+        background: var(--mm-rose-soft);
+        color: var(--mm-rose);
+        border-color: transparent;
+    }
+
+    [data-theme="dark"] .mm-pill.male {
+        background: rgba(59, 130, 246, .16);
+        color: #60a5fa;
+        border-color: rgba(59, 130, 246, .24);
+    }
+
+    [data-theme="dark"] .mm-pill.female {
+        background: rgba(236, 72, 153, .16);
+        color: #f472b6;
+        border-color: rgba(236, 72, 153, .24);
+    }
+
+    .mm-pill-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .3rem;
+    }
+
+    /* actions */
+    .mm-actions {
+        display: flex;
+        gap: .3rem;
+        flex-wrap: wrap;
+    }
+
+    .mm-icon-btn {
+        width: 32px; height: 32px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--mm-muted);
+        font-size: .74rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background .16s ease, color .16s ease, transform .16s ease;
+    }
+
+    .mm-icon-btn:hover {
+        background: var(--mm-soft);
+        color: var(--mm-text);
         transform: translateY(-1px);
     }
-    
-    .pagination-modern .page-item.active .page-link {
-        background: var(--gradient-primary);
-        border-color: var(--profile-primary);
-        color: white;
-    }
-    
-    .empty-state-modern {
+
+    .mm-icon-btn.view:hover    { background: var(--mm-primary-soft); color: var(--mm-primary); }
+    .mm-icon-btn.restore:hover { background: var(--mm-green-soft);   color: var(--mm-green); }
+    .mm-icon-btn.danger:hover  { background: var(--mm-rose-soft);    color: var(--mm-rose); }
+
+    /* ---------------- EMPTY ---------------- */
+    .mm-empty {
         text-align: center;
         padding: 3rem 1.5rem;
-        color: var(--text-muted);
     }
-    
-    .empty-state-modern i {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        opacity: 0.3;
+
+    .mm-empty i {
+        font-size: 2.4rem;
+        color: var(--mm-muted);
+        opacity: .35;
+        margin-bottom: .9rem;
+        display: block;
     }
-    
-    .empty-state-modern h5 {
-        color: var(--text-primary);
-        margin-bottom: 0.5rem;
+
+    .mm-empty h5 {
+        margin: 0 0 .35rem;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--mm-text);
+        letter-spacing: -.01em;
+    }
+
+    .mm-empty p {
+        margin: 0 0 1.1rem;
+        font-size: .82rem;
+        color: var(--mm-muted);
+    }
+
+    /* ---------------- FOOTER ---------------- */
+    .mm-foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding: .85rem 1.15rem;
+        border-top: 1px solid var(--mm-border);
+    }
+
+    .mm-foot-info {
+        font-size: .72rem;
+        color: var(--mm-muted);
+    }
+
+    .mm-foot-info strong {
+        color: var(--mm-text);
         font-weight: 600;
-        font-size: 1.1rem;
+        font-variant-numeric: tabular-nums;
     }
-    
-    .empty-state-modern p {
-        font-size: 0.85rem;
-        margin-bottom: 1rem;
+
+    .mm-foot .pagination {
+        margin: 0;
+        gap: .25rem;
+        flex-wrap: wrap;
     }
-    
-    .empty-state-modern .btn-add-modern {
-        padding: 0.6rem 2rem;
-        font-size: 0.8rem;
+
+    .mm-foot .page-link {
+        border: 1px solid var(--mm-border);
+        background: var(--mm-card);
+        color: var(--mm-muted);
+        font-size: .72rem;
+        font-weight: 600;
+        padding: .35rem .7rem;
+        border-radius: 9px;
+        transition: background .16s ease, color .16s ease, border-color .16s ease;
     }
-    
+
+    .mm-foot .page-link:hover {
+        background: var(--mm-soft);
+        color: var(--mm-text);
+        border-color: var(--mm-border);
+    }
+
+    .mm-foot .page-item.active .page-link {
+        background: var(--mm-primary);
+        border-color: var(--mm-primary);
+        color: #fff;
+    }
+
+    .mm-foot .page-item.disabled .page-link {
+        opacity: .45;
+        background: var(--mm-card);
+    }
+
+    /* ---------------- SPINNER (Swal) ---------------- */
     .loading-spinner {
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
         margin: 0 auto;
-        border: 4px solid var(--border-color);
-        border-top-color: var(--profile-primary);
+        border: 4px solid var(--mm-border, #e5e7eb);
+        border-top-color: #4f46e5;
         border-radius: 50%;
-        animation: spin 0.8s linear infinite;
+        animation: mmSpin .8s linear infinite;
     }
-    
-    @keyframes spin {
-        to { transform: rotate(360deg); }
+
+    @keyframes mmSpin { to { transform: rotate(360deg); } }
+
+    /* ---------------- RESPONSIVE ---------------- */
+    @media (max-width: 1100px) {
+        .mm-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
-    
-    @media (max-width: 1200px) {
-        .stats-grid-premium {
-            grid-template-columns: repeat(2, 1fr);
-        }
+
+    @media (max-width: 900px) {
+        .mm-col-optional { display: none; }
+        .mm-search input { width: 180px; }
     }
-    
-    @media (max-width: 992px) {
-        .member-hero .hero-content {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .member-hero .hero-actions {
-            width: 100%;
-        }
-    }
-    
+
     @media (max-width: 768px) {
-        .member-hero {
-            padding: 1.5rem;
-        }
-        
-        .member-hero h1 {
-            font-size: 1.3rem;
-        }
-        
-        .stats-grid-premium {
-            grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
-        }
-        
-        .stat-card-premium {
-            padding: 1rem;
-        }
-        
-        .stat-card-premium .stat-value {
-            font-size: 1.3rem;
-        }
-        
-        .stat-card-premium .stat-icon-wrap {
-            width: 36px;
-            height: 36px;
-            font-size: 0.9rem;
-        }
-        
-        .member-tab-modern {
-            flex: 1;
-            text-align: center;
-            font-size: 0.65rem;
-            padding: 0.5rem 0.8rem;
-        }
-        
-        .table-modern thead th,
-        .table-modern tbody td {
-            padding: 0.5rem 0.8rem;
-            font-size: 0.65rem;
-        }
-        
-        .action-buttons-modern {
-            gap: 3px;
-        }
-        
-        .btn-icon-action-modern {
-            width: 28px;
-            height: 28px;
-            font-size: 0.6rem;
-        }
-        
-        .member-avatar-modern {
-            width: 28px;
-            height: 28px;
-            font-size: 0.6rem;
-        }
-        
-        .pagination-container-modern {
-            flex-direction: column;
-            text-align: center;
-        }
+        .mm-head { flex-direction: column; align-items: flex-start; }
+        .mm-head-actions { width: 100%; }
+        .mm-head-actions .mm-btn { flex: 1; justify-content: center; }
+
+        .mm-title { font-size: 1.3rem; }
+        .mm-sub { font-size: .78rem; }
+
+        .mm-panel-head { flex-direction: column; align-items: stretch; }
+
+        .mm-seg { width: 100%; }
+        .mm-seg-item { flex: 1; justify-content: center; }
+
+        .mm-tools { width: 100%; }
+        .mm-search { flex: 1 1 100%; }
+        .mm-search input { width: 100%; }
+        .mm-select { flex: 1 1 100%; }
+        .mm-select select { width: 100%; max-width: none; }
+
+        .mm-foot { flex-direction: column; text-align: center; }
     }
-    
+
     @media (max-width: 480px) {
-        .stats-grid-premium {
-            grid-template-columns: 1fr;
-        }
+        .mm-stats { grid-template-columns: 1fr; }
+        .mm-stat { padding: .9rem 1rem; }
     }
 </style>
 
-<div class="container-fluid px-0">
+<div class="mm container-fluid px-0">
 
-    {{-- ============================================ --}}
-    {{-- HERO SECTION --}}
-    {{-- ============================================ --}}
-    <div class="member-hero">
-        <div class="hero-content">
-            <div class="hero-left">
-                <h1><i class="fas fa-users"></i> <span data-i18n="member_management">{{ __("Member Management") }}</span></h1>
-                <p class="hero-sub">
-                    <i class="fas fa-circle" style="color: #34D399; font-size: 0.4rem; vertical-align: middle;"></i>
-                    <span data-i18n="member_management_desc">{{ __("Manage your church members, roles, and choir assignments") }}</span>
-                </p>
+    {{-- ============================================
+         HEADER
+    ============================================ --}}
+    <header class="mm-head">
+        <div>
+            <div class="mm-eyebrow">
+                <span class="mm-dot"></span>
+                <span data-i18n="member_directory">{{ __("Member Directory") }}</span>
             </div>
-            <div class="hero-actions">
-                <a href="{{ route('members.create') }}" class="btn-hero btn-hero-white">
-                    <i class="fas fa-user-plus"></i> <span data-i18n="add_member">{{ __("Add Member") }}</span>
+            <h1 class="mm-title">
+                <i class="fas fa-users"></i>
+                <span data-i18n="member_management">{{ __("Member Management") }}</span>
+            </h1>
+            <p class="mm-sub" data-i18n="member_management_desc">
+                {{ __("Manage your church members, roles, and choir assignments") }}
+            </p>
+        </div>
+
+        <div class="mm-head-actions">
+            <a href="{{ route('members.create') }}" class="mm-btn mm-btn-primary">
+                <i class="fas fa-user-plus"></i>
+                <span data-i18n="add_member">{{ __("Add Member") }}</span>
+            </a>
+
+            @if($isDeceasedFilter)
+                <a href="{{ route('members.index') }}" class="mm-btn mm-btn-ghost">
+                    <i class="fas fa-arrow-left"></i>
+                    <span data-i18n="back_to_active">{{ __("Back to Active") }}</span>
                 </a>
-                @if($isDeceasedFilter)
-                    <a href="{{ route('members.index') }}" class="btn-hero btn-hero-ghost">
-                        <i class="fas fa-arrow-left"></i> <span data-i18n="back_to_active">{{ __("Back to Active") }}</span>
-                    </a>
-                @else
-                    <a href="{{ route('members.index', ['filter' => 'deceased']) }}" class="btn-hero btn-hero-ghost">
-                        <i class="fas fa-cross"></i> <span data-i18n="view_deceased">{{ __("View Deceased") }}</span>
-                    </a>
-                @endif
-            </div>
+            @else
+                <a href="{{ route('members.index', ['filter' => 'deceased']) }}" class="mm-btn mm-btn-ghost">
+                    <i class="fas fa-cross"></i>
+                    <span data-i18n="view_deceased">{{ __("View Deceased") }}</span>
+                </a>
+            @endif
         </div>
-    </div>
+    </header>
 
-    {{-- ============================================ --}}
-    {{-- STATS CARDS --}}
-    {{-- ============================================ --}}
-    <div class="stats-grid-premium">
-        <div class="stat-card-premium green">
-            <div class="stat-top">
-                <span class="stat-label" data-i18n="active_members_label">{{ __("Active Members") }}</span>
-                <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
+    {{-- ============================================
+         STATS
+    ============================================ --}}
+    <section class="mm-stats">
+        <article class="mm-stat">
+            <div class="mm-stat-icon green"><i class="fas fa-users"></i></div>
+            <div class="mm-stat-body">
+                <div class="mm-stat-value">{{ number_format($totalMembers ?? 0) }}</div>
+                <div class="mm-stat-label" data-i18n="active_members_label">{{ __("Active Members") }}</div>
+                <div class="mm-stat-cap" data-i18n="active_members">{{ __("Active members") }}</div>
             </div>
-            <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="active_members">{{ __("Active members") }}</span></div>
-        </div>
-        
-        <div class="stat-card-premium purple">
-            <div class="stat-top">
-                <span class="stat-label" data-i18n="choir_members_label">{{ __("Choir Members") }}</span>
-                <div class="stat-icon-wrap"><i class="fas fa-music"></i></div>
-            </div>
-            <div class="stat-value">{{ number_format($choirCount ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="music_ministry">{{ __("Music ministry") }}</span></div>
-        </div>
-        
-        <div class="stat-card-premium orange">
-            <div class="stat-top">
-                <span class="stat-label" data-i18n="birthdays_this_month">{{ __("Birthdays This Month") }}</span>
-                <div class="stat-icon-wrap"><i class="fas fa-birthday-cake"></i></div>
-            </div>
-            <div class="stat-value">{{ number_format($birthdaysThisMonth ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="celebrating_soon">{{ __("Celebrating soon") }}</span></div>
-        </div>
-        
-        <div class="stat-card-premium red">
-            <div class="stat-top">
-                <span class="stat-label" data-i18n="deceased_label">{{ __("Deceased") }}</span>
-                <div class="stat-icon-wrap"><i class="fas fa-cross"></i></div>
-            </div>
-            <div class="stat-value">{{ number_format($deceasedCount ?? 0) }}</div>
-            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="at_rest">{{ __("At rest") }}</span></div>
-        </div>
-    </div>
+        </article>
 
-    {{-- ============================================ --}}
-    {{-- FILTER SECTION --}}
-    {{-- ============================================ --}}
-    <div class="filter-card-modern">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <span class="filter-label-modern"><i class="fas fa-filter me-1"></i> <span data-i18n="filter_by_ministry">{{ __("Filter by Ministry") }}</span></span>
-                <select id="roleFilter" class="filter-select-modern" onchange="window.location.href=this.value">
-                    <option value="{{ route('members.index', ['role' => 'all']) }}" {{ ($currentFilter ?? 'all') == 'all' ? 'selected' : '' }}>
-                        📋 {{ __("All Members") }}
-                    </option>
-                    @php
-                        $uniqueRoles = collect($allRoles ?? [])->unique('name')->values()->all();
-                    @endphp
-                    @foreach($uniqueRoles as $role)
-                        <option value="{{ route('members.index', ['role' => $role->slug ?? $role]) }}" {{ ($currentFilter ?? '') == ($role->slug ?? $role) ? 'selected' : '' }}>
-                            {{ $role->name ?? ucfirst($role) }}
+        <article class="mm-stat">
+            <div class="mm-stat-icon violet"><i class="fas fa-music"></i></div>
+            <div class="mm-stat-body">
+                <div class="mm-stat-value">{{ number_format($choirCount ?? 0) }}</div>
+                <div class="mm-stat-label" data-i18n="choir_members_label">{{ __("Choir Members") }}</div>
+                <div class="mm-stat-cap" data-i18n="music_ministry">{{ __("Music ministry") }}</div>
+            </div>
+        </article>
+
+        <article class="mm-stat">
+            <div class="mm-stat-icon amber"><i class="fas fa-birthday-cake"></i></div>
+            <div class="mm-stat-body">
+                <div class="mm-stat-value">{{ number_format($birthdaysThisMonth ?? 0) }}</div>
+                <div class="mm-stat-label" data-i18n="birthdays_this_month">{{ __("Birthdays This Month") }}</div>
+                <div class="mm-stat-cap" data-i18n="celebrating_soon">{{ __("Celebrating soon") }}</div>
+            </div>
+        </article>
+
+        <article class="mm-stat">
+            <div class="mm-stat-icon rose"><i class="fas fa-cross"></i></div>
+            <div class="mm-stat-body">
+                <div class="mm-stat-value">{{ number_format($deceasedCount ?? 0) }}</div>
+                <div class="mm-stat-label" data-i18n="deceased_label">{{ __("Deceased") }}</div>
+                <div class="mm-stat-cap" data-i18n="at_rest">{{ __("At rest") }}</div>
+            </div>
+        </article>
+    </section>
+
+    {{-- ============================================
+         PANEL
+    ============================================ --}}
+    <div class="mm-panel">
+
+        {{-- Toolbar --}}
+        <div class="mm-panel-head">
+            <nav class="mm-seg">
+                <a href="{{ route('members.index') }}"
+                   class="mm-seg-item {{ !$isDeceasedFilter ? 'active' : '' }}">
+                    <i class="fas fa-user-friends"></i>
+                    <span data-i18n="active">{{ __("Active") }}</span>
+                    <span class="mm-seg-count">{{ number_format($totalMembers ?? 0) }}</span>
+                </a>
+                <a href="{{ route('members.index', ['filter' => 'deceased']) }}"
+                   class="mm-seg-item {{ $isDeceasedFilter ? 'active' : '' }}">
+                    <i class="fas fa-cross"></i>
+                    <span data-i18n="deceased">{{ __("Deceased") }}</span>
+                    <span class="mm-seg-count">{{ number_format($deceasedCount ?? 0) }}</span>
+                </a>
+            </nav>
+
+            <div class="mm-tools">
+                <label class="mm-search">
+                    <i class="fas fa-search"></i>
+                    <input type="search" id="mmSearch" autocomplete="off"
+                           placeholder="{{ __('Search members...') }}"
+                           aria-label="{{ __('Search members') }}">
+                </label>
+
+                <div class="mm-select">
+                    <i class="fas fa-filter mm-select-icon"></i>
+                    <select id="roleFilter" onchange="window.location.href=this.value"
+                            aria-label="{{ __('Filter by Ministry') }}">
+                        <option value="{{ route('members.index', ['role' => 'all']) }}"
+                            {{ ($currentFilter ?? 'all') == 'all' ? 'selected' : '' }}>
+                            📋 {{ __("All Members") }}
                         </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                <span class="total-badge-modern">
-                    <i class="fas fa-church"></i>
-                    @if($isDeceasedFilter)
-                        <span data-i18n="total_deceased">{{ __("Total Deceased:") }}</span> {{ number_format($deceasedMembers->total() ?? 0) }}
-                    @else
-                        <span data-i18n="total_active">{{ __("Total Active:") }}</span> {{ number_format($members->total() ?? 0) }}
-                    @endif
-                </span>
+                        @php
+                            $uniqueRoles = collect($allRoles ?? [])->unique('name')->values()->all();
+                        @endphp
+                        @foreach($uniqueRoles as $role)
+                            <option value="{{ route('members.index', ['role' => $role->slug ?? $role]) }}"
+                                {{ ($currentFilter ?? '') == ($role->slug ?? $role) ? 'selected' : '' }}>
+                                {{ $role->name ?? ucfirst($role) }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <i class="fas fa-chevron-down mm-select-caret"></i>
+                </div>
             </div>
         </div>
-    </div>
 
-    {{-- ============================================ --}}
-    {{-- TABS NAVIGATION --}}
-    {{-- ============================================ --}}
-    <div class="member-tabs-modern">
-        <button class="member-tab-modern {{ !$isDeceasedFilter ? 'active' : '' }}" onclick="window.location.href='{{ route('members.index') }}'">
-            <i class="fas fa-user-friends me-2"></i><span data-i18n="active">{{ __("Active") }}</span>
-            <span class="badge-modern">{{ number_format($totalMembers ?? 0) }}</span>
-        </button>
-        <button class="member-tab-modern {{ $isDeceasedFilter ? 'active' : '' }}" onclick="window.location.href='{{ route('members.index', ['filter' => 'deceased']) }}'">
-            <i class="fas fa-cross me-2"></i><span data-i18n="deceased">{{ __("Deceased") }}</span>
-            <span class="badge-modern">{{ number_format($deceasedCount ?? 0) }}</span>
-        </button>
-    </div>
-
-    {{-- ============================================ --}}
-    {{-- ACTIVE MEMBERS TABLE --}}
-    {{-- ============================================ --}}
-    <div id="activeMembersTable" class="table-section-modern {{ !$isDeceasedFilter ? 'active-section' : '' }}">
-        <div class="table-container-modern">
-            <div class="table-responsive">
-                <table class="table-modern table">
+        {{-- ============================================
+             ACTIVE MEMBERS
+        ============================================ --}}
+        <section id="activeMembersTable"
+                 class="mm-section {{ !$isDeceasedFilter ? 'is-active' : '' }}">
+            <div class="mm-table-scroll">
+                <table class="mm-table">
                     <thead>
                         <tr>
-                            <th style="width: 50px;">#</th>
+                            <th style="width:56px;">#</th>
                             <th data-i18n="member">{{ __("Member") }}</th>
-                            <th style="width: 80px;" data-i18n="gender">{{ __("Gender") }}</th>
+                            <th style="width:96px;" data-i18n="gender">{{ __("Gender") }}</th>
                             <th data-i18n="roles">{{ __("Roles") }}</th>
-                            <th data-i18n="birthday">{{ __("Birthday") }}</th>
-                            <th data-i18n="age">{{ __("Age") }}</th>
-                            <th style="width: 150px;" data-i18n="actions">{{ __("Actions") }}</th>
+                            <th style="width:110px;" class="mm-col-optional" data-i18n="birthday">{{ __("Birthday") }}</th>
+                            <th style="width:80px;" class="mm-col-optional" data-i18n="age">{{ __("Age") }}</th>
+                            <th style="width:150px;" data-i18n="actions">{{ __("Actions") }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -951,27 +860,22 @@
                                     $daysUntil = $today->diffInDays($birthdayThisYear, false);
                                     $isBirthdayThisWeek = ($daysUntil >= 0 && $daysUntil <= 7);
                                 }
-                                
+
                                 $memberRoles = $member->roles ?? [];
                                 $uniqueRoles = collect($memberRoles)->unique('name')->values()->all();
-                                
+
                                 $genderValue = $member->gender ?? null;
                                 if ($genderValue === 'male') {
-                                    $genderIcon = 'fa-mars';
-                                    $genderLabel = 'Male';
-                                    $genderClass = 'male';
+                                    $genderIcon = 'fa-mars'; $genderLabel = 'Male'; $genderClass = 'male';
                                 } elseif ($genderValue === 'female') {
-                                    $genderIcon = 'fa-venus';
-                                    $genderLabel = 'Female';
-                                    $genderClass = 'female';
+                                    $genderIcon = 'fa-venus'; $genderLabel = 'Female'; $genderClass = 'female';
                                 } else {
-                                    $genderIcon = 'fa-circle';
-                                    $genderLabel = '—';
-                                    $genderClass = 'unspecified';
+                                    $genderIcon = 'fa-circle'; $genderLabel = '—'; $genderClass = 'unspecified';
                                 }
                             @endphp
-                            <tr class="member-row" 
-                                data-member-id="{{ $member->id }}" 
+                            <tr class="member-row mm-row"
+                                data-row
+                                data-member-id="{{ $member->id }}"
                                 data-member-name="{{ addslashes($member->first_name . ' ' . $member->last_name) }}"
                                 data-member-birthday="{{ $member->birthday ? \Carbon\Carbon::parse($member->birthday)->format('F d, Y') : '' }}"
                                 data-member-age="{{ $age ?? '' }}"
@@ -980,69 +884,103 @@
                                 data-member-roles="{{ json_encode($uniqueRoles) }}"
                                 data-member-ischoir="{{ $member->is_choir ? 'true' : 'false' }}"
                                 data-member-isdeceased="{{ $member->is_deceased ? 'true' : 'false' }}">
-                                
-                                <td class="text-muted">{{ $members->firstItem() + $index }}</td>
-                                
+
+                                <td class="mm-idx">{{ $members->firstItem() + $index }}</td>
+
                                 <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div class="member-avatar-modern">
+                                    <div class="mm-person">
+                                        <div class="mm-avatar">
                                             {{ strtoupper(substr($member->first_name ?? 'M', 0, 1)) }}{{ strtoupper(substr($member->last_name ?? 'M', 0, 1)) }}
                                         </div>
-                                        <div>
-                                            <div class="member-name-modern">
+                                        <div style="min-width:0;">
+                                            <div class="mm-person-name">
                                                 {{ $member->first_name }} {{ $member->last_name }}
-                                                @if($isBirthdayThisWeek) <span style="font-size: 0.7rem;">🎂</span> @endif
+                                                @if($isBirthdayThisWeek)
+                                                    <span title="{{ __('Birthday this week') }}">🎂</span>
+                                                @endif
                                             </div>
                                             @if($member->phone)
-                                                <div class="member-phone-modern"><i class="fas fa-phone"></i> {{ $member->phone }}</div>
+                                                <div class="mm-person-meta">
+                                                    <i class="fas fa-phone"></i> {{ $member->phone }}
+                                                </div>
                                             @endif
                                         </div>
                                     </div>
                                 </td>
-                                
+
                                 <td>
-                                    <span class="gender-badge-small {{ $genderClass }}">
-                                        <i class="fas {{ $genderIcon }}"></i>
-                                        {{ $genderLabel }}
+                                    <span class="mm-pill {{ $genderClass }}">
+                                        <i class="fas {{ $genderIcon }}"></i> {{ $genderLabel }}
                                     </span>
                                 </td>
-                                
+
                                 <td>
-                                    <div class="d-flex flex-wrap gap-1">
+                                    <div class="mm-pill-group">
                                         @forelse($uniqueRoles as $role)
-                                            <span class="role-tag-modern"><i class="fas fa-tag"></i> {{ $role['name'] ?? $role }}</span>
+                                            <span class="mm-pill">
+                                                <i class="fas fa-tag"></i> {{ $role['name'] ?? $role }}
+                                            </span>
                                         @empty
-                                            <span class="role-tag-modern"><i class="fas fa-user"></i> <span data-i18n="regular">{{ __("Regular") }}</span></span>
+                                            <span class="mm-pill">
+                                                <i class="fas fa-user"></i>
+                                                <span data-i18n="regular">{{ __("Regular") }}</span>
+                                            </span>
                                         @endforelse
                                         @if($member->is_choir)
-                                            <span class="role-tag-modern choir"><i class="fas fa-music"></i> <span data-i18n="choir">{{ __("Choir") }}</span></span>
+                                            <span class="mm-pill choir">
+                                                <i class="fas fa-music"></i>
+                                                <span data-i18n="choir">{{ __("Choir") }}</span>
+                                            </span>
                                         @endif
                                     </div>
                                 </td>
-                                
-                                <td>@if($member->birthday) {{ \Carbon\Carbon::parse($member->birthday)->format('M d') }} @else <span class="text-muted">—</span> @endif</td>
-                                <td>@if($age) {{ $age }} @else <span class="text-muted">—</span> @endif</td>
-                                
+
+                                <td class="mm-col-optional">
+                                    @if($member->birthday)
+                                        {{ \Carbon\Carbon::parse($member->birthday)->format('M d') }}
+                                    @else
+                                        <span class="mm-muted">—</span>
+                                    @endif
+                                </td>
+
+                                <td class="mm-col-optional">
+                                    @if($age)
+                                        {{ $age }}
+                                    @else
+                                        <span class="mm-muted">—</span>
+                                    @endif
+                                </td>
+
                                 <td>
-                                    <div class="action-buttons-modern">
-                                        <a href="{{ route('members.show', $member->id) }}" class="btn-icon-action-modern view" title="View Profile" onclick="event.stopPropagation();">
+                                    <div class="mm-actions">
+                                        <a href="{{ route('members.show', $member->id) }}"
+                                           class="mm-icon-btn view" title="{{ __('View Profile') }}"
+                                           onclick="event.stopPropagation();">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ route('members.edit', $member->id) }}" class="btn-icon-action-modern" title="Edit Member" onclick="event.stopPropagation();">
-                                            <i class="fas fa-edit"></i>
+                                        <a href="{{ route('members.edit', $member->id) }}"
+                                           class="mm-icon-btn" title="{{ __('Edit Member') }}"
+                                           onclick="event.stopPropagation();">
+                                            <i class="fas fa-pen"></i>
                                         </a>
                                         @if(!$member->is_deceased)
-                                        <button type="button" class="btn-icon-action-modern deceased" title="Mark as Deceased" 
-                                                onclick="event.stopPropagation(); openDeceasedModal({{ $member->id }}, '{{ addslashes($member->first_name . ' ' . $member->last_name) }}')">
-                                            <i class="fas fa-cross"></i>
-                                        </button>
+                                            <button type="button"
+                                                    class="mm-icon-btn"
+                                                    title="{{ __('Mark as Deceased') }}"
+                                                    onclick="event.stopPropagation(); openDeceasedModal({{ $member->id }}, '{{ addslashes($member->first_name . ' ' . $member->last_name) }}')">
+                                                <i class="fas fa-cross"></i>
+                                            </button>
                                         @endif
-                                        <button type="button" class="btn-icon-action-modern delete" title="Delete Member" 
+                                        <button type="button"
+                                                class="mm-icon-btn danger"
+                                                title="{{ __('Delete Member') }}"
                                                 onclick="event.stopPropagation(); confirmDelete({{ $member->id }}, '{{ addslashes($member->first_name . ' ' . $member->last_name) }}')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </div>
-                                    <form id="delete-form-{{ $member->id }}" action="{{ route('members.destroy', $member->id) }}" method="POST" style="display: none;">
+                                    <form id="delete-form-{{ $member->id }}"
+                                          action="{{ route('members.destroy', $member->id) }}"
+                                          method="POST" style="display:none;">
                                         @csrf @method('DELETE')
                                     </form>
                                 </td>
@@ -1050,48 +988,64 @@
                         @empty
                             <tr>
                                 <td colspan="7">
-                                    <div class="empty-state-modern">
+                                    <div class="mm-empty">
                                         <i class="fas fa-users"></i>
                                         <h5 data-i18n="no_active_members">{{ __("No Active Members Yet") }}</h5>
                                         <p data-i18n="no_active_members_desc">{{ __("Get started by adding your first church member to the system.") }}</p>
-                                        <a href="{{ route('members.create') }}" class="btn-add-modern">
-                                            <i class="fas fa-plus me-2"></i><span data-i18n="add_first_member">{{ __("Add Your First Member") }}</span>
+                                        <a href="{{ route('members.create') }}" class="mm-btn mm-btn-primary">
+                                            <i class="fas fa-plus"></i>
+                                            <span data-i18n="add_first_member">{{ __("Add Your First Member") }}</span>
                                         </a>
                                     </div>
                                 </td>
                             </tr>
                         @endforelse
+
+                        <tr class="mm-no-results" hidden>
+                            <td colspan="7">
+                                <div class="mm-empty" style="padding:2.25rem 1.5rem;">
+                                    <i class="fas fa-magnifying-glass"></i>
+                                    <h5>{{ __("No matching members") }}</h5>
+                                    <p>{{ __("Try a different name or phone number.") }}</p>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
 
             @if($members->hasPages())
-            <div class="pagination-container-modern">
-                <div class="pagination-info-modern">
-                    <span data-i18n="showing">{{ __("Showing") }}</span> <strong>{{ $members->firstItem() }}</strong> <span data-i18n="to">{{ __("to") }}</span> <strong>{{ $members->lastItem() }}</strong> <span data-i18n="of">{{ __("of") }}</span> <strong>{{ $members->total() }}</strong> <span data-i18n="active_members">{{ __("active members") }}</span>
+                <div class="mm-foot">
+                    <div class="mm-foot-info">
+                        <span data-i18n="showing">{{ __("Showing") }}</span>
+                        <strong>{{ $members->firstItem() }}</strong>
+                        <span data-i18n="to">{{ __("to") }}</span>
+                        <strong>{{ $members->lastItem() }}</strong>
+                        <span data-i18n="of">{{ __("of") }}</span>
+                        <strong>{{ $members->total() }}</strong>
+                        <span data-i18n="active_members">{{ __("active members") }}</span>
+                    </div>
+                    {{ $members->links('pagination::bootstrap-5') }}
                 </div>
-                {{ $members->links('pagination::bootstrap-5') }}
-            </div>
             @endif
-        </div>
-    </div>
+        </section>
 
-    {{-- ============================================ --}}
-    {{-- DECEASED MEMBERS TABLE --}}
-    {{-- ============================================ --}}
-    <div id="deceasedMembersTable" class="table-section-modern {{ $isDeceasedFilter ? 'active-section' : '' }}">
-        <div class="table-container-modern">
-            <div class="table-responsive">
-                <table class="table-modern table">
+        {{-- ============================================
+             DECEASED MEMBERS
+        ============================================ --}}
+        <section id="deceasedMembersTable"
+                 class="mm-section {{ $isDeceasedFilter ? 'is-active' : '' }}">
+            <div class="mm-table-scroll">
+                <table class="mm-table">
                     <thead>
                         <tr>
-                            <th style="width: 50px;">#</th>
+                            <th style="width:56px;">#</th>
                             <th data-i18n="member">{{ __("Member") }}</th>
-                            <th style="width: 80px;" data-i18n="gender">{{ __("Gender") }}</th>
+                            <th style="width:96px;" data-i18n="gender">{{ __("Gender") }}</th>
                             <th data-i18n="roles">{{ __("Roles") }}</th>
-                            <th data-i18n="birthday">{{ __("Birthday") }}</th>
-                            <th data-i18n="age">{{ __("Age") }}</th>
-                            <th style="width: 120px;" data-i18n="actions">{{ __("Actions") }}</th>
+                            <th style="width:110px;" class="mm-col-optional" data-i18n="birthday">{{ __("Birthday") }}</th>
+                            <th style="width:80px;" class="mm-col-optional" data-i18n="age">{{ __("Age") }}</th>
+                            <th style="width:120px;" data-i18n="actions">{{ __("Actions") }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1103,27 +1057,22 @@
                                     $deathDate = \Carbon\Carbon::parse($member->date_deceased);
                                     $ageAtDeath = $birthDate->diffInYears($deathDate);
                                 }
-                                
+
                                 $memberRoles = $member->roles ?? [];
                                 $uniqueRoles = collect($memberRoles)->unique('name')->values()->all();
-                                
+
                                 $genderValue = $member->gender ?? null;
                                 if ($genderValue === 'male') {
-                                    $genderIcon = 'fa-mars';
-                                    $genderLabel = 'Male';
-                                    $genderClass = 'male';
+                                    $genderIcon = 'fa-mars'; $genderLabel = 'Male'; $genderClass = 'male';
                                 } elseif ($genderValue === 'female') {
-                                    $genderIcon = 'fa-venus';
-                                    $genderLabel = 'Female';
-                                    $genderClass = 'female';
+                                    $genderIcon = 'fa-venus'; $genderLabel = 'Female'; $genderClass = 'female';
                                 } else {
-                                    $genderIcon = 'fa-circle';
-                                    $genderLabel = '—';
-                                    $genderClass = 'unspecified';
+                                    $genderIcon = 'fa-circle'; $genderLabel = '—'; $genderClass = 'unspecified';
                                 }
                             @endphp
-                            <tr class="member-row" 
-                                data-member-id="{{ $member->id }}" 
+                            <tr class="member-row mm-row"
+                                data-row
+                                data-member-id="{{ $member->id }}"
                                 data-member-name="{{ addslashes($member->first_name . ' ' . $member->last_name) }}"
                                 data-member-birthday="{{ $member->birthday ? \Carbon\Carbon::parse($member->birthday)->format('F d, Y') : '' }}"
                                 data-member-age="{{ $ageAtDeath ?? '' }}"
@@ -1132,62 +1081,96 @@
                                 data-member-roles="{{ json_encode($uniqueRoles) }}"
                                 data-member-ischoir="{{ $member->is_choir ? 'true' : 'false' }}"
                                 data-member-isdeceased="true">
-                                
-                                <td class="text-muted">{{ $deceasedMembers->firstItem() + $index }}</td>
-                                
+
+                                <td class="mm-idx">{{ $deceasedMembers->firstItem() + $index }}</td>
+
                                 <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div class="member-avatar-modern deceased">
+                                    <div class="mm-person">
+                                        <div class="mm-avatar muted">
                                             <i class="fas fa-cross"></i>
                                         </div>
-                                        <div>
-                                            <div class="member-name-modern">{{ $member->first_name }} {{ $member->last_name }}</div>
-                                            <div class="deceased-date-modern">
-                                                <i class="fas fa-cross me-1"></i> {{ \Carbon\Carbon::parse($member->date_deceased)->format('M d, Y') }}
+                                        <div style="min-width:0;">
+                                            <div class="mm-person-name">
+                                                {{ $member->first_name }} {{ $member->last_name }}
+                                            </div>
+                                            <div class="mm-person-meta">
+                                                <i class="fas fa-cross"></i>
+                                                {{ \Carbon\Carbon::parse($member->date_deceased)->format('M d, Y') }}
                                             </div>
                                         </div>
                                     </div>
                                 </td>
-                                
+
                                 <td>
-                                    <span class="gender-badge-small {{ $genderClass }}">
-                                        <i class="fas {{ $genderIcon }}"></i>
-                                        {{ $genderLabel }}
+                                    <span class="mm-pill {{ $genderClass }}">
+                                        <i class="fas {{ $genderIcon }}"></i> {{ $genderLabel }}
                                     </span>
                                 </td>
-                                
+
                                 <td>
-                                    <div class="d-flex flex-wrap gap-1">
+                                    <div class="mm-pill-group">
                                         @forelse($uniqueRoles as $role)
-                                            <span class="role-tag-modern"><i class="fas fa-tag"></i> {{ $role['name'] ?? $role }}</span>
+                                            <span class="mm-pill">
+                                                <i class="fas fa-tag"></i> {{ $role['name'] ?? $role }}
+                                            </span>
                                         @empty
-                                            <span class="role-tag-modern"><i class="fas fa-user"></i> <span data-i18n="regular">{{ __("Regular") }}</span></span>
+                                            <span class="mm-pill">
+                                                <i class="fas fa-user"></i>
+                                                <span data-i18n="regular">{{ __("Regular") }}</span>
+                                            </span>
                                         @endforelse
                                         @if($member->is_choir)
-                                            <span class="role-tag-modern choir"><i class="fas fa-music"></i> <span data-i18n="choir">{{ __("Choir") }}</span></span>
+                                            <span class="mm-pill choir">
+                                                <i class="fas fa-music"></i>
+                                                <span data-i18n="choir">{{ __("Choir") }}</span>
+                                            </span>
                                         @endif
-                                        <span class="role-tag-modern deceased-tag"><i class="fas fa-cross"></i> <span data-i18n="deceased">{{ __("Deceased") }}</span></span>
+                                        <span class="mm-pill deceased">
+                                            <i class="fas fa-cross"></i>
+                                            <span data-i18n="deceased">{{ __("Deceased") }}</span>
+                                        </span>
                                     </div>
                                 </td>
-                                
-                                <td>@if($member->birthday) {{ \Carbon\Carbon::parse($member->birthday)->format('M d') }} @else <span class="text-muted">—</span> @endif</td>
-                                <td>@if($ageAtDeath) {{ $ageAtDeath }} @else <span class="text-muted">—</span> @endif</td>
-                                
+
+                                <td class="mm-col-optional">
+                                    @if($member->birthday)
+                                        {{ \Carbon\Carbon::parse($member->birthday)->format('M d') }}
+                                    @else
+                                        <span class="mm-muted">—</span>
+                                    @endif
+                                </td>
+
+                                <td class="mm-col-optional">
+                                    @if($ageAtDeath)
+                                        {{ $ageAtDeath }}
+                                    @else
+                                        <span class="mm-muted">—</span>
+                                    @endif
+                                </td>
+
                                 <td>
-                                    <div class="action-buttons-modern">
-                                        <button type="button" class="btn-icon-action-modern restore" title="Restore to Active" 
+                                    <div class="mm-actions">
+                                        <button type="button"
+                                                class="mm-icon-btn restore"
+                                                title="{{ __('Restore to Active') }}"
                                                 onclick="event.stopPropagation(); confirmRestore({{ $member->id }}, '{{ addslashes($member->first_name . ' ' . $member->last_name) }}')">
-                                            <i class="fas fa-undo-alt"></i>
+                                            <i class="fas fa-rotate-left"></i>
                                         </button>
-                                        <button type="button" class="btn-icon-action-modern delete" title="Delete Permanently" 
+                                        <button type="button"
+                                                class="mm-icon-btn danger"
+                                                title="{{ __('Delete Permanently') }}"
                                                 onclick="event.stopPropagation(); confirmDeletePermanent({{ $member->id }}, '{{ addslashes($member->first_name . ' ' . $member->last_name) }}')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </div>
-                                    <form id="restore-form-{{ $member->id }}" action="{{ route('members.restore', $member->id) }}" method="POST" style="display: none;">
+                                    <form id="restore-form-{{ $member->id }}"
+                                          action="{{ route('members.restore', $member->id) }}"
+                                          method="POST" style="display:none;">
                                         @csrf @method('PUT')
                                     </form>
-                                    <form id="delete-deceased-form-{{ $member->id }}" action="{{ route('members.destroy', $member->id) }}" method="POST" style="display: none;">
+                                    <form id="delete-deceased-form-{{ $member->id }}"
+                                          action="{{ route('members.destroy', $member->id) }}"
+                                          method="POST" style="display:none;">
                                         @csrf @method('DELETE')
                                     </form>
                                 </td>
@@ -1195,7 +1178,7 @@
                         @empty
                             <tr>
                                 <td colspan="7">
-                                    <div class="empty-state-modern">
+                                    <div class="mm-empty">
                                         <i class="fas fa-cross"></i>
                                         <h5 data-i18n="no_deceased_members">{{ __("No Deceased Members") }}</h5>
                                         <p data-i18n="no_deceased_members_desc">{{ __("Click the cross button on any active member to move them here.") }}</p>
@@ -1203,25 +1186,43 @@
                                 </td>
                             </tr>
                         @endforelse
+
+                        <tr class="mm-no-results" hidden>
+                            <td colspan="7">
+                                <div class="mm-empty" style="padding:2.25rem 1.5rem;">
+                                    <i class="fas fa-magnifying-glass"></i>
+                                    <h5>{{ __("No matching members") }}</h5>
+                                    <p>{{ __("Try a different name or phone number.") }}</p>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
-            
+
             @if($deceasedMembers->hasPages())
-            <div class="pagination-container-modern">
-                <div class="pagination-info-modern">
-                    <span data-i18n="showing">{{ __("Showing") }}</span> <strong>{{ $deceasedMembers->firstItem() }}</strong> <span data-i18n="to">{{ __("to") }}</span> <strong>{{ $deceasedMembers->lastItem() }}</strong> <span data-i18n="of">{{ __("of") }}</span> <strong>{{ $deceasedMembers->total() }}</strong> <span data-i18n="deceased_members">{{ __("deceased members") }}</span>
+                <div class="mm-foot">
+                    <div class="mm-foot-info">
+                        <span data-i18n="showing">{{ __("Showing") }}</span>
+                        <strong>{{ $deceasedMembers->firstItem() }}</strong>
+                        <span data-i18n="to">{{ __("to") }}</span>
+                        <strong>{{ $deceasedMembers->lastItem() }}</strong>
+                        <span data-i18n="of">{{ __("of") }}</span>
+                        <strong>{{ $deceasedMembers->total() }}</strong>
+                        <span data-i18n="deceased_members">{{ __("deceased members") }}</span>
+                    </div>
+                    {{ $deceasedMembers->links('pagination::bootstrap-5') }}
                 </div>
-                {{ $deceasedMembers->links('pagination::bootstrap-5') }}
-            </div>
             @endif
-        </div>
+        </section>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // ⭐ Helper: Get translated string
+    /* =============================================
+       i18n helper
+    ============================================= */
     function t(key, fallback) {
         if (typeof window.__t === 'function') {
             return window.__t(key, fallback);
@@ -1229,9 +1230,47 @@
         return fallback || key;
     }
 
-    // =============================================
-    // DELETE ACTIVE MEMBER
-    // =============================================
+    /* =============================================
+       CLIENT-SIDE SEARCH (filters visible section)
+    ============================================= */
+    (function () {
+        const input = document.getElementById('mmSearch');
+        if (!input) return;
+
+        function applyFilter() {
+            const q = input.value.trim().toLowerCase();
+            const section = document.querySelector('.mm-section.is-active');
+            if (!section) return;
+
+            const rows = section.querySelectorAll('tbody tr[data-row]');
+            let visible = 0;
+
+            rows.forEach(function (tr) {
+                const name = (tr.dataset.memberName || '').toLowerCase();
+                const phone = (tr.dataset.memberPhone || '').toLowerCase();
+                const match = !q || name.includes(q) || phone.includes(q);
+                tr.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+
+            const noResults = section.querySelector('.mm-no-results');
+            if (noResults) noResults.hidden = visible > 0 || rows.length === 0;
+        }
+
+        input.addEventListener('input', applyFilter);
+
+        // Escape clears the search
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                input.value = '';
+                applyFilter();
+            }
+        });
+    })();
+
+    /* =============================================
+       DELETE ACTIVE MEMBER
+    ============================================= */
     function confirmDelete(memberId, memberName) {
         Swal.fire({
             title: t('delete_member', 'Delete Member?'),
@@ -1257,10 +1296,10 @@
             }
         });
     }
-    
-    // =============================================
-    // DELETE DECEASED MEMBER (PERMANENT)
-    // =============================================
+
+    /* =============================================
+       DELETE DECEASED MEMBER (PERMANENT)
+    ============================================= */
     function confirmDeletePermanent(memberId, memberName) {
         Swal.fire({
             title: t('permanently_delete', 'Permanently Delete?'),
@@ -1286,10 +1325,10 @@
             }
         });
     }
-    
-    // =============================================
-    // RESTORE DECEASED MEMBER
-    // =============================================
+
+    /* =============================================
+       RESTORE DECEASED MEMBER
+    ============================================= */
     function confirmRestore(memberId, memberName) {
         Swal.fire({
             title: t('restore_member', 'Restore Member?'),
@@ -1311,7 +1350,7 @@
                     allowOutsideClick: false,
                     background: 'var(--card-bg)'
                 });
-                
+
                 fetch(`/members/${memberId}/restore`, {
                     method: 'PUT',
                     headers: {
@@ -1349,21 +1388,25 @@
             }
         });
     }
-    
-    // =============================================
-    // MARK AS DECEASED MODAL
-    // =============================================
+
+    /* =============================================
+       MARK AS DECEASED
+    ============================================= */
     function openDeceasedModal(memberId, memberName) {
         Swal.fire({
             title: t('mark_as_deceased', 'Mark as Deceased'),
             html: `
-                <div style="text-align: left;">
+                <div style="text-align:left;">
                     <p>${t('mark_deceased_confirm', 'Mark <strong>{memberName}</strong> as deceased?').replace('{memberName}', memberName)}</p>
                     <div class="mb-3">
-                        <label class="form-label" style="display: block; text-align: left; margin-bottom: 5px;">${t('date_of_death', 'Date of Death:')}</label>
-                        <input type="date" id="date_deceased_input" class="swal2-input" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #d1d5db;" max="${new Date().toISOString().split('T')[0]}" required>
+                        <label class="form-label" style="display:block;text-align:left;margin-bottom:5px;">
+                            ${t('date_of_death', 'Date of Death:')}
+                        </label>
+                        <input type="date" id="date_deceased_input" class="swal2-input"
+                               style="width:100%;padding:8px;border-radius:8px;border:1px solid #d1d5db;"
+                               max="${new Date().toISOString().split('T')[0]}" required>
                     </div>
-                    <small style="color: #6b7280;">${t('deceased_move_note', 'This member will be moved to the Deceased Members section.')}</small>
+                    <small style="color:#6b7280;">${t('deceased_move_note', 'This member will be moved to the Deceased Members section.')}</small>
                 </div>
             `,
             icon: 'info',
@@ -1392,7 +1435,7 @@
                     allowOutsideClick: false,
                     background: 'var(--card-bg)'
                 });
-                
+
                 fetch(`/members/${memberId}/deceased`, {
                     method: 'PUT',
                     headers: {
@@ -1432,8 +1475,10 @@
         });
     }
 
-    // ⭐ LISTEN FOR LANGUAGE CHANGES
-    window.addEventListener('localeChanged', function(e) {
+    /* =============================================
+       LANGUAGE CHANGE
+    ============================================= */
+    window.addEventListener('localeChanged', function (e) {
         if (typeof window.applyTranslations === 'function') {
             window.applyTranslations();
         }

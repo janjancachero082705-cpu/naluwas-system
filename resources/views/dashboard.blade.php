@@ -6,625 +6,1281 @@
 
 @section('content')
 <style>
-    /* Dashboard Styles */
-    :root {
-        --dash-primary: #4F46E5;
-        --dash-success: #10B981;
-        --dash-danger: #EF4444;
-        --dash-warning: #F59E0B;
-        --dash-purple: #8B5CF6;
-        --shadow-glow: 0 8px 32px rgba(79, 70, 229, 0.3);
-        --shadow-card: 0 1px 2px rgba(16,24,39,0.04), 0 1px 3px rgba(16,24,39,0.05);
-        --shadow-card-hover: 0 16px 32px -12px rgba(16,24,39,0.14);
+    /* ==========================================================
+       DASHBOARD — 2025 REDESIGN
+       Flat · bordered · airy · Inter
+    ========================================================== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    .dash {
+        --dash-card: var(--card-bg, #ffffff);
+        --dash-border: var(--border-color, #e8eaf0);
+        --dash-text: var(--text-primary, #0f172a);
+        --dash-muted: var(--text-muted, #7c8494);
+        --dash-soft: var(--bg-tertiary, #f5f6fa);
+
+        --dash-primary: #4f46e5;
+        --dash-primary-soft: rgba(79, 70, 229, .08);
+
+        --dash-green: #059669;
+        --dash-green-soft: rgba(5, 150, 105, .10);
+        --dash-rose: #e11d48;
+        --dash-rose-soft: rgba(225, 29, 72, .09);
+        --dash-amber: #d97706;
+        --dash-amber-soft: rgba(217, 119, 6, .10);
+        --dash-violet: #7c3aed;
+        --dash-violet-soft: rgba(124, 58, 237, .10);
+
+        --dash-shadow-sm: 0 1px 2px rgba(15, 23, 42, .04);
+        --dash-shadow-md: 0 10px 28px -14px rgba(15, 23, 42, .22);
+        --dash-radius: 16px;
+
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: var(--dash-text);
+        padding-bottom: 2rem;
+        max-width: 1600px;
+        margin: 0 auto;
     }
 
-    .dash-hero {
-        background: linear-gradient(135deg, #4F46E5, #7C3AED);
-        border-radius: 20px;
-        padding: 1.8rem 2.5rem;
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
-        box-shadow: var(--shadow-glow);
+    [data-theme="dark"] .dash {
+        --dash-primary: #6366f1;
+        --dash-primary-soft: rgba(99, 102, 241, .16);
+        --dash-green: #34d399;
+        --dash-green-soft: rgba(16, 185, 129, .14);
+        --dash-rose: #fb7185;
+        --dash-rose-soft: rgba(244, 63, 94, .14);
+        --dash-amber: #fbbf24;
+        --dash-amber-soft: rgba(245, 158, 11, .14);
+        --dash-violet: #a78bfa;
+        --dash-violet-soft: rgba(139, 92, 246, .16);
+        --dash-shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+        --dash-shadow-md: 0 14px 30px -16px rgba(0, 0, 0, .75);
     }
-    .dash-hero::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -20%;
-        width: 60%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-        animation: heroPulse 6s ease-in-out infinite;
-    }
-    @keyframes heroPulse {
-        0%, 100% { transform: scale(1); opacity: 0.5; }
-        50% { transform: scale(1.1); opacity: 1; }
-    }
-    .dash-hero .hero-content {
-        position: relative;
-        z-index: 1;
+
+    .dash * { box-sizing: border-box; }
+
+    /* ---------------- HEADER ---------------- */
+    .dash-head {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+        gap: 1.25rem;
         flex-wrap: wrap;
-        gap: 1rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid var(--dash-border);
+        margin-bottom: 1.5rem;
     }
-    .dash-hero .hero-left { display: flex; flex-direction: column; gap: 0.25rem; }
-    .dash-hero h1 { font-size: 1.6rem; font-weight: 800; color: white; margin: 0; font-family: 'Inter', sans-serif; }
-    .dash-hero h1 i { margin-right: 12px; opacity: 0.8; }
-    .dash-hero .hero-sub { color: rgba(255,255,255,0.8); font-size: 0.85rem; margin: 0; }
-    .dash-hero .hero-stats {
-        display: flex;
-        gap: 2rem;
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(10px);
-        padding: 0.6rem 1.5rem;
-        border-radius: 16px;
-        border: 1px solid rgba(255,255,255,0.15);
-    }
-    .dash-hero .hero-stat-item { text-align: center; }
-    .dash-hero .hero-stat-item .num { font-size: 1.1rem; font-weight: 700; color: white; display: block; }
-    .dash-hero .hero-stat-item .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,0.6); }
-    .btn-hero {
-        padding: 0.5rem 1.5rem;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 0.75rem;
-        transition: all 0.3s ease;
+
+    .dash-eyebrow {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        border: none;
-        text-decoration: none;
+        gap: .45rem;
+        font-size: .66rem;
+        font-weight: 700;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+        color: var(--dash-muted);
+        margin-bottom: .55rem;
     }
-    .btn-hero-white { background: white; color: #4F46E5; }
-    .btn-hero-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); color: #4F46E5; text-decoration: none; }
 
-    .stats-grid-premium {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.2rem;
-        margin-bottom: 2rem;
+    .dash-eyebrow .dash-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--dash-green);
+        box-shadow: 0 0 0 3px var(--dash-green-soft);
+        animation: dashPulse 2s infinite;
     }
-    .stat-card-premium {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.2rem 1.5rem;
-        transition: all 0.3s ease;
+
+    @keyframes dashPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: .5; transform: scale(.75); }
+    }
+
+    .dash-title {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        margin: 0;
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -.035em;
+        line-height: 1.15;
+    }
+
+    .dash-title i { font-size: 1.2rem; color: var(--dash-primary); }
+
+    .dash-sub {
+        margin: .5rem 0 0;
+        font-size: .84rem;
+        color: var(--dash-muted);
+        max-width: 62ch;
+        line-height: 1.5;
+    }
+
+    .dash-head-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .hero-stats {
+        display: inline-flex;
+        align-items: stretch;
+        background: var(--dash-card);
+        border: 1px solid var(--dash-border);
+        border-radius: 14px;
+        padding: .35rem .35rem;
+        box-shadow: var(--dash-shadow-sm);
+    }
+
+    .hero-stat {
+        padding: .5rem 1rem;
+        text-align: center;
         position: relative;
-        overflow: hidden;
-        box-shadow: var(--shadow-card);
+        min-width: 78px;
     }
-    .stat-card-premium::before {
+
+    .hero-stat + .hero-stat::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(135deg, #4F46E5, #7C3AED);
+        left: 0; top: 22%; bottom: 22%;
+        width: 1px;
+        background: var(--dash-border);
     }
-    .stat-card-premium:hover { transform: translateY(-4px); box-shadow: var(--shadow-card-hover); border-color: transparent; }
-    .stat-card-premium .stat-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
-    .stat-card-premium .stat-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); font-weight: 700; margin: 0; }
-    .stat-card-premium .stat-icon-wrap { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: white; flex-shrink: 0; }
-    .stat-card-premium .stat-value { font-size: 1.8rem; font-weight: 800; color: var(--text-primary); font-family: 'Inter', sans-serif; letter-spacing: -0.5px; line-height: 1.2; }
-    .stat-card-premium .stat-change { font-size: 0.65rem; color: var(--text-muted); display: inline-flex; align-items: center; gap: 4px; margin-top: 2px; padding: 2px 8px; border-radius: 20px; background: var(--bg-tertiary); }
-    .stat-card-premium .stat-change.positive { color: #10B981; }
-    .stat-card-premium .stat-change.negative { color: #EF4444; }
-    .stat-card-premium.green::before { background: linear-gradient(135deg, #10B981, #34D399); }
-    .stat-card-premium.blue::before { background: linear-gradient(135deg, #4F46E5, #7C3AED); }
-    .stat-card-premium.purple::before { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
-    .stat-card-premium.orange::before { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
-    .stat-card-premium.green .stat-icon-wrap { background: linear-gradient(135deg, #10B981, #34D399); }
-    .stat-card-premium.blue .stat-icon-wrap { background: linear-gradient(135deg, #4F46E5, #7C3AED); }
-    .stat-card-premium.purple .stat-icon-wrap { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
-    .stat-card-premium.orange .stat-icon-wrap { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
 
-    .chart-modern-dash {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.2rem 1.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: var(--shadow-card);
+    .hero-stat .num {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--dash-text);
+        letter-spacing: -.03em;
+        line-height: 1;
     }
-    .chart-modern-dash .chart-header-dash {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-    .chart-modern-dash .chart-header-dash h5 {
-        font-size: 0.95rem;
+
+    .hero-stat .lbl {
+        font-size: .58rem;
         font-weight: 700;
-        margin: 0;
-        color: var(--text-primary);
-        font-family: 'Inter', sans-serif;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--dash-muted);
+        margin-top: .3rem;
     }
-    .chart-modern-dash .chart-header-dash h5 i { color: #4F46E5; margin-right: 8px; }
-    .chart-modern-dash .chart-body-dash { height: 240px; position: relative; }
 
-    .dash-grid-2 {
+    /* ---------------- BUTTONS ---------------- */
+    .dash-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .6rem 1.1rem;
+        border-radius: 11px;
+        font-size: .79rem;
+        font-weight: 600;
+        font-family: inherit;
+        line-height: 1.2;
+        text-decoration: none;
+        border: 1px solid transparent;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .dash-btn-primary {
+        background: var(--dash-primary);
+        color: #fff;
+        box-shadow: 0 8px 18px -10px rgba(79, 70, 229, .9);
+    }
+    .dash-btn-primary:hover {
+        background: #4338ca;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 12px 22px -10px rgba(79, 70, 229, .9);
+    }
+
+    .dash-btn-ghost {
+        background: var(--dash-card);
+        color: var(--dash-text);
+        border-color: var(--dash-border);
+    }
+    .dash-btn-ghost:hover {
+        background: var(--dash-soft);
+        color: var(--dash-text);
+        transform: translateY(-1px);
+    }
+
+    /* ---------------- STATS GRID ---------------- */
+    .stats-dash-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-dash-card {
+        display: flex;
+        align-items: center;
+        gap: .9rem;
+        padding: 1.05rem 1.15rem;
+        background: var(--dash-card);
+        border: 1px solid var(--dash-border);
+        border-radius: var(--dash-radius);
+        transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+        position: relative;
+    }
+
+    .stat-dash-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--dash-shadow-md);
+        border-color: transparent;
+    }
+
+    .stat-dash-icon {
+        width: 44px; height: 44px;
+        border-radius: 13px;
+        display: grid;
+        place-items: center;
+        font-size: 1rem;
+        flex: 0 0 auto;
+    }
+
+    .stat-dash-icon.green  { background: var(--dash-green-soft);   color: var(--dash-green); }
+    .stat-dash-icon.violet { background: var(--dash-violet-soft);  color: var(--dash-violet); }
+    .stat-dash-icon.blue   { background: var(--dash-primary-soft); color: var(--dash-primary); }
+    .stat-dash-icon.amber  { background: var(--dash-amber-soft);   color: var(--dash-amber); }
+
+    .stat-dash-body { min-width: 0; flex: 1; }
+
+    .stat-dash-label {
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--dash-muted);
+        margin: 0 0 .2rem;
+        display: block;
+    }
+
+    .stat-dash-value {
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -.03em;
+        line-height: 1.15;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .stat-dash-meta {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        margin-top: .3rem;
+        padding: .12rem .5rem;
+        border-radius: 20px;
+        font-size: .64rem;
+        font-weight: 600;
+        background: var(--dash-soft);
+        color: var(--dash-muted);
+    }
+
+    .stat-dash-meta.positive { color: var(--dash-green); background: var(--dash-green-soft); }
+    .stat-dash-meta.negative { color: var(--dash-rose);  background: var(--dash-rose-soft); }
+
+    /* ---------------- CARD ---------------- */
+    .dash-card {
+        background: var(--dash-card);
+        border: 1px solid var(--dash-border);
+        border-radius: var(--dash-radius);
+        box-shadow: var(--dash-shadow-sm);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        transition: box-shadow .22s ease, border-color .22s ease;
+    }
+
+    .dash-card:hover {
+        box-shadow: var(--dash-shadow-md);
+        border-color: transparent;
+    }
+
+    .dash-card:last-child { margin-bottom: 0; }
+
+    .dash-card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding: .9rem 1.15rem;
+        border-bottom: 1px solid var(--dash-border);
+        background: var(--dash-soft);
+    }
+
+    .dash-card-head-left {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        min-width: 0;
+    }
+
+    .dash-card-head-icon {
+        width: 32px; height: 32px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        font-size: .75rem;
+        background: var(--dash-primary-soft);
+        color: var(--dash-primary);
+        flex: 0 0 auto;
+    }
+
+    .dash-card-head-icon.rose  { background: var(--dash-rose-soft);   color: var(--dash-rose); }
+    .dash-card-head-icon.amber { background: var(--dash-amber-soft);  color: var(--dash-amber); }
+    .dash-card-head-icon.violet{ background: var(--dash-violet-soft); color: var(--dash-violet); }
+
+    .dash-card-head-title {
+        font-size: .9rem;
+        font-weight: 700;
+        letter-spacing: -.01em;
+        line-height: 1.2;
+        margin: 0;
+    }
+
+    .dash-card-head-sub {
+        font-size: .7rem;
+        color: var(--dash-muted);
+        margin-top: .1rem;
+    }
+
+    .dash-card-head-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        padding: .22rem .6rem;
+        border-radius: 20px;
+        border: 1px solid var(--dash-border);
+        background: var(--dash-card);
+        font-size: .64rem;
+        font-weight: 600;
+        color: var(--dash-muted);
+        white-space: nowrap;
+    }
+
+    .dash-card-head-tag i { font-size: .56rem; color: var(--dash-primary); }
+
+    .dash-card-link {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        font-size: .68rem;
+        font-weight: 600;
+        color: var(--dash-muted);
+        text-decoration: none;
+        transition: color .18s ease;
+    }
+
+    .dash-card-link:hover { color: var(--dash-primary); text-decoration: none; }
+
+    .dash-card-body { padding: 1.15rem; }
+
+    /* ==========================================================
+       CHART — CONSTRAINED WRAPPER
+       The wrapper has a fixed height and clips overflow.
+       The canvas is absolutely positioned to fill it exactly.
+       This prevents the canvas from expanding the page.
+    ========================================================== */
+    .chart-dash-body {
+        position: relative;
+        height: 300px;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .chart-dash-body > canvas {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-height: 300px !important;
+        display: block !important;
+    }
+
+    /* ---------------- BOTTOM GRID ---------------- */
+    .dash-bottom-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1.5rem;
-        margin-bottom: 1.5rem;
+        align-items: start;
     }
 
-    .card-modern-dash {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        overflow: hidden;
-        margin-bottom: 1.5rem;
-        box-shadow: var(--shadow-card);
-        transition: all 0.3s ease;
-    }
-    .card-modern-dash:hover { box-shadow: var(--shadow-card-hover); }
-    .card-modern-dash .card-header-dash {
-        padding: 0.8rem 1.5rem;
-        border-bottom: 1px solid var(--border-color);
-        background: var(--bg-tertiary);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .card-modern-dash .card-header-dash h6 {
-        margin: 0;
-        font-weight: 700;
-        font-size: 0.8rem;
-        color: var(--text-primary);
-        font-family: 'Inter', sans-serif;
-    }
-    .card-modern-dash .card-header-dash h6 i { margin-right: 8px; color: #4F46E5; }
-    .card-modern-dash .card-body-dash { padding: 1.2rem 1.5rem; }
+    .dash-bottom-col { display: flex; flex-direction: column; gap: 1.5rem; }
 
-    .tx-item-modern {
+    /* ---------------- TRANSACTIONS ---------------- */
+    .tx-item {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 0.7rem 0;
-        border-bottom: 1px solid var(--border-color);
-        transition: all 0.2s ease;
+        gap: .8rem;
+        padding: .75rem 0;
+        border-bottom: 1px solid var(--dash-border);
+        transition: padding-left .18s ease;
     }
-    .tx-item-modern:last-child { border-bottom: none; padding-bottom: 0; }
-    .tx-item-modern:hover { padding-left: 4px; }
-    .tx-icon-modern {
-        width: 38px;
-        height: 38px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.85rem;
-        flex-shrink: 0;
-    }
-    .tx-icon-modern.income { background: rgba(16, 185, 129, 0.12); color: #10B981; }
-    .tx-icon-modern.expense { background: rgba(239, 68, 68, 0.12); color: #EF4444; }
-    .tx-content-modern { flex: 1; min-width: 0; }
-    .tx-content-modern .tx-name { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); }
-    .tx-content-modern .tx-meta { font-size: 0.65rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px; margin-top: 1px; }
-    .tx-content-modern .tx-meta .tx-badge { font-size: 0.55rem; padding: 1px 8px; border-radius: 20px; font-weight: 600; }
-    .tx-content-modern .tx-meta .tx-badge.income { background: rgba(16, 185, 129, 0.1); color: #10B981; }
-    .tx-content-modern .tx-meta .tx-badge.expense { background: rgba(239, 68, 68, 0.1); color: #EF4444; }
-    .tx-amount-modern { font-size: 0.85rem; font-weight: 700; text-align: right; flex-shrink: 0; }
-    .tx-amount-modern.positive { color: #10B981; }
-    .tx-amount-modern.negative { color: #EF4444; }
 
-    .bd-item-modern {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 0.6rem 0;
-        border-bottom: 1px solid var(--border-color);
-        transition: all 0.2s ease;
-    }
-    .bd-item-modern:last-child { border-bottom: none; padding-bottom: 0; }
-    .bd-date-modern {
-        min-width: 40px;
-        text-align: center;
-        background: var(--bg-tertiary);
-        border: 1px solid var(--border-color);
-        border-radius: 10px;
-        padding: 4px 6px;
-        flex-shrink: 0;
-    }
-    .bd-date-modern .day { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); line-height: 1; }
-    .bd-date-modern .month { font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
-    .bd-info-modern { flex: 1; min-width: 0; }
-    .bd-info-modern .name { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); }
-    .bd-info-modern .meta { font-size: 0.65rem; color: var(--text-muted); }
-    .bd-info-modern .meta .today-badge { font-size: 0.55rem; padding: 1px 8px; border-radius: 20px; background: rgba(245, 158, 11, 0.15); color: #F59E0B; font-weight: 600; }
+    .tx-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .tx-item:hover { padding-left: 4px; }
 
-    .choir-card-modern {
-        background: var(--bg-tertiary);
-        border-radius: 12px;
-        padding: 1.2rem;
-        border: 1px solid var(--border-color);
-        text-align: center;
+    .tx-icon {
+        width: 38px; height: 38px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        font-size: .78rem;
+        flex: 0 0 auto;
     }
-    .choir-card-modern .choir-icon {
-        width: 56px;
-        height: 56px;
-        border-radius: 16px;
-        background: linear-gradient(135deg, #8B5CF6, #A78BFA);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 0.8rem;
-        color: white;
-        font-size: 1.4rem;
-        box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
-    }
-    .choir-card-modern .choir-group { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
-    .choir-card-modern .choir-meta { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
-    .choir-card-modern .choir-chips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin: 0.8rem 0; }
-    .choir-card-modern .choir-chips .chip { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 2px 10px; font-size: 0.65rem; color: var(--text-secondary); }
-    .btn-choir {
-        background: linear-gradient(135deg, #8B5CF6, #A78BFA);
-        color: white;
-        border: none;
-        padding: 0.5rem 1.5rem;
-        border-radius: 10px;
+
+    .tx-icon.income  { background: var(--dash-green-soft); color: var(--dash-green); }
+    .tx-icon.expense { background: var(--dash-rose-soft);  color: var(--dash-rose); }
+
+    .tx-body { flex: 1; min-width: 0; }
+
+    .tx-name {
+        font-size: .82rem;
         font-weight: 600;
-        font-size: 0.75rem;
-        transition: all 0.3s ease;
+        color: var(--dash-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .tx-meta {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        margin-top: .2rem;
+        font-size: .66rem;
+        color: var(--dash-muted);
+    }
+
+    .tx-badge {
+        padding: .1rem .5rem;
+        border-radius: 20px;
+        font-size: .58rem;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+    }
+
+    .tx-badge.income  { background: var(--dash-green-soft); color: var(--dash-green); }
+    .tx-badge.expense { background: var(--dash-rose-soft);  color: var(--dash-rose); }
+
+    .tx-amount {
+        font-size: .84rem;
+        font-weight: 700;
+        text-align: right;
+        flex: 0 0 auto;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -.01em;
+    }
+
+    .tx-amount.positive { color: var(--dash-green); }
+    .tx-amount.negative { color: var(--dash-rose); }
+
+    /* ---------------- BIRTHDAYS ---------------- */
+    .bd-item {
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+        padding: .65rem 0;
+        border-bottom: 1px solid var(--dash-border);
+        transition: padding-left .18s ease;
+    }
+
+    .bd-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .bd-item:hover { padding-left: 4px; }
+
+    .bd-date {
+        min-width: 46px;
+        text-align: center;
+        padding: .35rem .5rem;
+        border-radius: 11px;
+        background: var(--dash-amber-soft);
+        color: var(--dash-amber);
+        flex: 0 0 auto;
+    }
+
+    .bd-date .day {
+        font-size: .95rem;
+        font-weight: 800;
+        letter-spacing: -.02em;
+        line-height: 1;
+    }
+
+    .bd-date .month {
+        font-size: .55rem;
+        font-weight: 800;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        margin-top: .15rem;
+        opacity: .85;
+    }
+
+    .bd-body { flex: 1; min-width: 0; }
+
+    .bd-name {
+        font-size: .82rem;
+        font-weight: 600;
+        color: var(--dash-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .bd-meta {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        margin-top: .15rem;
+        font-size: .66rem;
+        color: var(--dash-muted);
+        flex-wrap: wrap;
+    }
+
+    .bd-today {
+        padding: .1rem .5rem;
+        border-radius: 20px;
+        font-size: .58rem;
+        font-weight: 800;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        background: var(--dash-amber-soft);
+        color: var(--dash-amber);
+    }
+
+    .bd-arrow {
+        display: grid;
+        place-items: center;
+        width: 26px; height: 26px;
+        border-radius: 8px;
+        color: var(--dash-muted);
+        font-size: .62rem;
+        text-decoration: none;
+        transition: background .18s ease, color .18s ease;
+    }
+
+    .bd-arrow:hover { background: var(--dash-soft); color: var(--dash-primary); }
+
+    /* ---------------- CHOIR ---------------- */
+    .choir-panel {
+        background: var(--dash-violet-soft);
+        border: 1px solid transparent;
+        border-radius: 14px;
+        padding: 1.25rem 1.15rem;
+        text-align: center;
+    }
+
+    .choir-icon {
+        width: 56px; height: 56px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        margin: 0 auto .85rem;
+        background: var(--dash-violet);
+        color: #fff;
+        font-size: 1.35rem;
+        box-shadow: 0 8px 22px -8px rgba(124, 58, 237, .55);
+    }
+
+    .choir-group {
+        font-size: 1.1rem;
+        font-weight: 800;
+        letter-spacing: -.02em;
+        line-height: 1.2;
+    }
+
+    .choir-meta {
+        font-size: .74rem;
+        color: var(--dash-muted);
+        margin-top: .35rem;
+        font-weight: 500;
+    }
+
+    .choir-meta i { color: var(--dash-violet); margin-right: .25rem; }
+
+    .choir-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .35rem;
+        justify-content: center;
+        margin: 1rem 0;
+    }
+
+    .choir-chip {
+        background: var(--dash-card);
+        border: 1px solid var(--dash-border);
+        border-radius: 20px;
+        padding: .22rem .65rem;
+        font-size: .66rem;
+        font-weight: 600;
+        color: var(--dash-muted);
+        transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+    }
+
+    .choir-chip:hover {
+        background: var(--dash-violet);
+        color: #fff;
+        border-color: var(--dash-violet);
+        transform: translateY(-1px);
+    }
+
+    .btn-choir-dash {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        text-decoration: none;
-        width: 100%;
         justify-content: center;
+        gap: .45rem;
+        width: 100%;
+        padding: .65rem 1.25rem;
+        border-radius: 11px;
+        background: var(--dash-violet);
+        color: #fff;
+        font-size: .78rem;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
+        box-shadow: 0 8px 18px -10px rgba(124, 58, 237, .85);
     }
-    .btn-choir:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3); color: white; text-decoration: none; }
 
-    .coming-grid-modern {
+    .btn-choir-dash:hover {
+        background: #6d28d9;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 12px 22px -10px rgba(124, 58, 237, .9);
+        text-decoration: none;
+    }
+
+    .coming-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 6px;
-        margin-top: 0.8rem;
-        padding-top: 0.8rem;
-        border-top: 1px solid var(--border-color);
+        gap: .5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(124, 58, 237, .18);
     }
-    .coming-item-modern {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 10px;
-        padding: 0.6rem 0.4rem;
+
+    .coming-item {
+        background: var(--dash-card);
+        border: 1px solid var(--dash-border);
+        border-radius: 11px;
+        padding: .55rem .4rem;
         text-align: center;
-        transition: all 0.2s ease;
+        transition: transform .2s ease, box-shadow .2s ease;
     }
-    .coming-item-modern:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
-    .coming-item-modern .date { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
-    .coming-item-modern .name { font-size: 0.7rem; font-weight: 700; color: #8B5CF6; margin-top: 2px; }
-    .coming-item-modern .count { font-size: 0.55rem; color: var(--text-muted); }
 
-    .empty-state-modern { text-align: center; padding: 1.5rem 0; color: var(--text-muted); }
-    .empty-state-modern i { font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.3; }
-    .empty-state-modern p { font-size: 0.75rem; margin-bottom: 0.5rem; }
-    .btn-ghost-sm { font-size: 0.65rem; padding: 4px 14px; border-radius: 8px; border: 1px solid var(--border-color); color: var(--text-muted); text-decoration: none; transition: all 0.15s; display: inline-block; }
-    .btn-ghost-sm:hover { background: linear-gradient(135deg, #4F46E5, #7C3AED); border-color: #4F46E5; color: white; text-decoration: none; }
+    .coming-item:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--dash-shadow-sm);
+    }
 
-    .badge-modern { font-size: 0.6rem; font-weight: 600; padding: 0.2rem 0.8rem; border-radius: 20px; background: var(--bg-tertiary); color: var(--text-muted); border: 1px solid var(--border-color); }
+    .coming-date {
+        font-size: .58rem;
+        font-weight: 800;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--dash-muted);
+    }
 
-    @media (max-width: 1200px) { .stats-grid-premium { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 992px) { .dash-grid-2 { grid-template-columns: 1fr; } .dash-hero .hero-content { flex-direction: column; text-align: center; } .dash-hero .hero-left { align-items: center; } .dash-hero .hero-stats { justify-content: center; width: 100%; } .dash-hero .hero-actions { width: 100%; justify-content: center; } }
-    @media (max-width: 768px) { .dash-hero { padding: 1.2rem 1.5rem; } .dash-hero h1 { font-size: 1.2rem; } .dash-hero .hero-stats { gap: 1rem; padding: 0.5rem 1rem; } .dash-hero .hero-stat-item .num { font-size: 0.9rem; } .stats-grid-premium { grid-template-columns: 1fr 1fr; gap: 0.8rem; } .stat-card-premium { padding: 1rem; } .stat-card-premium .stat-value { font-size: 1.3rem; } .stat-card-premium .stat-icon-wrap { width: 36px; height: 36px; font-size: 0.9rem; } .coming-grid-modern { grid-template-columns: repeat(2, 1fr); } .card-modern-dash .card-body-dash { padding: 1rem; } .chart-modern-dash .chart-body-dash { height: 180px; } }
-    @media (max-width: 480px) { .stats-grid-premium { grid-template-columns: 1fr; } }
+    .coming-name {
+        font-size: .72rem;
+        font-weight: 700;
+        color: var(--dash-violet);
+        margin-top: .2rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .coming-count {
+        font-size: .6rem;
+        color: var(--dash-muted);
+        margin-top: .15rem;
+    }
+
+    /* ---------------- EMPTY ---------------- */
+    .empty-dash {
+        text-align: center;
+        padding: 2rem 1rem;
+        color: var(--dash-muted);
+    }
+
+    .empty-dash-icon {
+        width: 56px; height: 56px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        margin: 0 auto .75rem;
+        background: var(--dash-soft);
+        color: var(--dash-muted);
+        font-size: 1.25rem;
+        opacity: .8;
+    }
+
+    .empty-dash p {
+        font-size: .8rem;
+        margin: 0 0 .8rem;
+        font-weight: 500;
+    }
+
+    .btn-empty-dash {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .4rem .95rem;
+        border-radius: 10px;
+        background: var(--dash-card);
+        border: 1px solid var(--dash-border);
+        color: var(--dash-text);
+        font-size: .72rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+    }
+
+    .btn-empty-dash:hover {
+        background: var(--dash-primary);
+        color: #fff;
+        border-color: var(--dash-primary);
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+
+    /* ---------------- TOAST ---------------- */
+    .dashboard-toast-modern {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        padding: .85rem 1.15rem;
+        background: var(--dash-card);
+        border: 1px solid var(--dash-border);
+        border-left: 4px solid var(--dash-primary);
+        border-radius: 14px;
+        box-shadow: 0 20px 48px -12px rgba(15, 27, 45, .25);
+        z-index: 9999;
+        transform: translateY(120%);
+        opacity: 0;
+        transition: all .4s cubic-bezier(.22, 1, .36, 1);
+        min-width: 300px;
+        max-width: 400px;
+    }
+
+    .dashboard-toast-modern.show {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .dashboard-toast-modern .toast-icon { font-size: 1.35rem; flex-shrink: 0; }
+    .dashboard-toast-modern .toast-content { flex: 1; min-width: 0; }
+
+    .dashboard-toast-modern .toast-title {
+        font-size: .8rem;
+        font-weight: 700;
+        color: var(--dash-text);
+    }
+
+    .dashboard-toast-modern .toast-message {
+        font-size: .72rem;
+        color: var(--dash-muted);
+        margin-top: .1rem;
+    }
+
+    .dashboard-toast-modern .toast-close {
+        background: none;
+        border: none;
+        color: var(--dash-muted);
+        cursor: pointer;
+        padding: 4px;
+        font-size: .75rem;
+        transition: color .2s ease, transform .2s ease;
+    }
+
+    .dashboard-toast-modern .toast-close:hover {
+        color: var(--dash-text);
+        transform: rotate(90deg);
+    }
+
+    /* ---------------- UPDATED PULSE ---------------- */
+    .updated { animation: updatedPulse .8s ease; }
+
+    @keyframes updatedPulse {
+        0%   { transform: scale(1); }
+        40%  { transform: scale(1.1); background: rgba(16, 185, 129, .15); }
+        100% { transform: scale(1); }
+    }
+
+    /* ---------------- RESPONSIVE ---------------- */
+    @media (max-width: 1200px) {
+        .stats-dash-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 992px) {
+        .dash-head { flex-direction: column; align-items: flex-start; }
+        .dash-bottom-grid { grid-template-columns: 1fr; }
+        .hero-stats { width: 100%; justify-content: space-around; }
+        .hero-stat { flex: 1; min-width: 0; }
+    }
+
+    @media (max-width: 768px) {
+        .dash-title { font-size: 1.3rem; }
+        .dash-sub { font-size: .78rem; }
+
+        .stats-dash-grid { grid-template-columns: 1fr 1fr; gap: .8rem; }
+        .stat-dash-card { padding: .9rem; }
+        .stat-dash-value { font-size: 1.15rem; }
+        .stat-dash-icon { width: 38px; height: 38px; font-size: .85rem; }
+
+        .dash-head-right { width: 100%; }
+        .dash-head-right .dash-btn { flex: 1; justify-content: center; }
+
+        .chart-dash-body { height: 240px; }
+        .chart-dash-body > canvas { max-height: 240px !important; }
+
+        .coming-grid { grid-template-columns: repeat(2, 1fr); }
+        .dashboard-toast-modern { right: 16px; left: 16px; bottom: 16px; min-width: auto; }
+    }
+
+    @media (max-width: 480px) {
+        .stats-dash-grid { grid-template-columns: 1fr; }
+        .hero-stats { flex-direction: column; padding: .35rem; }
+        .hero-stat + .hero-stat::before { display: none; }
+        .hero-stat {
+            border-top: 1px solid var(--dash-border);
+            padding: .55rem .35rem;
+        }
+        .hero-stat:first-child { border-top: none; }
+
+        .chart-dash-body { height: 200px; }
+        .chart-dash-body > canvas { max-height: 200px !important; }
+    }
 </style>
 
-<div class="container-fluid px-0">
+<div class="dash container-fluid px-0">
 
-    <!-- ===== HERO SECTION ===== -->
-    <div class="dash-hero">
-        <div class="hero-content">
-            <div class="hero-left">
-                <h1><i class="fas fa-church"></i> <span data-i18n="Dashboard">{{ __("Dashboard") }}</span></h1>
-                <p class="hero-sub">
-                    <i class="fas fa-circle" style="color: #34D399; font-size: 0.4rem; vertical-align: middle;"></i>
-                    <span data-i18n="welcome_back">{{ __("Welcome back! Here's your church overview") }}</span>
-                </p>
+    {{-- ============================================
+         HEADER
+    ============================================ --}}
+    <header class="dash-head">
+        <div>
+            <div class="dash-eyebrow">
+                <span class="dash-dot"></span>
+                <span data-i18n="live">Live Dashboard</span>
             </div>
+            <h1 class="dash-title">
+                <i class="fas fa-church"></i>
+                <span data-i18n="Dashboard">{{ __("Dashboard") }}</span>
+            </h1>
+            <p class="dash-sub" data-i18n="welcome_back">
+                {{ __("Welcome back! Here's your church overview") }}
+            </p>
+        </div>
+
+        <div class="dash-head-right">
             <div class="hero-stats">
-                <div class="hero-stat-item">
-                    <span class="num">{{ number_format($totalMembers ?? 0) }}</span>
-                    <span class="label" data-i18n="members">{{ __("Members") }}</span>
+                <div class="hero-stat">
+                    <div class="num">{{ number_format($totalMembers ?? 0) }}</div>
+                    <div class="lbl" data-i18n="members">{{ __("Members") }}</div>
                 </div>
-                <div class="hero-stat-item">
-                    <span class="num">{{ number_format($choirMembers ?? 0) }}</span>
-                    <span class="label" data-i18n="choir">{{ __("Choir") }}</span>
+                <div class="hero-stat">
+                    <div class="num">{{ number_format($choirMembers ?? 0) }}</div>
+                    <div class="lbl" data-i18n="choir">{{ __("Choir") }}</div>
                 </div>
-                <div class="hero-stat-item">
-                    <span class="num">{{ number_format($todayAttendance ?? 0) }}</span>
-                    <span class="label" data-i18n="today">{{ __("Today") }}</span>
+                <div class="hero-stat">
+                    <div class="num">{{ number_format($todayAttendance ?? 0) }}</div>
+                    <div class="lbl" data-i18n="today">{{ __("Today") }}</div>
                 </div>
             </div>
-            <div class="hero-actions">
-                <a href="{{ route('reports.analytics') }}" class="btn-hero btn-hero-white">
-                    <i class="fas fa-chart-line"></i> <span data-i18n="analytics">{{ __("Analytics") }}</span>
-                </a>
-            </div>
-        </div>
-    </div>
 
-    <!-- ===== STAT CARDS ===== -->
-    <div class="stats-grid-premium">
-        <div class="stat-card-premium green">
-            <div class="stat-top">
-                <span class="stat-label" data-i18n="total_members">{{ __("Total Members") }}</span>
-                <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
-            </div>
-            <div class="stat-value" id="stat-total-members">{{ number_format($totalMembers ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="active_members">{{ __("Active members") }}</span></div>
+            <a href="{{ route('reports.analytics') }}" class="dash-btn dash-btn-primary">
+                <i class="fas fa-chart-line"></i>
+                <span data-i18n="analytics">{{ __("Analytics") }}</span>
+            </a>
         </div>
-        
-        <div class="stat-card-premium purple">
-            <div class="stat-top">
-                <span class="stat-label" data-i18n="choir_members">{{ __("Choir Members") }}</span>
-                <div class="stat-icon-wrap"><i class="fas fa-music"></i></div>
-            </div>
-            <div class="stat-value" id="stat-choir-members">{{ number_format($choirMembers ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="music_ministry">{{ __("Music ministry") }}</span></div>
-        </div>
-        
-        <div class="stat-card-premium blue">
-            <div class="stat-top">
-                <span class="stat-label" data-i18n="today_attendance">{{ __("Today's Attendance") }}</span>
-                <div class="stat-icon-wrap"><i class="fas fa-calendar-check"></i></div>
-            </div>
-            <div class="stat-value" id="stat-today-attendance">{{ number_format($todayAttendance ?? 0) }}</div>
-            @php
-                $rate = ($totalMembers ?? 1) > 0 ? (($todayAttendance ?? 0) / ($totalMembers ?? 1)) * 100 : 0;
-            @endphp
-            <div class="stat-change {{ $rate >= 50 ? 'positive' : 'negative' }}" id="stat-attendance-rate">
-                <i class="fas fa-{{ $rate >= 50 ? 'arrow-up' : 'arrow-down' }}"></i>
-                {{ number_format($rate, 1) }}% <span data-i18n="present">{{ __("present") }}</span>
-            </div>
-        </div>
-        
-        <div class="stat-card-premium orange">
-            <div class="stat-top">
-                <span class="stat-label" data-i18n="monthly_balance">{{ __("Monthly Balance") }}</span>
-                <div class="stat-icon-wrap"><i class="fas fa-wallet"></i></div>
-            </div>
-            <div class="stat-value" id="stat-monthly-balance" style="color: {{ ($monthlyBalance ?? 0) >= 0 ? '#10B981' : '#EF4444' }};">
-                ₱{{ number_format(abs($monthlyBalance ?? 0), 2) }}
-            </div>
-            <div class="stat-change {{ ($monthlyBalance ?? 0) >= 0 ? 'positive' : 'negative' }}" id="stat-balance-trend">
-                <i class="fas fa-{{ ($monthlyBalance ?? 0) >= 0 ? 'arrow-up' : 'arrow-down' }}"></i>
-                <span data-i18n="{{ ($monthlyBalance ?? 0) >= 0 ? 'surplus' : 'deficit' }}">
-                    {{ ($monthlyBalance ?? 0) >= 0 ? __("Surplus") : __("Deficit") }}
+    </header>
+
+    {{-- ============================================
+         STAT CARDS
+    ============================================ --}}
+    <section class="stats-dash-grid">
+
+        <div class="stat-dash-card">
+            <div class="stat-dash-icon green"><i class="fas fa-users"></i></div>
+            <div class="stat-dash-body">
+                <span class="stat-dash-label" data-i18n="total_members">{{ __("Total Members") }}</span>
+                <div class="stat-dash-value" id="stat-total-members">{{ number_format($totalMembers ?? 0) }}</div>
+                <span class="stat-dash-meta positive">
+                    <i class="fas fa-arrow-trend-up"></i>
+                    <span data-i18n="active_members">{{ __("Active members") }}</span>
                 </span>
             </div>
         </div>
+
+        <div class="stat-dash-card">
+            <div class="stat-dash-icon violet"><i class="fas fa-music"></i></div>
+            <div class="stat-dash-body">
+                <span class="stat-dash-label" data-i18n="choir_members">{{ __("Choir Members") }}</span>
+                <div class="stat-dash-value" id="stat-choir-members">{{ number_format($choirMembers ?? 0) }}</div>
+                <span class="stat-dash-meta positive">
+                    <i class="fas fa-arrow-trend-up"></i>
+                    <span data-i18n="music_ministry">{{ __("Music ministry") }}</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="stat-dash-card">
+            <div class="stat-dash-icon blue"><i class="fas fa-calendar-check"></i></div>
+            <div class="stat-dash-body">
+                <span class="stat-dash-label" data-i18n="today_attendance">{{ __("Today's Attendance") }}</span>
+                <div class="stat-dash-value" id="stat-today-attendance">{{ number_format($todayAttendance ?? 0) }}</div>
+                @php
+                    $rate = ($totalMembers ?? 1) > 0 ? (($todayAttendance ?? 0) / ($totalMembers ?? 1)) * 100 : 0;
+                @endphp
+                <span class="stat-dash-meta {{ $rate >= 50 ? 'positive' : 'negative' }}" id="stat-attendance-rate">
+                    <i class="fas fa-{{ $rate >= 50 ? 'arrow-up' : 'arrow-down' }}"></i>
+                    {{ number_format($rate, 1) }}% <span data-i18n="present">{{ __("present") }}</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="stat-dash-card">
+            <div class="stat-dash-icon amber"><i class="fas fa-wallet"></i></div>
+            <div class="stat-dash-body">
+                <span class="stat-dash-label" data-i18n="monthly_balance">{{ __("Monthly Balance") }}</span>
+                <div class="stat-dash-value" id="stat-monthly-balance"
+                     style="color: {{ ($monthlyBalance ?? 0) >= 0 ? 'var(--dash-green)' : 'var(--dash-rose)' }};">
+                    ₱{{ number_format(abs($monthlyBalance ?? 0), 2) }}
+                </div>
+                <span class="stat-dash-meta {{ ($monthlyBalance ?? 0) >= 0 ? 'positive' : 'negative' }}" id="stat-balance-trend">
+                    <i class="fas fa-{{ ($monthlyBalance ?? 0) >= 0 ? 'arrow-up' : 'arrow-down' }}"></i>
+                    <span data-i18n="{{ ($monthlyBalance ?? 0) >= 0 ? 'surplus' : 'deficit' }}">
+                        {{ ($monthlyBalance ?? 0) >= 0 ? __("Surplus") : __("Deficit") }}
+                    </span>
+                </span>
+            </div>
+        </div>
+
+    </section>
+
+    {{-- ============================================
+         CHART
+    ============================================ --}}
+    <div class="dash-card">
+        <div class="dash-card-head">
+            <div class="dash-card-head-left">
+                <div class="dash-card-head-icon"><i class="fas fa-chart-line"></i></div>
+                <div>
+                    <h2 class="dash-card-head-title" data-i18n="income_vs_expenses">
+                        {{ __("Income vs Expenses") }}
+                    </h2>
+                    <div class="dash-card-head-sub" data-i18n="chart_subtitle">
+                        {{ __("Monthly financial overview") }}
+                    </div>
+                </div>
+            </div>
+            <span class="dash-card-head-tag">
+                <i class="fas fa-calendar-alt"></i>
+                <span data-i18n="last_6_months">{{ __("Last 6 Months") }}</span>
+            </span>
+        </div>
+        <div class="dash-card-body">
+            <div class="chart-dash-body">
+                <canvas id="financeChart"></canvas>
+            </div>
+        </div>
     </div>
 
-    <!-- ===== CHART ===== -->
-    <div class="chart-modern-dash">
-        <div class="chart-header-dash">
-            <h5><i class="fas fa-chart-line"></i> <span data-i18n="income_vs_expenses">{{ __("Income vs Expenses") }}</span></h5>
-            <span class="badge-modern"><i class="fas fa-calendar-alt"></i> <span data-i18n="last_6_months">{{ __("Last 6 Months") }}</span></span>
-        </div>
-        <div class="chart-body-dash">
-            <canvas id="financeChart"></canvas>
-        </div>
-    </div>
+    {{-- ============================================
+         BOTTOM GRID
+    ============================================ --}}
+    <div class="dash-bottom-grid">
 
-    <!-- ===== TWO COLUMN GRID ===== -->
-    <div class="dash-grid-2">
-
-        <!-- Transactions -->
-        <div class="card-modern-dash">
-            <div class="card-header-dash">
-                <h6><i class="fas fa-arrows-alt-v"></i> <span data-i18n="recent_transactions">{{ __("Recent Transactions") }}</span></h6>
-                <a href="{{ route('finance.index') }}" style="font-size: 0.65rem; color: var(--text-muted); text-decoration: none;">
-                    <span data-i18n="view_all">{{ __("View all") }}</span> <i class="fas fa-arrow-right"></i>
+        {{-- ---------- Recent Transactions ---------- --}}
+        <div class="dash-card">
+            <div class="dash-card-head">
+                <div class="dash-card-head-left">
+                    <div class="dash-card-head-icon rose"><i class="fas fa-receipt"></i></div>
+                    <div>
+                        <h2 class="dash-card-head-title" data-i18n="recent_transactions">
+                            {{ __("Recent Transactions") }}
+                        </h2>
+                    </div>
+                </div>
+                <a href="{{ route('finance.index') }}" class="dash-card-link">
+                    <span data-i18n="view_all">{{ __("View all") }}</span>
+                    <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
-            <div class="card-body-dash" id="transactions-list">
+            <div class="dash-card-body" id="transactions-list">
                 @forelse(($recentActivities ?? []) as $item)
                     @php $isIncome = ($item->type ?? 'expense') === 'income'; @endphp
-                    <div class="tx-item-modern">
-                        <div class="tx-icon-modern {{ $isIncome ? 'income' : 'expense' }}">
+                    <div class="tx-item">
+                        <div class="tx-icon {{ $isIncome ? 'income' : 'expense' }}">
                             <i class="fas {{ $isIncome ? 'fa-arrow-down' : 'fa-arrow-up' }}"></i>
                         </div>
-                        <div class="tx-content-modern">
+                        <div class="tx-body">
                             <div class="tx-name">{{ $item->description ?? $item->name ?? 'Transaction' }}</div>
                             <div class="tx-meta">
                                 <span>{{ \Carbon\Carbon::parse($item->date ?? $item->created_at ?? now())->format('M d, Y') }}</span>
-                                <span class="tx-badge {{ $isIncome ? 'income' : 'expense' }}" data-i18n="{{ $isIncome ? 'income' : 'expense' }}">{{ $isIncome ? __("Income") : __("Expense") }}</span>
+                                <span class="tx-badge {{ $isIncome ? 'income' : 'expense' }}" data-i18n="{{ $isIncome ? 'income' : 'expense' }}">
+                                    {{ $isIncome ? __("Income") : __("Expense") }}
+                                </span>
                             </div>
                         </div>
-                        <div class="tx-amount-modern {{ $isIncome ? 'positive' : 'negative' }}">
+                        <div class="tx-amount {{ $isIncome ? 'positive' : 'negative' }}">
                             {{ $isIncome ? '+' : '−' }}₱{{ number_format($item->amount ?? 0, 2) }}
                         </div>
                     </div>
                 @empty
-                    <div class="empty-state-modern">
-                        <i class="fas fa-receipt"></i>
+                    <div class="empty-dash">
+                        <div class="empty-dash-icon"><i class="fas fa-receipt"></i></div>
                         <p data-i18n="no_transactions">{{ __("No transactions yet") }}</p>
-                        <a href="{{ route('finance.index') }}" class="btn-ghost-sm" data-i18n="add_transaction">{{ __("Add transaction") }}</a>
+                        <a href="{{ route('finance.index') }}" class="btn-empty-dash">
+                            <i class="fas fa-plus"></i>
+                            <span data-i18n="add_transaction">{{ __("Add transaction") }}</span>
+                        </a>
                     </div>
                 @endforelse
             </div>
         </div>
 
-        <!-- Right Column -->
-        <div>
-            <!-- Birthdays -->
-            <div class="card-modern-dash">
-                <div class="card-header-dash">
-                    <h6><i class="fas fa-birthday-cake" style="color: #F59E0B;"></i> <span data-i18n="upcoming_birthdays">{{ __("Upcoming Birthdays") }}</span></h6>
-                    <span class="badge-modern" data-i18n="this_month">{{ __("This month") }}</span>
+        {{-- ---------- Right Column ---------- --}}
+        <div class="dash-bottom-col">
+
+            {{-- Birthdays --}}
+            <div class="dash-card">
+                <div class="dash-card-head">
+                    <div class="dash-card-head-left">
+                        <div class="dash-card-head-icon amber"><i class="fas fa-birthday-cake"></i></div>
+                        <div>
+                            <h2 class="dash-card-head-title" data-i18n="upcoming_birthdays">
+                                {{ __("Upcoming Birthdays") }}
+                            </h2>
+                        </div>
+                    </div>
+                    <span class="dash-card-head-tag" data-i18n="this_month">{{ __("This month") }}</span>
                 </div>
-                <div class="card-body-dash" id="birthdays-list">
+                <div class="dash-card-body" id="birthdays-list">
                     @forelse(($upcomingBirthdays ?? []) as $birthday)
                         @php
                             $daysUntil = $birthday->days_until ?? null;
                             $isToday = $daysUntil === 0;
                             $isTomorrow = $daysUntil === 1;
                         @endphp
-                        <div class="bd-item-modern">
-                            <div class="bd-date-modern">
+                        <div class="bd-item">
+                            <div class="bd-date">
                                 <div class="day">{{ \Carbon\Carbon::parse($birthday->birthday ?? now())->format('d') }}</div>
                                 <div class="month">{{ \Carbon\Carbon::parse($birthday->birthday ?? now())->format('M') }}</div>
                             </div>
-                            <div class="bd-info-modern">
-                                <div class="name">{{ $birthday->first_name ?? '' }} {{ $birthday->last_name ?? '' }}</div>
-                                <div class="meta">
+                            <div class="bd-body">
+                                <div class="bd-name">{{ $birthday->first_name ?? '' }} {{ $birthday->last_name ?? '' }}</div>
+                                <div class="bd-meta">
                                     @if($isToday)
-                                        <span class="today-badge">🎉 <span data-i18n="today_label">{{ __("Today!") }}</span></span>
+                                        <span class="bd-today">🎉 <span data-i18n="today_label">{{ __("Today!") }}</span></span>
                                     @elseif($isTomorrow)
-                                        <span class="today-badge" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">🎂 <span data-i18n="tomorrow_label">{{ __("Tomorrow!") }}</span></span>
+                                        <span class="bd-today">🎂 <span data-i18n="tomorrow_label">{{ __("Tomorrow!") }}</span></span>
                                     @elseif($daysUntil !== null)
-                                        <span data-i18n="turning_in_days">{{ __("Turning") }}</span> {{ $birthday->age ?? '?' }} <span data-i18n="in">{{ __("in") }}</span> {{ $daysUntil }} <span data-i18n="days">{{ __("days") }}</span>
+                                        <span data-i18n="turning_in_days">{{ __("Turning") }}</span> {{ $birthday->age ?? '?' }}
+                                        <span data-i18n="in">{{ __("in") }}</span> {{ $daysUntil }} <span data-i18n="days">{{ __("days") }}</span>
                                     @endif
                                 </div>
                             </div>
-                            <a href="{{ route('members.show', $birthday->id) }}" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none; padding: 4px 8px; border-radius: 6px; transition: all 0.2s;">
+                            <a href="{{ route('members.show', $birthday->id) }}" class="bd-arrow">
                                 <i class="fas fa-chevron-right"></i>
                             </a>
                         </div>
                     @empty
-                        <div class="empty-state-modern">
-                            <i class="fas fa-birthday-cake"></i>
+                        <div class="empty-dash">
+                            <div class="empty-dash-icon"><i class="fas fa-birthday-cake"></i></div>
                             <p data-i18n="no_upcoming_birthdays">{{ __("No upcoming birthdays") }}</p>
                         </div>
                     @endforelse
                 </div>
             </div>
 
-            <!-- Choir Schedule -->
-            <div class="card-modern-dash" style="margin-bottom: 0;">
-                <div class="card-header-dash">
-                    <h6><i class="fas fa-music" style="color: #8B5CF6;"></i> <span data-i18n="choir_schedule">{{ __("Choir Schedule") }}</span></h6>
-                    <span class="badge-modern" data-i18n="upcoming_label">{{ __("Upcoming") }}</span>
+            {{-- Choir Schedule --}}
+            <div class="dash-card">
+                <div class="dash-card-head">
+                    <div class="dash-card-head-left">
+                        <div class="dash-card-head-icon violet"><i class="fas fa-music"></i></div>
+                        <div>
+                            <h2 class="dash-card-head-title" data-i18n="choir_schedule">
+                                {{ __("Choir Schedule") }}
+                            </h2>
+                        </div>
+                    </div>
+                    <span class="dash-card-head-tag" data-i18n="upcoming_label">{{ __("Upcoming") }}</span>
                 </div>
-                <div class="card-body-dash" id="choir-schedule-container">
+                <div class="dash-card-body" id="choir-schedule-container">
                     @if(isset($upcomingSunday) && $upcomingSunday)
-                        <div class="choir-card-modern">
+                        <div class="choir-panel">
                             <div class="choir-icon"><i class="fas fa-layer-group"></i></div>
-                            <div class="choir-group" style="color: {{ $upcomingSunday['group_color'] ?? '#8B5CF6' }};">
+                            <div class="choir-group" style="color: {{ $upcomingSunday['group_color'] ?? '#7C3AED' }};">
                                 {{ $upcomingSunday['group_name'] ?? 'Choir Group' }}
                             </div>
                             <div class="choir-meta">
                                 <i class="fas fa-users"></i>
-                                {{ $upcomingSunday['members_count'] ?? 0 }} <span data-i18n="members">{{ __("Members") }}</span> ·
+                                {{ $upcomingSunday['members_count'] ?? 0 }} <span data-i18n="members">{{ __("Members") }}</span>
+                                ·
                                 {{ \Carbon\Carbon::parse($upcomingSunday['date'] ?? now())->format('M d, Y') }}
                             </div>
+
                             <div class="choir-chips" id="choir-members-chips">
                                 @forelse(($upcomingSunday['members'] ?? []) as $member)
-                                    <span class="chip">
+                                    <span class="choir-chip">
                                         {{ $member->first_name ?? '' }} {{ substr($member->last_name ?? '', 0, 1) }}.
                                     </span>
                                 @empty
-                                    <span class="chip" data-i18n="no_members_assigned">{{ __("No members assigned") }}</span>
+                                    <span class="choir-chip" data-i18n="no_members_assigned">{{ __("No members assigned") }}</span>
                                 @endforelse
                             </div>
-                            <a href="{{ route('choir-schedules.index', ['date' => $upcomingSunday['date'] ?? '']) }}" class="btn-choir">
-                                <i class="fas fa-calendar-alt"></i> <span data-i18n="view_full_schedule">{{ __("View Full Schedule") }}</span>
+
+                            <a href="{{ route('choir-schedules.index', ['date' => $upcomingSunday['date'] ?? '']) }}" class="btn-choir-dash">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span data-i18n="view_full_schedule">{{ __("View Full Schedule") }}</span>
                             </a>
 
                             @if(isset($nextWeeks) && count($nextWeeks) > 0)
-                                <div class="coming-grid-modern" id="coming-sundays-grid">
+                                <div class="coming-grid" id="coming-sundays-grid">
                                     @foreach($nextWeeks as $week)
-                                        <div class="coming-item-modern">
-                                            <div class="date">{{ \Carbon\Carbon::parse($week['date'])->format('M d') }}</div>
-                                            <div class="name">{{ $week['group_name'] ?? 'Choir' }}</div>
-                                            <div class="count"><i class="fas fa-users"></i> {{ $week['members_count'] ?? 0 }}</div>
+                                        <div class="coming-item">
+                                            <div class="coming-date">{{ \Carbon\Carbon::parse($week['date'])->format('M d') }}</div>
+                                            <div class="coming-name">{{ $week['group_name'] ?? 'Choir' }}</div>
+                                            <div class="coming-count"><i class="fas fa-users"></i> {{ $week['members_count'] ?? 0 }}</div>
                                         </div>
                                     @endforeach
                                 </div>
                             @endif
                         </div>
                     @else
-                        <div class="empty-state-modern">
-                            <i class="fas fa-music"></i>
+                        <div class="empty-dash">
+                            <div class="empty-dash-icon"><i class="fas fa-music"></i></div>
                             <p data-i18n="no_upcoming_schedule">{{ __("No upcoming schedule") }}</p>
-                            <a href="{{ route('choir-schedules.index') }}" class="btn-ghost-sm" data-i18n="create_schedule">{{ __("Create schedule") }}</a>
+                            <a href="{{ route('choir-schedules.index') }}" class="btn-empty-dash">
+                                <i class="fas fa-plus"></i>
+                                <span data-i18n="create_schedule">{{ __("Create schedule") }}</span>
+                            </a>
                         </div>
                     @endif
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
 
 </div>
 
-<!-- ============================================ -->
-<!-- SCRIPTS -->
-<!-- ============================================ -->
+{{-- ===== SCRIPTS ===== --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // ===== FINANCE CHART =====
-    const canvas = document.getElementById('financeChart');
-    let chart = null;
+    /* =============================================
+       i18n helper
+    ============================================= */
+    function t(key, fallback) {
+        if (typeof window.t === 'function') return window.t(key, fallback);
+        if (typeof window.__t === 'function') return window.__t(key, fallback);
+        return fallback || key;
+    }
 
-    function buildChart() {
+    /* =============================================
+       FINANCE CHART
+    ============================================= */
+    let financeChartInstance = null;
+
+    function buildFinanceChart() {
+        const canvas = document.getElementById('financeChart');
         if (!canvas) return;
 
-        const monthsData = @json($months ?? []);
-        const incomeData = @json($incomeData ?? []);
-        const expenseData = @json($expenseData ?? []);
+        // ⭐ Ensure parent has a defined size BEFORE Chart.js reads it
+        const parent = canvas.parentElement;
+        if (parent) {
+            parent.style.position = 'relative';
+            parent.style.height = '300px';
+            parent.style.width = '100%';
+        }
 
-        let months = Array.isArray(monthsData) && monthsData.length > 0 ? monthsData : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-        let income = Array.isArray(incomeData) && incomeData.length > 0 ? incomeData : [0, 0, 0, 0, 0, 0];
-        let expense = Array.isArray(expenseData) && expenseData.length > 0 ? expenseData : [0, 0, 0, 0, 0, 0];
+        // ⭐ Force canvas to have explicit pixel size BEFORE Chart.js init
+        canvas.width = canvas.parentElement.clientWidth || 800;
+        canvas.height = 300;
 
-        while (income.length < months.length) income.push(0);
-        while (expense.length < months.length) expense.push(0);
+        let monthlyData = @json($monthlyData ?? []);
+        let months = monthlyData.map(item => item.month);
+        let incomeData = monthlyData.map(item => item.income);
+        let expenseData = monthlyData.map(item => item.expense);
+
+        if (!Array.isArray(months) || months.length === 0) {
+            months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            incomeData = [0, 0, 0, 0, 0, 0];
+            expenseData = [0, 0, 0, 0, 0, 0];
+        }
+
+        while (incomeData.length < months.length) incomeData.push(0);
+        while (expenseData.length < months.length) expenseData.push(0);
 
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)';
+        const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
         const tickColor = isDark ? 'rgba(255,255,255,0.4)' : '#888';
+        const ttBg = isDark ? '#2a2a2a' : '#ffffff';
+        const ttTitle = isDark ? '#e0e0e0' : '#1e293b';
+        const ttBody = isDark ? '#aaaaaa' : '#475569';
+        const ttBorder = isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0';
+        const ptBorder = isDark ? '#1e1e1e' : '#ffffff';
 
-        // ⭐ Get translated labels
-        const incomeLabel = (typeof window.__t === 'function') ? window.__t('income', 'Income') : 'Income';
-        const expensesLabel = (typeof window.__t === 'function') ? window.__t('expenses', 'Expenses') : 'Expenses';
+        const incomeLabel = t('income', 'Income');
+        const expensesLabel = t('expenses', 'Expenses');
 
-        // Destroy existing chart
-        if (chart) chart.destroy();
+        if (financeChartInstance) {
+            financeChartInstance.destroy();
+            financeChartInstance = null;
+        }
 
-        chart = new Chart(canvas, {
+        financeChartInstance = new Chart(canvas, {
             type: 'line',
             data: {
                 labels: months,
                 datasets: [
                     {
                         label: incomeLabel,
-                        data: income,
+                        data: incomeData,
                         borderColor: '#10B981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.05)',
-                        borderWidth: 3,
+                        backgroundColor: 'rgba(16, 185, 129, 0.07)',
+                        borderWidth: 2.5,
                         fill: true,
                         tension: 0.4,
-                        pointRadius: 4,
+                        pointRadius: 3,
                         pointBackgroundColor: '#10B981',
-                        pointBorderColor: isDark ? '#1e1e1e' : '#fff',
+                        pointBorderColor: ptBorder,
                         pointBorderWidth: 2,
-                        pointHoverRadius: 6
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: '#10B981',
+                        pointHoverBorderColor: ptBorder,
+                        pointHoverBorderWidth: 2
                     },
                     {
                         label: expensesLabel,
-                        data: expense,
+                        data: expenseData,
                         borderColor: '#EF4444',
                         backgroundColor: 'rgba(239, 68, 68, 0.05)',
                         borderWidth: 2,
                         borderDash: [5, 3],
                         fill: true,
                         tension: 0.4,
-                        pointRadius: 4,
+                        pointRadius: 3,
                         pointBackgroundColor: '#EF4444',
-                        pointBorderColor: isDark ? '#1e1e1e' : '#fff',
+                        pointBorderColor: ptBorder,
                         pointBorderWidth: 2,
-                        pointHoverRadius: 6
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: '#EF4444',
+                        pointHoverBorderColor: ptBorder,
+                        pointHoverBorderWidth: 2
                     }
                 ]
             },
@@ -632,20 +1288,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            font: { size: 11, weight: '600' },
-                            color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim(),
-                            usePointStyle: true,
-                            pointStyle: 'circle'
-                        }
-                    },
+                    legend: { display: false },
                     tooltip: {
-                        backgroundColor: isDark ? '#2a2a2a' : '#fff',
-                        titleColor: isDark ? '#e0e0e0' : '#1e293b',
-                        bodyColor: isDark ? '#aaa' : '#475569',
-                        borderColor: isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0',
+                        backgroundColor: ttBg,
+                        titleColor: ttTitle,
+                        bodyColor: ttBody,
+                        borderColor: ttBorder,
                         borderWidth: 1,
                         cornerRadius: 8,
                         padding: 10,
@@ -663,140 +1311,158 @@ document.addEventListener('DOMContentLoaded', function() {
                             callback: function(value) {
                                 return '₱' + value.toLocaleString();
                             },
-                            font: { size: 11 },
+                            font: { size: 10 },
                             color: tickColor
                         },
-                        grid: {
-                            color: gridColor,
-                            drawBorder: false
-                        }
+                        grid: { color: gridColor, drawBorder: false }
                     },
                     x: {
-                        ticks: {
-                            font: { size: 11 },
-                            color: tickColor
-                        },
-                        grid: {
-                            display: false,
-                            drawBorder: false
-                        }
+                        ticks: { font: { size: 10 }, color: tickColor },
+                        grid: { display: false, drawBorder: false }
                     }
                 },
-                interaction: {
-                    intersect: false,
-                    mode: 'index'
-                }
+                interaction: { intersect: false, mode: 'index' }
             }
         });
 
-        window.financeChart = chart;
+        // ⭐ Force resize after mount — fixes empty/0-height charts
+        setTimeout(function () {
+            if (financeChartInstance) {
+                try { financeChartInstance.resize(); } catch (e) {}
+            }
+        }, 80);
     }
 
-    buildChart();
+    /* =============================================
+       BUILD ON LOAD
+    ============================================= */
+    document.addEventListener('DOMContentLoaded', function() {
 
-    // ⭐ Rebuild chart on language change
-    window.addEventListener('localeChanged', function() {
-        buildChart();
+        // ⭐ Wait for layout/paint before building chart
+        requestAnimationFrame(function () {
+            setTimeout(buildFinanceChart, 60);
+        });
+
+        // ⭐ Auto-resize chart on window resize
+        window.addEventListener('resize', function () {
+            if (financeChartInstance) {
+                try { financeChartInstance.resize(); } catch (e) {}
+            }
+        });
+
+        // ============================================
+        // TOAST
+        // ============================================
+        function showDashboardToast(title, message, icon) {
+            icon = icon || '📊';
+            let toast = document.getElementById('dashboardToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'dashboardToast';
+                toast.className = 'dashboard-toast-modern';
+                toast.innerHTML = `
+                    <span class="toast-icon">📊</span>
+                    <div class="toast-content">
+                        <div class="toast-title" id="toastTitle">Update received</div>
+                        <div class="toast-message" id="toastMessage">Real-time data updated</div>
+                    </div>
+                    <button class="toast-close" onclick="this.closest('.dashboard-toast-modern').classList.remove('show')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                document.body.appendChild(toast);
+            }
+
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            toast.querySelector('.toast-icon').textContent = icon;
+
+            toast.classList.add('show');
+            clearTimeout(toast._hideTimeout);
+            toast._hideTimeout = setTimeout(function() {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        window.showDashboardToast = showDashboardToast;
+
+        // ============================================
+        // REAL-TIME UPDATES (Echo)
+        // ============================================
+        if (window.Echo) {
+            window.Echo.channel('attendance')
+                .listen('attendance.updated', function(e) {
+                    const present = e.present || 0;
+                    const total = e.total || 0;
+
+                    const todayEl = document.getElementById('stat-today-attendance');
+                    if (todayEl) {
+                        todayEl.textContent = present;
+                        todayEl.classList.add('updated');
+                        setTimeout(function() { todayEl.classList.remove('updated'); }, 800);
+                    }
+
+                    const rateEl = document.getElementById('stat-attendance-rate');
+                    if (rateEl) {
+                        const rate = total > 0 ? Math.round((present / total) * 100 * 10) / 10 : 0;
+                        const presentText = (typeof window.__t === 'function') ? window.__t('present', 'present') : 'present';
+                        rateEl.innerHTML = '<i class="fas fa-' + (rate >= 50 ? 'arrow-up' : 'arrow-down') + '"></i> ' + rate + '% ' + presentText;
+                        rateEl.className = 'stat-dash-meta ' + (rate >= 50 ? 'positive' : 'negative');
+                    }
+
+                    showDashboardToast('📊 Attendance', present + ' present today', '📊');
+                });
+
+            window.Echo.channel('finances')
+                .listen('balance.updated', function(e) {
+                    const balance = e.balance || 0;
+                    const balanceEl = document.getElementById('stat-monthly-balance');
+                    const trendEl = document.getElementById('stat-balance-trend');
+
+                    if (balanceEl) {
+                        balanceEl.textContent = '₱' + Math.abs(balance).toLocaleString();
+                        balanceEl.style.color = balance >= 0 ? '#10B981' : '#EF4444';
+                    }
+
+                    if (trendEl) {
+                        const surplusText = (typeof window.__t === 'function') ? window.__t('surplus', 'Surplus') : 'Surplus';
+                        const deficitText = (typeof window.__t === 'function') ? window.__t('deficit', 'Deficit') : 'Deficit';
+                        trendEl.innerHTML = '<i class="fas fa-' + (balance >= 0 ? 'arrow-up' : 'arrow-down') + '"></i> ' + (balance >= 0 ? surplusText : deficitText);
+                        trendEl.className = 'stat-dash-meta ' + (balance >= 0 ? 'positive' : 'negative');
+                    }
+
+                    showDashboardToast('💰 Balance', '₱' + Math.abs(balance).toLocaleString(), '💰');
+                });
+
+            window.Echo.channel('choir')
+                .listen('schedule.updated', function(e) {
+                    const choirEl = document.getElementById('stat-choir-members');
+                    if (choirEl && e.members_count !== undefined) {
+                        choirEl.textContent = e.members_count;
+                    }
+                    showDashboardToast('🎵 Choir', e.message || 'Schedule updated', '🎵');
+                });
+        }
     });
 
-    // ⭐ Rebuild chart on theme change
+    /* =============================================
+       LOCALE CHANGE
+    ============================================= */
+    window.addEventListener('localeChanged', function(e) {
+        if (typeof window.applyTranslations === 'function') {
+            window.applyTranslations();
+        }
+        buildFinanceChart();
+        console.log('[Dashboard] Locale changed to:', e.detail.locale);
+    });
+
+    /* =============================================
+       THEME CHANGE
+    ============================================= */
     document.addEventListener('click', function(e) {
         if (e.target.closest('#themeToggleBtn')) {
-            setTimeout(buildChart, 100);
+            setTimeout(buildFinanceChart, 150);
         }
     });
-
-    // ===== TOAST FUNCTION =====
-    function showDashboardToast(title, message, icon) {
-        icon = icon || '📊';
-        let toast = document.getElementById('dashboardToast');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'dashboardToast';
-            toast.className = 'dashboard-toast-modern';
-            toast.innerHTML = `
-                <span class="toast-icon">📊</span>
-                <div class="toast-content">
-                    <div class="toast-title" id="toastTitle">Update received</div>
-                    <div class="toast-message" id="toastMessage">Real-time data updated</div>
-                </div>
-                <button class="toast-close" onclick="this.closest('.dashboard-toast-modern').classList.remove('show')">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            document.body.appendChild(toast);
-        }
-        
-        document.getElementById('toastTitle').textContent = title;
-        document.getElementById('toastMessage').textContent = message;
-        toast.querySelector('.toast-icon').textContent = icon;
-        
-        toast.classList.add('show');
-        clearTimeout(toast._hideTimeout);
-        toast._hideTimeout = setTimeout(function() {
-            toast.classList.remove('show');
-        }, 4000);
-    }
-
-    window.showDashboardToast = showDashboardToast;
-
-    // ===== REAL-TIME UPDATES =====
-    if (window.Echo) {
-        window.Echo.channel('attendance')
-            .listen('attendance.updated', function(e) {
-                const present = e.present || 0;
-                const total = e.total || 0;
-                
-                const todayEl = document.getElementById('stat-today-attendance');
-                if (todayEl) {
-                    todayEl.textContent = present;
-                    todayEl.classList.add('updated');
-                    setTimeout(function() {
-                        todayEl.classList.remove('updated');
-                    }, 500);
-                }
-                
-                const rateEl = document.getElementById('stat-attendance-rate');
-                if (rateEl) {
-                    const rate = total > 0 ? Math.round((present / total) * 100 * 10) / 10 : 0;
-                    const presentText = (typeof window.__t === 'function') ? window.__t('present', 'present') : 'present';
-                    rateEl.innerHTML = rate + '% ' + presentText;
-                }
-                
-                showDashboardToast('📊 Attendance', present + ' present today', '📊');
-            });
-
-        window.Echo.channel('finances')
-            .listen('balance.updated', function(e) {
-                const balance = e.balance || 0;
-                const balanceEl = document.getElementById('stat-monthly-balance');
-                const trendEl = document.getElementById('stat-balance-trend');
-                
-                if (balanceEl) {
-                    balanceEl.textContent = '₱' + Math.abs(balance).toLocaleString();
-                    balanceEl.style.color = balance >= 0 ? '#10B981' : '#EF4444';
-                }
-                
-                if (trendEl) {
-                    const surplusText = (typeof window.__t === 'function') ? window.__t('surplus', 'Surplus') : 'Surplus';
-                    const deficitText = (typeof window.__t === 'function') ? window.__t('deficit', 'Deficit') : 'Deficit';
-                    trendEl.innerHTML = `<i class="fas fa-${balance >= 0 ? 'arrow-up' : 'arrow-down'}"></i> ${balance >= 0 ? surplusText : deficitText}`;
-                    trendEl.className = 'stat-change ' + (balance >= 0 ? 'positive' : 'negative');
-                }
-                
-                showDashboardToast('💰 Balance', '₱' + Math.abs(balance).toLocaleString(), '💰');
-            });
-
-        window.Echo.channel('choir')
-            .listen('schedule.updated', function(e) {
-                const choirEl = document.getElementById('stat-choir-members');
-                if (choirEl && e.members_count !== undefined) {
-                    choirEl.textContent = e.members_count;
-                }
-                
-                showDashboardToast('🎵 Choir', e.message || 'Schedule updated', '🎵');
-            });
-    }
-});
 </script>
 @endsection

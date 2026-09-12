@@ -7,952 +7,1052 @@
 @section('content')
 
 <style>
-    /* ============================================
-       MODERN DESIGN - MATCHING MEMBER PROFILE STYLE
-    ============================================ */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-    
-    :root {
-        --profile-primary: #4F46E5;
-        --profile-primary-light: #818CF8;
-        --profile-primary-dark: #4338CA;
-        --profile-success: #10B981;
-        --profile-warning: #F59E0B;
-        --profile-danger: #EF4444;
-        --profile-purple: #8B5CF6;
-        --profile-pink: #EC4899;
-        --gradient-primary: linear-gradient(135deg, #4F46E5, #7C3AED);
-        --shadow-profile-lg: 0 20px 60px rgba(0,0,0,0.08);
-        --shadow-profile-hover: 0 24px 80px rgba(0,0,0,0.12);
-        --shadow-glow: 0 8px 32px rgba(79, 70, 229, 0.3);
+    /* ==========================================================
+       FINANCE DASHBOARD — 2025 REDESIGN
+       Flat · bordered · airy · Inter
+       (functionality unchanged — design only)
+    ========================================================== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    .fd {
+        --fd-card: var(--card-bg, #ffffff);
+        --fd-border: var(--border-color, #e8eaf0);
+        --fd-text: var(--text-primary, #0f172a);
+        --fd-muted: var(--text-muted, #7c8494);
+        --fd-soft: var(--bg-tertiary, #f5f6fa);
+
+        --fd-primary: #4f46e5;
+        --fd-primary-soft: rgba(79, 70, 229, .08);
+        --fd-primary-ring: rgba(79, 70, 229, .18);
+
+        --fd-green: #059669;
+        --fd-green-soft: rgba(5, 150, 105, .10);
+        --fd-rose: #e11d48;
+        --fd-rose-soft: rgba(225, 29, 72, .09);
+        --fd-amber: #d97706;
+        --fd-amber-soft: rgba(217, 119, 6, .10);
+        --fd-violet: #7c3aed;
+        --fd-violet-soft: rgba(124, 58, 237, .10);
+        --fd-blue: #2563eb;
+        --fd-blue-soft: rgba(37, 99, 235, .10);
+
+        --fd-shadow-sm: 0 1px 2px rgba(15, 23, 42, .04);
+        --fd-shadow-md: 0 10px 28px -14px rgba(15, 23, 42, .22);
+        --fd-radius: 16px;
+
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: var(--fd-text);
+        padding-bottom: 2rem;
     }
-    
-    .finance-hero {
-        background: var(--gradient-primary);
-        border-radius: 24px;
-        padding: 2rem 2.5rem;
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
-        box-shadow: var(--shadow-glow);
+
+    [data-theme="dark"] .fd {
+        --fd-primary: #6366f1;
+        --fd-primary-soft: rgba(99, 102, 241, .16);
+        --fd-primary-ring: rgba(99, 102, 241, .28);
+        --fd-green: #34d399;
+        --fd-green-soft: rgba(16, 185, 129, .14);
+        --fd-rose: #fb7185;
+        --fd-rose-soft: rgba(244, 63, 94, .14);
+        --fd-amber: #fbbf24;
+        --fd-amber-soft: rgba(245, 158, 11, .14);
+        --fd-violet: #a78bfa;
+        --fd-violet-soft: rgba(139, 92, 246, .16);
+        --fd-blue: #60a5fa;
+        --fd-blue-soft: rgba(59, 130, 246, .16);
+        --fd-shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+        --fd-shadow-md: 0 14px 30px -16px rgba(0, 0, 0, .75);
     }
-    
-    .finance-hero::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -20%;
-        width: 60%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-        animation: heroPulse 6s ease-in-out infinite;
-    }
-    
-    .finance-hero::after {
-        content: '';
-        position: absolute;
-        bottom: -40%;
-        left: -10%;
-        width: 40%;
-        height: 180%;
-        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
-        animation: heroPulse 8s ease-in-out infinite reverse;
-    }
-    
-    @keyframes heroPulse {
-        0%, 100% { transform: scale(1); opacity: 0.5; }
-        50% { transform: scale(1.1); opacity: 1; }
-    }
-    
-    .finance-hero .hero-content {
-        position: relative;
-        z-index: 1;
+
+    .fd * { box-sizing: border-box; }
+
+    /* ---------------- HEADER ---------------- */
+    .fd-head {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+        gap: 1.25rem;
         flex-wrap: wrap;
-        gap: 1rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid var(--fd-border);
+        margin-bottom: 1.5rem;
     }
-    
-    .finance-hero .hero-left {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-    
-    .finance-hero h1 {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: white;
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        letter-spacing: -0.5px;
-    }
-    
-    .finance-hero h1 i {
-        margin-right: 12px;
-        opacity: 0.8;
-    }
-    
-    .finance-hero .hero-sub {
-        color: rgba(255,255,255,0.8);
-        font-size: 0.85rem;
-        margin: 0;
-    }
-    
-    .finance-hero .hero-actions {
-        display: flex;
-        gap: 0.6rem;
-        flex-wrap: wrap;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .btn-hero {
-        padding: 0.5rem 1.5rem;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 0.75rem;
-        transition: all 0.3s ease;
+
+    .fd-eyebrow {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: .45rem;
+        font-size: .66rem;
+        font-weight: 700;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+        color: var(--fd-muted);
+        margin-bottom: .55rem;
+    }
+
+    .fd-eyebrow .fd-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--fd-green);
+        box-shadow: 0 0 0 3px var(--fd-green-soft);
+    }
+
+    .fd-title {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        margin: 0;
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -.035em;
+        line-height: 1.15;
+    }
+
+    .fd-title i { font-size: 1.2rem; color: var(--fd-primary); }
+
+    .fd-sub {
+        margin: .5rem 0 0;
+        font-size: .84rem;
+        color: var(--fd-muted);
+        max-width: 62ch;
+        line-height: 1.5;
+    }
+
+    .fd-head-actions {
+        display: flex;
+        gap: .55rem;
+        flex-wrap: wrap;
+    }
+
+    /* ---------------- BUTTONS ---------------- */
+    .fd-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .6rem 1.1rem;
+        border-radius: 11px;
+        font-size: .79rem;
+        font-weight: 600;
+        font-family: inherit;
+        line-height: 1.2;
+        text-decoration: none;
+        border: 1px solid transparent;
         cursor: pointer;
-        border: none;
-        text-decoration: none;
+        white-space: nowrap;
+        transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease, border-color .18s ease;
     }
-    
-    .btn-hero-white {
-        background: white;
-        color: #4F46E5;
+
+    .fd-btn-primary {
+        background: var(--fd-primary);
+        color: #fff;
+        box-shadow: 0 8px 18px -10px rgba(79, 70, 229, .9);
     }
-    
-    .btn-hero-white:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        color: #4F46E5;
-        text-decoration: none;
+    .fd-btn-primary:hover {
+        background: #4338ca;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 12px 22px -10px rgba(79, 70, 229, .9);
     }
-    
-    .btn-hero-ghost {
-        background: rgba(255,255,255,0.15);
-        color: white;
-        border: 1px solid rgba(255,255,255,0.2);
+
+    .fd-btn-ghost {
+        background: var(--fd-card);
+        color: var(--fd-text);
+        border-color: var(--fd-border);
     }
-    
-    .btn-hero-ghost:hover {
-        background: rgba(255,255,255,0.25);
-        transform: translateY(-2px);
-        color: white;
-        text-decoration: none;
+    .fd-btn-ghost:hover {
+        background: var(--fd-soft);
+        color: var(--fd-text);
+        transform: translateY(-1px);
     }
-    
+
+    /* ---------------- STATS ---------------- */
     .stats-grid-premium {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.2rem;
-        margin-bottom: 2rem;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
     }
-    
+
     .stat-card-premium {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.2rem 1.5rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        gap: .9rem;
+        padding: 1.05rem 1.15rem;
+        background: var(--fd-card);
+        border: 1px solid var(--fd-border);
+        border-radius: var(--fd-radius);
+        transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
         position: relative;
-        overflow: hidden;
-        box-shadow: var(--shadow-profile-lg);
     }
-    
-    .stat-card-premium::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: var(--gradient-primary);
-    }
-    
+
     .stat-card-premium:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-profile-hover);
+        transform: translateY(-3px);
+        box-shadow: var(--fd-shadow-md);
         border-color: transparent;
     }
-    
-    .stat-card-premium .stat-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 0.5rem;
+
+    .stat-card-premium .stat-icon-wrap {
+        width: 44px; height: 44px;
+        border-radius: 13px;
+        display: grid;
+        place-items: center;
+        font-size: 1rem;
+        flex: 0 0 auto;
     }
-    
+
+    .stat-card-premium.green  .stat-icon-wrap { background: var(--fd-green-soft);   color: var(--fd-green); }
+    .stat-card-premium.red    .stat-icon-wrap { background: var(--fd-rose-soft);    color: var(--fd-rose); }
+    .stat-card-premium.blue   .stat-icon-wrap { background: var(--fd-primary-soft); color: var(--fd-primary); }
+    .stat-card-premium.purple .stat-icon-wrap { background: var(--fd-violet-soft);  color: var(--fd-violet); }
+
+    .stat-card-premium .stat-body { min-width: 0; }
+
     .stat-card-premium .stat-label {
-        font-size: 0.6rem;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        color: var(--text-muted);
+        font-size: .68rem;
         font-weight: 700;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--fd-muted);
+        margin: 0 0 .2rem;
+    }
+
+    .stat-card-premium .stat-value {
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -.03em;
+        line-height: 1.15;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .stat-card-premium .stat-change {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        margin-top: .25rem;
+        padding: .12rem .5rem;
+        border-radius: 20px;
+        font-size: .64rem;
+        font-weight: 600;
+        background: var(--fd-soft);
+        color: var(--fd-muted);
+    }
+
+    .stat-card-premium .stat-change.positive { color: var(--fd-green); background: var(--fd-green-soft); }
+    .stat-card-premium .stat-change.negative { color: var(--fd-rose);  background: var(--fd-rose-soft); }
+
+    /* ---------------- CARD / PANEL ---------------- */
+    .fd-card {
+        background: var(--fd-card);
+        border: 1px solid var(--fd-border);
+        border-radius: var(--fd-radius);
+        box-shadow: var(--fd-shadow-sm);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        transition: box-shadow .22s ease, border-color .22s ease;
+    }
+
+    .fd-card:hover {
+        box-shadow: var(--fd-shadow-md);
+        border-color: transparent;
+    }
+
+    .fd-card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding: .9rem 1.15rem;
+        border-bottom: 1px solid var(--fd-border);
+        background: var(--fd-soft);
+    }
+
+    .fd-card-head-left {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        min-width: 0;
+    }
+
+    .fd-card-head-icon {
+        width: 32px; height: 32px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        font-size: .75rem;
+        background: var(--fd-primary-soft);
+        color: var(--fd-primary);
+        flex: 0 0 auto;
+    }
+
+    .fd-card-head-title {
+        font-size: .9rem;
+        font-weight: 700;
+        letter-spacing: -.01em;
+        line-height: 1.2;
         margin: 0;
     }
-    
-    .stat-card-premium .stat-icon-wrap {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        color: white;
-        flex-shrink: 0;
+
+    .fd-card-head-sub {
+        font-size: .7rem;
+        color: var(--fd-muted);
+        margin-top: .1rem;
     }
-    
-    .stat-card-premium .stat-value {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: var(--text-primary);
-        font-family: 'Inter', sans-serif;
-        letter-spacing: -0.5px;
-        line-height: 1.2;
-    }
-    
-    .stat-card-premium .stat-change {
-        font-size: 0.65rem;
-        color: var(--text-muted);
+
+    .fd-card-head-tag {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
-        margin-top: 2px;
-        padding: 2px 8px;
+        gap: .35rem;
+        padding: .22rem .6rem;
         border-radius: 20px;
-        background: var(--bg-tertiary);
-    }
-    
-    .stat-card-premium .stat-change.positive { color: #10B981; }
-    .stat-card-premium .stat-change.negative { color: #EF4444; }
-    
-    .stat-card-premium.green::before { background: linear-gradient(135deg, #10B981, #34D399); }
-    .stat-card-premium.blue::before { background: var(--gradient-primary); }
-    .stat-card-premium.purple::before { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
-    .stat-card-premium.orange::before { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
-    .stat-card-premium.red::before { background: linear-gradient(135deg, #EF4444, #F87171); }
-    
-    .stat-card-premium.green .stat-icon-wrap { background: linear-gradient(135deg, #10B981, #34D399); }
-    .stat-card-premium.blue .stat-icon-wrap { background: var(--gradient-primary); }
-    .stat-card-premium.purple .stat-icon-wrap { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
-    .stat-card-premium.orange .stat-icon-wrap { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
-    .stat-card-premium.red .stat-icon-wrap { background: linear-gradient(135deg, #EF4444, #F87171); }
-    
-    .filter-card-modern {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.2rem 1.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: var(--shadow-profile-lg);
-        transition: all 0.3s ease;
-    }
-    
-    .filter-card-modern:hover {
-        box-shadow: var(--shadow-profile-hover);
-        border-color: transparent;
-    }
-    
-    .filter-label-modern {
-        font-size: 0.65rem;
+        border: 1px solid var(--fd-border);
+        background: var(--fd-card);
+        font-size: .64rem;
         font-weight: 600;
+        color: var(--fd-muted);
+        white-space: nowrap;
+    }
+
+    .fd-card-head-tag i { font-size: .56rem; }
+
+    .fd-card-body { padding: 1.15rem 1.15rem; }
+
+    /* ---------------- FILTER BAR ---------------- */
+    .filter-card-modern {
+        background: var(--fd-card);
+        border: 1px solid var(--fd-border);
+        border-radius: var(--fd-radius);
+        padding: 1rem 1.15rem;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--fd-shadow-sm);
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        transition: box-shadow .22s ease;
+    }
+
+    .filter-card-modern:hover { box-shadow: var(--fd-shadow-md); }
+
+    .filter-field { min-width: 0; flex: 1 1 260px; }
+
+    .filter-label-modern {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .66rem;
+        font-weight: 700;
+        letter-spacing: .09em;
         text-transform: uppercase;
-        letter-spacing: 0.8px;
-        color: var(--text-muted);
-        margin-bottom: 0.4rem;
-        display: block;
+        color: var(--fd-muted);
+        margin-bottom: .4rem;
     }
-    
+
+    .filter-label-modern i { font-size: .62rem; color: var(--fd-primary); }
+
     .filter-select-modern {
-        background: var(--bg-tertiary);
-        border: 1px solid var(--border-color);
-        border-radius: 10px;
-        padding: 0.5rem 1rem;
-        color: var(--text-primary);
-        font-size: 0.8rem;
+        width: 100%;
+        padding: .6rem 2.4rem .6rem .9rem;
+        border-radius: 11px;
+        border: 1px solid var(--fd-border);
+        background: var(--fd-soft);
+        color: var(--fd-text);
+        font-size: .82rem;
+        font-family: inherit;
         cursor: pointer;
-        min-width: 200px;
-        transition: all 0.2s ease;
+        appearance: none;
+        -webkit-appearance: none;
+        transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c8494' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right .85rem center;
+        background-size: 13px;
     }
-    
+
     .filter-select-modern:focus {
         outline: none;
-        border-color: var(--profile-primary);
-        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        background-color: var(--fd-card);
+        border-color: var(--fd-primary);
+        box-shadow: 0 0 0 3px var(--fd-primary-ring);
     }
-    
-    .filter-select-modern option {
-        background: var(--card-bg);
-        color: var(--text-primary);
-    }
-    
+
+    .filter-select-modern option { background: var(--fd-card); color: var(--fd-text); }
+
     .total-badge-modern {
-        background: var(--bg-tertiary);
-        color: var(--text-secondary);
-        padding: 6px 16px;
-        border-radius: 30px;
-        font-size: 0.75rem;
-        font-weight: 600;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        border: 1px solid var(--border-color);
+        gap: .5rem;
+        padding: .45rem .9rem;
+        border-radius: 30px;
+        background: var(--fd-soft);
+        color: var(--fd-muted);
+        border: 1px solid var(--fd-border);
+        font-size: .74rem;
+        font-weight: 600;
+        white-space: nowrap;
     }
-    
-    .church-detail-premium {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: var(--shadow-profile-lg);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .church-detail-premium:hover {
-        box-shadow: var(--shadow-profile-hover);
-        border-color: transparent;
-    }
-    
-    .church-detail-premium::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: var(--gradient-primary);
-    }
-    
-    .church-detail-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.2rem;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-    
-    .church-detail-header .church-name-large {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .church-detail-header .church-name-large i {
-        color: #4F46E5;
-        margin-right: 10px;
-    }
-    
-    .church-detail-header .date-badge {
-        font-size: 0.65rem;
-        color: var(--text-muted);
-        background: var(--bg-tertiary);
-        padding: 4px 14px;
-        border-radius: 20px;
-        border: 1px solid var(--border-color);
-    }
-    
+
+    .total-badge-modern i { font-size: .68rem; color: var(--fd-primary); }
+
+    .total-badge-modern strong { color: var(--fd-text); font-weight: 700; }
+
+    /* ---------------- CHURCH DETAIL ---------------- */
     .church-detail-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        margin-bottom: 1.2rem;
+        gap: .9rem;
     }
-    
+
     .church-detail-item {
-        background: var(--bg-tertiary);
+        background: var(--fd-soft);
+        border: 1px solid var(--fd-border);
         border-radius: 12px;
-        padding: 1rem;
+        padding: .95rem 1rem;
         text-align: center;
-        border: 1px solid var(--border-color);
-        transition: all 0.2s ease;
+        transition: transform .2s ease, border-color .2s ease;
     }
-    
+
     .church-detail-item:hover {
         transform: translateY(-2px);
-        border-color: var(--profile-primary);
+        border-color: var(--fd-primary);
     }
-    
+
     .church-detail-item .label {
-        font-size: 0.6rem;
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        font-size: .62rem;
         text-transform: uppercase;
-        letter-spacing: 0.6px;
-        color: var(--text-muted);
+        letter-spacing: .09em;
+        color: var(--fd-muted);
         font-weight: 700;
+        margin-bottom: .35rem;
     }
-    
+
+    .church-detail-item .label i { font-size: .62rem; }
+
     .church-detail-item .value {
-        font-size: 1.3rem;
-        font-weight: 700;
-        margin-top: 0.2rem;
-        font-family: 'Inter', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -.03em;
+        line-height: 1.2;
     }
-    
-    .church-detail-item .value.income { color: #10B981; }
-    .church-detail-item .value.expense { color: #EF4444; }
-    .church-detail-item .value.balance { color: #4F46E5; }
-    .church-detail-item .value.balance.positive { color: #10B981; }
-    .church-detail-item .value.balance.negative { color: #EF4444; }
-    
+
+    .church-detail-item .value.income  { color: var(--fd-green); }
+    .church-detail-item .value.expense { color: var(--fd-rose); }
+    .church-detail-item .value.balance { color: var(--fd-primary); }
+    .church-detail-item .value.balance.positive { color: var(--fd-green); }
+    .church-detail-item .value.balance.negative { color: var(--fd-rose); }
+
     .church-detail-item .sub-text {
-        font-size: 0.6rem;
-        color: var(--text-muted);
+        display: inline-flex;
+        align-items: center;
+        gap: .25rem;
+        margin-top: .35rem;
+        font-size: .64rem;
         font-weight: 600;
-        margin-top: 2px;
+        color: var(--fd-muted);
     }
-    
+
     .category-section {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 1.2rem;
-        padding-top: 1.2rem;
-        border-top: 1px solid var(--border-color);
+        gap: 1rem;
+        padding-top: 1.15rem;
+        margin-top: 1.15rem;
+        border-top: 1px solid var(--fd-border);
     }
-    
+
     .category-section .cat-label {
-        font-size: 0.6rem;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .62rem;
         text-transform: uppercase;
-        letter-spacing: 0.6px;
-        color: var(--text-muted);
+        letter-spacing: .09em;
+        color: var(--fd-muted);
         font-weight: 700;
-        margin-bottom: 0.5rem;
-        display: block;
+        margin-bottom: .55rem;
     }
-    
+
+    .category-section .cat-label i { font-size: .62rem; }
+
     .category-tags {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.4rem;
+        gap: .4rem;
     }
-    
+
     .category-tag {
-        padding: 3px 12px;
+        padding: .28rem .65rem;
         border-radius: 20px;
-        font-size: 0.65rem;
-        font-weight: 500;
-        border: 1px solid var(--border-color);
-        background: var(--bg-tertiary);
-        color: var(--text-secondary);
-        transition: all 0.2s ease;
+        font-size: .68rem;
+        font-weight: 600;
+        border: 1px solid var(--fd-border);
+        background: var(--fd-soft);
+        color: var(--fd-muted);
+        transition: transform .18s ease, border-color .18s ease;
     }
-    
-    .category-tag:hover {
-        transform: translateY(-1px);
-    }
-    
+
+    .category-tag:hover { transform: translateY(-1px); }
+
     .category-tag.income-tag {
-        background: rgba(16, 185, 129, 0.1);
-        color: #10B981;
-        border-color: rgba(16, 185, 129, 0.2);
-    }
-    
-    .category-tag.expense-tag {
-        background: rgba(239, 68, 68, 0.1);
-        color: #EF4444;
-        border-color: rgba(239, 68, 68, 0.2);
-    }
-    
-    .chart-container-premium {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: var(--shadow-profile-lg);
-        transition: all 0.3s ease;
-    }
-    
-    .chart-container-premium:hover {
-        box-shadow: var(--shadow-profile-hover);
+        background: var(--fd-green-soft);
+        color: var(--fd-green);
         border-color: transparent;
     }
-    
-    .chart-container-premium .chart-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        flex-wrap: wrap;
-        gap: 0.5rem;
+
+    .category-tag.expense-tag {
+        background: var(--fd-rose-soft);
+        color: var(--fd-rose);
+        border-color: transparent;
     }
-    
-    .chart-container-premium .chart-header h6 {
-        font-size: 0.75rem;
-        font-weight: 700;
+
+    /* ---------------- CHART ---------------- */
+    .chart-header h6 {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
         margin: 0;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-        font-family: 'Inter', sans-serif;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        font-size: .9rem;
+        font-weight: 700;
+        letter-spacing: -.005em;
+        color: var(--fd-text);
     }
-    
-    .chart-container-premium .chart-header h6 i {
-        font-size: 0.9rem;
-        color: #10B981;
+
+    .chart-header h6 i {
+        display: grid;
+        place-items: center;
+        width: 30px; height: 30px;
+        border-radius: 9px;
+        font-size: .7rem;
+        background: var(--fd-green-soft);
+        color: var(--fd-green);
     }
-    
+
     .chart-legend-premium {
         display: flex;
-        gap: 20px;
-        margin-bottom: 12px;
+        gap: 1.25rem;
+        margin: .35rem 0 1rem;
+        flex-wrap: wrap;
     }
-    
+
     .leg-item {
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        gap: 6px;
-        font-size: 0.7rem;
-        color: var(--text-muted);
+        gap: .45rem;
+        font-size: .72rem;
+        color: var(--fd-muted);
         font-weight: 500;
     }
-    
+
     .leg-dot {
         width: 12px;
         height: 12px;
         border-radius: 3px;
     }
-    
+
+    .leg-dot.dashed {
+        background: none;
+        border-top: 2px dashed var(--fd-rose);
+        height: 2px;
+        width: 20px;
+        border-radius: 0;
+    }
+
     .chart-box {
-        height: 240px;
+        height: 300px;
         position: relative;
     }
-    
-    .chart-box canvas {
-        width: 100% !important;
-        height: 100% !important;
+
+    .chart-box canvas { width: 100% !important; height: 100% !important; }
+
+    /* ---------------- INFO MESSAGE ---------------- */
+    .info-message-modern {
+        display: flex;
+        align-items: center;
+        gap: .7rem;
+        padding: .85rem 1.15rem;
+        border-radius: 12px;
+        background: var(--fd-primary-soft);
+        color: var(--fd-primary);
+        border: 1px solid transparent;
+        font-size: .82rem;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
     }
-    
+
+    .info-message-modern i { font-size: .95rem; flex: 0 0 auto; }
+
+    /* ---------------- ALL CHURCHES GRID ---------------- */
     .all-churches-grid-premium {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 1rem;
         margin-bottom: 1.5rem;
     }
-    
+
     .church-mini-card-premium {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.2rem 1.5rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
-        box-shadow: var(--shadow-profile-lg);
-        cursor: default;
+        background: var(--fd-card);
+        border: 1px solid var(--fd-border);
+        border-radius: var(--fd-radius);
+        padding: 1.15rem 1.15rem 1rem;
+        box-shadow: var(--fd-shadow-sm);
+        transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
     }
-    
+
     .church-mini-card-premium:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-profile-hover);
+        transform: translateY(-3px);
+        box-shadow: var(--fd-shadow-md);
         border-color: transparent;
     }
-    
-    .church-mini-card-premium::before {
-        content: '';
+
+    .church-mini-card-premium .status-dot {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: var(--gradient-primary);
-        border-radius: 16px 16px 0 0;
+        top: 14px; right: 14px;
+        width: 9px; height: 9px;
+        border-radius: 50%;
     }
-    
+
+    .church-mini-card-premium .status-dot.surplus {
+        background: var(--fd-green);
+        box-shadow: 0 0 0 4px var(--fd-green-soft);
+    }
+
+    .church-mini-card-premium .status-dot.deficit {
+        background: var(--fd-rose);
+        box-shadow: 0 0 0 4px var(--fd-rose-soft);
+    }
+
     .church-mini-card-premium .church-name {
-        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .88rem;
         font-weight: 700;
-        color: var(--text-primary);
-        margin-bottom: 0.3rem;
-        font-family: 'Inter', sans-serif;
+        color: var(--fd-text);
+        letter-spacing: -.005em;
+        margin-bottom: .5rem;
+        padding-right: 1.5rem;
     }
-    
+
     .church-mini-card-premium .church-name i {
-        color: #4F46E5;
-        margin-right: 8px;
+        display: grid;
+        place-items: center;
+        width: 26px; height: 26px;
+        border-radius: 8px;
+        font-size: .65rem;
+        background: var(--fd-primary-soft);
+        color: var(--fd-primary);
+        flex: 0 0 auto;
     }
-    
+
     .church-mini-card-premium .mini-balance {
         font-size: 1.3rem;
         font-weight: 800;
-        font-family: 'Inter', sans-serif;
-        letter-spacing: -0.3px;
+        letter-spacing: -.03em;
+        line-height: 1.15;
+        margin-bottom: .5rem;
     }
-    
-    .church-mini-card-premium .mini-balance.positive { color: #10B981; }
-    .church-mini-card-premium .mini-balance.negative { color: #EF4444; }
-    
+
+    .church-mini-card-premium .mini-balance.positive { color: var(--fd-green); }
+    .church-mini-card-premium .mini-balance.negative { color: var(--fd-rose); }
+
     .church-mini-card-premium .mini-details {
         display: flex;
-        gap: 0.5rem;
-        margin-top: 0.5rem;
-        font-size: 0.65rem;
-        color: var(--text-muted);
+        gap: .4rem;
         flex-wrap: wrap;
+        margin-bottom: .65rem;
     }
-    
+
     .church-mini-card-premium .mini-details span {
-        background: var(--bg-tertiary);
-        padding: 2px 10px;
-        border-radius: 20px;
-        border: 1px solid var(--border-color);
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: .3rem;
+        padding: .22rem .55rem;
+        border-radius: 20px;
+        background: var(--fd-soft);
+        border: 1px solid var(--fd-border);
+        color: var(--fd-muted);
+        font-size: .66rem;
+        font-weight: 600;
     }
-    
-    .church-mini-card-premium .mini-details span i {
-        font-size: 0.5rem;
-    }
-    
-    .church-mini-card-premium .status-dot {
-        position: absolute;
-        top: 14px;
-        right: 14px;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-    }
-    
-    .church-mini-card-premium .status-dot.surplus {
-        background: #10B981;
-        box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
-    }
-    
-    .church-mini-card-premium .status-dot.deficit {
-        background: #EF4444;
-        box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
-    }
-    
+
+    .church-mini-card-premium .mini-details span i { font-size: .55rem; }
+
     .btn-view-church-premium {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 4px 14px;
-        border-radius: 8px;
-        background: rgba(79, 70, 229, 0.08);
-        color: #4F46E5;
-        font-size: 0.65rem;
+        gap: .4rem;
+        padding: .42rem .85rem;
+        border-radius: 9px;
+        font-size: .72rem;
         font-weight: 600;
-        border: 1px solid rgba(79, 70, 229, 0.15);
-        transition: all 0.3s ease;
-        cursor: pointer;
+        background: var(--fd-primary-soft);
+        color: var(--fd-primary);
+        border: 1px solid transparent;
         text-decoration: none;
-        margin-top: 8px;
+        transition: background .18s ease, color .18s ease, transform .18s ease;
     }
-    
+
     .btn-view-church-premium:hover {
-        background: #4F46E5;
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+        background: var(--fd-primary);
+        color: #fff;
+        transform: translateY(-1px);
         text-decoration: none;
     }
-    
+
+    /* ---------------- EMPTY ---------------- */
     .empty-state-modern {
         text-align: center;
         padding: 3rem 1.5rem;
-        color: var(--text-muted);
+        color: var(--fd-muted);
     }
-    
+
     .empty-state-modern i {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        opacity: 0.3;
+        font-size: 2.4rem;
+        opacity: .35;
+        display: block;
+        margin-bottom: .9rem;
     }
-    
+
     .empty-state-modern h5 {
-        color: var(--text-primary);
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        font-size: 1.1rem;
-        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--fd-text);
+        letter-spacing: -.01em;
+        margin: 0 0 .35rem;
     }
-    
-    .empty-state-modern p {
-        font-size: 0.85rem;
-        margin-bottom: 1rem;
-    }
-    
-    .info-message-modern {
-        background: var(--bg-tertiary);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 1rem 1.5rem;
-        margin-bottom: 1.5rem;
-        color: var(--text-secondary);
-        font-size: 0.85rem;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .info-message-modern i {
-        color: #4F46E5;
-        font-size: 1.1rem;
-    }
-    
+
+    .empty-state-modern p { font-size: .82rem; margin: 0; }
+
+    /* ---------------- RESPONSIVE ---------------- */
     @media (max-width: 1200px) {
-        .stats-grid-premium {
-            grid-template-columns: repeat(2, 1fr);
-        }
+        .stats-grid-premium { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
-    
+
     @media (max-width: 992px) {
-        .finance-hero .hero-content {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .finance-hero .hero-actions {
-            width: 100%;
-        }
-        
-        .category-section {
-            grid-template-columns: 1fr;
-        }
+        .fd-head { flex-direction: column; align-items: flex-start; }
+        .category-section { grid-template-columns: 1fr; }
     }
-    
+
     @media (max-width: 768px) {
-        .finance-hero { padding: 1.5rem; }
-        .finance-hero h1 { font-size: 1.3rem; }
-        .stats-grid-premium { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-        .stat-card-premium { padding: 1rem; }
-        .stat-card-premium .stat-value { font-size: 1.3rem; }
-        .stat-card-premium .stat-icon-wrap { width: 36px; height: 36px; font-size: 0.9rem; }
+        .fd-title { font-size: 1.3rem; }
+        .fd-sub { font-size: .78rem; }
+
+        .stats-grid-premium { grid-template-columns: 1fr 1fr; gap: .8rem; }
+        .stat-card-premium { padding: .9rem; }
+        .stat-card-premium .stat-value { font-size: 1.15rem; }
+        .stat-card-premium .stat-icon-wrap { width: 38px; height: 38px; font-size: .85rem; }
+
+        .fd-head-actions { width: 100%; }
+        .fd-head-actions .fd-btn { flex: 1; justify-content: center; }
+
+        .filter-card-modern { flex-direction: column; align-items: stretch; }
+        .filter-field { flex: 1 1 auto; }
+
         .church-detail-grid { grid-template-columns: 1fr 1fr; }
         .all-churches-grid-premium { grid-template-columns: 1fr 1fr; }
-        .chart-box { height: 180px; }
+        .chart-box { height: 220px; }
     }
-    
+
     @media (max-width: 480px) {
         .stats-grid-premium { grid-template-columns: 1fr; }
         .church-detail-grid { grid-template-columns: 1fr; }
         .all-churches-grid-premium { grid-template-columns: 1fr; }
-        .filter-card-modern .row { flex-direction: column; align-items: stretch; }
         .filter-select-modern { width: 100%; }
-        .total-badge-modern { justify-content: center; }
-        .church-detail-header { flex-direction: column; align-items: flex-start; }
+        .total-badge-modern { justify-content: center; width: 100%; }
+        .chart-box { height: 200px; }
     }
 </style>
 
-<div class="container-fluid px-0">
+<div class="fd container-fluid px-0">
 
-    {{-- HERO SECTION --}}
-    <div class="finance-hero">
-        <div class="hero-content">
-            <div class="hero-left">
-                <h1><i class="fas fa-coins"></i> <span data-i18n="finance_dashboard">{{ __("Finance Dashboard") }}</span></h1>
-                <p class="hero-sub">
-                    <i class="fas fa-circle" style="color: #34D399; font-size: 0.4rem; vertical-align: middle;"></i>
-                    <span data-i18n="finance_dashboard_desc">{{ __("Track income, expenses, and financial health across all churches") }}</span>
-                </p>
+    {{-- ============================================
+         HERO
+    ============================================ --}}
+    <header class="fd-head">
+        <div>
+            <div class="fd-eyebrow">
+                <span class="fd-dot"></span>
+                <span data-i18n="finance_overview">{{ __("Finance Overview") }}</span>
             </div>
-            <div class="hero-actions">
-                <a href="{{ route('finance.index') }}?church=all" class="btn-hero btn-hero-white">
-                    <i class="fas fa-chart-simple"></i> <span data-i18n="view_all">{{ __("View All") }}</span>
-                </a>
-                <a href="{{ route('finance.index') }}" class="btn-hero btn-hero-ghost">
-                    <i class="fas fa-sync-alt"></i> <span data-i18n="refresh">{{ __("Refresh") }}</span>
-                </a>
-            </div>
+            <h1 class="fd-title">
+                <i class="fas fa-coins"></i>
+                <span data-i18n="finance_dashboard">{{ __("Finance Dashboard") }}</span>
+            </h1>
+            <p class="fd-sub" data-i18n="finance_dashboard_desc">
+                {{ __("Track income, expenses, and financial health across all churches") }}
+            </p>
         </div>
-    </div>
+        <div class="fd-head-actions">
+            <a href="{{ route('finance.index') }}?church=all" class="fd-btn fd-btn-primary">
+                <i class="fas fa-chart-simple"></i>
+                <span data-i18n="view_all">{{ __("View All") }}</span>
+            </a>
+            <a href="{{ route('finance.index') }}" class="fd-btn fd-btn-ghost">
+                <i class="fas fa-sync-alt"></i>
+                <span data-i18n="refresh">{{ __("Refresh") }}</span>
+            </a>
+        </div>
+    </header>
 
-    {{-- STATS CARDS --}}
-    <div class="stats-grid-premium">
+    {{-- ============================================
+         STATS
+    ============================================ --}}
+    <section class="stats-grid-premium">
         <div class="stat-card-premium green">
-            <div class="stat-top">
-                <span class="stat-label"><span data-i18n="total_income">{{ __("Total Income") }}</span></span>
-                <div class="stat-icon-wrap"><i class="fas fa-arrow-down"></i></div>
-            </div>
-            <div class="stat-value">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="all_churches">{{ __("All churches") }}</span></div>
-        </div>
-        
-        <div class="stat-card-premium red">
-            <div class="stat-top">
-                <span class="stat-label"><span data-i18n="total_expenses">{{ __("Total Expenses") }}</span></span>
-                <div class="stat-icon-wrap"><i class="fas fa-arrow-up"></i></div>
-            </div>
-            <div class="stat-value">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
-            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="all_churches">{{ __("All churches") }}</span></div>
-        </div>
-        
-        <div class="stat-card-premium blue">
-            <div class="stat-top">
-                <span class="stat-label"><span data-i18n="overall_balance">{{ __("Overall Balance") }}</span></span>
-                <div class="stat-icon-wrap"><i class="fas fa-scale-balanced"></i></div>
-            </div>
-            <div class="stat-value" style="color: {{ ($overallBalance ?? 0) >= 0 ? '#10B981' : '#EF4444' }}">
-                ₱{{ number_format(abs($overallBalance ?? 0), 2) }}
-            </div>
-            <div class="stat-change {{ ($overallBalance ?? 0) >= 0 ? 'positive' : 'negative' }}">
-                {{ ($overallBalance ?? 0) >= 0 ? '↑ ' : '↓ ' }}
-                <span data-i18n="{{ ($overallBalance ?? 0) >= 0 ? 'surplus' : 'deficit' }}">
-                    {{ ($overallBalance ?? 0) >= 0 ? __("Surplus") : __("Deficit") }}
+            <div class="stat-icon-wrap"><i class="fas fa-arrow-down"></i></div>
+            <div class="stat-body">
+                <p class="stat-label"><span data-i18n="total_income">{{ __("Total Income") }}</span></p>
+                <div class="stat-value">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
+                <span class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span data-i18n="all_churches">{{ __("All churches") }}</span>
                 </span>
             </div>
         </div>
-        
-        <div class="stat-card-premium purple">
-            <div class="stat-top">
-                <span class="stat-label"><span data-i18n="churches">{{ __("Churches") }}</span></span>
-                <div class="stat-icon-wrap"><i class="fas fa-church"></i></div>
-            </div>
-            <div class="stat-value">{{ $churches->count() ?? 0 }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="connected_churches">{{ __("Connected churches") }}</span></div>
-        </div>
-    </div>
 
-    {{-- FILTER SECTION --}}
-    <div class="filter-card-modern">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <span class="filter-label-modern"><i class="fas fa-church me-1"></i> <span data-i18n="select_church">{{ __("Select Church") }}</span></span>
-                <select id="churchSelect" class="filter-select-modern" onchange="window.location.href='{{ route('finance.index') }}?church=' + this.value">
-                    <option value="">-- {{ __("Choose a Church") }} --</option>
-                    @foreach($churches as $church)
-                        <option value="{{ $church->id }}" {{ ($selectedChurchId ?? '') == $church->id ? 'selected' : '' }}>
-                            {{ $church->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                <span class="total-badge-modern">
-                    <i class="fas fa-building"></i>
-                    @if($selectedChurch)
-                        <span data-i18n="viewing">{{ __("Viewing:") }}</span> <strong>{{ $selectedChurch->name }}</strong>
-                    @else
-                        <span data-i18n="all_churches_label">{{ __("All Churches") }}</span>
-                    @endif
+        <div class="stat-card-premium red">
+            <div class="stat-icon-wrap"><i class="fas fa-arrow-up"></i></div>
+            <div class="stat-body">
+                <p class="stat-label"><span data-i18n="total_expenses">{{ __("Total Expenses") }}</span></p>
+                <div class="stat-value">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
+                <span class="stat-change negative">
+                    <i class="fas fa-arrow-down"></i>
+                    <span data-i18n="all_churches">{{ __("All churches") }}</span>
                 </span>
             </div>
+        </div>
+
+        <div class="stat-card-premium blue">
+            <div class="stat-icon-wrap"><i class="fas fa-scale-balanced"></i></div>
+            <div class="stat-body">
+                <p class="stat-label"><span data-i18n="overall_balance">{{ __("Overall Balance") }}</span></p>
+                <div class="stat-value" style="color: {{ ($overallBalance ?? 0) >= 0 ? 'var(--fd-green)' : 'var(--fd-rose)' }}">
+                    ₱{{ number_format(abs($overallBalance ?? 0), 2) }}
+                </div>
+                <span class="stat-change {{ ($overallBalance ?? 0) >= 0 ? 'positive' : 'negative' }}">
+                    {{ ($overallBalance ?? 0) >= 0 ? '↑ ' : '↓ ' }}
+                    <span data-i18n="{{ ($overallBalance ?? 0) >= 0 ? 'surplus' : 'deficit' }}">
+                        {{ ($overallBalance ?? 0) >= 0 ? __("Surplus") : __("Deficit") }}
+                    </span>
+                </span>
+            </div>
+        </div>
+
+        <div class="stat-card-premium purple">
+            <div class="stat-icon-wrap"><i class="fas fa-church"></i></div>
+            <div class="stat-body">
+                <p class="stat-label"><span data-i18n="churches">{{ __("Churches") }}</span></p>
+                <div class="stat-value">{{ $churches->count() ?? 0 }}</div>
+                <span class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span data-i18n="connected_churches">{{ __("Connected churches") }}</span>
+                </span>
+            </div>
+        </div>
+    </section>
+
+    {{-- ============================================
+         FILTER
+    ============================================ --}}
+    <div class="filter-card-modern">
+        <div class="filter-field">
+            <span class="filter-label-modern">
+                <i class="fas fa-church"></i>
+                <span data-i18n="select_church">{{ __("Select Church") }}</span>
+            </span>
+            <select id="churchSelect" class="filter-select-modern"
+                    onchange="window.location.href='{{ route('finance.index') }}?church=' + this.value">
+                <option value="">— {{ __("Choose a Church") }} —</option>
+                @foreach($churches as $church)
+                    <option value="{{ $church->id }}" {{ ($selectedChurchId ?? '') == $church->id ? 'selected' : '' }}>
+                        {{ $church->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <span class="total-badge-modern">
+                <i class="fas fa-building"></i>
+                @if($selectedChurch)
+                    <span data-i18n="viewing">{{ __("Viewing:") }}</span> <strong>{{ $selectedChurch->name }}</strong>
+                @else
+                    <span data-i18n="all_churches_label">{{ __("All Churches") }}</span>
+                @endif
+            </span>
         </div>
     </div>
 
     @if($selectedChurch)
-        {{-- CHURCH DETAIL --}}
-        <div class="church-detail-premium">
-            <div class="church-detail-header">
-                <div class="church-name-large">
-                    <i class="fas fa-church"></i> {{ $selectedChurch->name }}
+        {{-- ============================================
+             CHURCH DETAIL
+        ============================================ --}}
+        <div class="fd-card">
+            <div class="fd-card-head">
+                <div class="fd-card-head-left">
+                    <div class="fd-card-head-icon"><i class="fas fa-church"></i></div>
+                    <div>
+                        <h2 class="fd-card-head-title">{{ $selectedChurch->name }}</h2>
+                        <div class="fd-card-head-sub" data-i18n="church_financial_summary">
+                            {{ __("Financial summary for the selected church") }}
+                        </div>
+                    </div>
                 </div>
-                <span class="date-badge">
-                    <i class="fas fa-calendar-alt"></i> {{ now()->format('F d, Y') }}
+                <span class="fd-card-head-tag">
+                    <i class="fas fa-calendar-alt"></i>
+                    {{ now()->format('F d, Y') }}
                 </span>
             </div>
-            
-            <div class="church-detail-grid">
-                <div class="church-detail-item">
-                    <div class="label"><i class="fas fa-arrow-down" style="color: #10B981;"></i> <span data-i18n="total_income">{{ __("Total Income") }}</span></div>
-                    <div class="value income">₱{{ number_format($churchIncome ?? 0, 2) }}</div>
-                </div>
-                <div class="church-detail-item">
-                    <div class="label"><i class="fas fa-arrow-up" style="color: #EF4444;"></i> <span data-i18n="total_expenses">{{ __("Total Expenses") }}</span></div>
-                    <div class="value expense">₱{{ number_format($churchExpenses ?? 0, 2) }}</div>
-                </div>
-                <div class="church-detail-item">
-                    <div class="label"><i class="fas fa-scale-balanced" style="color: #4F46E5;"></i> <span data-i18n="balance">{{ __("Balance") }}</span></div>
-                    <div class="value balance {{ ($churchBalance ?? 0) >= 0 ? 'positive' : 'negative' }}">
-                        ₱{{ number_format(abs($churchBalance ?? 0), 2) }}
+
+            <div class="fd-card-body">
+                <div class="church-detail-grid">
+                    <div class="church-detail-item">
+                        <div class="label">
+                            <i class="fas fa-arrow-down" style="color: var(--fd-green);"></i>
+                            <span data-i18n="total_income">{{ __("Total Income") }}</span>
+                        </div>
+                        <div class="value income">₱{{ number_format($churchIncome ?? 0, 2) }}</div>
                     </div>
-                    <div class="sub-text">
-                        {{ ($churchBalance ?? 0) >= 0 ? '↑ ' : '↓ ' }}
-                        <span data-i18n="{{ ($churchBalance ?? 0) >= 0 ? 'surplus' : 'deficit' }}">
-                            {{ ($churchBalance ?? 0) >= 0 ? __("Surplus") : __("Deficit") }}
+                    <div class="church-detail-item">
+                        <div class="label">
+                            <i class="fas fa-arrow-up" style="color: var(--fd-rose);"></i>
+                            <span data-i18n="total_expenses">{{ __("Total Expenses") }}</span>
+                        </div>
+                        <div class="value expense">₱{{ number_format($churchExpenses ?? 0, 2) }}</div>
+                    </div>
+                    <div class="church-detail-item">
+                        <div class="label">
+                            <i class="fas fa-scale-balanced" style="color: var(--fd-primary);"></i>
+                            <span data-i18n="balance">{{ __("Balance") }}</span>
+                        </div>
+                        <div class="value balance {{ ($churchBalance ?? 0) >= 0 ? 'positive' : 'negative' }}">
+                            ₱{{ number_format(abs($churchBalance ?? 0), 2) }}
+                        </div>
+                        <div class="sub-text">
+                            {{ ($churchBalance ?? 0) >= 0 ? '↑ ' : '↓ ' }}
+                            <span data-i18n="{{ ($churchBalance ?? 0) >= 0 ? 'surplus' : 'deficit' }}">
+                                {{ ($churchBalance ?? 0) >= 0 ? __("Surplus") : __("Deficit") }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-section">
+                    <div>
+                        <span class="cat-label">
+                            <i class="fas fa-tags" style="color: var(--fd-green);"></i>
+                            <span data-i18n="income_categories">{{ __("Income Categories") }}</span>
                         </span>
+                        <div class="category-tags">
+                            @forelse($incomeTypes ?? [] as $type)
+                                <span class="category-tag income-tag">
+                                    {{ $type->category ?? __("Uncategorized") }}: ₱{{ number_format($type->total, 2) }}
+                                </span>
+                            @empty
+                                <span style="font-size:.72rem; color: var(--fd-muted);">
+                                    <span data-i18n="no_income_categories">{{ __("No income categories") }}</span>
+                                </span>
+                            @endforelse
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="category-section">
-                <div>
-                    <span class="cat-label"><i class="fas fa-tags" style="color: #10B981;"></i> <span data-i18n="income_categories">{{ __("Income Categories") }}</span></span>
-                    <div class="category-tags">
-                        @forelse($incomeTypes ?? [] as $type)
-                            <span class="category-tag income-tag">
-                                {{ $type->category ?? __("Uncategorized") }}: ₱{{ number_format($type->total, 2) }}
-                            </span>
-                        @empty
-                            <span style="font-size: 0.7rem; color: var(--text-muted);"><span data-i18n="no_income_categories">{{ __("No income categories") }}</span></span>
-                        @endforelse
-                    </div>
-                </div>
-                <div>
-                    <span class="cat-label"><i class="fas fa-tags" style="color: #EF4444;"></i> <span data-i18n="expense_categories">{{ __("Expense Categories") }}</span></span>
-                    <div class="category-tags">
-                        @forelse($expenseTypes ?? [] as $type)
-                            <span class="category-tag expense-tag">
-                                {{ $type->category ?? __("Uncategorized") }}: ₱{{ number_format($type->total, 2) }}
-                            </span>
-                        @empty
-                            <span style="font-size: 0.7rem; color: var(--text-muted);"><span data-i18n="no_expense_categories">{{ __("No expense categories") }}</span></span>
-                        @endforelse
+                    <div>
+                        <span class="cat-label">
+                            <i class="fas fa-tags" style="color: var(--fd-rose);"></i>
+                            <span data-i18n="expense_categories">{{ __("Expense Categories") }}</span>
+                        </span>
+                        <div class="category-tags">
+                            @forelse($expenseTypes ?? [] as $type)
+                                <span class="category-tag expense-tag">
+                                    {{ $type->category ?? __("Uncategorized") }}: ₱{{ number_format($type->total, 2) }}
+                                </span>
+                            @empty
+                                <span style="font-size:.72rem; color: var(--fd-muted);">
+                                    <span data-i18n="no_expense_categories">{{ __("No expense categories") }}</span>
+                                </span>
+                            @endforelse
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- CHART --}}
-        <div class="chart-container-premium">
-            <div class="chart-header">
-                <h6>
-                    <i class="fas fa-chart-line"></i> <span data-i18n="monthly_income_expenses">{{ __("Monthly Income vs Expenses") }}</span> - {{ $selectedChurch->name }}
-                </h6>
-                <span style="font-size: 0.65rem; color: var(--text-muted);"><span data-i18n="last_6_months">{{ __("Last 6 months") }}</span></span>
-            </div>
-            <div class="chart-legend-premium">
-                <span class="leg-item">
-                    <span class="leg-dot" style="background: #10B981;"></span> <span data-i18n="income">{{ __("Income") }}</span>
+        {{-- ============================================
+             CHART
+        ============================================ --}}
+        <div class="fd-card">
+            <div class="fd-card-head">
+                <div class="chart-header">
+                    <h6>
+                        <i class="fas fa-chart-line"></i>
+                        <span data-i18n="monthly_income_expenses">{{ __("Monthly Income vs Expenses") }}</span>
+                        — {{ $selectedChurch->name }}
+                    </h6>
+                </div>
+                <span class="fd-card-head-tag">
+                    <i class="fas fa-clock"></i>
+                    <span data-i18n="last_6_months">{{ __("Last 6 months") }}</span>
                 </span>
-                <span class="leg-item">
-                    <span class="leg-dot" style="background: #EF4444; border: 2px dashed #EF4444; background: none; width: 20px; height: 2px; border-radius: 0;"></span> <span data-i18n="expenses">{{ __("Expenses") }}</span>
-                </span>
             </div>
-            <div class="chart-box">
-                <canvas id="financeChart"></canvas>
+
+            <div class="fd-card-body">
+                <div class="chart-legend-premium">
+                    <span class="leg-item">
+                        <span class="leg-dot" style="background: var(--fd-green);"></span>
+                        <span data-i18n="income">{{ __("Income") }}</span>
+                    </span>
+                    <span class="leg-item">
+                        <span class="leg-dot dashed"></span>
+                        <span data-i18n="expenses">{{ __("Expenses") }}</span>
+                    </span>
+                </div>
+                <div class="chart-box">
+                    <canvas id="financeChart"></canvas>
+                </div>
             </div>
         </div>
     @else
-        {{-- ALL CHURCHES OVERVIEW --}}
+        {{-- ============================================
+             ALL CHURCHES OVERVIEW
+        ============================================ --}}
         <div class="info-message-modern">
             <i class="fas fa-info-circle"></i>
-            <span data-i18n="select_church_hint">{{ __("Select a church above to view its detailed financial information.") }}</span>
+            <span data-i18n="select_church_hint">
+                {{ __("Select a church above to view its detailed financial information.") }}
+            </span>
         </div>
-        
+
         <div class="all-churches-grid-premium">
             @foreach($churchBalances ?? [] as $data)
-            <div class="church-mini-card-premium">
-                <div class="status-dot {{ $data['status'] }}"></div>
-                <div class="church-name">
-                    <i class="fas fa-church"></i> {{ $data['church']->name }}
+                <div class="church-mini-card-premium">
+                    <div class="status-dot {{ $data['status'] }}"></div>
+                    <div class="church-name">
+                        <i class="fas fa-church"></i>
+                        <span>{{ $data['church']->name }}</span>
+                    </div>
+                    <div class="mini-balance {{ $data['status'] == 'surplus' ? 'positive' : 'negative' }}">
+                        ₱{{ number_format(abs($data['balance']), 2) }}
+                        {{ $data['balance'] >= 0 ? '↑' : '↓' }}
+                    </div>
+                    <div class="mini-details">
+                        <span>
+                            <i class="fas fa-arrow-down" style="color: var(--fd-green);"></i>
+                            ₱{{ number_format($data['income'], 2) }}
+                        </span>
+                        <span>
+                            <i class="fas fa-arrow-up" style="color: var(--fd-rose);"></i>
+                            ₱{{ number_format($data['expense'], 2) }}
+                        </span>
+                    </div>
+                    <a href="{{ route('finance.index') }}?church={{ $data['church']->id }}" class="btn-view-church-premium">
+                        <i class="fas fa-eye"></i>
+                        <span data-i18n="view_details">{{ __("View Details") }}</span>
+                    </a>
                 </div>
-                <div class="mini-balance {{ $data['status'] == 'surplus' ? 'positive' : 'negative' }}">
-                    ₱{{ number_format(abs($data['balance']), 2) }}
-                    {{ $data['balance'] >= 0 ? '↑' : '↓' }}
-                </div>
-                <div class="mini-details">
-                    <span><i class="fas fa-arrow-down" style="color: #10B981;"></i> ₱{{ number_format($data['income'], 2) }}</span>
-                    <span><i class="fas fa-arrow-up" style="color: #EF4444;"></i> ₱{{ number_format($data['expense'], 2) }}</span>
-                </div>
-                <a href="{{ route('finance.index') }}?church={{ $data['church']->id }}" class="btn-view-church-premium">
-                    <i class="fas fa-eye"></i> <span data-i18n="view_details">{{ __("View Details") }}</span>
-                </a>
-            </div>
             @endforeach
         </div>
     @endif

@@ -6,561 +6,617 @@
 
 @section('content')
 <style>
-    /* ============================================
-       MODERN PROFILE DESIGN - CLEAN VERSION
-    ============================================ */
-    
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-    
-    :root {
-        --profile-primary: #4F46E5;
-        --profile-primary-light: #818CF8;
-        --profile-primary-dark: #4338CA;
-        --profile-success: #10B981;
-        --profile-warning: #F59E0B;
-        --profile-danger: #EF4444;
-        --profile-purple: #8B5CF6;
-        --profile-pink: #EC4899;
-        --gradient-primary: linear-gradient(135deg, #4F46E5, #7C3AED);
-        --shadow-profile-lg: 0 20px 60px rgba(0,0,0,0.08);
-        --shadow-profile-hover: 0 24px 80px rgba(0,0,0,0.12);
-        --shadow-glow: 0 8px 32px rgba(79, 70, 229, 0.3);
+    /* ==========================================================
+       MEMBER PROFILE — 2025 REDESIGN
+       Flat · bordered · airy · Inter
+       (functionality unchanged — design only)
+    ========================================================== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    .mp {
+        --mp-card: var(--card-bg, #ffffff);
+        --mp-border: var(--border-color, #e8eaf0);
+        --mp-text: var(--text-primary, #0f172a);
+        --mp-muted: var(--text-muted, #7c8494);
+        --mp-soft: var(--bg-tertiary, #f5f6fa);
+
+        --mp-primary: #4f46e5;
+        --mp-primary-soft: rgba(79, 70, 229, .08);
+        --mp-primary-ring: rgba(79, 70, 229, .18);
+
+        --mp-green: #059669;
+        --mp-green-soft: rgba(5, 150, 105, .10);
+        --mp-rose: #e11d48;
+        --mp-rose-soft: rgba(225, 29, 72, .09);
+        --mp-amber: #d97706;
+        --mp-amber-soft: rgba(217, 119, 6, .10);
+        --mp-violet: #7c3aed;
+        --mp-violet-soft: rgba(124, 58, 237, .10);
+        --mp-pink: #db2777;
+        --mp-pink-soft: rgba(219, 39, 119, .10);
+        --mp-teal: #0d9488;
+        --mp-teal-soft: rgba(13, 148, 136, .10);
+        --mp-blue: #2563eb;
+        --mp-blue-soft: rgba(37, 99, 235, .10);
+
+        --mp-shadow-sm: 0 1px 2px rgba(15, 23, 42, .04);
+        --mp-shadow-md: 0 10px 28px -14px rgba(15, 23, 42, .22);
+        --mp-radius: 16px;
+
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: var(--mp-text);
+        padding-bottom: 2rem;
     }
-    
-    /* ============================================
-       HERO SECTION
-    ============================================ */
-    .profile-hero {
-        background: var(--gradient-primary);
-        border-radius: 20px;
-        padding: 1.8rem 2.5rem;
-        margin-bottom: 1.5rem;
-        position: relative;
-        overflow: hidden;
-        box-shadow: var(--shadow-glow);
+
+    [data-theme="dark"] .mp {
+        --mp-primary: #6366f1;
+        --mp-primary-soft: rgba(99, 102, 241, .16);
+        --mp-primary-ring: rgba(99, 102, 241, .28);
+        --mp-green: #34d399;
+        --mp-green-soft: rgba(16, 185, 129, .14);
+        --mp-rose: #fb7185;
+        --mp-rose-soft: rgba(244, 63, 94, .14);
+        --mp-amber: #fbbf24;
+        --mp-amber-soft: rgba(245, 158, 11, .14);
+        --mp-violet: #a78bfa;
+        --mp-violet-soft: rgba(139, 92, 246, .16);
+        --mp-pink: #f472b6;
+        --mp-pink-soft: rgba(236, 72, 153, .14);
+        --mp-teal: #2dd4bf;
+        --mp-teal-soft: rgba(20, 184, 166, .14);
+        --mp-blue: #60a5fa;
+        --mp-blue-soft: rgba(59, 130, 246, .16);
+        --mp-shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+        --mp-shadow-md: 0 14px 30px -16px rgba(0, 0, 0, .75);
+    }
+
+    .mp * { box-sizing: border-box; }
+
+    /* ---------------- HEADER ---------------- */
+    .mp-head {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+        gap: 1.25rem;
         flex-wrap: wrap;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid var(--mp-border);
+        margin-bottom: 1.25rem;
+    }
+
+    .mp-head-left {
+        display: flex;
+        align-items: center;
         gap: 1rem;
+        min-width: 0;
     }
-    
-    .profile-hero::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -20%;
-        width: 60%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-        animation: heroPulse 6s ease-in-out infinite;
-    }
-    
-    .profile-hero::after {
-        content: '';
-        position: absolute;
-        bottom: -40%;
-        left: -10%;
-        width: 40%;
-        height: 180%;
-        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
-        animation: heroPulse 8s ease-in-out infinite reverse;
-    }
-    
-    @keyframes heroPulse {
-        0%, 100% { transform: scale(1); opacity: 0.5; }
-        50% { transform: scale(1.1); opacity: 1; }
-    }
-    
-    .profile-hero .hero-left {
-        display: flex;
-        align-items: center;
-        gap: 1.2rem;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .profile-hero .hero-avatar {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.15);
-        border: 3px solid rgba(255,255,255,0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: white;
-        flex-shrink: 0;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-    }
-    
-    .profile-hero .hero-text h1 {
-        font-size: 1.6rem;
+
+    .mp-head-avatar {
+        width: 62px; height: 62px;
+        border-radius: 20px;
+        display: grid;
+        place-items: center;
+        font-size: 1.35rem;
         font-weight: 800;
-        color: white;
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        letter-spacing: -0.5px;
+        letter-spacing: .02em;
+        background: var(--mp-primary-soft);
+        color: var(--mp-primary);
+        flex: 0 0 auto;
     }
-    
-    .profile-hero .hero-text .hero-sub {
-        color: rgba(255,255,255,0.8);
-        font-size: 0.8rem;
-        margin: 2px 0 0 0;
-    }
-    
-    .profile-hero .hero-text .hero-sub i {
-        margin-right: 6px;
-    }
-    
-    .profile-hero .hero-actions {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .btn-hero {
-        padding: 0.45rem 1.2rem;
-        border-radius: 10px;
-        font-weight: 600;
-        font-size: 0.7rem;
-        transition: all 0.3s ease;
+
+    .mp-eyebrow {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        border: none;
-        text-decoration: none;
+        gap: .45rem;
+        font-size: .66rem;
+        font-weight: 700;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+        color: var(--mp-muted);
+        margin-bottom: .4rem;
     }
-    
-    .btn-hero-white {
-        background: white;
-        color: #4F46E5;
+
+    .mp-eyebrow .mp-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--mp-violet);
+        box-shadow: 0 0 0 3px var(--mp-violet-soft);
     }
-    
-    .btn-hero-white:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        color: #4F46E5;
-        text-decoration: none;
-    }
-    
-    .btn-hero-ghost {
-        background: rgba(255,255,255,0.15);
-        color: white;
-        border: 1px solid rgba(255,255,255,0.2);
-    }
-    
-    .btn-hero-ghost:hover {
-        background: rgba(255,255,255,0.25);
-        transform: translateY(-2px);
-        color: white;
-        text-decoration: none;
-    }
-    
-    /* ============================================
-       QUICK ACTIONS - HORIZONTAL
-    ============================================ */
-    .quick-actions-horizontal {
+
+    .mp-title {
         display: flex;
-        gap: 0.8rem;
-        margin-bottom: 1.5rem;
+        align-items: center;
+        gap: .55rem;
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -.035em;
+        line-height: 1.15;
+    }
+
+    .mp-title i { font-size: 1.1rem; color: var(--mp-primary); }
+
+    .mp-sub {
+        display: flex;
+        align-items: center;
+        gap: .55rem;
+        flex-wrap: wrap;
+        margin: .45rem 0 0;
+        font-size: .8rem;
+        color: var(--mp-muted);
+        line-height: 1.4;
+    }
+
+    .mp-sub .mp-sep { opacity: .4; }
+
+    .mp-sub i { font-size: .68rem; }
+
+    /* Status pill */
+    .mp-status {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .22rem .65rem;
+        border-radius: 20px;
+        font-size: .64rem;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+
+    .mp-status.active {
+        background: var(--mp-green-soft);
+        color: var(--mp-green);
+    }
+
+    .mp-status.active::before {
+        content: '';
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--mp-green);
+        animation: mpPulse 2s infinite;
+    }
+
+    .mp-status.deceased {
+        background: var(--mp-rose-soft);
+        color: var(--mp-rose);
+    }
+
+    .mp-status.deceased i { font-size: .58rem; }
+
+    @keyframes mpPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: .5; transform: scale(.75); }
+    }
+
+    .mp-head-actions {
+        display: flex;
+        gap: .55rem;
         flex-wrap: wrap;
     }
-    
+
+    /* ---------------- BUTTONS ---------------- */
+    .mp-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .6rem 1.1rem;
+        border-radius: 11px;
+        font-size: .79rem;
+        font-weight: 600;
+        font-family: inherit;
+        line-height: 1.2;
+        text-decoration: none;
+        border: 1px solid transparent;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .mp-btn-primary {
+        background: var(--mp-primary);
+        color: #fff;
+        box-shadow: 0 8px 18px -10px rgba(79, 70, 229, .9);
+    }
+    .mp-btn-primary:hover {
+        background: #4338ca;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 12px 22px -10px rgba(79, 70, 229, .9);
+    }
+
+    .mp-btn-ghost {
+        background: var(--mp-card);
+        color: var(--mp-text);
+        border-color: var(--mp-border);
+    }
+    .mp-btn-ghost:hover {
+        background: var(--mp-soft);
+        color: var(--mp-text);
+        transform: translateY(-1px);
+    }
+
+    /* ---------------- QUICK ACTIONS (horizontal) ---------------- */
+    .quick-actions-horizontal {
+        display: flex;
+        gap: .7rem;
+        margin-bottom: 1.25rem;
+        flex-wrap: wrap;
+    }
+
     .quick-action-btn {
         flex: 1;
-        min-width: 120px;
-        padding: 0.8rem 1rem;
+        min-width: 150px;
+        padding: .8rem 1rem;
         border-radius: 12px;
-        border: 1.5px solid var(--border-color);
-        background: var(--card-bg);
+        border: 1px solid var(--mp-border);
+        background: var(--mp-card);
         text-align: center;
         text-decoration: none;
-        color: var(--text-secondary);
-        transition: all 0.3s ease;
-        font-size: 0.7rem;
+        color: var(--mp-muted);
+        font-size: .78rem;
         font-weight: 600;
-        display: flex;
-        flex-direction: column;
+        display: inline-flex;
         align-items: center;
-        gap: 4px;
+        justify-content: center;
+        gap: .5rem;
         cursor: pointer;
+        font-family: inherit;
+        transition: background .18s ease, color .18s ease, transform .18s ease, border-color .18s ease;
     }
-    
+
+    .quick-action-btn i { font-size: .85rem; }
+
     .quick-action-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow-profile-lg);
+        transform: translateY(-2px);
     }
-    
-    .quick-action-btn i {
-        font-size: 1.3rem;
-    }
-    
+
     .quick-action-btn.attendance {
-        border-color: rgba(16, 185, 129, 0.3);
-        color: #10B981;
+        border-color: var(--mp-border);
+        color: var(--mp-green);
     }
-    
     .quick-action-btn.attendance:hover {
-        border-color: #10B981;
-        background: rgba(16, 185, 129, 0.05);
+        border-color: var(--mp-green);
+        background: var(--mp-green-soft);
     }
-    
+
     .quick-action-btn.deceased {
-        border-color: rgba(239, 68, 68, 0.3);
-        color: #EF4444;
+        border-color: var(--mp-border);
+        color: var(--mp-rose);
     }
-    
     .quick-action-btn.deceased:hover {
-        border-color: #EF4444;
-        background: rgba(239, 68, 68, 0.05);
+        border-color: var(--mp-rose);
+        background: var(--mp-rose-soft);
     }
-    
+
     .quick-action-btn.edit {
-        border-color: rgba(139, 92, 246, 0.3);
-        color: #8B5CF6;
+        border-color: var(--mp-border);
+        color: var(--mp-violet);
     }
-    
     .quick-action-btn.edit:hover {
-        border-color: #8B5CF6;
-        background: rgba(139, 92, 246, 0.05);
+        border-color: var(--mp-violet);
+        background: var(--mp-violet-soft);
     }
-    
+
     .quick-action-btn.restore {
-        border-color: rgba(16, 185, 129, 0.3);
-        color: #10B981;
+        border-color: var(--mp-border);
+        color: var(--mp-green);
     }
-    
     .quick-action-btn.restore:hover {
-        border-color: #10B981;
-        background: rgba(16, 185, 129, 0.05);
+        border-color: var(--mp-green);
+        background: var(--mp-green-soft);
     }
-    
-    /* ============================================
-       MAIN LAYOUT - LEFT (Name) + RIGHT (Info)
-    ============================================ */
+
+    /* ---------------- MAIN LAYOUT ---------------- */
     .profile-main-layout {
         display: flex;
-        gap: 1.5rem;
+        gap: 1.25rem;
+        align-items: stretch;
     }
-    
+
     .profile-left {
-        flex: 0 0 280px;
-        min-width: 220px;
+        flex: 0 0 300px;
+        min-width: 260px;
     }
-    
+
     .profile-right {
         flex: 1;
         min-width: 0;
     }
-    
-    /* ============================================
-       LEFT CARD - Name & Basic Info
-    ============================================ */
+
+    /* ---------------- NAME CARD (LEFT) ---------------- */
     .name-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: var(--shadow-profile-lg);
-        transition: all 0.3s ease;
-        height: 100%;
+        background: var(--mp-card);
+        border: 1px solid var(--mp-border);
+        border-radius: var(--mp-radius);
+        box-shadow: var(--mp-shadow-sm);
+        padding: 1.6rem 1.15rem 1.4rem;
         text-align: center;
-        padding: 2rem 1.5rem;
+        height: 100%;
+        transition: box-shadow .25s ease, border-color .25s ease;
     }
-    
+
     .name-card:hover {
-        box-shadow: var(--shadow-profile-hover);
+        box-shadow: var(--mp-shadow-md);
         border-color: transparent;
     }
-    
+
     .name-card .avatar-large {
-        width: 90px;
-        height: 90px;
-        border-radius: 50%;
-        background: var(--gradient-primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.4rem;
-        color: white;
+        width: 88px; height: 88px;
+        border-radius: 24px;
+        display: grid;
+        place-items: center;
+        margin: 0 auto .9rem;
+        font-size: 2rem;
         font-weight: 800;
-        margin: 0 auto 0.8rem;
-        box-shadow: var(--shadow-glow);
+        letter-spacing: .02em;
+        background: var(--mp-primary-soft);
+        color: var(--mp-primary);
     }
-    
+
     .name-card .member-name {
-        font-size: 1.3rem;
+        font-size: 1.15rem;
         font-weight: 700;
-        color: var(--text-primary);
+        color: var(--mp-text);
         margin: 0;
-        font-family: 'Inter', sans-serif;
+        letter-spacing: -.02em;
+        line-height: 1.25;
     }
-    
+
     .name-card .member-id {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        margin: 4px 0 8px 0;
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        margin: .4rem 0 .9rem;
+        font-size: .72rem;
+        color: var(--mp-muted);
+        font-weight: 500;
     }
-    
+
+    .name-card .member-id i { font-size: .62rem; }
+
+    .name-divider {
+        height: 1px;
+        background: var(--mp-border);
+        margin: 0 auto 1rem;
+        width: 100%;
+    }
+
     .name-card .status-badge {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 4px 14px;
+        gap: .4rem;
+        padding: .28rem .75rem;
         border-radius: 20px;
-        font-size: 0.65rem;
+        font-size: .66rem;
         font-weight: 700;
+        letter-spacing: .06em;
         text-transform: uppercase;
-        letter-spacing: 0.3px;
     }
-    
+
     .name-card .status-badge.active {
-        background: rgba(16, 185, 129, 0.12);
-        color: #10B981;
+        background: var(--mp-green-soft);
+        color: var(--mp-green);
     }
-    
     .name-card .status-badge.active::before {
         content: '';
-        width: 6px;
-        height: 6px;
+        width: 6px; height: 6px;
         border-radius: 50%;
-        background: #10B981;
-        animation: pulse 2s infinite;
+        background: var(--mp-green);
+        animation: mpPulse 2s infinite;
     }
-    
+
     .name-card .status-badge.deceased {
-        background: rgba(239, 68, 68, 0.12);
-        color: #EF4444;
+        background: var(--mp-rose-soft);
+        color: var(--mp-rose);
     }
-    
+
     .name-card .gender-badge {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 4px 14px;
+        gap: .4rem;
+        padding: .28rem .75rem;
         border-radius: 20px;
-        font-size: 0.75rem;
+        font-size: .72rem;
         font-weight: 600;
-        margin-top: 10px;
+        margin-top: .55rem;
+        background: var(--mp-soft);
+        color: var(--mp-muted);
+        border: 1px solid var(--mp-border);
     }
-    
+
+    .name-card .gender-badge i { font-size: .68rem; }
+
     .name-card .gender-badge.male {
-        background: rgba(59, 130, 246, 0.12);
-        color: #3B82F6;
-        border: 1px solid rgba(59, 130, 246, 0.2);
-    }
-    
-    .name-card .gender-badge.female {
-        background: rgba(236, 72, 153, 0.12);
-        color: #EC4899;
-        border: 1px solid rgba(236, 72, 153, 0.2);
-    }
-    
-    .name-card .gender-badge.unspecified {
-        background: var(--bg-tertiary);
-        color: var(--text-muted);
-        border: 1px solid var(--border-color);
-    }
-    
-    .name-card .gender-badge i {
-        font-size: 0.75rem;
-    }
-    
-    .name-divider {
-        width: 40px;
-        height: 3px;
-        background: var(--gradient-primary);
-        border-radius: 4px;
-        margin: 12px auto;
-    }
-    
-    /* ============================================
-       RIGHT CARD - Personal Information
-    ============================================ */
-    .info-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: var(--shadow-profile-lg);
-        transition: all 0.3s ease;
-        height: 100%;
-    }
-    
-    .info-card:hover {
-        box-shadow: var(--shadow-profile-hover);
+        background: var(--mp-blue-soft);
+        color: var(--mp-blue);
         border-color: transparent;
     }
-    
-    .info-card .card-header {
-        padding: 0.8rem 1.5rem;
-        border-bottom: 1px solid var(--border-color);
-        background: var(--bg-tertiary);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    .name-card .gender-badge.female {
+        background: var(--mp-pink-soft);
+        color: var(--mp-pink);
+        border-color: transparent;
     }
-    
+
+    /* ---------------- INFO CARD (RIGHT) ---------------- */
+    .info-card {
+        background: var(--mp-card);
+        border: 1px solid var(--mp-border);
+        border-radius: var(--mp-radius);
+        box-shadow: var(--mp-shadow-sm);
+        height: 100%;
+        overflow: hidden;
+        transition: box-shadow .25s ease, border-color .25s ease;
+    }
+
+    .info-card:hover {
+        box-shadow: var(--mp-shadow-md);
+        border-color: transparent;
+    }
+
+    .info-card .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: .75rem;
+        padding: .85rem 1.2rem;
+        border-bottom: 1px solid var(--mp-border);
+        background: var(--mp-soft);
+    }
+
     .info-card .card-header h6 {
+        display: flex;
+        align-items: center;
+        gap: .55rem;
         margin: 0;
         font-weight: 700;
-        font-size: 0.8rem;
-        color: var(--text-primary);
-        font-family: 'Inter', sans-serif;
+        font-size: .84rem;
+        color: var(--mp-text);
+        letter-spacing: -.005em;
     }
-    
+
     .info-card .card-header h6 i {
-        margin-right: 8px;
-        color: #4F46E5;
+        display: grid;
+        place-items: center;
+        width: 28px; height: 28px;
+        border-radius: 8px;
+        font-size: .68rem;
+        background: var(--mp-primary-soft);
+        color: var(--mp-primary);
     }
-    
+
     .info-card .card-header .member-since {
-        font-size: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        font-size: .64rem;
         font-weight: 600;
-        color: var(--text-muted);
-        background: var(--bg-tertiary);
-        padding: 2px 10px;
+        color: var(--mp-muted);
+        background: var(--mp-card);
+        padding: .22rem .55rem;
         border-radius: 20px;
-        border: 1px solid var(--border-color);
+        border: 1px solid var(--mp-border);
+        white-space: nowrap;
     }
-    
+
+    .info-card .card-header .member-since i { font-size: .56rem; }
+
     .info-card .card-body {
-        padding: 1.2rem 1.5rem;
+        padding: .35rem 1.2rem 1.15rem;
     }
-    
-    /* Info Items */
+
+    /* Info items */
     .info-item {
         display: flex;
         align-items: flex-start;
-        gap: 12px;
-        padding: 0.6rem 0;
-        border-bottom: 1px solid var(--border-color);
-        transition: all 0.2s ease;
+        gap: .8rem;
+        padding: .85rem 0;
+        border-bottom: 1px solid var(--mp-border);
     }
-    
-    .info-item:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-    
+
+    .info-item:last-child { border-bottom: none; padding-bottom: 0; }
+
     .info-item .info-icon {
-        width: 34px;
-        height: 34px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.8rem;
-        flex-shrink: 0;
-        color: white;
+        width: 34px; height: 34px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-size: .75rem;
+        flex: 0 0 auto;
     }
-    
-    .info-item .info-icon.purple { background: var(--gradient-primary); }
-    .info-item .info-icon.green { background: linear-gradient(135deg, #10B981, #34D399); }
-    .info-item .info-icon.orange { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
-    .info-item .info-icon.pink { background: linear-gradient(135deg, #EC4899, #F472B6); }
-    .info-item .info-icon.blue { background: linear-gradient(135deg, #3B82F6, #60A5FA); }
-    .info-item .info-icon.teal { background: linear-gradient(135deg, #14B8A6, #2DD4BF); }
-    .info-item .info-icon.roles { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
-    
-    .info-item .info-content {
-        flex: 1;
-        min-width: 0;
-    }
-    
+
+    .info-item .info-icon.purple { background: var(--mp-violet-soft); color: var(--mp-violet); }
+    .info-item .info-icon.green  { background: var(--mp-green-soft);  color: var(--mp-green); }
+    .info-item .info-icon.orange { background: var(--mp-amber-soft);  color: var(--mp-amber); }
+    .info-item .info-icon.pink   { background: var(--mp-pink-soft);   color: var(--mp-pink); }
+    .info-item .info-icon.blue   { background: var(--mp-blue-soft);   color: var(--mp-blue); }
+    .info-item .info-icon.teal   { background: var(--mp-teal-soft);   color: var(--mp-teal); }
+    .info-item .info-icon.roles  { background: var(--mp-violet-soft); color: var(--mp-violet); }
+
+    .info-item .info-content { flex: 1; min-width: 0; }
+
     .info-item .info-label {
-        font-size: 0.55rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--text-muted);
+        font-size: .62rem;
         font-weight: 700;
-        margin: 0;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--mp-muted);
+        margin: 0 0 .2rem;
     }
-    
+
     .info-item .info-value {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--text-primary);
+        font-size: .84rem;
+        font-weight: 500;
+        color: var(--mp-text);
         margin: 0;
+        line-height: 1.45;
         word-break: break-word;
     }
-    
-    /* Role Tags */
+
+    /* Role tags */
     .role-tag {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
-        padding: 2px 10px;
-        border-radius: 16px;
-        font-size: 0.6rem;
-        font-weight: 500;
-        background: var(--bg-tertiary);
-        border: 1px solid var(--border-color);
-        color: var(--text-secondary);
-        transition: all 0.2s ease;
+        gap: .35rem;
+        padding: .28rem .65rem;
+        border-radius: 20px;
+        font-size: .68rem;
+        font-weight: 600;
+        background: var(--mp-soft);
+        color: var(--mp-muted);
+        border: 1px solid var(--mp-border);
         margin: 2px 3px 2px 0;
+        transition: transform .18s ease, border-color .18s ease, color .18s ease;
     }
-    
-    .role-tag i {
-        font-size: 0.45rem;
-        opacity: 0.6;
-    }
-    
+
+    .role-tag i { font-size: .58rem; opacity: .85; }
+
     .role-tag:hover {
         transform: translateY(-1px);
-        border-color: #4F46E5;
-        color: #4F46E5;
+        border-color: var(--mp-primary);
+        color: var(--mp-primary);
     }
-    
+
     .role-tag.choir {
-        background: #fef3c7;
-        color: #92400e;
-        border-color: #fcd34d;
+        background: var(--mp-amber-soft);
+        color: var(--mp-amber);
+        border-color: transparent;
     }
-    
-    [data-theme="dark"] .role-tag.choir {
-        background: #78350f;
-        color: #fde68a;
-        border-color: #92400e;
+
+    .role-tag.choir:hover {
+        color: var(--mp-amber);
+        border-color: var(--mp-amber);
     }
-    
+
     .no-roles {
-        color: var(--text-muted);
-        font-weight: 400;
-        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .78rem;
+        color: var(--mp-muted);
+        font-style: italic;
     }
-    
+
     .no-roles a {
-        margin-left: 8px;
-        font-size: 0.65rem;
-        color: #4F46E5;
+        font-style: normal;
+        font-weight: 600;
+        color: var(--mp-primary);
         text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .25rem;
     }
-    
-    .no-roles a:hover {
-        text-decoration: underline;
-    }
-    
-    @keyframes pulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.5; transform: scale(0.8); }
-    }
-    
-    /* ============================================
-       CUSTOM SWEETALERT STYLES
-    ============================================ */
+
+    .no-roles a:hover { text-decoration: underline; }
+    .no-roles a i { font-size: .6rem; }
+
+    /* ---------------- SWEETALERT CUSTOM (kept identical) ---------------- */
     .swal2-custom-delete {
         border-radius: 20px !important;
         padding: 2rem 1.5rem !important;
         box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important;
     }
-    
+
     .swal2-custom-delete .swal2-icon {
         border: none !important;
         background: linear-gradient(135deg, #fef2f2, #fee2e2) !important;
@@ -574,22 +630,20 @@
         justify-content: center !important;
         animation: deletePulse 2s infinite !important;
     }
-    
+
     @keyframes deletePulse {
         0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.2); }
         50% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
     }
-    
-    .swal2-custom-delete .swal2-icon .swal2-x-mark {
-        display: none !important;
-    }
-    
+
+    .swal2-custom-delete .swal2-icon .swal2-x-mark { display: none !important; }
+
     .swal2-custom-delete .swal2-icon .swal2-icon-content {
         font-size: 2.5rem !important;
         color: #EF4444 !important;
         font-weight: 300 !important;
     }
-    
+
     .swal2-custom-delete .swal2-title {
         font-size: 1.4rem !important;
         font-weight: 800 !important;
@@ -597,11 +651,9 @@
         font-family: 'Inter', sans-serif !important;
         margin-bottom: 0.3rem !important;
     }
-    
-    [data-theme="dark"] .swal2-custom-delete .swal2-title {
-        color: #f1f5f9 !important;
-    }
-    
+
+    [data-theme="dark"] .swal2-custom-delete .swal2-title { color: #f1f5f9 !important; }
+
     .swal2-custom-delete .swal2-html-container {
         font-size: 0.9rem !important;
         color: #64748b !important;
@@ -609,11 +661,9 @@
         font-family: 'Inter', sans-serif !important;
         line-height: 1.6 !important;
     }
-    
-    [data-theme="dark"] .swal2-custom-delete .swal2-html-container {
-        color: #94a3b8 !important;
-    }
-    
+
+    [data-theme="dark"] .swal2-custom-delete .swal2-html-container { color: #94a3b8 !important; }
+
     .swal2-custom-delete .swal2-html-container .member-name-highlight {
         color: #EF4444 !important;
         font-weight: 700 !important;
@@ -622,12 +672,12 @@
         border-radius: 6px !important;
         display: inline-block !important;
     }
-    
+
     [data-theme="dark"] .swal2-custom-delete .swal2-html-container .member-name-highlight {
         background: #7f1d1d !important;
         color: #fca5a5 !important;
     }
-    
+
     .swal2-custom-delete .swal2-html-container .warning-box {
         background: #fef3c7 !important;
         border: 1px solid #fcd34d !important;
@@ -640,23 +690,20 @@
         align-items: center !important;
         gap: 8px !important;
     }
-    
+
     [data-theme="dark"] .swal2-custom-delete .swal2-html-container .warning-box {
         background: #78350f !important;
         border-color: #92400e !important;
         color: #fde68a !important;
     }
-    
+
     .swal2-custom-delete .swal2-html-container .warning-box i {
         font-size: 1rem !important;
         color: #f59e0b !important;
     }
-    
-    .swal2-custom-delete .swal2-actions {
-        gap: 0.8rem !important;
-        margin-top: 0.5rem !important;
-    }
-    
+
+    .swal2-custom-delete .swal2-actions { gap: 0.8rem !important; margin-top: 0.5rem !important; }
+
     .swal2-custom-delete .swal2-confirm {
         background: linear-gradient(135deg, #EF4444, #DC2626) !important;
         padding: 0.7rem 2.5rem !important;
@@ -672,16 +719,14 @@
         align-items: center !important;
         gap: 8px !important;
     }
-    
+
     .swal2-custom-delete .swal2-confirm:hover {
         transform: translateY(-2px) !important;
         box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4) !important;
     }
-    
-    .swal2-custom-delete .swal2-confirm:active {
-        transform: scale(0.97) !important;
-    }
-    
+
+    .swal2-custom-delete .swal2-confirm:active { transform: scale(0.97) !important; }
+
     .swal2-custom-delete .swal2-cancel {
         background: var(--bg-tertiary) !important;
         color: var(--text-secondary) !important;
@@ -693,180 +738,150 @@
         border: 1px solid var(--border-color) !important;
         transition: all 0.3s ease !important;
     }
-    
+
     .swal2-custom-delete .swal2-cancel:hover {
         background: var(--bg-tertiary) !important;
         transform: translateY(-2px) !important;
     }
-    
+
     .swal2-custom-delete .swal2-timer-progress-bar {
         background: linear-gradient(90deg, #EF4444, #F87171) !important;
         height: 3px !important;
     }
-    
-    /* ============================================
-       RESPONSIVE
-    ============================================ */
+
+    /* ---------------- RESPONSIVE ---------------- */
     @media (max-width: 992px) {
-        .profile-main-layout {
-            flex-direction: column;
-        }
-        .profile-left {
-            flex: 1;
-            min-width: 0;
-        }
-        .profile-hero {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .profile-hero .hero-actions {
-            width: 100%;
-        }
+        .profile-main-layout { flex-direction: column; }
+        .profile-left { flex: 1; min-width: 0; }
     }
-    
+
     @media (max-width: 768px) {
-        .profile-hero {
-            padding: 1.2rem;
-        }
-        .profile-hero .hero-avatar {
-            width: 50px;
-            height: 50px;
-            font-size: 1.3rem;
-        }
-        .profile-hero .hero-text h1 {
-            font-size: 1.2rem;
-        }
-        .quick-actions-horizontal {
-            flex-direction: column;
-        }
-        .quick-action-btn {
-            flex-direction: row;
-            justify-content: center;
-            gap: 8px;
-            padding: 0.6rem;
-            min-width: 0;
-        }
-        .quick-action-btn i {
-            font-size: 1rem;
-            margin-bottom: 0;
-        }
-        .name-card .avatar-large {
-            width: 70px;
-            height: 70px;
-            font-size: 1.8rem;
-        }
-        .name-card .member-name {
-            font-size: 1.1rem;
-        }
-        .info-card .card-body {
-            padding: 1rem;
-        }
-        .info-card .card-header {
-            padding: 0.6rem 1rem;
-        }
-        .swal2-custom-delete {
-            padding: 1.5rem 1rem !important;
-            margin: 0 0.5rem !important;
-        }
-        .swal2-custom-delete .swal2-icon {
-            width: 60px !important;
-            height: 60px !important;
-            padding: 15px !important;
-        }
-        .swal2-custom-delete .swal2-icon .swal2-icon-content {
-            font-size: 2rem !important;
-        }
-        .swal2-custom-delete .swal2-title {
-            font-size: 1.2rem !important;
-        }
-        .swal2-custom-delete .swal2-actions {
-            flex-direction: column !important;
-            width: 100% !important;
-        }
+        .mp-head { flex-direction: column; align-items: flex-start; }
+        .mp-head-left { width: 100%; }
+        .mp-head-actions { width: 100%; }
+        .mp-head-actions .mp-btn { flex: 1; justify-content: center; }
+
+        .mp-head-avatar { width: 52px; height: 52px; border-radius: 16px; font-size: 1.1rem; }
+        .mp-title { font-size: 1.25rem; }
+
+        .quick-actions-horizontal { flex-direction: column; }
+        .quick-action-btn { min-width: 0; width: 100%; }
+
+        .name-card .avatar-large { width: 72px; height: 72px; font-size: 1.6rem; }
+        .name-card .member-name { font-size: 1.05rem; }
+
+        .info-card .card-header { padding: .7rem 1rem; }
+        .info-card .card-body { padding: .25rem 1rem 1rem; }
+
+        .swal2-custom-delete { padding: 1.5rem 1rem !important; margin: 0 0.5rem !important; }
+        .swal2-custom-delete .swal2-icon { width: 60px !important; height: 60px !important; padding: 15px !important; }
+        .swal2-custom-delete .swal2-icon .swal2-icon-content { font-size: 2rem !important; }
+        .swal2-custom-delete .swal2-title { font-size: 1.2rem !important; }
+        .swal2-custom-delete .swal2-actions { flex-direction: column !important; width: 100% !important; }
         .swal2-custom-delete .swal2-confirm,
-        .swal2-custom-delete .swal2-cancel {
-            width: 100% !important;
-            justify-content: center !important;
-        }
+        .swal2-custom-delete .swal2-cancel { width: 100% !important; justify-content: center !important; }
     }
-    
+
     @media (max-width: 480px) {
-        .profile-hero .hero-left {
-            flex-direction: column;
-            text-align: center;
-            width: 100%;
-        }
-        .name-card {
-            padding: 1.2rem;
-        }
-        .name-card .avatar-large {
-            width: 60px;
-            height: 60px;
-            font-size: 1.5rem;
-        }
+        .name-card { padding: 1.2rem 1rem; }
+        .name-card .avatar-large { width: 62px; height: 62px; border-radius: 18px; font-size: 1.4rem; }
     }
 </style>
 
-<div class="container-fluid px-0">
+<div class="mp container-fluid px-0">
 
-    <!-- HERO SECTION -->
-    <div class="profile-hero">
-        <div class="hero-left">
-            <div class="hero-avatar">
-                <i class="fas fa-user-circle" style="font-size: 2.2rem;"></i>
+    {{-- ============================================
+         HERO SECTION
+    ============================================ --}}
+    <header class="mp-head">
+        <div class="mp-head-left">
+            <div class="mp-head-avatar">
+                <i class="fas fa-user-circle" style="font-size: 1.8rem;"></i>
             </div>
-            <div class="hero-text">
-                <h1><span data-i18n="member_profile">{{ __("Member Profile") }}</span></h1>
-                <p class="hero-sub">
+            <div style="min-width:0;">
+                <div class="mp-eyebrow">
+                    <span class="mp-dot"></span>
+                    <span data-i18n="member_directory">{{ __("Member Directory") }}</span>
+                </div>
+                <h1 class="mp-title">
                     <i class="fas fa-id-card"></i>
-                    <span data-i18n="id_label">{{ __("ID:") }}</span> {{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}
-                    &nbsp;·&nbsp;
-                    <span class="badge-status-modern {{ $member->is_deceased ? 'deceased' : 'active' }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 2px 12px; border-radius: 20px; font-size: 0.6rem; font-weight: 700; text-transform: uppercase;">
-                        <span data-i18n="{{ $member->is_deceased ? 'deceased' : 'active' }}">{{ $member->is_deceased ? __("Deceased") : __("Active") }}</span>
+                    <span data-i18n="member_profile">{{ __("Member Profile") }}</span>
+                </h1>
+                <p class="mp-sub">
+                    <span>
+                        <i class="fas fa-id-card"></i>
+                        <span data-i18n="id_label">{{ __("ID:") }}</span>
+                        {{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}
+                    </span>
+                    <span class="mp-sep">·</span>
+                    <span class="mp-status {{ $member->is_deceased ? 'deceased' : 'active' }}">
+                        @if($member->is_deceased)
+                            <i class="fas fa-cross"></i>
+                        @endif
+                        <span data-i18n="{{ $member->is_deceased ? 'deceased' : 'active' }}">
+                            {{ $member->is_deceased ? __("Deceased") : __("Active") }}
+                        </span>
                     </span>
                 </p>
             </div>
         </div>
-        <div class="hero-actions">
-            <a href="{{ route('members.edit', $member->id) }}" class="btn-hero btn-hero-white">
-                <i class="fas fa-edit"></i> <span data-i18n="edit_profile">{{ __("Edit Profile") }}</span>
+        <div class="mp-head-actions">
+            <a href="{{ route('members.edit', $member->id) }}" class="mp-btn mp-btn-primary">
+                <i class="fas fa-edit"></i>
+                <span data-i18n="edit_profile">{{ __("Edit Profile") }}</span>
             </a>
-            <a href="{{ route('members.index') }}" class="btn-hero btn-hero-ghost">
-                <i class="fas fa-arrow-left"></i> <span data-i18n="back_to_members">{{ __("Back to Members") }}</span>
+            <a href="{{ route('members.index') }}" class="mp-btn mp-btn-ghost">
+                <i class="fas fa-arrow-left"></i>
+                <span data-i18n="back_to_members">{{ __("Back to Members") }}</span>
             </a>
         </div>
-    </div>
+    </header>
 
-    <!-- QUICK ACTIONS -->
+    {{-- ============================================
+         QUICK ACTIONS (horizontal — unchanged structure)
+    ============================================ --}}
     <div class="quick-actions-horizontal">
         @if($member->is_deceased)
-        <a href="#" class="quick-action-btn restore" onclick="confirmRestore({{ $member->id }})">
-            <i class="fas fa-undo-alt"></i>
-            <span data-i18n="restore_to_active">{{ __("Restore to Active") }}</span>
-        </a>
+            <a href="#" class="quick-action-btn restore" onclick="confirmRestore({{ $member->id }}); return false;">
+                <i class="fas fa-undo-alt"></i>
+                <span data-i18n="restore_to_active">{{ __("Restore to Active") }}</span>
+            </a>
         @endif
     </div>
 
-    <!-- MAIN LAYOUT -->
+    {{-- ============================================
+         MAIN LAYOUT
+    ============================================ --}}
     <div class="profile-main-layout">
 
-        <!-- LEFT SIDE - NAME CARD -->
+        {{-- ---------- LEFT: NAME CARD ---------- --}}
         <div class="profile-left">
             <div class="name-card">
                 <div class="avatar-large">
                     {{ strtoupper(substr($member->first_name ?? 'M', 0, 1)) }}{{ strtoupper(substr($member->last_name ?? 'M', 0, 1)) }}
                 </div>
-                <h2 class="member-name">{{ $member->first_name ?? '' }} {{ $member->last_name ?? '' }}</h2>
-                <p class="member-id"><i class="fas fa-id-card"></i> <span data-i18n="id_label">{{ __("ID:") }}</span> {{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}</p>
-                
+                <h2 class="member-name">
+                    {{ $member->first_name ?? '' }} {{ $member->last_name ?? '' }}
+                </h2>
+                <p class="member-id">
+                    <i class="fas fa-id-card"></i>
+                    <span data-i18n="id_label">{{ __("ID:") }}</span>
+                    {{ str_pad($member->id ?? 0, 4, '0', STR_PAD_LEFT) }}
+                </p>
+
                 <div class="name-divider"></div>
-                
+
                 <div>
                     <span class="status-badge {{ $member->is_deceased ? 'deceased' : 'active' }}">
-                        <span data-i18n="{{ $member->is_deceased ? 'deceased' : 'active' }}">{{ $member->is_deceased ? __("Deceased") : __("Active") }}</span>
+                        @if($member->is_deceased)
+                            <i class="fas fa-cross" style="font-size:.58rem;"></i>
+                        @endif
+                        <span data-i18n="{{ $member->is_deceased ? 'deceased' : 'active' }}">
+                            {{ $member->is_deceased ? __("Deceased") : __("Active") }}
+                        </span>
                     </span>
                 </div>
-                
+
                 <div>
                     @php
                         $genderValue = $member->gender ?? null;
@@ -886,72 +901,95 @@
                     @endphp
                     <span class="gender-badge {{ $genderClass }}">
                         <i class="fas {{ $genderIcon }}"></i>
-                        <span data-i18n="{{ $genderKey }}">{{ __(ucfirst(str_replace('_', ' ', $genderKey))) }}</span>
+                        <span data-i18n="{{ $genderKey }}">
+                            {{ __(ucfirst(str_replace('_', ' ', $genderKey))) }}
+                        </span>
                     </span>
                 </div>
             </div>
         </div>
 
-        <!-- RIGHT SIDE - PERSONAL INFORMATION -->
+        {{-- ---------- RIGHT: PERSONAL INFORMATION ---------- --}}
         <div class="profile-right">
             <div class="info-card">
                 <div class="card-header">
-                    <h6><i class="fas fa-user-circle"></i> <span data-i18n="personal_information">{{ __("Personal Information") }}</span></h6>
+                    <h6>
+                        <i class="fas fa-user-circle"></i>
+                        <span data-i18n="personal_information">{{ __("Personal Information") }}</span>
+                    </h6>
                     <span class="member-since">
-                        <i class="fas fa-clock"></i> 
+                        <i class="fas fa-clock"></i>
                         {{ \Carbon\Carbon::parse($member->created_at ?? now())->format('M d, Y') }}
                     </span>
                 </div>
                 <div class="card-body">
 
-                    <!-- Birthday -->
+                    {{-- Birthday --}}
                     <div class="info-item">
                         <div class="info-icon pink"><i class="fas fa-birthday-cake"></i></div>
                         <div class="info-content">
-                            <p class="info-label"><span data-i18n="birthday_label">{{ __("Birthday") }}</span></p>
+                            <p class="info-label">
+                                <span data-i18n="birthday_label">{{ __("Birthday") }}</span>
+                            </p>
                             <p class="info-value">
-                                {{ $member->birthday ? \Carbon\Carbon::parse($member->birthday)->format('F d, Y') : 'N/A' }}
                                 @if($member->birthday)
-                                    <span style="font-size: 0.65rem; font-weight: 400; color: var(--text-muted);">
-                                        (<span data-i18n="years_old">{{ __(":age years old") }}</span>)
+                                    {{ \Carbon\Carbon::parse($member->birthday)->format('F d, Y') }}
+                                    <span style="font-size: .7rem; font-weight: 400; color: var(--mp-muted);">
+                                        ({{ \Carbon\Carbon::parse($member->birthday)->age }} {{ __("years old") }})
                                     </span>
+                                @else
+                                    <span style="color:var(--mp-muted); font-style:italic; font-weight:400;">N/A</span>
                                 @endif
                             </p>
                         </div>
                     </div>
 
-                    <!-- Phone -->
+                    {{-- Phone --}}
                     <div class="info-item">
                         <div class="info-icon green"><i class="fas fa-phone"></i></div>
                         <div class="info-content">
-                            <p class="info-label"><span data-i18n="phone_label">{{ __("Phone Number") }}</span></p>
-                            <p class="info-value">{{ $member->phone ?? 'N/A' }}</p>
+                            <p class="info-label">
+                                <span data-i18n="phone_label">{{ __("Phone Number") }}</span>
+                            </p>
+                            <p class="info-value">
+                                {{ $member->phone ?? 'N/A' }}
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Email -->
+                    {{-- Email --}}
                     <div class="info-item">
                         <div class="info-icon orange"><i class="fas fa-envelope"></i></div>
                         <div class="info-content">
-                            <p class="info-label"><span data-i18n="email_label">{{ __("Email Address") }}</span></p>
-                            <p class="info-value">{{ $member->email ?? 'N/A' }}</p>
+                            <p class="info-label">
+                                <span data-i18n="email_label">{{ __("Email Address") }}</span>
+                            </p>
+                            <p class="info-value">
+                                {{ $member->email ?? 'N/A' }}
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Address -->
+                    {{-- Address --}}
                     <div class="info-item">
                         <div class="info-icon teal"><i class="fas fa-map-marker-alt"></i></div>
                         <div class="info-content">
-                            <p class="info-label"><span data-i18n="address_label">{{ __("Address") }}</span></p>
-                            <p class="info-value">{{ $member->address ?? 'N/A' }}</p>
+                            <p class="info-label">
+                                <span data-i18n="address_label">{{ __("Address") }}</span>
+                            </p>
+                            <p class="info-value">
+                                {{ $member->address ?? 'N/A' }}
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Roles -->
+                    {{-- Roles --}}
                     <div class="info-item">
                         <div class="info-icon roles"><i class="fas fa-tags"></i></div>
                         <div class="info-content">
-                            <p class="info-label"><span data-i18n="roles_label">{{ __("Roles & Responsibilities") }}</span></p>
+                            <p class="info-label">
+                                <span data-i18n="roles_label">{{ __("Roles & Responsibilities") }}</span>
+                            </p>
                             <div class="info-value">
                                 @if($member->roles->count() > 0)
                                     <div class="d-flex flex-wrap" style="margin-top: 2px;">
@@ -963,7 +1001,8 @@
                                         @endforeach
                                         @if($member->is_choir)
                                             <span class="role-tag choir">
-                                                <i class="fas fa-music"></i> <span data-i18n="choir_label">{{ __("Choir") }}</span>
+                                                <i class="fas fa-music"></i>
+                                                <span data-i18n="choir_label">{{ __("Choir") }}</span>
                                             </span>
                                         @endif
                                     </div>
@@ -971,7 +1010,8 @@
                                     <span class="no-roles">
                                         <span data-i18n="no_roles_assigned">{{ __("No roles assigned") }}</span>
                                         <a href="{{ route('members.edit', $member->id) }}">
-                                            <i class="fas fa-plus"></i> <span data-i18n="add_label">{{ __("Add") }}</span>
+                                            <i class="fas fa-plus"></i>
+                                            <span data-i18n="add_label">{{ __("Add") }}</span>
                                         </a>
                                     </span>
                                 @endif
@@ -1034,7 +1074,7 @@ function confirmDeceased(memberId) {
     }).then((result) => {
         if (result.isConfirmed) {
             const dateDeceased = result.value.date_deceased;
-            
+
             Swal.fire({
                 title: t('processing', 'Processing...'),
                 html: '<div class="loading-spinner"></div><p class="mt-2">' + t('please_wait', 'Please wait') + '</p>',
@@ -1042,7 +1082,7 @@ function confirmDeceased(memberId) {
                 allowOutsideClick: false,
                 background: 'var(--card-bg)'
             });
-            
+
             fetch(`/members/${memberId}/deceased`, {
                 method: 'PUT',
                 headers: {
@@ -1106,7 +1146,7 @@ function confirmRestore(memberId) {
                 allowOutsideClick: false,
                 background: 'var(--card-bg)'
             });
-            
+
             fetch(`/members/${memberId}/restore`, {
                 method: 'PUT',
                 headers: {
@@ -1150,13 +1190,13 @@ function confirmRestore(memberId) {
 // ============================================
 function confirmDelete(memberId, memberName) {
     const memberDisplay = memberName || 'this member';
-    
+
     Swal.fire({
         title: t('delete_member', 'Delete Member'),
         html: `
             <div style="text-align: left;">
                 <p style="margin-bottom: 0.5rem;">
-                    ${t('delete_confirm_text', 'Are you sure you want to permanently delete')} 
+                    ${t('delete_confirm_text', 'Are you sure you want to permanently delete')}
                     <span class="member-name-highlight" style="color: #EF4444; font-weight: 700; background: #fef2f2; padding: 2px 12px; border-radius: 6px; display: inline-block;">
                         ${memberDisplay}
                     </span>
@@ -1210,7 +1250,7 @@ function confirmDelete(memberId, memberName) {
                     popup: 'swal2-custom-delete'
                 }
             });
-            
+
             document.getElementById(`delete-form-${memberId}`).submit();
         }
     });
