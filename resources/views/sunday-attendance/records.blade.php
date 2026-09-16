@@ -1,902 +1,1151 @@
 @extends('layouts.app')
 
 @section('header')
-    <span data-i18n="attendance_records">{{ __("Attendance Records") }}</span>
+    <span data-i18n="sunday_attendance">{{ __("Sunday Service Attendance") }}</span>
 @endsection
 
 @section('content')
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-    
-    :root {
-        --gradient-green: linear-gradient(135deg, #10B981, #34D399);
-        --gradient-red: linear-gradient(135deg, #EF4444, #F87171);
-        --gradient-blue: linear-gradient(135deg, #4F46E5, #7C3AED);
-        --gradient-purple: linear-gradient(135deg, #8B5CF6, #A78BFA);
-        --gradient-orange: linear-gradient(135deg, #F59E0B, #FBBF24);
-        --gradient-pink: linear-gradient(135deg, #EC4899, #F472B6);
-        --shadow-glow-green: 0 8px 32px rgba(16, 185, 129, 0.3);
-        --shadow-glow-red: 0 8px 32px rgba(239, 68, 68, 0.3);
-        --shadow-glow-blue: 0 8px 32px rgba(79, 70, 229, 0.3);
-        --shadow-glow-purple: 0 8px 32px rgba(139, 92, 246, 0.3);
-        --shadow-card-lg: 0 20px 60px rgba(0,0,0,0.08);
-        --shadow-card-hover: 0 24px 80px rgba(0,0,0,0.12);
+    /* ==========================================================
+       SUNDAY ATTENDANCE — 2025 REDESIGN
+       Flat · bordered · airy · Inter
+    ========================================================== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    .sa {
+        --sa-card: var(--card-bg, #ffffff);
+        --sa-border: var(--border-color, #e8eaf0);
+        --sa-text: var(--text-primary, #0f172a);
+        --sa-muted: var(--text-muted, #7c8494);
+        --sa-soft: var(--bg-tertiary, #f5f6fa);
+
+        --sa-primary: #4f46e5;
+        --sa-primary-soft: rgba(79, 70, 229, .08);
+        --sa-primary-ring: rgba(79, 70, 229, .18);
+
+        --sa-green: #059669;
+        --sa-green-soft: rgba(5, 150, 105, .10);
+        --sa-rose: #e11d48;
+        --sa-rose-soft: rgba(225, 29, 72, .09);
+        --sa-amber: #d97706;
+        --sa-amber-soft: rgba(217, 119, 6, .10);
+        --sa-violet: #7c3aed;
+        --sa-violet-soft: rgba(124, 58, 237, .10);
+        --sa-blue: #2563eb;
+        --sa-blue-soft: rgba(37, 99, 235, .10);
+
+        --sa-shadow-sm: 0 1px 2px rgba(15, 23, 42, .04);
+        --sa-shadow-md: 0 10px 28px -14px rgba(15, 23, 42, .22);
+        --sa-radius: 16px;
+
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: var(--sa-text);
+        padding-bottom: 2rem;
     }
-    
-    .records-hero {
-        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
-        border-radius: 20px;
-        padding: 2rem 2.5rem;
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(79, 70, 229, 0.3);
+
+    [data-theme="dark"] .sa {
+        --sa-primary: #6366f1;
+        --sa-primary-soft: rgba(99, 102, 241, .16);
+        --sa-primary-ring: rgba(99, 102, 241, .28);
+        --sa-green: #34d399;
+        --sa-green-soft: rgba(16, 185, 129, .14);
+        --sa-rose: #fb7185;
+        --sa-rose-soft: rgba(244, 63, 94, .14);
+        --sa-amber: #fbbf24;
+        --sa-amber-soft: rgba(245, 158, 11, .14);
+        --sa-violet: #a78bfa;
+        --sa-violet-soft: rgba(139, 92, 246, .16);
+        --sa-blue: #60a5fa;
+        --sa-blue-soft: rgba(59, 130, 246, .16);
+        --sa-shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+        --sa-shadow-md: 0 14px 30px -16px rgba(0, 0, 0, .75);
     }
-    
-    .records-hero::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -30%;
-        width: 80%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-        pointer-events: none;
-        animation: pulseGlow 8s ease-in-out infinite;
-    }
-    
-    .records-hero::after {
-        content: '';
-        position: absolute;
-        bottom: -50%;
-        left: -20%;
-        width: 60%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
-        pointer-events: none;
-        animation: pulseGlow 10s ease-in-out infinite reverse;
-    }
-    
-    @keyframes pulseGlow {
-        0%, 100% { transform: scale(1); opacity: 0.5; }
-        50% { transform: scale(1.2); opacity: 1; }
-    }
-    
-    .records-hero .hero-content {
-        position: relative;
-        z-index: 1;
+
+    .sa * { box-sizing: border-box; }
+
+    /* ---------------- HEADER ---------------- */
+    .sa-head {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+        gap: 1.25rem;
         flex-wrap: wrap;
-        gap: 1.5rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid var(--sa-border);
+        margin-bottom: 1.5rem;
     }
-    
-    .records-hero .hero-left {
-        display: flex;
-        flex-direction: column;
-        gap: 0.3rem;
-    }
-    
-    .records-hero h1 {
-        font-size: 2rem;
-        font-weight: 800;
-        color: white;
-        margin: 0;
-        letter-spacing: -0.5px;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .records-hero h1 i {
-        margin-right: 12px;
-        opacity: 0.8;
-    }
-    
-    .records-hero p {
-        color: rgba(255,255,255,0.85);
-        margin: 0;
-        font-size: 0.9rem;
-        font-weight: 400;
-    }
-    
-    .records-hero .hero-badge {
+
+    .sa-eyebrow {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(20px);
-        padding: 0.5rem 1.2rem;
-        border-radius: 50px;
-        border: 1px solid rgba(255,255,255,0.2);
-        color: white;
-        font-size: 0.75rem;
-        font-weight: 600;
-    }
-    
-    .records-hero .hero-actions {
-        display: flex;
-        gap: 0.75rem;
-        flex-wrap: wrap;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .btn-hero-primary {
-        background: white;
-        color: #4F46E5;
-        border: none;
-        padding: 0.6rem 1.8rem;
-        border-radius: 12px;
+        gap: .45rem;
+        font-size: .66rem;
         font-weight: 700;
-        font-size: 0.8rem;
-        transition: all 0.3s ease;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+        color: var(--sa-muted);
+        margin-bottom: .55rem;
+    }
+
+    .sa-eyebrow .sa-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--sa-green);
+        box-shadow: 0 0 0 3px var(--sa-green-soft);
+    }
+
+    .sa-title {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        margin: 0;
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -.035em;
+        line-height: 1.15;
+    }
+
+    .sa-title i { font-size: 1.2rem; color: var(--sa-primary); }
+
+    .sa-sub {
+        margin: .5rem 0 0;
+        font-size: .84rem;
+        color: var(--sa-muted);
+        max-width: 62ch;
+        line-height: 1.5;
+    }
+
+    .sa-head-actions {
+        display: flex;
+        gap: .55rem;
+        flex-wrap: wrap;
+    }
+
+    /* ---------------- BUTTONS ---------------- */
+    .sa-btn {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        text-decoration: none;
-    }
-    
-    .btn-hero-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-        color: #4F46E5;
-        text-decoration: none;
-    }
-    
-    .btn-hero-secondary {
-        background: rgba(255,255,255,0.15);
-        color: white;
-        border: 1px solid rgba(255,255,255,0.3);
-        padding: 0.6rem 1.8rem;
-        border-radius: 12px;
+        gap: .5rem;
+        padding: .6rem 1.1rem;
+        border-radius: 11px;
+        font-size: .79rem;
         font-weight: 600;
-        font-size: 0.8rem;
-        transition: all 0.3s ease;
+        font-family: inherit;
+        line-height: 1.2;
+        text-decoration: none;
+        border: 1px solid transparent;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease, border-color .18s ease, opacity .18s ease;
+    }
+
+    .sa-btn-primary {
+        background: var(--sa-primary);
+        color: #fff;
+        box-shadow: 0 8px 18px -10px rgba(79, 70, 229, .9);
+    }
+    .sa-btn-primary:hover:not(:disabled) {
+        background: #4338ca;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 12px 22px -10px rgba(79, 70, 229, .9);
+    }
+
+    /* ⭐ DISABLED state for Save Now */
+    .sa-btn-primary:disabled,
+    .sa-btn-primary[disabled] {
+        opacity: .45;
+        cursor: not-allowed;
+        pointer-events: none;
+        box-shadow: none;
+        background: var(--sa-primary);
+        color: #fff;
+        transform: none;
+    }
+
+    .sa-btn-ghost {
+        background: var(--sa-card);
+        color: var(--sa-text);
+        border-color: var(--sa-border);
+    }
+    .sa-btn-ghost:hover {
+        background: var(--sa-soft);
+        color: var(--sa-text);
+        transform: translateY(-1px);
+    }
+
+    .sa-pill {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        text-decoration: none;
-        backdrop-filter: blur(20px);
+        gap: .4rem;
+        padding: .5rem 1rem;
+        border-radius: 11px;
+        border: 1px solid var(--sa-border);
+        background: var(--sa-card);
+        color: var(--sa-muted);
+        font-size: .74rem;
+        font-weight: 600;
+        white-space: nowrap;
     }
-    
-    .btn-hero-secondary:hover {
-        background: rgba(255,255,255,0.25);
-        transform: translateY(-2px);
-        color: white;
-        text-decoration: none;
-    }
-    
+
+    .sa-pill i { font-size: .68rem; color: var(--sa-primary); }
+
+    /* ---------------- STATS ---------------- */
     .stats-grid-premium {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.2rem;
-        margin-bottom: 2rem;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
     }
-    
+
     .stat-card-premium {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.2rem 1.5rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-        box-shadow: var(--shadow-card-lg);
-    }
-    
-    .stat-card-premium::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-    }
-    
-    .stat-card-premium:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-card-hover);
-        border-color: transparent;
-    }
-    
-    .stat-card-premium .stat-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 0.5rem;
-    }
-    
-    .stat-card-premium .stat-label {
-        font-size: 0.6rem;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        color: var(--text-muted);
-        font-weight: 700;
-        margin: 0;
-    }
-    
-    .stat-card-premium .stat-icon-wrap {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        color: white;
-        flex-shrink: 0;
+        gap: .9rem;
+        padding: 1.05rem 1.15rem;
+        background: var(--sa-card);
+        border: 1px solid var(--sa-border);
+        border-radius: var(--sa-radius);
+        transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+        position: relative;
     }
-    
+
+    .stat-card-premium:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--sa-shadow-md);
+        border-color: transparent;
+    }
+
+    .stat-card-premium .stat-icon-wrap {
+        width: 44px; height: 44px;
+        border-radius: 13px;
+        display: grid;
+        place-items: center;
+        font-size: 1rem;
+        flex: 0 0 auto;
+    }
+
+    .stat-card-premium.blue  .stat-icon-wrap { background: var(--sa-primary-soft); color: var(--sa-primary); }
+    .stat-card-premium.green .stat-icon-wrap { background: var(--sa-green-soft);   color: var(--sa-green); }
+    .stat-card-premium.red   .stat-icon-wrap { background: var(--sa-rose-soft);    color: var(--sa-rose); }
+
+    .stat-card-premium .stat-body { min-width: 0; }
+
+    .stat-card-premium .stat-label {
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--sa-muted);
+        margin: 0 0 .2rem;
+    }
+
     .stat-card-premium .stat-value {
-        font-size: 1.8rem;
+        font-size: 1.35rem;
         font-weight: 800;
-        color: var(--text-primary);
-        font-family: 'Inter', sans-serif;
-        letter-spacing: -0.5px;
-        line-height: 1.2;
+        letter-spacing: -.03em;
+        line-height: 1.15;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-    
+
+    .stat-card-premium .stat-value.amount-positive-premium { color: var(--sa-green); }
+    .stat-card-premium .stat-value.amount-negative-premium { color: var(--sa-rose); }
+
     .stat-card-premium .stat-change {
-        font-size: 0.65rem;
-        color: var(--text-muted);
         display: inline-flex;
         align-items: center;
-        gap: 4px;
-        margin-top: 2px;
-        padding: 2px 8px;
+        gap: .3rem;
+        margin-top: .3rem;
+        padding: .12rem .5rem;
         border-radius: 20px;
-        background: var(--bg-tertiary);
+        font-size: .64rem;
+        font-weight: 600;
+        background: var(--sa-soft);
+        color: var(--sa-muted);
     }
-    
-    .stat-card-premium .stat-change.positive { color: #10B981; }
-    .stat-card-premium .stat-change.negative { color: #EF4444; }
-    
-    .stat-card-premium.blue::before { background: var(--gradient-blue); }
-    .stat-card-premium.green::before { background: var(--gradient-green); }
-    .stat-card-premium.red::before { background: var(--gradient-red); }
-    
-    .stat-card-premium.blue .stat-icon-wrap { background: var(--gradient-blue); box-shadow: var(--shadow-glow-blue); }
-    .stat-card-premium.green .stat-icon-wrap { background: var(--gradient-green); box-shadow: var(--shadow-glow-green); }
-    .stat-card-premium.red .stat-icon-wrap { background: var(--gradient-red); box-shadow: var(--shadow-glow-red); }
-    
-    .date-selector-premium {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.2rem 1.8rem;
-        margin-bottom: 1.5rem;
-        box-shadow: var(--shadow-card-lg);
-        transition: all 0.3s ease;
-        position: relative;
+
+    .stat-card-premium .stat-change.positive { color: var(--sa-green); background: var(--sa-green-soft); }
+    .stat-card-premium .stat-change.negative { color: var(--sa-rose);  background: var(--sa-rose-soft); }
+
+    /* ---------------- CARD ---------------- */
+    .sa-card {
+        background: var(--sa-card);
+        border: 1px solid var(--sa-border);
+        border-radius: var(--sa-radius);
+        box-shadow: var(--sa-shadow-sm);
         overflow: hidden;
+        margin-bottom: 1.5rem;
+        transition: box-shadow .22s ease, border-color .22s ease;
     }
-    
-    .date-selector-premium::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: var(--gradient-blue);
-    }
-    
-    .date-selector-premium:hover {
-        box-shadow: var(--shadow-card-hover);
+
+    .sa-card:hover {
+        box-shadow: var(--sa-shadow-md);
         border-color: transparent;
     }
-    
-    .selector-header {
+
+    .sa-card-head {
         display: flex;
+        align-items: center;
         justify-content: space-between;
-        align-items: center;
+        gap: 1rem;
         flex-wrap: wrap;
-        gap: 0.8rem;
-        margin-bottom: 0.8rem;
+        padding: .9rem 1.15rem;
+        border-bottom: 1px solid var(--sa-border);
+        background: var(--sa-soft);
     }
-    
-    .selector-title {
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: var(--text-primary);
+
+    .sa-card-head-left {
         display: flex;
         align-items: center;
-        gap: 8px;
-        font-family: 'Inter', sans-serif;
+        gap: .65rem;
+        min-width: 0;
     }
-    
-    .selector-title i { color: #4F46E5; }
-    
-    .selector-title small {
-        font-weight: 400;
-        color: var(--text-muted);
-        font-size: 0.65rem;
+
+    .sa-card-head-icon {
+        width: 32px; height: 32px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        font-size: .75rem;
+        background: var(--sa-primary-soft);
+        color: var(--sa-primary);
+        flex: 0 0 auto;
     }
-    
+
+    .sa-card-head-title {
+        font-size: .9rem;
+        font-weight: 700;
+        letter-spacing: -.01em;
+        line-height: 1.2;
+        margin: 0;
+    }
+
+    .sa-card-head-sub {
+        font-size: .7rem;
+        color: var(--sa-muted);
+        margin-top: .1rem;
+    }
+
+    /* ---------------- DATE SELECTOR ---------------- */
+    .date-selector-premium {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding: 1rem 1.15rem;
+    }
+
     .selector-group {
         display: flex;
         gap: 1rem;
         flex-wrap: wrap;
         align-items: flex-end;
     }
-    
+
+    .selector-item { min-width: 0; }
+
     .selector-item label {
-        display: block;
-        font-size: 0.6rem;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .66rem;
         font-weight: 700;
+        letter-spacing: .09em;
         text-transform: uppercase;
-        letter-spacing: 0.8px;
-        color: var(--text-muted);
-        margin-bottom: 0.3rem;
-        font-family: 'Inter', sans-serif;
+        color: var(--sa-muted);
+        margin-bottom: .4rem;
     }
-    
+
+    .selector-item label i { font-size: .62rem; color: var(--sa-primary); }
+
     .selector-item input {
-        width: 200px;
-        padding: 0.5rem 0.8rem;
-        border: 1px solid var(--border-color);
-        border-radius: 10px;
-        background: var(--input-bg);
-        color: var(--text-primary);
-        font-size: 0.8rem;
-        transition: all 0.2s;
+        width: 220px;
+        padding: .6rem .9rem;
+        border-radius: 11px;
+        border: 1px solid var(--sa-border);
+        background: var(--sa-soft);
+        color: var(--sa-text);
+        font-size: .82rem;
+        font-family: inherit;
         cursor: pointer;
+        transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
     }
-    
+
     .selector-item input:focus {
         outline: none;
-        border-color: #10B981;
-        box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
+        background: var(--sa-card);
+        border-color: var(--sa-primary);
+        box-shadow: 0 0 0 3px var(--sa-primary-ring);
     }
-    
-    .quick-actions {
+
+    .week-nav {
         display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
+        gap: .5rem;
     }
-    
-    .btn-quick-premium {
-        padding: 0.4rem 1rem;
-        border-radius: 8px;
+
+    .btn-week-premium {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .6rem 1rem;
+        border-radius: 11px;
+        font-size: .76rem;
         font-weight: 600;
-        font-size: 0.65rem;
+        font-family: inherit;
         cursor: pointer;
-        transition: all 0.3s ease;
-        border: 1px solid var(--border-color);
-        background: var(--card-bg);
-        color: var(--text-secondary);
-        font-family: 'Inter', sans-serif;
+        border: 1px solid var(--sa-border);
+        background: var(--sa-card);
+        color: var(--sa-text);
+        transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+    }
+
+    .btn-week-premium:hover {
+        background: var(--sa-soft);
+        border-color: var(--sa-primary);
+        color: var(--sa-primary);
+        transform: translateY(-1px);
+    }
+
+    .btn-week-premium i { font-size: .68rem; transition: transform .18s ease; }
+    .btn-week-prev:hover i { transform: translateX(-3px); }
+    .btn-week-next:hover i { transform: translateX(3px); }
+
+    .auto-save-status {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
-    }
-    
-    .btn-quick-premium:hover {
-        background: var(--gradient-green);
-        border-color: #10B981;
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-glow-green);
-    }
-    
-    .total-badge-premium {
-        background: var(--bg-tertiary);
-        color: var(--text-primary);
-        padding: 6px 16px;
-        border-radius: 30px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.75rem;
+        gap: .45rem;
+        padding: .4rem .85rem;
+        border-radius: 20px;
+        border: 1px solid var(--sa-border);
+        background: var(--sa-card);
+        font-size: .68rem;
         font-weight: 600;
-        border: 1px solid var(--border-color);
-        font-family: 'Inter', sans-serif;
+        color: var(--sa-muted);
+        white-space: nowrap;
     }
-    
-    .total-badge-premium i { color: #10B981; }
-    
+
+    .auto-save-status .fa-check-circle { color: var(--sa-green); }
+    .auto-save-status .fa-exclamation-circle { color: var(--sa-rose); }
+
+    /* ---------------- TABLE ---------------- */
     .table-container-premium {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
+        background: var(--sa-card);
+        border: 1px solid var(--sa-border);
+        border-radius: var(--sa-radius);
+        box-shadow: var(--sa-shadow-sm);
         overflow: hidden;
         margin-bottom: 1.5rem;
-        box-shadow: var(--shadow-card-lg);
-        transition: all 0.3s ease;
+        transition: box-shadow .22s ease, border-color .22s ease;
     }
-    
+
     .table-container-premium:hover {
-        box-shadow: var(--shadow-card-hover);
+        box-shadow: var(--sa-shadow-md);
+        border-color: transparent;
     }
-    
+
     .table-header-premium {
-        padding: 0.8rem 1.5rem;
-        border-bottom: 1px solid var(--border-color);
-        background: var(--bg-tertiary);
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        padding: .9rem 1.15rem;
+        border-bottom: 1px solid var(--sa-border);
+        background: var(--sa-soft);
     }
-    
+
     .table-header-premium h6 {
-        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: .55rem;
         margin: 0;
-        font-size: 0.8rem;
+        font-size: .88rem;
         font-weight: 700;
-        font-family: 'Inter', sans-serif;
+        letter-spacing: -.005em;
+        color: var(--sa-text);
     }
-    
+
     .table-header-premium h6 i {
-        margin-right: 8px;
-        color: #10B981;
+        display: grid;
+        place-items: center;
+        width: 30px; height: 30px;
+        border-radius: 9px;
+        font-size: .7rem;
+        background: var(--sa-primary-soft);
+        color: var(--sa-primary);
     }
-    
+
     .badge-count-premium {
-        background: rgba(16, 185, 129, 0.1);
-        color: #10B981;
-        padding: 2px 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: .25rem;
+        padding: .18rem .6rem;
+        margin-left: .35rem;
         border-radius: 20px;
-        font-size: 0.65rem;
-        font-weight: 600;
+        font-size: .64rem;
+        font-weight: 700;
+        background: var(--sa-green-soft);
+        color: var(--sa-green);
     }
-    
-    .table-footer-premium {
-        padding: 0.6rem 1.5rem;
-        border-top: 1px solid var(--border-color);
-        background: var(--bg-tertiary);
-        text-align: center;
-        font-size: 0.65rem;
-        color: var(--text-muted);
-    }
-    
-    .table-footer-premium strong.text-success { color: #10B981; }
-    .table-footer-premium strong.text-danger { color: #EF4444; }
-    
+
     .table-premium {
         width: 100%;
-        border-collapse: collapse;
-        background: var(--card-bg);
+        border-collapse: separate;
+        border-spacing: 0;
+        background: var(--sa-card);
     }
-    
+
     .table-premium thead th {
-        background: var(--bg-tertiary);
-        border-bottom: 1px solid var(--border-color);
-        color: var(--text-muted) !important;
-        font-size: 0.6rem;
+        text-align: left;
+        padding: .8rem 1.15rem;
+        font-size: .65rem;
         font-weight: 700;
+        letter-spacing: .1em;
         text-transform: uppercase;
-        letter-spacing: 0.6px;
-        padding: 0.7rem 1.2rem;
+        color: var(--sa-muted) !important;
+        background: var(--sa-card);
+        border-bottom: 1px solid var(--sa-border);
         white-space: nowrap;
-        font-family: 'Inter', sans-serif;
     }
-    
+
     .table-premium tbody td {
-        padding: 0.7rem 1.2rem;
+        padding: .7rem 1.15rem;
         vertical-align: middle;
-        color: var(--text-primary) !important;
-        background: var(--card-bg);
-        border-bottom: 1px solid var(--border-color);
-        font-size: 0.8rem;
+        color: var(--sa-text) !important;
+        background: var(--sa-card);
+        border-bottom: 1px solid var(--sa-border);
+        font-size: .82rem;
+        transition: background .16s ease;
     }
-    
-    .table-premium tbody tr { transition: all 0.15s ease; }
-    .table-premium tbody tr:hover { background: var(--bg-tertiary) !important; }
-    .table-premium tbody tr:hover td { background: var(--bg-tertiary) !important; }
+
     .table-premium tbody tr:last-child td { border-bottom: none; }
-    
+    .table-premium tbody tr { transition: background .16s ease; }
+    .table-premium tbody tr:hover td { background: var(--sa-soft) !important; }
+
+    .table-premium .text-muted { color: var(--sa-muted) !important; }
+    .table-premium .text-center { text-align: center; }
+
     .member-info-premium {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: .75rem;
+        min-width: 0;
     }
-    
+
     .member-avatar-premium {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        background: var(--gradient-blue);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 0.7rem;
-        flex-shrink: 0;
+        width: 38px; height: 38px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        font-size: .72rem;
         font-weight: 700;
-        box-shadow: var(--shadow-glow-blue);
+        letter-spacing: .02em;
+        background: var(--sa-primary-soft);
+        color: var(--sa-primary);
     }
-    
-    .member-avatar-premium.choir {
-        background: var(--gradient-orange);
-        box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
-    }
-    
+
     .member-name-premium {
+        font-size: .85rem;
         font-weight: 600;
-        color: var(--text-primary);
-        font-size: 0.85rem;
-        margin-bottom: 1px;
-        font-family: 'Inter', sans-serif;
+        color: var(--sa-text);
+        line-height: 1.25;
     }
-    
+
     .member-role-premium {
-        font-size: 0.6rem;
-        color: var(--text-muted);
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-    
-    .member-role-premium i { color: #F59E0B; font-size: 0.55rem; }
-    
-    .status-badge-premium {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 4px 14px;
-        border-radius: 20px;
-        font-size: 0.65rem;
-        font-weight: 600;
-        font-family: 'Inter', sans-serif;
+        gap: .3rem;
+        margin-top: .15rem;
+        font-size: .66rem;
+        color: var(--sa-muted);
     }
-    
-    .status-present-premium {
-        background: rgba(16, 185, 129, 0.12);
-        color: #10B981;
-        border: 1px solid rgba(16, 185, 129, 0.15);
+
+    .member-role-premium i { color: var(--sa-violet); font-size: .58rem; }
+
+    .status-select-premium {
+        width: 130px;
+        padding: .42rem .8rem;
+        border-radius: 10px;
+        border: 1px solid var(--sa-border);
+        background: var(--sa-soft);
+        color: var(--sa-text);
+        font-size: .78rem;
+        font-family: inherit;
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c8494' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right .7rem center;
+        background-size: 12px;
+        transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease;
     }
-    
-    .status-present-premium i { color: #10B981; }
-    
-    .status-absent-premium {
-        background: rgba(239, 68, 68, 0.12);
-        color: #EF4444;
-        border: 1px solid rgba(239, 68, 68, 0.15);
+
+    .status-select-premium:focus {
+        outline: none;
+        background-color: var(--sa-card);
+        border-color: var(--sa-primary);
+        box-shadow: 0 0 0 3px var(--sa-primary-ring);
     }
-    
-    .status-absent-premium i { color: #EF4444; }
-    
+
+    .status-select-premium option { background: var(--sa-card); color: var(--sa-text); }
+
+    .status-select-premium.changed {
+        border-color: var(--sa-amber);
+        background-color: var(--sa-amber-soft);
+    }
+
+    .status-select-premium.saved {
+        border-color: var(--sa-green);
+        background-color: var(--sa-green-soft);
+    }
+
+    .notes-input-premium {
+        width: 100%;
+        padding: .42rem .8rem;
+        border-radius: 10px;
+        border: 1px solid var(--sa-border);
+        background: var(--sa-soft);
+        color: var(--sa-text);
+        font-size: .78rem;
+        font-family: inherit;
+        transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease;
+    }
+
+    .notes-input-premium::placeholder { color: var(--sa-muted); opacity: .8; }
+
+    .notes-input-premium:focus {
+        outline: none;
+        background: var(--sa-card);
+        border-color: var(--sa-primary);
+        box-shadow: 0 0 0 3px var(--sa-primary-ring);
+    }
+
+    .notes-input-premium.changed {
+        border-color: var(--sa-amber);
+        background-color: var(--sa-amber-soft);
+    }
+
+    .notes-input-premium.saved {
+        border-color: var(--sa-green);
+        background-color: var(--sa-green-soft);
+    }
+
+    .alert-box-premium {
+        display: flex;
+        align-items: center;
+        gap: .7rem;
+        padding: .85rem 1.15rem;
+        border-radius: 12px;
+        margin-bottom: 1.25rem;
+        font-size: .82rem;
+        font-weight: 500;
+        background: var(--sa-green-soft);
+        color: var(--sa-green);
+        border: 1px solid transparent;
+    }
+
+    .alert-box-premium.error {
+        background: var(--sa-rose-soft);
+        color: var(--sa-rose);
+    }
+
+    .alert-box-premium i { font-size: .95rem; flex: 0 0 auto; }
+
     .empty-state-premium {
         text-align: center;
         padding: 3rem 1.5rem;
-        color: var(--text-muted);
+        color: var(--sa-muted);
     }
-    
+
     .empty-state-premium i {
-        font-size: 3rem;
-        margin-bottom: 0.8rem;
-        opacity: 0.3;
-        color: #10B981;
+        font-size: 2.4rem;
+        color: var(--sa-muted);
+        opacity: .35;
+        display: block;
+        margin-bottom: .9rem;
     }
-    
-    .empty-state-premium p { font-size: 0.85rem; margin: 0; }
-    
+
+    .empty-state-premium p {
+        font-size: .85rem;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .auto-save-toast {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        padding: .8rem 1.1rem;
+        background: var(--sa-card);
+        border: 1px solid var(--sa-border);
+        border-left: 4px solid var(--sa-green);
+        border-radius: 14px;
+        box-shadow: 0 20px 48px -12px rgba(15, 27, 45, .25);
+        font-size: .8rem;
+        font-weight: 600;
+        color: var(--sa-text);
+        z-index: 9999;
+        transform: translateY(120%);
+        opacity: 0;
+        transition: all .4s cubic-bezier(.22, 1, .36, 1);
+        min-width: 260px;
+        max-width: 380px;
+    }
+
+    .auto-save-toast.show { transform: translateY(0); opacity: 1; }
+    .auto-save-toast.success { border-left-color: var(--sa-green); }
+    .auto-save-toast.success i { color: var(--sa-green); }
+    .auto-save-toast.error { border-left-color: var(--sa-rose); }
+    .auto-save-toast.error i { color: var(--sa-rose); }
+
     .custom-alert-overlay {
+        --sa-card: var(--card-bg, #ffffff);
+        --sa-border: var(--border-color, #e8eaf0);
+        --sa-text: var(--text-primary, #0f172a);
+        --sa-muted: var(--text-muted, #7c8494);
+        --sa-soft: var(--bg-tertiary, #f5f6fa);
+        --sa-primary: #4f46e5;
+        --sa-primary-soft: rgba(79, 70, 229, .08);
+        --sa-amber: #d97706;
+        --sa-amber-soft: rgba(217, 119, 6, .10);
+        --sa-green: #059669;
+        --sa-rose: #e11d48;
+
         display: none;
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.4);
+        inset: 0;
+        background: rgba(15, 23, 42, .55);
         backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
         z-index: 10000;
         align-items: center;
         justify-content: center;
-        animation: fadeIn 0.25s ease;
+        animation: saFadeIn .22s ease;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
-    
+
+    [data-theme="dark"] .custom-alert-overlay {
+        --sa-card: var(--card-bg, #1e1e2d);
+        --sa-border: var(--border-color, #2a2a3d);
+        --sa-text: var(--text-primary, #f1f5f9);
+        --sa-muted: var(--text-muted, #94a3b8);
+        --sa-soft: var(--bg-tertiary, #262636);
+        --sa-primary: #6366f1;
+        --sa-primary-soft: rgba(99, 102, 241, .16);
+        --sa-amber: #fbbf24;
+        --sa-amber-soft: rgba(245, 158, 11, .18);
+        --sa-green: #34d399;
+        --sa-rose: #fb7185;
+        background: rgba(0, 0, 0, .7);
+    }
+
     .custom-alert-overlay.active { display: flex; }
-    
+
     .custom-alert {
-        background: var(--card-bg);
+        background: var(--sa-card);
         border-radius: 16px;
-        padding: 2rem;
+        padding: 2rem 1.75rem 1.75rem;
         max-width: 420px;
         width: 90%;
-        box-shadow: var(--shadow-card-hover);
-        animation: slideUp 0.3s ease;
+        box-shadow:
+            0 24px 60px -20px rgba(15, 23, 42, .4),
+            0 8px 24px -12px rgba(15, 23, 42, .25);
+        animation: saSlideUp .3s cubic-bezier(.22, 1, .36, 1);
         text-align: center;
-        border: 1px solid var(--border-color);
+        border: 1px solid var(--sa-border);
+        position: relative;
     }
-    
+
     .custom-alert-icon {
-        width: 72px;
-        height: 72px;
-        border-radius: 50%;
-        background: rgba(239, 68, 68, 0.1);
-        display: flex;
+        width: 68px; height: 68px;
+        border-radius: 20px;
+        background: var(--sa-amber-soft);
+        color: var(--sa-amber);
+        display: grid;
+        place-items: center;
+        margin: 0 auto 1rem;
+        font-size: 1.7rem;
+        box-shadow: 0 8px 20px -8px rgba(217, 119, 6, .35);
+    }
+
+    .custom-alert h3 {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--sa-text);
+        margin: 0 0 .4rem;
+        letter-spacing: -.02em;
+    }
+
+    .custom-alert p {
+        font-size: .84rem;
+        color: var(--sa-muted);
+        margin: 0 0 1.1rem;
+        line-height: 1.55;
+    }
+
+    .custom-alert .alert-date {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .5rem 1rem;
+        border-radius: 10px;
+        background: var(--sa-soft);
+        border: 1px solid var(--sa-border);
+        font-size: .78rem;
+        font-weight: 600;
+        color: var(--sa-text);
+        margin-bottom: 1.25rem;
+        white-space: nowrap;
+    }
+
+    .custom-alert .alert-date i { color: var(--sa-amber); font-size: .72rem; }
+
+    .btn-alert-close {
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 0.8rem;
-    }
-    
-    .custom-alert-icon i { font-size: 2rem; color: #EF4444; }
-    
-    .custom-alert h3 {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        margin-bottom: 0.3rem;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .custom-alert p {
-        font-size: 0.85rem;
-        color: var(--text-secondary);
-        margin-bottom: 1rem;
-        line-height: 1.5;
-    }
-    
-    .custom-alert .alert-date {
-        background: var(--bg-tertiary);
-        padding: 0.4rem 1rem;
-        border-radius: 8px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 1.2rem;
-        display: inline-block;
-        border: 1px solid var(--border-color);
-    }
-    
-    .custom-alert .alert-date i { color: #F59E0B; margin-right: 6px; }
-    
-    .btn-alert-close {
-        padding: 0.6rem 2rem;
-        background: var(--gradient-blue);
-        color: white;
+        gap: .45rem;
+        padding: .7rem 1.8rem;
+        background: var(--sa-primary);
+        color: #fff;
         border: none;
-        border-radius: 10px;
-        font-size: 0.8rem;
-        font-weight: 600;
+        border-radius: 11px;
+        font-size: .82rem;
+        font-weight: 700;
+        font-family: inherit;
         cursor: pointer;
-        transition: all 0.3s ease;
-        font-family: 'Inter', sans-serif;
-        box-shadow: var(--shadow-glow-blue);
+        transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
+        box-shadow: 0 10px 22px -10px rgba(79, 70, 229, .9);
+        min-width: 180px;
     }
-    
+
     .btn-alert-close:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 40px rgba(79, 70, 229, 0.4);
+        background: #4338ca;
+        transform: translateY(-1px);
+        box-shadow: 0 14px 26px -10px rgba(79, 70, 229, .95);
     }
-    
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(20px) scale(0.96); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
+
+    @keyframes saFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes saSlideUp {
+        from { opacity: 0; transform: translateY(16px) scale(.98); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
     }
-    
+
     @media (max-width: 992px) {
-        .records-hero .hero-content { flex-direction: column; align-items: flex-start; }
-        .records-hero .hero-actions { width: 100%; }
+        .sa-head { flex-direction: column; align-items: flex-start; }
+        .sa-head-actions { width: 100%; }
+        .sa-head-actions .sa-btn { flex: 1; justify-content: center; }
     }
-    
+
     @media (max-width: 768px) {
-        .records-hero { padding: 1.5rem; border-radius: 16px; }
-        .records-hero h1 { font-size: 1.3rem; }
-        .stats-grid-premium { grid-template-columns: 1fr; gap: 0.8rem; }
-        .stat-card-premium { padding: 1rem; }
-        .stat-card-premium .stat-value { font-size: 1.3rem; }
-        .stat-card-premium .stat-icon-wrap { width: 36px; height: 36px; font-size: 0.9rem; }
-        .date-selector-premium { padding: 1rem 1.2rem; }
-        .selector-group { flex-direction: column; align-items: stretch !important; }
+        .sa-title { font-size: 1.3rem; }
+        .sa-sub { font-size: .78rem; }
+
+        .stats-grid-premium { grid-template-columns: 1fr; gap: .8rem; }
+        .stat-card-premium { padding: .9rem; }
+        .stat-card-premium .stat-value { font-size: 1.15rem; }
+        .stat-card-premium .stat-icon-wrap { width: 38px; height: 38px; font-size: .85rem; }
+
+        .date-selector-premium { flex-direction: column; align-items: stretch; }
+        .selector-group { flex-direction: column; align-items: stretch; }
         .selector-item input { width: 100%; }
-        .quick-actions { width: 100%; flex-direction: column; }
-        .btn-quick-premium { width: 100%; justify-content: center; }
-        .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; }
+        .week-nav { width: 100%; }
+        .btn-week-premium { flex: 1; justify-content: center; }
+
+        .auto-save-status { align-self: flex-start; }
+
         .table-header-premium { flex-direction: column; align-items: flex-start; }
-        .table-premium thead th, .table-premium tbody td { padding: 0.4rem 0.6rem; font-size: 0.65rem; }
-        .member-avatar-premium { width: 28px; height: 28px; font-size: 0.6rem; }
-        .member-name-premium { font-size: 0.75rem; }
-        .status-badge-premium { font-size: 0.55rem; padding: 2px 8px; }
-        .total-badge-premium { font-size: 0.65rem; padding: 4px 12px; }
+
+        .table-premium thead th,
+        .table-premium tbody td { padding: .55rem .75rem; font-size: .7rem; }
+
+        .member-avatar-premium { width: 32px; height: 32px; border-radius: 10px; font-size: .65rem; }
+        .member-name-premium { font-size: .78rem; }
+        .status-select-premium { width: 100%; }
+
+        .auto-save-toast { right: 16px; left: 16px; bottom: 16px; min-width: auto; }
+
+        .custom-alert { padding: 1.6rem 1.25rem 1.35rem; }
+        .custom-alert-icon { width: 58px; height: 58px; font-size: 1.45rem; border-radius: 16px; }
+        .custom-alert h3 { font-size: 1.02rem; }
     }
-    
+
     @media (max-width: 480px) {
-        .records-hero .hero-actions { flex-direction: column; }
+        .sa-head-actions { flex-direction: column; }
+        .sa-head-actions .sa-btn,
+        .sa-head-actions .sa-pill { width: 100%; justify-content: center; }
+
+        .btn-alert-close { width: 100%; min-width: 0; }
+        .custom-alert .alert-date { white-space: normal; }
     }
 </style>
 
-<div class="container-fluid px-0">
+<div class="sa container-fluid px-0">
 
-    {{-- HERO SECTION --}}
-    <div class="records-hero">
-        <div class="hero-content">
-            <div class="hero-left">
-                <h1><i class="fas fa-calendar-check"></i> <span data-i18n="attendance_records">{{ __("Attendance Records") }}</span></h1>
-                <p><span data-i18n="attendance_records_desc">{{ __("View and analyze church attendance data") }}</span></p>
-                <div class="hero-badge">
-                    <i class="fas fa-circle" style="color: #34D399; font-size: 0.5rem;"></i>
-                    {{ \Carbon\Carbon::parse($selectedDate ?? date('Y-m-d'))->format('F d, Y') }}
-                </div>
+    {{-- ============================================
+         HEADER
+    ============================================ --}}
+    <header class="sa-head">
+        <div>
+            <div class="sa-eyebrow">
+                <span class="sa-dot"></span>
+                <span data-i18n="sunday_service_label">{{ __("Sunday Service") }}</span>
             </div>
-            <div class="hero-actions">
-                <a href="{{ route('sunday-attendance.index', ['date' => $selectedDate ?? date('Y-m-d')]) }}" class="btn-hero-primary">
-                    <i class="fas fa-pen-alt"></i> <span data-i18n="input_attendance">{{ __("Input Attendance") }}</span>
-                </a>
-                <span class="btn-hero-secondary">
-                    <i class="fas fa-calendar-alt"></i>
-                    {{ \Carbon\Carbon::parse($selectedDate ?? date('Y-m-d'))->format('l') }}
+            <h1 class="sa-title">
+                <i class="fas fa-church"></i>
+                <span data-i18n="sunday_attendance">{{ __("Sunday Service Attendance") }}</span>
+            </h1>
+            <p class="sa-sub" data-i18n="sunday_attendance_desc">
+                {{ __("Record and manage attendance for Sunday worship services") }}
+            </p>
+        </div>
+        <div class="sa-head-actions">
+            <a href="{{ route('sunday-attendance.records', ['date' => $selectedDate]) }}" class="sa-btn sa-btn-ghost">
+                <i class="fas fa-list-alt"></i>
+                <span data-i18n="view_records">{{ __("View Records") }}</span>
+            </a>
+
+            {{-- ⭐ Save Now: disabled by default, enabled only when there are changes --}}
+            <button type="button"
+                    class="sa-btn sa-btn-primary"
+                    id="saveNowBtn"
+                    onclick="saveAttendance(true)"
+                    disabled
+                    title="{{ __('No changes yet') }}">
+                <i class="fas fa-save"></i>
+                <span data-i18n="save_now">{{ __("Save Now") }}</span>
+            </button>
+
+            <span class="sa-pill">
+                <i class="fas fa-calendar-alt"></i>
+                {{ \Carbon\Carbon::parse($selectedDate)->format('l, F d, Y') }}
+            </span>
+        </div>
+    </header>
+
+    @if(session('success'))
+        <div class="alert-box-premium">
+            <i class="fas fa-check-circle"></i>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="alert-box-premium error">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>{{ session('error') }}</span>
+        </div>
+    @endif
+
+    <section class="stats-grid-premium">
+        <div class="stat-card-premium blue">
+            <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
+            <div class="stat-body">
+                <p class="stat-label"><span data-i18n="total_members">{{ __("Total Members") }}</span></p>
+                <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
+                <span class="stat-change positive">
+                    <i class="fas fa-users"></i>
+                    <span data-i18n="church_family">{{ __("Church family") }}</span>
                 </span>
             </div>
         </div>
-    </div>
 
-    {{-- STATS CARDS --}}
-    <div class="stats-grid-premium">
-        <div class="stat-card-premium blue">
-            <div class="stat-top">
-                <span class="stat-label"><span data-i18n="total_members_label">{{ __("Total Members") }}</span></span>
-                <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
-            </div>
-            <div class="stat-value">{{ number_format($totalMembers ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-users"></i> <span data-i18n="registered">{{ __("Registered") }}</span></div>
-        </div>
-        
         <div class="stat-card-premium green">
-            <div class="stat-top">
-                <span class="stat-label"><span data-i18n="present_today">{{ __("Present Today") }}</span></span>
-                <div class="stat-icon-wrap"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-icon-wrap"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-body">
+                <p class="stat-label"><span data-i18n="present_label">{{ __("Present") }}</span></p>
+                <div class="stat-value amount-positive-premium" id="presentCountValue">{{ number_format($presentCount ?? 0) }}</div>
+                <span class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span data-i18n="attended_today">{{ __("Attended today") }}</span>
+                </span>
             </div>
-            <div class="stat-value" style="color: #10B981;">{{ number_format($presentCount ?? 0) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="attended">{{ __("Attended") }}</span></div>
         </div>
-        
+
         <div class="stat-card-premium red">
-            <div class="stat-top">
-                <span class="stat-label"><span data-i18n="absent_today">{{ __("Absent Today") }}</span></span>
-                <div class="stat-icon-wrap"><i class="fas fa-times-circle"></i></div>
+            <div class="stat-icon-wrap"><i class="fas fa-times-circle"></i></div>
+            <div class="stat-body">
+                <p class="stat-label"><span data-i18n="absent_label">{{ __("Absent") }}</span></p>
+                <div class="stat-value amount-negative-premium" id="absentCountValue">{{ number_format($absentCount ?? 0) }}</div>
+                <span class="stat-change negative">
+                    <i class="fas fa-arrow-down"></i>
+                    <span data-i18n="not_attended">{{ __("Not attended") }}</span>
+                </span>
             </div>
-            <div class="stat-value" style="color: #EF4444;">{{ number_format($absentCount ?? 0) }}</div>
-            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="not_attended">{{ __("Not attended") }}</span></div>
         </div>
-    </div>
+    </section>
 
-    {{-- DATE SELECTOR --}}
-    <div class="date-selector-premium">
-        <div class="selector-header">
-            <div class="selector-title">
-                <i class="fas fa-calendar-week"></i>
-                <span data-i18n="select_date">{{ __("Select Date") }}</span>
-                <small><i class="fas fa-info-circle"></i> <span data-i18n="only_sundays">{{ __("Only Sundays are selectable") }}</span></small>
+    <div class="sa-card">
+        <div class="sa-card-head">
+            <div class="sa-card-head-left">
+                <div class="sa-card-head-icon"><i class="fas fa-calendar-week"></i></div>
+                <div>
+                    <h2 class="sa-card-head-title" data-i18n="select_date">{{ __("Select Date") }}</h2>
+                    <div class="sa-card-head-sub">
+                        <i class="fas fa-info-circle" style="font-size:.62rem;"></i>
+                        <span data-i18n="only_sundays">{{ __("Only Sundays are selectable") }}</span>
+                    </div>
+                </div>
             </div>
-            <div class="total-badge-premium">
-                <i class="fas fa-church"></i>
-                {{ \Carbon\Carbon::parse($selectedDate ?? date('Y-m-d'))->format('F d, Y') }}
-            </div>
-        </div>
-        <div class="selector-group">
-            <div class="selector-item">
-                <label><i class="fas fa-calendar-day me-1"></i> <span data-i18n="date_label">{{ __("DATE") }}</span></label>
-                <input type="date" id="dateSelector" value="{{ $selectedDate ?? date('Y-m-d') }}"
-                       min="{{ \Carbon\Carbon::now()->subYears(5)->format('Y-m-d') }}"
-                       max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
-            </div>
-            <div class="quick-actions">
-                <button class="btn-quick-premium" onclick="selectToday()">
-                    <i class="fas fa-calendar-day"></i> <span data-i18n="today">{{ __("Today") }}</span>
-                </button>
-                <button class="btn-quick-premium" onclick="selectLastSunday()">
-                    <i class="fas fa-calendar-week"></i> <span data-i18n="last_sunday">{{ __("Last Sunday") }}</span>
-                </button>
-                <button class="btn-quick-premium" onclick="selectPrevSunday()">
-                    <i class="fas fa-chevron-left"></i> <span data-i18n="previous">{{ __("Previous") }}</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    {{-- ATTENDANCE DETAILS TABLE --}}
-    <div class="table-container-premium">
-        <div class="table-header-premium">
-            <h6>
-                <i class="fas fa-users"></i>
-                <span data-i18n="attendance_details">{{ __("Attendance Details") }}</span>
-                <span class="badge-count-premium">{{ $presentCount ?? 0 }} <span data-i18n="present_short">{{ __("Present") }}</span> / {{ $totalMembers ?? 0 }} <span data-i18n="members_short">{{ __("Members") }}</span></span>
-            </h6>
-            <span style="font-size: 0.65rem; color: var(--text-muted);">
-                <i class="fas fa-calendar-alt"></i>
-                {{ \Carbon\Carbon::parse($selectedDate ?? date('Y-m-d'))->format('l, F d, Y') }}
+            <span class="auto-save-status">
+                <i class="fas fa-sync-alt fa-fw" id="autoSaveSpinner"></i>
+                <span id="autoSaveLabel" data-i18n="auto_save_enabled">{{ __("Auto-save enabled") }}</span>
             </span>
         </div>
-        <div class="table-responsive">
-            <table class="table-premium table">
-                <thead>
-                    <tr>
-                        <th style="width: 50px;">#</th>
-                        <th data-i18n="member_info">{{ __("Member Information") }}</th>
-                        <th data-i18n="age_label">{{ __("Age") }}</th>
-                        <th style="width: 140px;" data-i18n="status_label">{{ __("Status") }}</th>
-                        <th data-i18n="notes_label">{{ __("Notes") }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse(($members ?? []) as $index => $member)
-                    @php
-                        $attendance = ($attendances ?? collect())->get($member->id);
-                        $status = $attendance ? $attendance->status : 'Absent';
-                        $age = $member->birthday ? \Carbon\Carbon::parse($member->birthday)->age : 'N/A';
-                        $notes = $attendance ? $attendance->notes : null;
-                        $isChoir = $member->is_choir ?? false;
-                    @endphp
-                    <tr>
-                        <td class="text-muted text-center">{{ $index + 1 }}</td>
-                        <td>
-                            <div class="member-info-premium">
-                                <div class="member-avatar-premium {{ $isChoir ? 'choir' : '' }}">
-                                    {{ strtoupper(substr($member->first_name ?? '', 0, 1)) }}{{ strtoupper(substr($member->last_name ?? '', 0, 1)) }}
-                                </div>
-                                <div>
-                                    <div class="member-name-premium">{{ $member->first_name ?? '' }} {{ $member->last_name ?? '' }}</div>
-                                    @if($isChoir)
-                                        <div class="member-role-premium"><i class="fas fa-music"></i> <span data-i18n="choir_member">{{ __("Choir Member") }}</span></div>
-                                    @endif
-                                </div>
-                            </div>
-                        </td>
-                        <td>{{ $age }}</td>
-                        <td>
-                            @if($status == 'Present')
-                                <span class="status-badge-premium status-present-premium">
-                                    <i class="fas fa-check-circle"></i> <span data-i18n="present_option">{{ __("Present") }}</span>
-                                </span>
-                            @else
-                                <span class="status-badge-premium status-absent-premium">
-                                    <i class="fas fa-times-circle"></i> <span data-i18n="absent_option">{{ __("Absent") }}</span>
-                                </span>
-                            @endif
-                        </td>
-                        <td style="color: var(--text-muted);">{{ $notes ?? '—' }}</td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5">
-                            <div class="empty-state-premium">
-                                <i class="fas fa-users"></i>
-                                <p data-i18n="no_members_found">{{ __("No members found. Please add members first.") }}</p>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <div class="date-selector-premium">
+            <div class="selector-group">
+                <div class="selector-item">
+                    <label>
+                        <i class="fas fa-calendar-day"></i>
+                        <span data-i18n="date_label">{{ __("DATE") }}</span>
+                    </label>
+                    <input type="date" id="datePicker" value="{{ $selectedDate }}"
+                           min="{{ \Carbon\Carbon::now()->subYears(5)->format('Y-m-d') }}"
+                           max="{{ \Carbon\Carbon::now()->addYears(1)->format('Y-m-d') }}">
+                </div>
+                <div class="week-nav">
+                    <button type="button" class="btn-week-premium btn-week-prev" onclick="goToPrevWeek()">
+                        <i class="fas fa-chevron-left"></i>
+                        <span data-i18n="prev_week">{{ __("Prev Week") }}</span>
+                    </button>
+                    <button type="button" class="btn-week-premium btn-week-next" onclick="goToNextWeek()">
+                        <span data-i18n="next_week">{{ __("Next Week") }}</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-        
-        @if(($members ?? collect())->count() > 0)
-        <div class="table-footer-premium">
-            <i class="fas fa-users me-1"></i>
-            <span data-i18n="total_members_footer">{{ __("Total members:") }}</span> <strong>{{ $members->count() }}</strong> &nbsp;|&nbsp;
-            <i class="fas fa-check-circle me-1" style="color: #10B981;"></i>
-            <span data-i18n="present_footer">{{ __("Present:") }}</span> <strong class="text-success">{{ $presentCount ?? 0 }}</strong> &nbsp;|&nbsp;
-            <i class="fas fa-times-circle me-1" style="color: #EF4444;"></i>
-            <span data-i18n="absent_footer">{{ __("Absent:") }}</span> <strong class="text-danger">{{ $absentCount ?? 0 }}</strong>
-        </div>
-        @endif
     </div>
+
+    <form id="attendanceForm" action="{{ route('sunday-attendance.store') }}" method="POST">
+        @csrf
+        <input type="hidden" name="service_date" id="serviceDate" value="{{ $selectedDate }}">
+
+        <div class="table-container-premium">
+            <div class="table-header-premium">
+                <h6>
+                    <i class="fas fa-users"></i>
+                    <span data-i18n="member_attendance">{{ __("Member Attendance") }}</span>
+                    <span class="badge-count-premium" id="badgeCount">
+                        {{ $presentCount ?? 0 }} / {{ $totalMembers ?? 0 }}
+                        <span data-i18n="recorded">{{ __("Recorded") }}</span>
+                    </span>
+                </h6>
+                <span style="font-size: .68rem; color: var(--sa-muted); display: inline-flex; align-items: center; gap: .35rem;">
+                    <i class="fas fa-edit"></i>
+                    <span data-i18n="changes_auto_save">{{ __("Changes auto-save") }}</span>
+                </span>
+            </div>
+            <div class="table-responsive">
+                <table class="table-premium table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th data-i18n="member_info">{{ __("Member Information") }}</th>
+                            <th style="width: 150px;" data-i18n="status_label">{{ __("Status") }}</th>
+                            <th data-i18n="notes_label">{{ __("Notes") }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($members ?? [] as $index => $member)
+                        @php
+                            $attendance = ($attendances ?? collect())->get($member->id);
+                            $status = $attendance ? $attendance->status : 'Absent';
+                            $notes = $attendance ? $attendance->notes : '';
+                        @endphp
+                        <tr>
+                            <td class="text-muted text-center">{{ $index + 1 }}</td>
+                            <td>
+                                <div class="member-info-premium">
+                                    <div class="member-avatar-premium">
+                                        {{ strtoupper(substr($member->first_name ?? '', 0, 1)) }}{{ strtoupper(substr($member->last_name ?? '', 0, 1)) }}
+                                    </div>
+                                    <div style="min-width:0;">
+                                        <div class="member-name-premium">
+                                            {{ $member->first_name }} {{ $member->last_name }}
+                                        </div>
+                                        @if(($member->is_choir ?? false))
+                                            <div class="member-role-premium">
+                                                <i class="fas fa-music"></i>
+                                                <span data-i18n="choir_member">{{ __("Choir Member") }}</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <select name="attendances[{{ $member->id }}][status]"
+                                        class="status-select-premium"
+                                        data-member="{{ $member->id }}"
+                                        onchange="autoSave(this)">
+                                    <option value="Present" {{ $status == 'Present' ? 'selected' : '' }}>✅ {{ __("Present") }}</option>
+                                    <option value="Absent"  {{ $status == 'Absent'  ? 'selected' : '' }}>❌ {{ __("Absent") }}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text"
+                                       name="attendances[{{ $member->id }}][notes]"
+                                       class="notes-input-premium"
+                                       placeholder="{{ __('Add notes...') }}"
+                                       value="{{ $notes }}"
+                                       data-member="{{ $member->id }}"
+                                       data-i18n-placeholder="Add notes..."
+                                       onchange="autoSave(this)"
+                                       onkeyup="autoSaveDebounce(this)">
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state-premium">
+                                    <i class="fas fa-users"></i>
+                                    <p data-i18n="no_members_found">{{ __("No members found. Please add members first.") }}</p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-save-hidden" id="hiddenSubmitBtn" style="display:none;"></button>
+    </form>
+
+    <div class="custom-alert-overlay" id="customAlert">
+        <div class="custom-alert">
+            <div class="custom-alert-icon">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <h3 data-i18n="only_sundays_allowed">{{ __("Only Sundays Allowed") }}</h3>
+            <p data-i18n="only_sundays_desc">{{ __("Attendance can only be recorded on Sundays. Please select a Sunday date.") }}</p>
+            <div class="alert-date">
+                <i class="fas fa-calendar-day"></i>
+                <span id="alertSelectedDate">
+                    <span data-i18n="select_date_label">{{ __("Select a date") }}</span>
+                </span>
+            </div>
+            <br>
+            <button class="btn-alert-close" onclick="closeCustomAlert()">
+                <i class="fas fa-check"></i>
+                <span data-i18n="ok_understand">{{ __("OK, I Understand") }}</span>
+            </button>
+        </div>
+    </div>
+
 </div>
 
-{{-- CUSTOM ALERT - ONLY SUNDAYS --}}
-<div class="custom-alert-overlay" id="customAlert">
-    <div class="custom-alert">
-        <div class="custom-alert-icon">
-            <i class="fas fa-exclamation-circle"></i>
-        </div>
-        <h3 data-i18n="only_sundays_allowed">{{ __("Only Sundays Allowed") }}</h3>
-        <p data-i18n="only_sundays_records_desc">{{ __("Attendance records can only be viewed for Sundays. Please select a Sunday date.") }}</p>
-        <div class="alert-date">
-            <i class="fas fa-calendar-day"></i>
-            <span id="alertSelectedDate"><span data-i18n="select_date_label">{{ __("Select a date") }}</span></span>
-        </div>
-        <button class="btn-alert-close" onclick="closeCustomAlert()">
-            <i class="fas fa-check me-1"></i> <span data-i18n="ok_understand">{{ __("OK, I Understand") }}</span>
-        </button>
-    </div>
+<div class="auto-save-toast" id="autoSaveToast">
+    <i class="fas fa-check-circle"></i>
+    <span id="autoSaveMessage" data-i18n="changes_saved">{{ __("Changes saved automatically") }}</span>
 </div>
 
 <script>
@@ -908,121 +1157,356 @@
     }
 
     // =============================================
+    // SUNDAY CHECK HELPER — force local time
+    // =============================================
+    function isSunday(dateStr) {
+        if (!dateStr) return false;
+        const d = new Date(dateStr + 'T00:00:00');
+        return !isNaN(d.getTime()) && d.getDay() === 0;
+    }
+
+    // =============================================
+    // SAVE NOW BUTTON — enable/disable based on changes
+    // =============================================
+    function setSaveNowEnabled(enabled) {
+        const btn = document.getElementById('saveNowBtn');
+        if (!btn) return;
+        if (enabled) {
+            btn.disabled = false;
+            btn.removeAttribute('disabled');
+            btn.title = t('click_to_save', 'Click to save now');
+        } else {
+            btn.disabled = true;
+            btn.setAttribute('disabled', 'disabled');
+            btn.title = t('no_changes_yet', 'No changes yet');
+        }
+    }
+
+    // =============================================
     // CUSTOM ALERT
     // =============================================
     function showCustomAlert(date) {
         const overlay = document.getElementById('customAlert');
         const dateSpan = document.getElementById('alertSelectedDate');
-        
+
         if (date) {
-            const d = new Date(date);
+            const d = new Date(date + 'T00:00:00');
             const localeMap = { 'en': 'en-US', 'ceb': 'en-PH', 'tl': 'en-PH' };
             const locale = window.__currentLocale || 'en';
-            dateSpan.textContent = d.toLocaleDateString(localeMap[locale] || 'en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+            dateSpan.textContent = d.toLocaleDateString(localeMap[locale] || 'en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             });
         } else {
             dateSpan.textContent = t('invalid_date', 'Invalid date selected');
         }
-        
+
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
-    
+
     function closeCustomAlert() {
         const overlay = document.getElementById('customAlert');
         overlay.classList.remove('active');
         document.body.style.overflow = '';
-        
-        const dateSelector = document.getElementById('dateSelector');
-        const currentDate = "{{ $selectedDate ?? date('Y-m-d') }}";
-        if (dateSelector && currentDate) dateSelector.value = currentDate;
+
+        const datePicker = document.getElementById('datePicker');
+        const currentDate = document.getElementById('serviceDate').value;
+        if (datePicker && currentDate) datePicker.value = currentDate;
     }
-    
+
     document.addEventListener('DOMContentLoaded', function() {
         const overlay = document.getElementById('customAlert');
         overlay.addEventListener('click', function(e) {
             if (e.target === this) closeCustomAlert();
         });
-        
+
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && overlay.classList.contains('active')) closeCustomAlert();
         });
+
+        // ⭐ Ensure Save Now is disabled on initial load
+        setSaveNowEnabled(false);
     });
-    
+
     // =============================================
-    // DATE SELECTOR - ONLY SUNDAYS
+    // AUTO-SAVE
     // =============================================
-    const dateSelector = document.getElementById('dateSelector');
-    
+    let saveTimeout = null;
+    let isSaving = false;
+    const toast = document.getElementById('autoSaveToast');
+    const toastMessage = document.getElementById('autoSaveMessage');
+    const spinner = document.getElementById('autoSaveSpinner');
+    const autoSaveLabel = document.getElementById('autoSaveLabel');
+
+    function showToast(message, type = 'success') {
+        toast.className = 'auto-save-toast ' + type;
+        toastMessage.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toast._hideTimeout);
+        toast._hideTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function autoSave(element) {
+        // ⭐ SUNDAY-ONLY GUARD
+        const serviceDate = document.getElementById('serviceDate').value;
+        if (!isSunday(serviceDate)) {
+            if (element) element.classList.remove('changed');
+            showCustomAlert(serviceDate);
+            return;
+        }
+
+        // ⭐ Enable Save Now since a change happened
+        setSaveNowEnabled(true);
+
+        clearTimeout(saveTimeout);
+        if (element) element.classList.add('changed');
+        spinner.className = 'fas fa-spinner fa-spin fa-fw';
+        autoSaveLabel.textContent = t('saving', 'Saving...');
+        saveTimeout = setTimeout(() => saveAttendance(false), 500);
+    }
+
+    function autoSaveDebounce(element) {
+        // ⭐ SUNDAY-ONLY GUARD
+        const serviceDate = document.getElementById('serviceDate').value;
+        if (!isSunday(serviceDate)) {
+            if (element) element.classList.remove('changed');
+            showCustomAlert(serviceDate);
+            return;
+        }
+
+        // ⭐ Enable Save Now since a change happened
+        setSaveNowEnabled(true);
+
+        clearTimeout(saveTimeout);
+        if (element) element.classList.add('changed');
+        spinner.className = 'fas fa-spinner fa-spin fa-fw';
+        autoSaveLabel.textContent = t('saving', 'Saving...');
+        saveTimeout = setTimeout(() => saveAttendance(false), 800);
+    }
+
+    /**
+     * Save attendance.
+     * @param {boolean} manual  true = user clicked "Save Now", false = auto-save
+     */
+    function saveAttendance(manual) {
+        if (isSaving) return;
+
+        const serviceDate = document.getElementById('serviceDate').value;
+
+        // ⭐ SUNDAY-ONLY GUARD
+        if (!isSunday(serviceDate)) {
+            isSaving = false;
+            spinner.className = 'fas fa-exclamation-circle fa-fw';
+            autoSaveLabel.textContent = t('save_blocked', 'Save blocked');
+            showCustomAlert(serviceDate);
+            document.querySelectorAll('.status-select-premium.changed, .notes-input-premium.changed')
+                .forEach(el => el.classList.remove('changed'));
+            setTimeout(() => {
+                spinner.className = 'fas fa-sync-alt fa-fw';
+                autoSaveLabel.textContent = t('auto_save_enabled', 'Auto-save enabled');
+            }, 3000);
+            return;
+        }
+
+        // ⭐ If manual click but nothing changed, do nothing
+        if (manual) {
+            const hasChanges = document.querySelectorAll('.status-select-premium.changed, .notes-input-premium.changed').length > 0;
+            const btn = document.getElementById('saveNowBtn');
+            if (!hasChanges && btn && btn.disabled) return;
+        }
+
+        isSaving = true;
+
+        const form = document.getElementById('attendanceForm');
+        const statusSelects = form.querySelectorAll('.status-select-premium');
+        const notesInputs = form.querySelectorAll('.notes-input-premium');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
+
+        const attendances = {};
+
+        statusSelects.forEach(select => {
+            const memberId = select.dataset.member;
+            if (!attendances[memberId]) attendances[memberId] = {};
+            attendances[memberId]['status'] = select.value;
+        });
+
+        notesInputs.forEach(input => {
+            const memberId = input.dataset.member;
+            if (!attendances[memberId]) attendances[memberId] = {};
+            attendances[memberId]['notes'] = input.value;
+        });
+
+        const submitData = new FormData();
+        submitData.append('service_date', serviceDate);
+        submitData.append('_token', csrfToken);
+
+        Object.keys(attendances).forEach(memberId => {
+            submitData.append(`attendances[${memberId}][status]`, attendances[memberId]['status'] || 'Absent');
+            submitData.append(`attendances[${memberId}][notes]`, attendances[memberId]['notes'] || '');
+        });
+
+        fetch('{{ route("sunday-attendance.store") }}', {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: submitData,
+            credentials: 'same-origin'
+        })
+        .then(async response => {
+            const contentType = response.headers.get('content-type') || '';
+            if (!response.ok) {
+                const text = await response.text();
+                console.error('[Auto-save] HTTP', response.status, text);
+                throw new Error('Server returned ' + response.status);
+            }
+            if (!contentType.includes('application/json')) {
+                const text = await response.text();
+                console.error('[Auto-save] Non-JSON response:', text.substring(0, 300));
+                throw new Error('Server did not return JSON.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            isSaving = false;
+
+            if (data.success) {
+                document.querySelectorAll('.status-select-premium.changed, .notes-input-premium.changed').forEach(el => {
+                    el.classList.remove('changed');
+                    el.classList.add('saved');
+                    setTimeout(() => el.classList.remove('saved'), 1000);
+                });
+
+                spinner.className = 'fas fa-check-circle fa-fw';
+                autoSaveLabel.textContent = t('auto_saved', 'Auto-saved');
+
+                // ⭐ Disable Save Now again after successful save
+                setSaveNowEnabled(false);
+
+                if (data.stats) {
+                    const presentEl = document.getElementById('presentCountValue');
+                    const absentEl  = document.getElementById('absentCountValue');
+                    const badgeEl   = document.getElementById('badgeCount');
+
+                    if (presentEl) presentEl.textContent = data.stats.present;
+                    if (absentEl)  absentEl.textContent  = data.stats.absent;
+                    if (badgeEl)   badgeEl.innerHTML = data.stats.present + ' / ' + data.stats.total + ' ' + t('recorded', 'Recorded');
+                }
+
+                showToast(data.message || t('changes_saved', 'Changes saved automatically'), 'success');
+
+                // ⭐ Manual save → redirect to records
+                if (manual) {
+                    setTimeout(() => {
+                        window.location.href = "{{ route('sunday-attendance.records') }}?date=" + serviceDate;
+                    }, 600);
+                }
+            } else {
+                showToast(data.message || t('save_error', 'Error saving changes'), 'error');
+                spinner.className = 'fas fa-exclamation-circle fa-fw';
+                autoSaveLabel.textContent = t('save_failed', 'Auto-save failed');
+            }
+
+            setTimeout(() => {
+                spinner.className = 'fas fa-sync-alt fa-fw';
+                autoSaveLabel.textContent = t('auto_save_enabled', 'Auto-save enabled');
+            }, 3000);
+        })
+        .catch(error => {
+            isSaving = false;
+            console.error('[Auto-save] Error:', error);
+            showToast(t('network_error', 'Save failed. Check console for details.'), 'error');
+            spinner.className = 'fas fa-exclamation-circle fa-fw';
+            autoSaveLabel.textContent = t('save_failed', 'Auto-save failed');
+            setTimeout(() => {
+                spinner.className = 'fas fa-sync-alt fa-fw';
+                autoSaveLabel.textContent = t('auto_save_enabled', 'Auto-save enabled');
+            }, 3000);
+        });
+    }
+
+    // =============================================
+    // DATE PICKER — ONLY SUNDAYS
+    // =============================================
+    const datePicker = document.getElementById('datePicker');
+
     function getNearestSunday(date) {
-        let d = new Date(date);
+        let d = new Date(date + 'T00:00:00');
         d.setDate(d.getDate() + (7 - d.getDay()) % 7);
         return d;
     }
-    
-    if (dateSelector) {
-        const currentDate = dateSelector.value;
-        if (currentDate) {
-            const selectedDate = new Date(currentDate);
-            if (selectedDate.getDay() !== 0) {
-                const nearestSunday = getNearestSunday(selectedDate);
-                const dateStr = nearestSunday.toISOString().split('T')[0];
-                window.location.href = "{{ route('sunday-attendance.records', ['date' => '']) }}" + dateStr;
-            }
+
+    function toLocalDateStr(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + d;
+    }
+
+    if (datePicker) {
+        const currentDate = datePicker.value;
+        if (currentDate && !isSunday(currentDate)) {
+            const nearestSunday = getNearestSunday(currentDate);
+            window.location.href = "{{ route('sunday-attendance.index') }}?date=" + toLocalDateStr(nearestSunday);
         }
-        
-        dateSelector.addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            if (selectedDate.getDay() !== 0) {
+
+        datePicker.addEventListener('input', function() {
+            if (!isSunday(this.value)) {
                 showCustomAlert(this.value);
-                const currentDate = "{{ $selectedDate ?? date('Y-m-d') }}";
-                this.value = currentDate;
-            } else {
-                window.location.href = "{{ route('sunday-attendance.records', ['date' => '']) }}" + this.value;
+                this.value = document.getElementById('serviceDate').value;
+            } else if (this.value) {
+                window.location.href = "{{ route('sunday-attendance.index') }}?date=" + this.value;
             }
         });
     }
-    
-    // =============================================
-    // QUICK SELECT FUNCTIONS
-    // =============================================
-    function selectToday() {
-        let today = new Date();
-        if (today.getDay() !== 0) {
-            today.setDate(today.getDate() + (7 - today.getDay()) % 7);
-        }
-        let dateStr = today.toISOString().split('T')[0];
-        window.location.href = "{{ route('sunday-attendance.records', ['date' => '']) }}" + dateStr;
-    }
-    
-    function selectLastSunday() {
-        let today = new Date();
-        let lastSunday = new Date(today);
-        lastSunday.setDate(today.getDate() - today.getDay());
-        let dateStr = lastSunday.toISOString().split('T')[0];
-        window.location.href = "{{ route('sunday-attendance.records', ['date' => '']) }}" + dateStr;
-    }
-    
-    function selectPrevSunday() {
-        let currentDate = document.getElementById('dateSelector').value;
-        let date = new Date(currentDate);
+
+    function goToPrevWeek() {
+        let date = new Date(document.getElementById('datePicker').value + 'T00:00:00');
         date.setDate(date.getDate() - 7);
-        let year = date.getFullYear();
-        let month = String(date.getMonth() + 1).padStart(2, '0');
-        let day = String(date.getDate()).padStart(2, '0');
-        window.location.href = "{{ route('sunday-attendance.records', ['date' => '']) }}" + year + '-' + month + '-' + day;
+        window.location.href = "{{ route('sunday-attendance.index') }}?date=" + toLocalDateStr(date);
     }
 
-    // ⭐ LISTEN FOR LANGUAGE CHANGES
+    function goToNextWeek() {
+        let date = new Date(document.getElementById('datePicker').value + 'T00:00:00');
+        date.setDate(date.getDate() + 7);
+        window.location.href = "{{ route('sunday-attendance.index') }}?date=" + toLocalDateStr(date);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            const badge = document.getElementById('badgeCount');
+            if (badge) {
+                const text = badge.textContent;
+                if (text && !text.includes('0 /')) {
+                    spinner.className = 'fas fa-check-circle fa-fw';
+                    autoSaveLabel.textContent = t('auto_saved', 'Auto-saved');
+                    setTimeout(() => {
+                        spinner.className = 'fas fa-sync-alt fa-fw';
+                        autoSaveLabel.textContent = t('auto_save_enabled', 'Auto-save enabled');
+                    }, 2000);
+                }
+            }
+        }, 1000);
+    });
+
     window.addEventListener('localeChanged', function(e) {
         if (typeof window.applyTranslations === 'function') {
             window.applyTranslations();
         }
-        console.log('[Attendance Records] Locale changed to:', e.detail.locale);
+        if (autoSaveLabel && spinner.classList.contains('fa-sync-alt')) {
+            autoSaveLabel.textContent = t('auto_save_enabled', 'Auto-save enabled');
+        }
+        // Refresh Save Now button title
+        const btn = document.getElementById('saveNowBtn');
+        if (btn) {
+            btn.title = btn.disabled ? t('no_changes_yet', 'No changes yet') : t('click_to_save', 'Click to save now');
+        }
+        console.log('[Attendance] Locale changed to:', e.detail.locate);
     });
 </script>
 @endsection

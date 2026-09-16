@@ -6,1238 +6,1343 @@
 
 @section('content')
 
-{{-- ============================================= --}}
-{{-- STYLES SECTION --}}
-{{-- ============================================= --}}
 <style>
-    /* ============================================
-       MODERN DESIGN - WITH GRADIENT COLORS
-    ============================================ */
-    
-    /* Import Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-    
-    :root {
-        --profile-primary: #4F46E5;
-        --profile-primary-light: #818CF8;
-        --profile-primary-dark: #4338CA;
-        --profile-success: #10B981;
-        --profile-warning: #F59E0B;
-        --profile-danger: #EF4444;
-        --profile-purple: #8B5CF6;
-        --profile-pink: #EC4899;
-        --gradient-primary: linear-gradient(135deg, #4F46E5, #7C3AED);
-        --gradient-success: linear-gradient(135deg, #10B981, #34D399);
-        --gradient-danger: linear-gradient(135deg, #EF4444, #F87171);
-        --gradient-info: linear-gradient(135deg, #3B82F6, #60A5FA);
-        --gradient-multi: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
-        --shadow-profile-lg: 0 20px 60px rgba(0,0,0,0.08);
-        --shadow-profile-hover: 0 24px 80px rgba(0,0,0,0.12);
-        --shadow-glow: 0 8px 32px rgba(79, 70, 229, 0.3);
-        --shadow-success: 0 8px 32px rgba(16, 185, 129, 0.3);
-        --shadow-danger: 0 8px 32px rgba(239, 68, 68, 0.3);
-        --shadow-info: 0 8px 32px rgba(59, 130, 246, 0.3);
+    /* ==========================================================
+       INVENTORY MANAGEMENT — 2025 REDESIGN
+       Flat · bordered · airy · Inter
+    ========================================================== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    .inv {
+        --inv-card: var(--card-bg, #ffffff);
+        --inv-border: var(--border-color, #e8eaf0);
+        --inv-text: var(--text-primary, #0f172a);
+        --inv-muted: var(--text-muted, #7c8494);
+        --inv-soft: var(--bg-tertiary, #f5f6fa);
+
+        --inv-primary: #4f46e5;
+        --inv-primary-soft: rgba(79, 70, 229, .08);
+        --inv-primary-ring: rgba(79, 70, 229, .18);
+
+        --inv-green: #059669;
+        --inv-green-soft: rgba(5, 150, 105, .10);
+        --inv-rose: #e11d48;
+        --inv-rose-soft: rgba(225, 29, 72, .09);
+        --inv-amber: #d97706;
+        --inv-amber-soft: rgba(217, 119, 6, .10);
+        --inv-violet: #7c3aed;
+        --inv-violet-soft: rgba(124, 58, 237, .10);
+
+        --inv-shadow-sm: 0 1px 2px rgba(15, 23, 42, .04);
+        --inv-shadow-md: 0 10px 28px -14px rgba(15, 23, 42, .22);
+        --inv-shadow-lg: 0 20px 60px -24px rgba(15, 23, 42, .35);
+        --inv-radius: 16px;
+
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: var(--inv-text);
+        padding-bottom: 2rem;
     }
-    
-    /* Hero Section - MULTI-COLOR GRADIENT */
-    .finance-hero {
-        background: var(--gradient-multi);
-        border-radius: 24px;
-        padding: 2rem 2.5rem;
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(79, 70, 229, 0.3);
+
+    [data-theme="dark"] .inv {
+        --inv-primary: #6366f1;
+        --inv-primary-soft: rgba(99, 102, 241, .16);
+        --inv-primary-ring: rgba(99, 102, 241, .28);
+        --inv-green: #34d399;
+        --inv-green-soft: rgba(16, 185, 129, .14);
+        --inv-rose: #fb7185;
+        --inv-rose-soft: rgba(244, 63, 94, .14);
+        --inv-amber: #fbbf24;
+        --inv-amber-soft: rgba(245, 158, 11, .14);
+        --inv-violet: #a78bfa;
+        --inv-violet-soft: rgba(139, 92, 246, .16);
+        --inv-shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+        --inv-shadow-md: 0 14px 30px -16px rgba(0, 0, 0, .75);
+        --inv-shadow-lg: 0 24px 60px -20px rgba(0, 0, 0, .85);
     }
-    
-    .finance-hero::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -30%;
-        width: 80%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-        pointer-events: none;
-        animation: heroPulse 8s ease-in-out infinite;
-    }
-    
-    .finance-hero::after {
-        content: '';
-        position: absolute;
-        bottom: -50%;
-        left: -20%;
-        width: 60%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
-        pointer-events: none;
-        animation: heroPulse 10s ease-in-out infinite reverse;
-    }
-    
-    @keyframes heroPulse {
-        0%, 100% { transform: scale(1); opacity: 0.5; }
-        50% { transform: scale(1.2); opacity: 1; }
-    }
-    
-    .finance-hero .hero-content {
-        position: relative;
-        z-index: 1;
+
+    .inv * { box-sizing: border-box; }
+
+    /* ---------------- HEADER ---------------- */
+    .inv-head {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+        gap: 1.25rem;
         flex-wrap: wrap;
-        gap: 1rem;
-    }
-    
-    .finance-hero .hero-left {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-    
-    .finance-hero h1 {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: white;
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        letter-spacing: -0.5px;
-    }
-    
-    .finance-hero h1 i {
-        margin-right: 12px;
-        opacity: 0.8;
-    }
-    
-    .finance-hero .hero-sub {
-        color: rgba(255,255,255,0.85);
-        font-size: 0.85rem;
-        margin: 0;
-    }
-    
-    .finance-hero .hero-actions {
-        display: flex;
-        gap: 0.6rem;
-        flex-wrap: wrap;
-        position: relative;
-        z-index: 1;
-    }
-    
-    /* Hero Buttons */
-    .btn-hero {
-        padding: 0.6rem 1.6rem;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 0.75rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        border: none;
-        text-decoration: none;
-        font-family: 'Inter', sans-serif;
-        letter-spacing: 0.3px;
-        position: relative;
-        overflow: hidden;
-        color: white;
-    }
-    
-    .btn-hero-income {
-        background: var(--gradient-success);
-        box-shadow: var(--shadow-success);
-        color: white;
-    }
-    
-    .btn-hero-income:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4);
-        color: white;
-    }
-    
-    .btn-hero-expense {
-        background: var(--gradient-danger);
-        box-shadow: var(--shadow-danger);
-        color: white;
-    }
-    
-    .btn-hero-expense:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 40px rgba(239, 68, 68, 0.4);
-        color: white;
-    }
-    
-    .btn-hero-transactions {
-        background: #ffffff;
-        color: #4F46E5;
-        box-shadow: 0 8px 32px rgba(255, 255, 255, 0.3);
-    }
-    
-    .btn-hero-transactions:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 40px rgba(255, 255, 255, 0.5);
-        color: #4F46E5;
-        background: #f1f5f9;
-    }
-    
-    .btn-hero-export {
-        background: var(--gradient-primary);
-        box-shadow: var(--shadow-glow);
-        color: white;
-    }
-    
-    .btn-hero-export:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 40px rgba(79, 70, 229, 0.4);
-        color: white;
-    }
-    
-    /* Stats Grid */
-    .stats-grid-premium {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.2rem;
-        margin-bottom: 2rem;
-    }
-    
-    .stat-card-premium {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        padding: 1.2rem 1.5rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-        box-shadow: var(--shadow-profile-lg);
-    }
-    
-    .stat-card-premium::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-    }
-    
-    .stat-card-premium:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-profile-hover);
-        border-color: transparent;
-    }
-    
-    .stat-card-premium .stat-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 0.5rem;
-    }
-    
-    .stat-card-premium .stat-label {
-        font-size: 0.6rem;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        color: #6b7280;
-        font-weight: 700;
-        margin: 0;
-    }
-    
-    .stat-card-premium .stat-icon-wrap {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        color: white;
-        flex-shrink: 0;
-    }
-    
-    .stat-card-premium .stat-value {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: #1a1a2e;
-        font-family: 'Inter', sans-serif;
-        letter-spacing: -0.5px;
-        line-height: 1.2;
-    }
-    
-    .stat-card-premium .stat-change {
-        font-size: 0.65rem;
-        color: #6b7280;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        margin-top: 2px;
-        padding: 2px 8px;
-        border-radius: 20px;
-        background: #f9fafb;
-    }
-    
-    .stat-card-premium .stat-change.positive { color: #10B981; }
-    .stat-card-premium .stat-change.negative { color: #EF4444; }
-    
-    .stat-card-premium.green::before { background: var(--gradient-success); }
-    .stat-card-premium.blue::before { background: var(--gradient-primary); }
-    .stat-card-premium.purple::before { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
-    .stat-card-premium.orange::before { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
-    .stat-card-premium.red::before { background: var(--gradient-danger); }
-    
-    .stat-card-premium.green .stat-icon-wrap { background: var(--gradient-success); box-shadow: var(--shadow-success); }
-    .stat-card-premium.blue .stat-icon-wrap { background: var(--gradient-primary); box-shadow: var(--shadow-glow); }
-    .stat-card-premium.purple .stat-icon-wrap { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
-    .stat-card-premium.orange .stat-icon-wrap { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
-    .stat-card-premium.red .stat-icon-wrap { background: var(--gradient-danger); box-shadow: var(--shadow-danger); }
-    
-    /* Summary Banner - Premium */
-    .summary-banner-premium {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        padding: 1.2rem 1.8rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid var(--inv-border);
         margin-bottom: 1.5rem;
-        box-shadow: var(--shadow-profile-lg);
-        transition: all 0.3s ease;
-        display: flex;
-        justify-content: space-between;
+    }
+
+    .inv-eyebrow {
+        display: inline-flex;
         align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .summary-banner-premium::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: var(--gradient-primary);
-    }
-    
-    .summary-banner-premium:hover {
-        box-shadow: var(--shadow-profile-hover);
-        border-color: transparent;
-    }
-    
-    .summary-banner-premium h4 {
-        margin: 0 0 4px 0;
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        color: #6b7280;
+        gap: .45rem;
+        font-size: .66rem;
         font-weight: 700;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+        color: var(--inv-muted);
+        margin-bottom: .55rem;
     }
-    
-    .summary-banner-premium .amount {
+
+    .inv-eyebrow .inv-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--inv-green);
+        box-shadow: 0 0 0 3px var(--inv-green-soft);
+    }
+
+    .inv-title {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        margin: 0;
         font-size: 1.6rem;
         font-weight: 800;
-        color: #1a1a2e;
-        font-family: 'Inter', sans-serif;
-        letter-spacing: -0.5px;
+        letter-spacing: -.035em;
+        line-height: 1.15;
     }
-    
-    .summary-banner-premium .small {
-        font-size: 0.7rem;
-        color: #6b7280;
+
+    .inv-title i { font-size: 1.2rem; color: var(--inv-primary); }
+
+    .inv-sub {
+        margin: .5rem 0 0;
+        font-size: .84rem;
+        color: var(--inv-muted);
+        max-width: 62ch;
+        line-height: 1.5;
     }
-    
-    /* Category Grid */
-    .category-grid-premium {
+
+    .inv-head-actions {
+        display: flex;
+        gap: .55rem;
+        flex-wrap: wrap;
+    }
+
+    /* ---------------- BUTTONS ---------------- */
+    .inv-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .6rem 1.1rem;
+        border-radius: 11px;
+        font-size: .79rem;
+        font-weight: 600;
+        font-family: inherit;
+        line-height: 1.2;
+        text-decoration: none;
+        border: 1px solid transparent;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .inv-btn-primary {
+        background: var(--inv-primary);
+        color: #fff;
+        box-shadow: 0 8px 18px -10px rgba(79, 70, 229, .9);
+    }
+    .inv-btn-primary:hover {
+        background: #4338ca;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 12px 22px -10px rgba(79, 70, 229, .9);
+    }
+
+    .inv-btn-green {
+        background: var(--inv-green);
+        color: #fff;
+        box-shadow: 0 8px 18px -10px rgba(5, 150, 105, .9);
+    }
+    .inv-btn-green:hover {
+        background: #047857;
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .inv-btn-rose {
+        background: var(--inv-rose);
+        color: #fff;
+        box-shadow: 0 8px 18px -10px rgba(225, 29, 72, .9);
+    }
+    .inv-btn-rose:hover {
+        background: #be123c;
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .inv-btn-ghost {
+        background: var(--inv-card);
+        color: var(--inv-text);
+        border-color: var(--inv-border);
+    }
+    .inv-btn-ghost:hover {
+        background: var(--inv-soft);
+        color: var(--inv-text);
+        transform: translateY(-1px);
+    }
+
+    /* ---------------- STATS ---------------- */
+    .inv-stats {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .inv-stat {
+        display: flex;
+        align-items: center;
+        gap: .9rem;
+        padding: 1.05rem 1.15rem;
+        background: var(--inv-card);
+        border: 1px solid var(--inv-border);
+        border-radius: var(--inv-radius);
+        transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+        position: relative;
+    }
+
+    .inv-stat:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--inv-shadow-md);
+        border-color: transparent;
+    }
+
+    .inv-stat .inv-stat-icon {
+        width: 44px; height: 44px;
+        border-radius: 13px;
+        display: grid;
+        place-items: center;
+        font-size: 1rem;
+        flex: 0 0 auto;
+    }
+
+    .inv-stat.green  .inv-stat-icon { background: var(--inv-green-soft);   color: var(--inv-green); }
+    .inv-stat.rose   .inv-stat-icon { background: var(--inv-rose-soft);    color: var(--inv-rose); }
+    .inv-stat.primary .inv-stat-icon { background: var(--inv-primary-soft); color: var(--inv-primary); }
+    .inv-stat.violet .inv-stat-icon { background: var(--inv-violet-soft);  color: var(--inv-violet); }
+
+    .inv-stat .inv-stat-body { min-width: 0; flex: 1; }
+
+    .inv-stat .inv-stat-label {
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--inv-muted);
+        margin: 0 0 .2rem;
+    }
+
+    .inv-stat .inv-stat-value {
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -.03em;
+        line-height: 1.15;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .inv-stat .inv-stat-value.is-positive { color: var(--inv-green); }
+    .inv-stat .inv-stat-value.is-negative { color: var(--inv-rose); }
+
+    .inv-stat .inv-stat-meta {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        margin-top: .3rem;
+        padding: .12rem .5rem;
+        border-radius: 20px;
+        font-size: .64rem;
+        font-weight: 600;
+        background: var(--inv-soft);
+        color: var(--inv-muted);
+    }
+
+    .inv-stat .inv-stat-meta.positive { color: var(--inv-green); background: var(--inv-green-soft); }
+    .inv-stat .inv-stat-meta.negative { color: var(--inv-rose);  background: var(--inv-rose-soft); }
+
+    /* ---------------- SUMMARY BANNER ---------------- */
+    .inv-summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        padding: 1.15rem 1.35rem;
+        background: var(--inv-card);
+        border: 1px solid var(--inv-border);
+        border-radius: var(--inv-radius);
+        box-shadow: var(--inv-shadow-sm);
+        margin-bottom: 1.5rem;
+        transition: box-shadow .22s ease;
+    }
+
+    .inv-summary:hover { box-shadow: var(--inv-shadow-md); }
+
+    .inv-summary-left h4 {
+        display: flex;
+        align-items: center;
+        gap: .45rem;
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--inv-muted);
+        margin: 0 0 .4rem;
+    }
+
+    .inv-summary-left h4 i { color: var(--inv-green); font-size: .7rem; }
+
+    .inv-summary-amount {
+        font-size: 1.75rem;
+        font-weight: 800;
+        letter-spacing: -.04em;
+        color: var(--inv-text);
+        line-height: 1.1;
+    }
+
+    .inv-summary-left .small {
+        font-size: .7rem;
+        color: var(--inv-muted);
+        margin-top: .15rem;
+    }
+
+    .inv-summary-right {
+        display: flex;
+        flex-direction: column;
+        gap: .35rem;
+        text-align: right;
+    }
+
+    .inv-summary-right .small {
+        font-size: .74rem;
+        color: var(--inv-muted);
+        font-weight: 500;
+    }
+
+    .inv-summary-right .small strong { color: var(--inv-text); font-weight: 700; }
+    .inv-summary-right .small.net-pos strong { color: var(--inv-green); }
+    .inv-summary-right .small.net-neg strong { color: var(--inv-rose); }
+
+    /* ---------------- CATEGORY GRID ---------------- */
+    .inv-category-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 1.5rem;
         margin-bottom: 1.5rem;
     }
-    
-    .category-card-premium {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
+
+    .inv-card {
+        background: var(--inv-card);
+        border: 1px solid var(--inv-border);
+        border-radius: var(--inv-radius);
+        box-shadow: var(--inv-shadow-sm);
         overflow: hidden;
-        box-shadow: var(--shadow-profile-lg);
-        transition: all 0.3s ease;
+        transition: box-shadow .22s ease, border-color .22s ease;
     }
-    
-    .category-card-premium:hover {
-        box-shadow: var(--shadow-profile-hover);
+
+    .inv-card:hover {
+        box-shadow: var(--inv-shadow-md);
         border-color: transparent;
     }
-    
-    .category-header-premium {
-        padding: 0.8rem 1.5rem;
-        border-bottom: 1px solid #e5e7eb;
-        background: #f9fafb;
+
+    .inv-card-head {
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
         flex-wrap: wrap;
+        padding: .9rem 1.15rem;
+        border-bottom: 1px solid var(--inv-border);
+        background: var(--inv-soft);
     }
-    
-    .category-header-premium h6 {
-        margin: 0;
-        font-size: 0.8rem;
+
+    .inv-card-head-left {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        min-width: 0;
+    }
+
+    .inv-card-head-icon {
+        width: 32px; height: 32px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        font-size: .75rem;
+        flex: 0 0 auto;
+    }
+
+    .inv-card-head-icon.green  { background: var(--inv-green-soft);   color: var(--inv-green); }
+    .inv-card-head-icon.rose   { background: var(--inv-rose-soft);    color: var(--inv-rose); }
+    .inv-card-head-icon.primary { background: var(--inv-primary-soft); color: var(--inv-primary); }
+
+    .inv-card-head-title {
+        font-size: .9rem;
         font-weight: 700;
-        color: #1a1a2e;
-        font-family: 'Inter', sans-serif;
+        letter-spacing: -.01em;
+        line-height: 1.2;
+        margin: 0;
     }
-    
-    .category-header-premium h6 i {
-        margin-right: 8px;
+
+    .inv-card-head-sub {
+        font-size: .7rem;
+        color: var(--inv-muted);
+        margin-top: .1rem;
     }
-    
-    .category-header-premium .date-range-badge {
-        font-size: 0.6rem;
-        color: #6b7280;
-        background: #ffffff;
-        padding: 2px 10px;
-        border-radius: 20px;
-        border: 1px solid #e5e7eb;
+
+    .inv-card-head-tag {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: .35rem;
+        padding: .22rem .6rem;
+        border-radius: 20px;
+        border: 1px solid var(--inv-border);
+        background: var(--inv-card);
+        font-size: .64rem;
+        font-weight: 600;
+        color: var(--inv-muted);
+        white-space: nowrap;
     }
-    
-    .category-header-premium .date-range-badge i {
-        font-size: 0.55rem;
-        color: #4F46E5;
-    }
-    
-    .category-item-premium {
+
+    .inv-card-head-tag i { font-size: .56rem; color: var(--inv-primary); }
+
+    .inv-cat-item {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.7rem 1.5rem;
-        border-bottom: 1px solid #e5e7eb;
-        transition: all 0.2s ease;
+        gap: 1rem;
+        padding: .7rem 1.15rem;
+        border-bottom: 1px solid var(--inv-border);
+        transition: background .16s ease;
     }
-    
-    .category-item-premium:hover {
-        background: #f9fafb;
-        transform: translateX(4px);
-    }
-    
-    .category-name-premium {
-        font-size: 0.8rem;
+
+    .inv-cat-item:last-of-type { border-bottom: none; }
+    .inv-cat-item:hover { background: var(--inv-soft); }
+
+    .inv-cat-item .name {
+        font-size: .82rem;
         font-weight: 500;
-        color: #1a1a2e;
+        color: var(--inv-text);
     }
-    
-    .category-amount-premium {
+
+    .inv-cat-item .amt {
+        font-size: .85rem;
         font-weight: 700;
-        font-size: 0.85rem;
-        font-family: 'Inter', sans-serif;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -.01em;
     }
-    
-    .category-amount-premium.income { color: #10B981; }
-    .category-amount-premium.expense { color: #EF4444; }
-    
-    .summary-row-premium {
-        padding: 0.7rem 1.5rem;
-        background: #f9fafb;
+
+    .inv-cat-item .amt.income  { color: var(--inv-green); }
+    .inv-cat-item .amt.expense { color: var(--inv-rose); }
+
+    .inv-cat-summary {
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        padding: .8rem 1.15rem;
+        background: var(--inv-soft);
+        border-top: 1px solid var(--inv-border);
+        font-size: .82rem;
         font-weight: 700;
-        font-size: 0.85rem;
-        border-top: 2px solid #e5e7eb;
-        color: #1a1a2e;
-        font-family: 'Inter', sans-serif;
+        letter-spacing: -.005em;
+        color: var(--inv-text);
     }
-    
-    /* Table Container */
-    .table-container-premium {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
+
+    .inv-cat-summary .amt { font-variant-numeric: tabular-nums; }
+    .inv-cat-summary .amt.income  { color: var(--inv-green); }
+    .inv-cat-summary .amt.expense { color: var(--inv-rose); }
+
+    /* ---------------- TABLE ---------------- */
+    .inv-table-container {
+        background: var(--inv-card);
+        border: 1px solid var(--inv-border);
+        border-radius: var(--inv-radius);
+        box-shadow: var(--inv-shadow-sm);
         overflow: hidden;
         margin-bottom: 1.5rem;
-        box-shadow: var(--shadow-profile-lg);
-        transition: all 0.3s ease;
+        transition: box-shadow .22s ease, border-color .22s ease;
     }
-    
-    .table-container-premium:hover {
-        box-shadow: var(--shadow-profile-hover);
+
+    .inv-table-container:hover {
+        box-shadow: var(--inv-shadow-md);
+        border-color: transparent;
     }
-    
-    .table-header-premium {
-        padding: 0.8rem 1.5rem;
-        border-bottom: 1px solid #e5e7eb;
-        background: #f9fafb;
+
+    .inv-table-header {
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        padding: .9rem 1.15rem;
+        border-bottom: 1px solid var(--inv-border);
+        background: var(--inv-soft);
     }
-    
-    .table-header-premium h6 {
-        color: #1a1a2e;
+
+    .inv-table-header h6 {
+        display: flex;
+        align-items: center;
+        gap: .55rem;
         margin: 0;
-        font-size: 0.8rem;
+        font-size: .88rem;
         font-weight: 700;
-        font-family: 'Inter', sans-serif;
+        letter-spacing: -.005em;
+        color: var(--inv-text);
     }
-    
-    .table-header-premium h6 i {
-        margin-right: 8px;
-        color: #10B981;
+
+    .inv-table-header h6 i {
+        display: grid;
+        place-items: center;
+        width: 30px; height: 30px;
+        border-radius: 9px;
+        font-size: .7rem;
+        background: var(--inv-primary-soft);
+        color: var(--inv-primary);
     }
-    
-    .table-premium {
-        margin-bottom: 0;
+
+    .inv-table {
         width: 100%;
-        background: #ffffff;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: var(--inv-card);
     }
-    
-    .table-premium thead th {
-        background: #f9fafb;
-        border-bottom: 1px solid #e5e7eb;
-        color: #6b7280 !important;
-        font-size: 0.6rem;
+
+    .inv-table thead th {
+        text-align: left;
+        padding: .8rem 1.15rem;
+        font-size: .65rem;
         font-weight: 700;
+        letter-spacing: .1em;
         text-transform: uppercase;
-        letter-spacing: 0.6px;
-        padding: 0.7rem 1.2rem;
+        color: var(--inv-muted) !important;
+        background: var(--inv-card);
+        border-bottom: 1px solid var(--inv-border);
         white-space: nowrap;
-        font-family: 'Inter', sans-serif;
     }
-    
-    .table-premium tbody td {
-        padding: 0.7rem 1.2rem;
+
+    .inv-table tbody td {
+        padding: .7rem 1.15rem;
         vertical-align: middle;
-        color: #1a1a2e !important;
-        background: #ffffff;
-        border-bottom: 1px solid #e5e7eb;
-        font-size: 0.8rem;
+        color: var(--inv-text) !important;
+        background: var(--inv-card);
+        border-bottom: 1px solid var(--inv-border);
+        font-size: .82rem;
+        transition: background .16s ease;
     }
-    
-    .table-premium tbody tr {
-        transition: all 0.15s ease;
-    }
-    
-    .table-premium tbody tr:hover {
-        background: #f9fafb !important;
-    }
-    
-    .table-premium tbody tr:hover td {
-        background: #f9fafb !important;
-    }
-    
-    .table-premium tbody tr.clickable-row {
-        cursor: pointer;
-    }
-    
-    .table-premium tbody tr.clickable-row:hover {
-        background: rgba(79, 70, 229, 0.05) !important;
-        transform: scale(1.01);
-        transition: all 0.2s ease;
-    }
-    
-    .type-badge-premium {
+
+    .inv-table tbody tr:last-child td { border-bottom: none; }
+    .inv-table tbody tr { transition: background .16s ease; }
+    .inv-table tbody tr:hover td { background: var(--inv-soft) !important; }
+
+    .inv-table .text-muted { color: var(--inv-muted) !important; }
+
+    .inv-type-badge {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
-        padding: 3px 12px;
+        gap: .35rem;
+        padding: .24rem .65rem;
         border-radius: 20px;
-        font-size: 0.6rem;
+        font-size: .66rem;
         font-weight: 600;
+        white-space: nowrap;
     }
-    
-    .badge-income-premium {
-        background: rgba(16, 185, 129, 0.12);
-        color: #10B981 !important;
+
+    .inv-type-badge.income {
+        background: var(--inv-green-soft);
+        color: var(--inv-green);
     }
-    
-    .badge-expense-premium {
-        background: rgba(239, 68, 68, 0.12);
-        color: #EF4444 !important;
+
+    .inv-type-badge.expense {
+        background: var(--inv-rose-soft);
+        color: var(--inv-rose);
     }
-    
-    .amount-positive-premium { color: #10B981 !important; }
-    .amount-negative-premium { color: #EF4444 !important; }
-    
-    /* Modal Styles */
+
+    .inv-type-badge i { font-size: .58rem; }
+
+    .inv-cat-badge {
+        display: inline-block;
+        padding: .2rem .65rem;
+        border-radius: 20px;
+        font-size: .66rem;
+        font-weight: 500;
+        background: var(--inv-soft);
+        border: 1px solid var(--inv-border);
+        color: var(--inv-muted);
+    }
+
+    .inv-amount-pos { color: var(--inv-green) !important; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .inv-amount-neg { color: var(--inv-rose) !important; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    .inv-action-btns {
+        display: flex;
+        gap: 4px;
+        justify-content: center;
+    }
+
+    .inv-icon-btn {
+        width: 30px; height: 30px;
+        border-radius: 8px;
+        display: inline-grid;
+        place-items: center;
+        border: 1px solid var(--inv-border);
+        background: transparent;
+        color: var(--inv-muted);
+        cursor: pointer;
+        font-size: .72rem;
+        text-decoration: none;
+        transition: background .16s ease, color .16s ease, border-color .16s ease;
+    }
+
+    .inv-icon-btn:hover { transform: translateY(-1px); }
+    .inv-icon-btn.edit:hover   { background: var(--inv-primary-soft); color: var(--inv-primary); border-color: transparent; }
+    .inv-icon-btn.delete:hover { background: var(--inv-rose-soft);    color: var(--inv-rose);    border-color: transparent; }
+
+    /* ---------------- EMPTY ---------------- */
+    .inv-empty {
+        text-align: center;
+        padding: 3rem 1.5rem;
+        color: var(--inv-muted);
+    }
+
+    .inv-empty i {
+        font-size: 2.4rem;
+        color: var(--inv-muted);
+        opacity: .35;
+        display: block;
+        margin-bottom: .9rem;
+    }
+
+    .inv-empty p { font-size: .85rem; margin: 0 0 .35rem; font-weight: 600; color: var(--inv-text); }
+    .inv-empty small { font-size: .75rem; color: var(--inv-muted); }
+
+    /* ==========================================================
+       MODALS — FIXED
+    ========================================================== */
     .modal-content-premium {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
+        --inv-card: var(--card-bg, #ffffff);
+        --inv-border: var(--border-color, #e8eaf0);
+        --inv-text: var(--text-primary, #0f172a);
+        --inv-muted: var(--text-muted, #7c8494);
+        --inv-soft: var(--bg-tertiary, #f5f6fa);
+        --inv-primary: #4f46e5;
+        --inv-primary-soft: rgba(79, 70, 229, .08);
+        --inv-primary-ring: rgba(79, 70, 229, .18);
+        --inv-green: #059669;
+        --inv-green-soft: rgba(5, 150, 105, .10);
+        --inv-rose: #e11d48;
+        --inv-rose-soft: rgba(225, 29, 72, .09);
+        --inv-amber: #d97706;
+        --inv-amber-soft: rgba(217, 119, 6, .10);
+        --inv-violet: #7c3aed;
+        --inv-violet-soft: rgba(124, 58, 237, .10);
+        --inv-shadow-lg: 0 20px 60px -24px rgba(15, 23, 42, .35);
+
+        background: var(--inv-card) !important;
+        border: 1px solid var(--inv-border) !important;
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: var(--shadow-profile-hover);
+        box-shadow: var(--inv-shadow-lg);
+        color: var(--inv-text);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
-    
+
+    [data-theme="dark"] .modal-content-premium {
+        --inv-card: var(--card-bg, #1e1e2d);
+        --inv-border: var(--border-color, #2a2a3d);
+        --inv-text: var(--text-primary, #f1f5f9);
+        --inv-muted: var(--text-muted, #94a3b8);
+        --inv-soft: var(--bg-tertiary, #262636);
+        --inv-primary: #6366f1;
+        --inv-primary-soft: rgba(99, 102, 241, .16);
+        --inv-primary-ring: rgba(99, 102, 241, .28);
+        --inv-green: #34d399;
+        --inv-green-soft: rgba(16, 185, 129, .14);
+        --inv-rose: #fb7185;
+        --inv-rose-soft: rgba(244, 63, 94, .14);
+        --inv-amber: #fbbf24;
+        --inv-amber-soft: rgba(245, 158, 11, .14);
+        --inv-violet: #a78bfa;
+        --inv-violet-soft: rgba(139, 92, 246, .16);
+        --inv-shadow-lg: 0 24px 60px -20px rgba(0, 0, 0, .85);
+    }
+
+    .modal-backdrop {
+        background: rgba(15, 23, 42, .55) !important;
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+    }
+
+    .modal-backdrop.show { opacity: 1 !important; }
+
+    [data-theme="dark"] .modal-backdrop {
+        background: rgba(0, 0, 0, .7) !important;
+    }
+
+    .modal-dialog { z-index: 1056; }
+
     .modal-header-premium {
-        padding: 1.2rem 1.5rem;
-        border-bottom: 1px solid #e5e7eb;
-        background: #f9fafb;
+        padding: 1rem 1.35rem;
+        border-bottom: 1px solid var(--inv-border);
+        background: var(--inv-soft);
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
     }
-    
+
     .modal-header-premium .modal-title {
-        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .95rem;
         font-weight: 700;
-        color: #1a1a2e;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .modal-header-premium p {
-        color: #6b7280;
-        font-size: 0.75rem;
+        color: var(--inv-text);
+        letter-spacing: -.005em;
         margin: 0;
     }
-    
-    .modal-body {
-        padding: 1.5rem;
+
+    .modal-header-premium .modal-title i { font-size: .95rem; }
+
+    .modal-header-premium p {
+        color: var(--inv-muted);
+        font-size: .72rem;
+        margin: .25rem 0 0;
     }
-    
+
+    .modal-body { padding: 1.35rem; }
+
     .modal-footer {
-        padding: 1rem 1.5rem;
-        border-top: 1px solid #e5e7eb;
-        background: #f9fafb;
+        padding: 1rem 1.35rem;
+        border-top: 1px solid var(--inv-border);
+        background: var(--inv-soft);
+        display: flex;
+        justify-content: flex-end;
+        gap: .55rem;
+        flex-wrap: wrap;
     }
-    
+
     /* Category Pills */
     .category-pills-premium {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: .45rem;
     }
-    
+
     .category-pill-premium {
-        padding: 0.4rem 1rem;
-        border-radius: 20px;
-        font-size: 0.7rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        color: #4b5563;
-        text-align: center;
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        font-family: 'Inter', sans-serif;
+        gap: .4rem;
+        padding: .4rem .85rem;
+        border-radius: 10px;
+        font-size: .72rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background .16s ease, color .16s ease, border-color .16s ease, transform .16s ease;
+        background: var(--inv-card);
+        border: 1px solid var(--inv-border);
+        color: var(--inv-muted);
+        user-select: none;
     }
-    
-    .category-pill-premium i {
-        font-size: 0.6rem;
-    }
-    
+
+    .category-pill-premium i { font-size: .68rem; }
+
     .category-pill-premium:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        border-color: #10B981;
+        border-color: var(--inv-primary);
+        color: var(--inv-primary);
+        transform: translateY(-1px);
     }
-    
+
     .category-pill-premium.selected {
-        background: #10B981;
-        border-color: #10B981;
-        color: white;
-        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+        background: var(--inv-primary);
+        border-color: var(--inv-primary);
+        color: #fff;
+        box-shadow: 0 6px 16px -8px rgba(79, 70, 229, .9);
     }
-    
+
+    /* Form */
     .form-label-premium {
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        font-weight: 700;
-        color: #6b7280;
-        margin-bottom: 0.3rem;
         display: flex;
         align-items: center;
-        gap: 6px;
-        font-family: 'Inter', sans-serif;
+        gap: .35rem;
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--inv-muted);
+        margin-bottom: .4rem;
     }
-    
+
+    .form-label-premium i { font-size: .62rem; color: var(--inv-primary); }
+
     .form-control-premium {
         width: 100%;
-        padding: 0.5rem 0.8rem;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        background: #ffffff;
-        color: #1a1a2e;
-        font-size: 0.8rem;
-        transition: all 0.2s ease;
+        padding: .6rem .9rem;
+        border-radius: 11px;
+        border: 1px solid var(--inv-border);
+        background: var(--inv-soft);
+        color: var(--inv-text);
+        font-size: .82rem;
+        font-family: inherit;
+        transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
     }
-    
+
+    .form-control-premium::placeholder { color: var(--inv-muted); opacity: .8; }
+
     .form-control-premium:focus {
         outline: none;
-        border-color: #10B981;
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        background: var(--inv-card);
+        border-color: var(--inv-primary);
+        box-shadow: 0 0 0 3px var(--inv-primary-ring);
     }
-    
+
     .input-group-text-premium {
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        color: #1a1a2e;
-        font-size: 0.8rem;
-        border-radius: 10px 0 0 10px;
-    }
-    
-    .btn-secondary-premium {
-        background: #f9fafb;
-        color: #1a1a2e;
-        border: 1px solid #e5e7eb;
-        padding: 0.4rem 1.2rem;
-        border-radius: 10px;
-        font-size: 0.75rem;
+        background: var(--inv-soft);
+        border: 1px solid var(--inv-border);
+        border-right: none;
+        color: var(--inv-muted);
+        font-size: .82rem;
         font-weight: 600;
-        transition: all 0.3s ease;
-        font-family: 'Inter', sans-serif;
+        border-radius: 11px 0 0 11px;
+        padding: .6rem .85rem;
     }
-    
-    .btn-secondary-premium:hover {
-        background: #f3f4f6;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-    
-    .btn-success-premium {
-        background: var(--gradient-success);
-        color: white;
-        border: none;
-        padding: 0.5rem 1.5rem;
-        border-radius: 10px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        font-family: 'Inter', sans-serif;
-        box-shadow: var(--shadow-success);
-    }
-    
-    .btn-success-premium:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4);
-        color: white;
-    }
-    
-    .btn-danger-premium {
-        background: var(--gradient-danger);
-        color: white;
-        border: none;
-        padding: 0.5rem 1.5rem;
-        border-radius: 10px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        font-family: 'Inter', sans-serif;
-        box-shadow: var(--shadow-danger);
-    }
-    
-    .btn-danger-premium:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 40px rgba(239, 68, 68, 0.4);
-        color: white;
-    }
-    
-    .btn-danger-premium:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        transform: none !important;
-        box-shadow: none !important;
-    }
-    
-    /* Export Modal */
-    .export-modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-        backdrop-filter: blur(4px);
-        z-index: 99999;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .export-modal-overlay.active {
-        display: flex;
-    }
-    
-    .export-modal-content {
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 2rem;
-        max-width: 600px;
-        width: 90%;
-        max-height: 90vh;
-        overflow-y: auto;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        border: 1px solid #e5e7eb;
-    }
-    
-    .export-modal-content .modal-header-custom {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid #e5e7eb;
-    }
-    
-    .export-modal-content .modal-header-custom h3 {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #1a1a2e;
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .export-modal-content .modal-header-custom h3 i {
-        color: #4F46E5;
-        margin-right: 8px;
-    }
-    
-    .export-modal-content .modal-header-custom .close-btn {
-        background: none;
-        border: none;
-        font-size: 1.8rem;
-        color: #9ca3af;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .export-modal-content .modal-header-custom .close-btn:hover {
-        color: #1a1a2e;
-        transform: rotate(90deg);
-    }
-    
-    .export-section-group {
-        margin-bottom: 1.5rem;
-    }
-    
-    .export-section-group label {
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        font-weight: 700;
-        color: #6b7280;
-        display: block;
-        margin-bottom: 0.5rem;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .export-section-group .checkbox-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.5rem;
-    }
-    
-    .export-section-group .checkbox-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 0.5rem 0.8rem;
-        border-radius: 10px;
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        transition: all 0.2s ease;
-        cursor: pointer;
-    }
-    
-    .export-section-group .checkbox-item:hover {
-        border-color: #4F46E5;
-        background: rgba(79,70,229,0.05);
-    }
-    
-    .export-section-group .checkbox-item input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        accent-color: #4F46E5;
-        cursor: pointer;
-        flex-shrink: 0;
-    }
-    
-    .export-section-group .checkbox-item label {
-        font-size: 0.75rem;
-        font-weight: 500;
-        color: #1a1a2e;
-        margin: 0;
-        cursor: pointer;
-        text-transform: none;
-        letter-spacing: 0;
-    }
-    
-    .export-section-group .checkbox-item label i {
-        margin-right: 6px;
-        font-size: 0.8rem;
-    }
-    
-    .select-all-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 0.5rem 0.8rem;
-        border-radius: 10px;
-        background: rgba(79,70,229,0.05);
-        border: 1px solid rgba(79,70,229,0.15);
-        margin-bottom: 1rem;
-        cursor: pointer;
-    }
-    
-    .select-all-row input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        accent-color: #4F46E5;
-        cursor: pointer;
-    }
-    
-    .select-all-row label {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #1a1a2e;
-        margin: 0;
-        cursor: pointer;
-    }
-    
-    .export-actions {
-        display: flex;
-        gap: 0.75rem;
-        margin-top: 1.5rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid #e5e7eb;
-    }
-    
-    .export-actions .btn-export {
-        flex: 1;
-        padding: 0.7rem 1.5rem;
+
+    .amount-preview-premium {
+        padding: .9rem 1.15rem;
         border-radius: 12px;
-        font-weight: 700;
-        font-size: 0.8rem;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
+        border: 1px solid transparent;
+        margin-top: 1rem;
+        font-size: .82rem;
+    }
+
+    .alert-success-premium {
+        background: var(--inv-green-soft);
+        color: var(--inv-green);
+        border-color: transparent;
+    }
+
+    .alert-info-premium {
+        background: var(--inv-primary-soft);
+        color: var(--inv-primary);
+        border-color: transparent;
+    }
+
+    .alert-danger-premium {
+        background: var(--inv-rose-soft);
+        color: var(--inv-rose);
+        border-color: transparent;
+        padding: .7rem 1rem;
+        border-radius: 10px;
+        font-size: .78rem;
+        margin-top: .8rem;
+    }
+
+    /* Buttons */
+    .btn-secondary-premium {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        gap: 8px;
-        font-family: 'Inter', sans-serif;
+        gap: .4rem;
+        background: var(--inv-card);
+        color: var(--inv-text);
+        border: 1px solid var(--inv-border);
+        padding: .55rem 1.2rem;
+        border-radius: 11px;
+        font-size: .78rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: background .16s ease, transform .16s ease;
     }
-    
-    .btn-export-pdf {
-        background: var(--gradient-primary);
-        color: white;
-        box-shadow: 0 4px 16px rgba(79,70,229,0.3);
+
+    .btn-secondary-premium:hover {
+        background: var(--inv-soft);
+        transform: translateY(-1px);
     }
-    
-    .btn-export-pdf:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 32px rgba(79,70,229,0.4);
+
+    .btn-success-premium {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        background: var(--inv-green);
+        color: #fff;
+        border: none;
+        padding: .55rem 1.4rem;
+        border-radius: 11px;
+        font-size: .78rem;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+        box-shadow: 0 8px 18px -10px rgba(5, 150, 105, .9);
+        transition: background .16s ease, transform .16s ease, box-shadow .16s ease;
     }
-    
-    .btn-export-print {
-        background: var(--gradient-success);
-        color: white;
-        box-shadow: 0 4px 16px rgba(16,185,129,0.3);
+
+    .btn-success-premium:hover {
+        background: #047857;
+        transform: translateY(-1px);
+        color: #fff;
     }
-    
-    .btn-export-print:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 32px rgba(16,185,129,0.4);
+
+    .btn-danger-premium {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        background: var(--inv-rose);
+        color: #fff;
+        border: none;
+        padding: .55rem 1.4rem;
+        border-radius: 11px;
+        font-size: .78rem;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+        box-shadow: 0 8px 18px -10px rgba(225, 29, 72, .9);
+        transition: background .16s ease, transform .16s ease, box-shadow .16s ease;
     }
-    
-    .btn-export-cancel {
-        background: #f9fafb;
-        color: #1a1a2e;
-        border: 1px solid #e5e7eb;
+
+    .btn-danger-premium:hover:not(:disabled) {
+        background: #be123c;
+        transform: translateY(-1px);
+        color: #fff;
     }
-    
-    .btn-export-cancel:hover {
-        background: #f3f4f6;
-        transform: translateY(-2px);
+
+    .btn-danger-premium:disabled {
+        opacity: .45;
+        cursor: not-allowed;
+        box-shadow: none;
     }
-    
-    /* NEW: Date Filter Styles for Modal */
+
+    .btn-primary-premium {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        background: var(--inv-primary);
+        color: #fff;
+        border: none;
+        padding: .55rem 1.4rem;
+        border-radius: 11px;
+        font-size: .78rem;
+        font-weight: 700;
+        font-family: inherit;
+        cursor: pointer;
+        box-shadow: 0 8px 18px -10px rgba(79, 70, 229, .9);
+        transition: background .16s ease, transform .16s ease, box-shadow .16s ease;
+    }
+
+    .btn-primary-premium:hover {
+        background: #4338ca;
+        transform: translateY(-1px);
+        color: #fff;
+    }
+
+    /* Filter tabs */
+    .filter-tabs-premium {
+        display: flex;
+        gap: .4rem;
+        flex-wrap: wrap;
+        padding-bottom: .75rem;
+        border-bottom: 1px solid var(--inv-border);
+    }
+
+    .filter-tab-premium {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        padding: .4rem 1rem;
+        border-radius: 10px;
+        border: 1px solid var(--inv-border);
+        background: var(--inv-card);
+        color: var(--inv-muted);
+        font-size: .74rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: background .16s ease, color .16s ease, border-color .16s ease, transform .16s ease;
+    }
+
+    .filter-tab-premium:hover {
+        background: var(--inv-soft);
+        color: var(--inv-text);
+        transform: translateY(-1px);
+    }
+
+    .filter-tab-premium.active {
+        background: var(--inv-primary);
+        border-color: var(--inv-primary);
+        color: #fff;
+    }
+
+    .filter-tab-premium i { font-size: .65rem; }
+
+    /* Modal filter container */
     .modal-filter-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: .65rem;
         align-items: center;
         margin-bottom: 1rem;
-        padding: 0.8rem 1.2rem;
-        background: #f9fafb;
+        padding: .85rem 1.15rem;
+        background: var(--inv-soft);
         border-radius: 12px;
-        border: 1px solid #e5e7eb;
+        border: 1px solid var(--inv-border);
     }
-    
+
     .modal-filter-container label {
-        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        gap: .3rem;
+        font-size: .68rem;
         font-weight: 700;
+        letter-spacing: .09em;
         text-transform: uppercase;
-        letter-spacing: 0.6px;
-        color: #6b7280;
-        margin-right: 0.3rem;
-        font-family: 'Inter', sans-serif;
+        color: var(--inv-muted);
+        margin: 0;
     }
-    
+
     .modal-filter-container select,
     .modal-filter-container input {
-        padding: 0.3rem 0.8rem;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        background: #ffffff;
-        color: #1a1a2e;
-        font-size: 0.75rem;
-        font-family: 'Inter', sans-serif;
+        padding: .42rem .75rem;
+        border: 1px solid var(--inv-border);
+        border-radius: 9px;
+        background: var(--inv-card);
+        color: var(--inv-text);
+        font-size: .78rem;
+        font-family: inherit;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
     }
-    
+
     .modal-filter-container select:focus,
     .modal-filter-container input:focus {
         outline: none;
-        border-color: #4F46E5;
-        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        border-color: var(--inv-primary);
+        box-shadow: 0 0 0 3px var(--inv-primary-ring);
     }
-    
+
     .modal-filter-btn {
-        padding: 0.3rem 1.2rem;
-        background: var(--gradient-primary);
-        color: white;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .42rem 1rem;
+        background: var(--inv-primary);
+        color: #fff;
         border: none;
-        border-radius: 8px;
-        font-size: 0.75rem;
-        font-weight: 600;
+        border-radius: 9px;
+        font-size: .75rem;
+        font-weight: 700;
+        font-family: inherit;
         cursor: pointer;
-        transition: all 0.3s ease;
-        font-family: 'Inter', sans-serif;
+        transition: background .16s ease, transform .16s ease;
     }
-    
+
     .modal-filter-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
+        background: #4338ca;
+        transform: translateY(-1px);
     }
-    
+
     .modal-filter-btn:disabled {
-        opacity: 0.5;
+        opacity: .5;
         cursor: not-allowed;
-        transform: none !important;
-        box-shadow: none !important;
+        transform: none;
     }
-    
-    /* Transaction Summary */
+
+    /* Transaction summary */
     .transaction-summary-premium {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 0.75rem;
+        gap: .75rem;
     }
-    
+
     .summary-item-premium {
-        background: #f9fafb;
-        border-radius: 12px;
-        padding: 0.8rem 1.2rem;
         display: flex;
         align-items: center;
-        gap: 0.8rem;
-        border: 1px solid #e5e7eb;
-        transition: all 0.3s ease;
+        gap: .75rem;
+        padding: .8rem 1rem;
+        background: var(--inv-soft);
+        border: 1px solid var(--inv-border);
+        border-radius: 12px;
+        transition: transform .2s ease, border-color .2s ease;
     }
-    
+
     .summary-item-premium:hover {
         transform: translateY(-2px);
-        box-shadow: var(--shadow-profile-hover);
         border-color: transparent;
     }
-    
+
     .summary-icon-premium {
-        width: 42px;
-        height: 42px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-        color: white;
-        flex-shrink: 0;
+        width: 38px; height: 38px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        font-size: .85rem;
+        flex: 0 0 auto;
     }
-    
-    .summary-icon-premium.income-bg { background: var(--gradient-success); }
-    .summary-icon-premium.expense-bg { background: var(--gradient-danger); }
-    .summary-icon-premium.balance-bg { background: var(--gradient-primary); }
-    .summary-icon-premium.total-bg { background: linear-gradient(135deg, #8B5CF6, #A78BFA); }
-    
-    .filter-tabs-premium {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-        border-bottom: 2px solid #e5e7eb;
-        padding-bottom: 0.75rem;
+
+    .summary-icon-premium.income-bg  { background: var(--inv-green-soft);   color: var(--inv-green); }
+    .summary-icon-premium.expense-bg { background: var(--inv-rose-soft);    color: var(--inv-rose); }
+    .summary-icon-premium.balance-bg { background: var(--inv-primary-soft); color: var(--inv-primary); }
+    .summary-icon-premium.total-bg   { background: var(--inv-violet-soft);  color: var(--inv-violet); }
+
+    .summary-info { min-width: 0; }
+
+    .summary-label {
+        display: block;
+        font-size: .62rem;
+        font-weight: 700;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--inv-muted);
+        margin-bottom: .1rem;
     }
-    
-    .filter-tab-premium {
-        padding: 0.4rem 1.2rem;
-        border-radius: 20px;
-        border: 1px solid #e5e7eb;
-        background: transparent;
-        color: #4b5563;
-        font-size: 0.7rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-family: 'Inter', sans-serif;
+
+    .summary-value {
+        display: block;
+        font-size: .9rem;
+        font-weight: 700;
+        color: var(--inv-text);
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -.01em;
     }
-    
-    .filter-tab-premium:hover {
-        background: #f9fafb;
-        color: #1a1a2e;
-        transform: translateY(-2px);
-    }
-    
-    .filter-tab-premium.active {
-        background: #10B981;
-        color: white;
-        border-color: #10B981;
-        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
-    }
-    
-    .search-bar-premium {
-        max-width: 320px;
-    }
-    
+
+    /* Search */
+    .search-bar-premium { max-width: 320px; }
+    .search-bar-premium .input-group { display: flex; }
     .search-bar-premium .input-group-text {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
+        display: grid;
+        place-items: center;
+        padding: 0 .8rem;
+        background: var(--inv-soft);
+        border: 1px solid var(--inv-border);
         border-right: none;
         border-radius: 10px 0 0 10px;
-        color: #6b7280;
-        font-size: 0.75rem;
+        color: var(--inv-muted);
+        font-size: .75rem;
     }
-    
-    .search-bar-premium .form-control {
-        background: #ffffff;
+
+    .search-bar-premium .form-control-premium {
         border-left: none;
         border-radius: 0 10px 10px 0;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.75rem;
     }
-    
-    .search-bar-premium .form-control:focus {
-        border-color: #10B981;
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+
+    /* ---------------- EXPORT MODAL ---------------- */
+    .export-modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, .55);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        z-index: 99999;
+        align-items: center;
+        justify-content: center;
+        animation: invFadeIn .22s ease;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
-    
-    .btn-primary-premium {
-        background: var(--gradient-primary);
-        color: white;
-        border: none;
-        padding: 0.5rem 1.5rem;
-        border-radius: 10px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        font-family: 'Inter', sans-serif;
-        box-shadow: var(--shadow-glow);
+
+    .export-modal-overlay.active { display: flex; }
+
+    .export-modal-content {
+        --inv-card: var(--card-bg, #ffffff);
+        --inv-border: var(--border-color, #e8eaf0);
+        --inv-text: var(--text-primary, #0f172a);
+        --inv-muted: var(--text-muted, #7c8494);
+        --inv-soft: var(--bg-tertiary, #f5f6fa);
+        --inv-primary: #4f46e5;
+        --inv-primary-soft: rgba(79, 70, 229, .08);
+        --inv-primary-ring: rgba(79, 70, 229, .18);
+        --inv-green: #059669;
+        --inv-green-soft: rgba(5, 150, 105, .10);
+        --inv-rose: #e11d48;
+
+        background: var(--inv-card);
+        border: 1px solid var(--inv-border);
+        border-radius: 18px;
+        padding: 1.75rem;
+        max-width: 640px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 24px 60px -20px rgba(15, 23, 42, .4);
+        color: var(--inv-text);
     }
-    
-    .btn-primary-premium:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 40px rgba(79, 70, 229, 0.4);
-        color: white;
+
+    [data-theme="dark"] .export-modal-content {
+        --inv-card: var(--card-bg, #1e1e2d);
+        --inv-border: var(--border-color, #2a2a3d);
+        --inv-text: var(--text-primary, #f1f5f9);
+        --inv-muted: var(--text-muted, #94a3b8);
+        --inv-soft: var(--bg-tertiary, #262636);
+        --inv-primary: #6366f1;
+        --inv-primary-soft: rgba(99, 102, 241, .16);
+        --inv-green: #34d399;
+        --inv-green-soft: rgba(16, 185, 129, .14);
+        --inv-rose: #fb7185;
     }
-    
-    .action-btns-premium {
+
+    .export-modal-content .modal-header-custom {
         display: flex;
-        gap: 4px;
-        align-items: center;
-        justify-content: center;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--inv-border);
     }
-    
-    .btn-edit-premium {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-        background: transparent;
-        color: #3B82F6;
+
+    .export-modal-content .modal-header-custom h3 {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--inv-text);
+        margin: 0;
+        letter-spacing: -.01em;
+    }
+
+    .export-modal-content .modal-header-custom h3 i { color: var(--inv-primary); }
+
+    .export-modal-content .modal-header-custom .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        line-height: 1;
+        color: var(--inv-muted);
         cursor: pointer;
-        transition: all 0.2s ease;
+        padding: 0 .35rem;
+        transition: color .2s ease, transform .2s ease;
+    }
+
+    .export-modal-content .modal-header-custom .close-btn:hover {
+        color: var(--inv-text);
+        transform: rotate(90deg);
+    }
+
+    .export-section-group { margin-bottom: 1.25rem; }
+
+    .export-section-group .checkbox-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .5rem;
+    }
+
+    .export-section-group .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        padding: .55rem .8rem;
+        border-radius: 11px;
+        background: var(--inv-soft);
+        border: 1px solid var(--inv-border);
+        transition: border-color .18s ease, background .18s ease;
+        cursor: pointer;
+    }
+
+    .export-section-group .checkbox-item:hover {
+        border-color: var(--inv-primary);
+        background: var(--inv-primary-soft);
+    }
+
+    .export-section-group .checkbox-item input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--inv-primary);
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .export-section-group .checkbox-item label {
+        font-size: .76rem;
+        font-weight: 600;
+        color: var(--inv-text);
+        margin: 0;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+    }
+
+    .export-section-group .checkbox-item label i { font-size: .72rem; color: var(--inv-primary); }
+
+    .select-all-row {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        padding: .55rem .8rem;
+        border-radius: 11px;
+        background: var(--inv-primary-soft);
+        border: 1px solid transparent;
+        margin-bottom: .85rem;
+        cursor: pointer;
+    }
+
+    .select-all-row input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--inv-primary);
+        cursor: pointer;
+    }
+
+    .select-all-row label {
+        font-size: .8rem;
+        font-weight: 700;
+        color: var(--inv-text);
+        margin: 0;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+    }
+
+    .export-actions {
+        display: flex;
+        gap: .6rem;
+        margin-top: 1.25rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--inv-border);
+        flex-wrap: wrap;
+    }
+
+    .export-actions .btn-export {
+        flex: 1;
+        min-width: 120px;
+        padding: .7rem 1.2rem;
+        border-radius: 11px;
+        font-weight: 700;
+        font-size: .8rem;
+        font-family: inherit;
+        cursor: pointer;
+        border: none;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.75rem;
+        gap: .5rem;
+        transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
     }
-    
-    .btn-edit-premium:hover {
-        background: rgba(59, 130, 246, 0.1);
-        border-color: #3B82F6;
-        transform: translateY(-2px);
-        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+
+    .btn-export-pdf {
+        background: var(--inv-primary);
+        color: #fff;
+        box-shadow: 0 8px 18px -10px rgba(79, 70, 229, .9);
     }
-    
-    .btn-delete-premium {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-        background: transparent;
-        color: #EF4444;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.75rem;
+    .btn-export-pdf:hover { background: #4338ca; transform: translateY(-1px); }
+
+    .btn-export-print {
+        background: var(--inv-green);
+        color: #fff;
+        box-shadow: 0 8px 18px -10px rgba(5, 150, 105, .9);
     }
-    
-    .btn-delete-premium:hover {
-        background: rgba(239, 68, 68, 0.1);
-        border-color: #EF4444;
-        transform: translateY(-2px);
-        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+    .btn-export-print:hover { background: #047857; transform: translateY(-1px); }
+
+    .btn-export-cancel {
+        background: var(--inv-card);
+        color: var(--inv-text);
+        border: 1px solid var(--inv-border);
     }
-    
-    .category-badge-premium {
-        background: #f9fafb;
-        padding: 2px 12px;
-        border-radius: 20px;
-        font-size: 0.65rem;
-        border: 1px solid #e5e7eb;
-        color: #4b5563;
-    }
-    
-    .amount-preview-premium {
-        background: #f9fafb;
-        border-radius: 12px;
-        padding: 0.8rem 1.2rem;
-        margin-top: 1rem;
-        border: 1px solid #e5e7eb;
-        transition: all 0.3s ease;
-    }
-    
-    .amount-preview-premium:hover {
-        border-color: #10B981;
-    }
-    
-    .alert-success-premium {
-        background: rgba(16, 185, 129, 0.08);
-        color: #10B981;
-        border: 1px solid rgba(16, 185, 129, 0.15);
-        border-radius: 10px;
-        padding: 0.6rem 1rem;
-    }
-    
-    .alert-info-premium {
-        background: rgba(59, 130, 246, 0.08);
-        color: #1a1a2e;
-        border: 1px solid rgba(59, 130, 246, 0.15);
-        border-radius: 10px;
-        padding: 0.6rem 1rem;
-    }
-    
-    .alert-danger-premium {
-        background: rgba(239, 68, 68, 0.08);
-        color: #EF4444;
-        border: 1px solid rgba(239, 68, 68, 0.15);
-        border-radius: 10px;
-        padding: 0.6rem 1rem;
-    }
-    
-    /* PDF Export */
+    .btn-export-cancel:hover { background: var(--inv-soft); transform: translateY(-1px); }
+
+    /* ---------------- PDF EXPORT WRAPPER (print) ---------------- */
     .pdf-export-wrapper {
         display: none;
         background: white;
@@ -1245,39 +1350,40 @@
         max-width: 1100px;
         margin: 0 auto;
         font-family: 'Inter', Arial, sans-serif;
+        color: #1a1a2e;
     }
-    
+
     .pdf-export-wrapper .pdf-header {
         text-align: center;
         padding-bottom: 20px;
         margin-bottom: 25px;
         border-bottom: 2px solid #4F46E5;
     }
-    
+
     .pdf-export-wrapper .pdf-header h1 {
         font-size: 24px;
         font-weight: 800;
         color: #4F46E5;
         margin: 0 0 5px 0;
     }
-    
+
     .pdf-export-wrapper .pdf-header p {
         color: #666;
         margin: 0;
         font-size: 14px;
     }
-    
+
     .pdf-export-wrapper .pdf-header .pdf-date {
         font-size: 12px;
         color: #999;
         margin-top: 5px;
     }
-    
+
     .pdf-export-wrapper .pdf-section {
         margin-bottom: 25px;
         page-break-inside: avoid;
     }
-    
+
     .pdf-export-wrapper .pdf-section .pdf-section-title {
         font-size: 16px;
         font-weight: 700;
@@ -1290,11 +1396,9 @@
         gap: 8px;
         flex-wrap: wrap;
     }
-    
-    .pdf-export-wrapper .pdf-section .pdf-section-title i {
-        color: #4F46E5;
-    }
-    
+
+    .pdf-export-wrapper .pdf-section .pdf-section-title i { color: #4F46E5; }
+
     .pdf-export-wrapper .pdf-section .pdf-section-title .pdf-date-badge {
         font-size: 11px;
         font-weight: 600;
@@ -1304,13 +1408,13 @@
         border-radius: 20px;
         border: 1px solid #e5e7eb;
     }
-    
+
     .pdf-export-wrapper .pdf-stats-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 15px;
     }
-    
+
     .pdf-export-wrapper .pdf-stat-card {
         background: #f9fafb;
         border: 1px solid #e5e7eb;
@@ -1318,13 +1422,13 @@
         padding: 15px 20px;
         text-align: center;
     }
-    
+
     .pdf-export-wrapper .pdf-stat-card .pdf-stat-value {
         font-size: 22px;
         font-weight: 800;
         color: #1a1a2e;
     }
-    
+
     .pdf-export-wrapper .pdf-stat-card .pdf-stat-label {
         font-size: 11px;
         text-transform: uppercase;
@@ -1332,22 +1436,22 @@
         font-weight: 600;
         letter-spacing: 0.5px;
     }
-    
+
     .pdf-export-wrapper .pdf-stat-card .pdf-stat-change {
         font-size: 11px;
         font-weight: 600;
         margin-top: 4px;
     }
-    
+
     .pdf-export-wrapper .pdf-stat-card .pdf-stat-change.positive { color: #10B981; }
     .pdf-export-wrapper .pdf-stat-card .pdf-stat-change.negative { color: #EF4444; }
-    
+
     .pdf-export-wrapper .pdf-table {
         width: 100%;
         border-collapse: collapse;
         font-size: 13px;
     }
-    
+
     .pdf-export-wrapper .pdf-table thead th {
         background: #f9fafb;
         border-bottom: 2px solid #e5e7eb;
@@ -1359,17 +1463,15 @@
         color: #6b7280;
         letter-spacing: 0.5px;
     }
-    
+
     .pdf-export-wrapper .pdf-table tbody td {
         padding: 8px 12px;
         border-bottom: 1px solid #f0f0f0;
         color: #1a1a2e;
     }
-    
-    .pdf-export-wrapper .pdf-table tbody tr:last-child td {
-        border-bottom: none;
-    }
-    
+
+    .pdf-export-wrapper .pdf-table tbody tr:last-child td { border-bottom: none; }
+
     .pdf-export-wrapper .pdf-badge {
         display: inline-block;
         padding: 2px 10px;
@@ -1377,17 +1479,10 @@
         font-size: 11px;
         font-weight: 600;
     }
-    
-    .pdf-export-wrapper .pdf-badge.income {
-        background: #d1fae5;
-        color: #065f46;
-    }
-    
-    .pdf-export-wrapper .pdf-badge.expense {
-        background: #fee2e2;
-        color: #991b1b;
-    }
-    
+
+    .pdf-export-wrapper .pdf-badge.income { background: #d1fae5; color: #065f46; }
+    .pdf-export-wrapper .pdf-badge.expense { background: #fee2e2; color: #991b1b; }
+
     .pdf-export-wrapper .pdf-footer {
         text-align: center;
         margin-top: 30px;
@@ -1396,222 +1491,193 @@
         font-size: 12px;
         color: #999;
     }
-    
-    .pdf-export-wrapper .pdf-footer strong {
-        color: #4F46E5;
-    }
-    
+
+    .pdf-export-wrapper .pdf-footer strong { color: #4F46E5; }
+
+    /* ---------------- RESPONSIVE ---------------- */
     @media (max-width: 1200px) {
-        .stats-grid-premium {
-            grid-template-columns: repeat(2, 1fr);
-        }
+        .inv-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
-    
+
     @media (max-width: 992px) {
-        .finance-hero .hero-content {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .finance-hero .hero-actions {
-            width: 100%;
-        }
-        
-        .btn-hero {
-            flex: 1;
-            justify-content: center;
-        }
+        .inv-head { flex-direction: column; align-items: flex-start; }
+        .inv-head-actions { width: 100%; }
+        .inv-head-actions .inv-btn { flex: 1; justify-content: center; }
+        .inv-category-grid { grid-template-columns: 1fr; }
+        .export-section-group .checkbox-grid { grid-template-columns: 1fr; }
     }
-    
+
     @media (max-width: 768px) {
-        .finance-hero {
-            padding: 1.5rem;
-            border-radius: 16px;
-        }
-        
-        .finance-hero h1 {
-            font-size: 1.3rem;
-        }
-        
-        .stats-grid-premium {
-            grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
-        }
-        
-        .stat-card-premium {
-            padding: 1rem;
-        }
-        
-        .stat-card-premium .stat-value {
-            font-size: 1.3rem;
-        }
-        
-        .stat-card-premium .stat-icon-wrap {
-            width: 36px;
-            height: 36px;
-            font-size: 0.9rem;
-        }
-        
-        .category-grid-premium {
-            grid-template-columns: 1fr;
-        }
-        
-        .summary-banner-premium {
-            flex-direction: column;
-            text-align: center;
-            padding: 1rem 1.2rem;
-        }
-        
-        .transaction-summary-premium {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        
-        .summary-item-premium {
-            padding: 0.6rem 0.8rem;
-        }
-        
-        .table-premium thead th,
-        .table-premium tbody td {
-            padding: 0.4rem 0.6rem;
-            font-size: 0.65rem;
-        }
-        
-        .modal-header-premium {
-            padding: 0.8rem 1rem;
-        }
-        
-        .modal-body {
-            padding: 1rem;
-        }
-        
-        .search-bar-premium {
-            max-width: 100%;
-        }
-        
-        .export-section-group .checkbox-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .export-actions {
-            flex-direction: column;
-        }
+        .inv-title { font-size: 1.3rem; }
+        .inv-sub { font-size: .78rem; }
+
+        .inv-stats { grid-template-columns: 1fr; gap: .8rem; }
+        .inv-stat { padding: .9rem; }
+        .inv-stat .inv-stat-value { font-size: 1.15rem; }
+        .inv-stat .inv-stat-icon { width: 38px; height: 38px; font-size: .85rem; }
+
+        .inv-summary { flex-direction: column; align-items: flex-start; }
+        .inv-summary-right { text-align: left; }
+
+        .inv-table-header { flex-direction: column; align-items: flex-start; }
+
+        .inv-table thead th,
+        .inv-table tbody td { padding: .55rem .75rem; font-size: .7rem; }
+
+        .modal-body { padding: 1rem; }
+        .modal-header-premium { padding: .9rem 1rem; }
+        .modal-footer { padding: .85rem 1rem; }
+
+        .modal-filter-container { flex-direction: column; align-items: stretch; }
+        .modal-filter-container label { justify-content: flex-start; }
+        .modal-filter-container select,
+        .modal-filter-container input { width: 100%; }
+
+        .search-bar-premium { max-width: 100%; }
+
+        .export-modal-content { padding: 1.25rem; }
+        .export-actions { flex-direction: column; }
+        .export-actions .btn-export { width: 100%; }
     }
-    
+
     @media (max-width: 480px) {
-        .stats-grid-premium {
-            grid-template-columns: 1fr;
-        }
-        
-        .transaction-summary-premium {
-            grid-template-columns: 1fr;
-        }
-        
-        .btn-hero {
-            width: 100%;
-            justify-content: center;
-        }
+        .inv-head-actions { flex-direction: column; }
+        .inv-head-actions .inv-btn { width: 100%; justify-content: center; }
+        .transaction-summary-premium { grid-template-columns: 1fr; }
     }
+
+    @keyframes invFadeIn { from { opacity: 0; } to { opacity: 1; } }
 </style>
 
 {{-- ============================================= --}}
 {{-- MAIN CONTENT --}}
 {{-- ============================================= --}}
-<div class="container-fluid px-0" id="reportContent">
-    {{-- HERO SECTION --}}
-    <div class="finance-hero">
-        <div class="hero-content">
-            <div class="hero-left">
-                <h1><i class="fas fa-boxes"></i> <span data-i18n="inventory_management">Inventory Management</span></h1>
-                <p class="hero-sub">
-                    <i class="fas fa-circle" style="color: #34D399; font-size: 0.4rem; vertical-align: middle;"></i>
-                    <span data-i18n="inventory_desc">Track church finances, income, expenses, and donations</span>
-                </p>
+<div class="inv container-fluid px-0" id="reportContent">
+
+    {{-- HEADER --}}
+    <header class="inv-head">
+        <div>
+            <div class="inv-eyebrow">
+                <span class="inv-dot"></span>
+                <span data-i18n="inventory_management">Inventory Management</span>
             </div>
-            <div class="hero-actions">
-                <button class="btn-hero btn-hero-income" data-bs-toggle="modal" data-bs-target="#incomeModal">
-                    <i class="fas fa-plus-circle"></i> <span data-i18n="income_label">Income</span>
-                </button>
-                <button class="btn-hero btn-hero-expense" data-bs-toggle="modal" data-bs-target="#expenseModal">
-                    <i class="fas fa-minus-circle"></i> <span data-i18n="expense_label">Expense</span>
-                </button>
-                <button class="btn-hero btn-hero-transactions" data-bs-toggle="modal" data-bs-target="#transactionsModal">
-                    <i class="fas fa-list"></i> <span data-i18n="all_transactions">All Transactions</span>
-                </button>
-                <button class="btn-hero btn-hero-export" onclick="openExportModal()">
-                    <i class="fas fa-file-pdf"></i> <span data-i18n="export_pdf">Export PDF</span>
-                </button>
-            </div>
+            <h1 class="inv-title">
+                <i class="fas fa-boxes"></i>
+                <span data-i18n="inventory_management">Inventory Management</span>
+            </h1>
+            <p class="inv-sub" data-i18n="inventory_desc">
+                Track church finances, income, expenses, and donations
+            </p>
         </div>
-    </div>
+        <div class="inv-head-actions">
+            <button type="button" class="inv-btn inv-btn-green" data-bs-toggle="modal" data-bs-target="#incomeModal">
+                <i class="fas fa-plus-circle"></i>
+                <span data-i18n="income_label">Income</span>
+            </button>
+            <button type="button" class="inv-btn inv-btn-rose" data-bs-toggle="modal" data-bs-target="#expenseModal">
+                <i class="fas fa-minus-circle"></i>
+                <span data-i18n="expense_label">Expense</span>
+            </button>
+            <button type="button" class="inv-btn inv-btn-ghost" data-bs-toggle="modal" data-bs-target="#transactionsModal">
+                <i class="fas fa-list"></i>
+                <span data-i18n="all_transactions">All Transactions</span>
+            </button>
+            <button type="button" class="inv-btn inv-btn-primary" onclick="openExportModal()">
+                <i class="fas fa-file-pdf"></i>
+                <span data-i18n="export_pdf">Export PDF</span>
+            </button>
+        </div>
+    </header>
 
     {{-- STATS CARDS --}}
-    <div class="stats-grid-premium" id="statsSection">
-        <div class="stat-card-premium green">
-            <div class="stat-top">
-                <span class="stat-label" data-i18n="total_income">Total Income</span>
-                <div class="stat-icon-wrap"><i class="fas fa-arrow-down"></i></div>
-            </div>
-            <div class="stat-value amount-positive-premium" id="totalIncome">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
-            <div class="stat-change positive"><i class="fas fa-arrow-up"></i> <span data-i18n="all_time">All time</span></div>
-        </div>
-        
-        <div class="stat-card-premium red">
-            <div class="stat-top">
-                <span class="stat-label" data-i18n="total_expenses">Total Expenses</span>
-                <div class="stat-icon-wrap"><i class="fas fa-arrow-up"></i></div>
-            </div>
-            <div class="stat-value amount-negative-premium" id="totalExpense">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
-            <div class="stat-change negative"><i class="fas fa-arrow-down"></i> <span data-i18n="all_time">All time</span></div>
-        </div>
-        
-        <div class="stat-card-premium blue">
-            <div class="stat-top">
-                <span class="stat-label" data-i18n="net_balance">Net Balance</span>
-                <div class="stat-icon-wrap"><i class="fas fa-calculator"></i></div>
-            </div>
-            <div class="stat-value {{ ($balance ?? 0) >= 0 ? 'amount-positive-premium' : 'amount-negative-premium' }}" id="netBalance">
-                {{ ($balance ?? 0) >= 0 ? '₱' : '-₱' }}{{ number_format(abs($balance ?? 0), 2) }}
-            </div>
-            <div class="stat-change {{ ($balance ?? 0) >= 0 ? 'positive' : 'negative' }}">
-                {{ ($balance ?? 0) >= 0 ? '↑ Surplus' : '↓ Deficit' }}
+    <section class="inv-stats" id="statsSection">
+        <div class="inv-stat green">
+            <div class="inv-stat-icon"><i class="fas fa-arrow-down"></i></div>
+            <div class="inv-stat-body">
+                <p class="inv-stat-label" data-i18n="total_income">Total Income</p>
+                <div class="inv-stat-value is-positive" id="totalIncome">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
+                <span class="inv-stat-meta positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span data-i18n="all_time">All time</span>
+                </span>
             </div>
         </div>
-        
-        <div class="stat-card-premium purple">
-            <div class="stat-top">
-                <span class="stat-label" data-i18n="church_balance">Church Balance</span>
-                <div class="stat-icon-wrap"><i class="fas fa-church"></i></div>
-            </div>
-            <div class="stat-value {{ ($allTimeBalance ?? 0) >= 0 ? 'amount-positive-premium' : 'amount-negative-premium' }}" id="churchBalance">
-                {{ ($allTimeBalance ?? 0) >= 0 ? '₱' : '-₱' }}{{ number_format(abs($allTimeBalance ?? 0), 2) }}
-            </div>
-            <div class="stat-change {{ ($allTimeBalance ?? 0) >= 0 ? 'positive' : 'negative' }}">
-                {{ ($allTimeBalance ?? 0) >= 0 ? '↑ Available' : '↓ Shortfall' }}
+
+        <div class="inv-stat rose">
+            <div class="inv-stat-icon"><i class="fas fa-arrow-up"></i></div>
+            <div class="inv-stat-body">
+                <p class="inv-stat-label" data-i18n="total_expenses">Total Expenses</p>
+                <div class="inv-stat-value is-negative" id="totalExpense">₱{{ number_format($totalExpense ?? 0, 2) }}</div>
+                <span class="inv-stat-meta negative">
+                    <i class="fas fa-arrow-down"></i>
+                    <span data-i18n="all_time">All time</span>
+                </span>
             </div>
         </div>
-    </div>
+
+        <div class="inv-stat primary">
+            <div class="inv-stat-icon"><i class="fas fa-calculator"></i></div>
+            <div class="inv-stat-body">
+                <p class="inv-stat-label" data-i18n="net_balance">Net Balance</p>
+                <div class="inv-stat-value {{ ($balance ?? 0) >= 0 ? 'is-positive' : 'is-negative' }}" id="netBalance">
+                    {{ ($balance ?? 0) >= 0 ? '₱' : '-₱' }}{{ number_format(abs($balance ?? 0), 2) }}
+                </div>
+                <span class="inv-stat-meta {{ ($balance ?? 0) >= 0 ? 'positive' : 'negative' }}">
+                    {{ ($balance ?? 0) >= 0 ? '↑ Surplus' : '↓ Deficit' }}
+                </span>
+            </div>
+        </div>
+
+        <div class="inv-stat violet">
+            <div class="inv-stat-icon"><i class="fas fa-church"></i></div>
+            <div class="inv-stat-body">
+                <p class="inv-stat-label" data-i18n="church_balance">Church Balance</p>
+                <div class="inv-stat-value {{ ($allTimeBalance ?? 0) >= 0 ? 'is-positive' : 'is-negative' }}" id="churchBalance">
+                    {{ ($allTimeBalance ?? 0) >= 0 ? '₱' : '-₱' }}{{ number_format(abs($allTimeBalance ?? 0), 2) }}
+                </div>
+                <span class="inv-stat-meta {{ ($allTimeBalance ?? 0) >= 0 ? 'positive' : 'negative' }}">
+                    {{ ($allTimeBalance ?? 0) >= 0 ? '↑ Available' : '↓ Shortfall' }}
+                </span>
+            </div>
+        </div>
+    </section>
 
     {{-- SUMMARY BANNER --}}
-    <div class="summary-banner-premium" id="summarySection">
-        <div>
-            <h4><i class="fas fa-chart-line me-1" style="color: #10B981;"></i> <span data-i18n="financial_summary">Financial Summary</span></h4>
-            <div class="amount">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
+    <div class="inv-summary" id="summarySection">
+        <div class="inv-summary-left">
+            <h4>
+                <i class="fas fa-chart-line"></i>
+                <span data-i18n="financial_summary">Financial Summary</span>
+            </h4>
+            <div class="inv-summary-amount">₱{{ number_format($totalIncome ?? 0, 2) }}</div>
             <div class="small" data-i18n="total_income">Total Income</div>
         </div>
-        <div style="text-align: right;">
-            <div class="small"><span data-i18n="expenses">Expenses:</span> ₱{{ number_format($totalExpense ?? 0, 2) }}</div>
-            <div class="small" style="font-weight: 700; color: {{ ($balance ?? 0) >= 0 ? '#10B981' : '#EF4444' }};">
-                <span data-i18n="net">Net:</span> {{ ($balance ?? 0) >= 0 ? '+' : '' }}₱{{ number_format($balance ?? 0, 2) }}
+        <div class="inv-summary-right">
+            <div class="small">
+                <span data-i18n="expenses">Expenses:</span>
+                <strong>₱{{ number_format($totalExpense ?? 0, 2) }}</strong>
+            </div>
+            <div class="small {{ ($balance ?? 0) >= 0 ? 'net-pos' : 'net-neg' }}">
+                <span data-i18n="net">Net:</span>
+                <strong>{{ ($balance ?? 0) >= 0 ? '+' : '' }}₱{{ number_format($balance ?? 0, 2) }}</strong>
             </div>
         </div>
     </div>
 
     {{-- CATEGORY GRID --}}
-    <div class="category-grid-premium" id="categorySection">
-        <div class="category-card-premium" id="incomeCategoryCard">
-            <div class="category-header-premium">
-                <h6><i class="fas fa-chart-pie text-success"></i> <span data-i18n="income_breakdown">Income Breakdown</span></h6>
-                <span class="date-range-badge">
+    <div class="inv-category-grid" id="categorySection">
+
+        {{-- INCOME BREAKDOWN --}}
+        <div class="inv-card" id="incomeCategoryCard">
+            <div class="inv-card-head">
+                <div class="inv-card-head-left">
+                    <div class="inv-card-head-icon green"><i class="fas fa-arrow-down"></i></div>
+                    <div>
+                        <h2 class="inv-card-head-title" data-i18n="income_breakdown">Income Breakdown</h2>
+                        <div class="inv-card-head-sub" data-i18n="income_by_category">Income grouped by category</div>
+                    </div>
+                </div>
+                <span class="inv-card-head-tag">
                     <i class="fas fa-calendar-alt"></i>
                     @php
                         $incomeDates = [];
@@ -1636,26 +1702,33 @@
                 </span>
             </div>
             @forelse(($incomeByCategory ?? []) as $category => $amount)
-                <div class="category-item-premium">
-                    <span class="category-name-premium">{{ $category }}</span>
-                    <span class="category-amount-premium income">₱{{ number_format($amount, 2) }}</span>
+                <div class="inv-cat-item">
+                    <span class="name">{{ $category }}</span>
+                    <span class="amt income">₱{{ number_format($amount, 2) }}</span>
                 </div>
             @empty
-                <div class="category-item-premium">
-                    <span class="category-name-premium" data-i18n="no_income_records">No income records yet</span>
-                    <span class="category-amount-premium income">₱0.00</span>
+                <div class="inv-cat-item">
+                    <span class="name" data-i18n="no_income_records">No income records yet</span>
+                    <span class="amt income">₱0.00</span>
                 </div>
             @endforelse
-            <div class="summary-row-premium">
+            <div class="inv-cat-summary">
                 <span data-i18n="total_income">Total Income</span>
-                <span class="amount-positive-premium">₱{{ number_format($allTimeIncome ?? 0, 2) }}</span>
+                <span class="amt income">₱{{ number_format($allTimeIncome ?? 0, 2) }}</span>
             </div>
         </div>
 
-        <div class="category-card-premium" id="expenseCategoryCard">
-            <div class="category-header-premium">
-                <h6><i class="fas fa-chart-pie text-danger"></i> <span data-i18n="expense_breakdown">Expense Breakdown</span></h6>
-                <span class="date-range-badge">
+        {{-- EXPENSE BREAKDOWN --}}
+        <div class="inv-card" id="expenseCategoryCard">
+            <div class="inv-card-head">
+                <div class="inv-card-head-left">
+                    <div class="inv-card-head-icon rose"><i class="fas fa-arrow-up"></i></div>
+                    <div>
+                        <h2 class="inv-card-head-title" data-i18n="expense_breakdown">Expense Breakdown</h2>
+                        <div class="inv-card-head-sub" data-i18n="expense_by_category">Expenses grouped by category</div>
+                    </div>
+                </div>
+                <span class="inv-card-head-tag">
                     <i class="fas fa-calendar-alt"></i>
                     @php
                         $expenseDates = [];
@@ -1680,33 +1753,38 @@
                 </span>
             </div>
             @forelse(($expenseByCategory ?? []) as $category => $amount)
-                <div class="category-item-premium">
-                    <span class="category-name-premium">{{ $category }}</span>
-                    <span class="category-amount-premium expense">₱{{ number_format($amount, 2) }}</span>
+                <div class="inv-cat-item">
+                    <span class="name">{{ $category }}</span>
+                    <span class="amt expense">₱{{ number_format($amount, 2) }}</span>
                 </div>
             @empty
-                <div class="category-item-premium">
-                    <span class="category-name-premium" data-i18n="no_expense_records">No expense records yet</span>
-                    <span class="category-amount-premium expense">₱0.00</span>
+                <div class="inv-cat-item">
+                    <span class="name" data-i18n="no_expense_records">No expense records yet</span>
+                    <span class="amt expense">₱0.00</span>
                 </div>
             @endforelse
-            <div class="summary-row-premium">
+            <div class="inv-cat-summary">
                 <span data-i18n="total_expenses">Total Expenses</span>
-                <span class="amount-negative-premium">₱{{ number_format($allTimeExpense ?? 0, 2) }}</span>
+                <span class="amt expense">₱{{ number_format($allTimeExpense ?? 0, 2) }}</span>
             </div>
         </div>
     </div>
 
-    {{-- RECENT TRANSACTIONS TABLE --}}
-    <div class="table-container-premium" id="transactionsSection">
-        <div class="table-header-premium">
-            <h6><i class="fas fa-history"></i> <span data-i18n="recent_transactions">Recent Transactions</span></h6>
-            <span style="font-size: 0.65rem; color: #6b7280;">
-                <span data-i18n="showing_latest">Showing latest</span> {{ count($recentTransactions ?? []) }} <span data-i18n="entries">entries</span>
+    {{-- RECENT TRANSACTIONS --}}
+    <div class="inv-table-container" id="transactionsSection">
+        <div class="inv-table-header">
+            <h6>
+                <i class="fas fa-history"></i>
+                <span data-i18n="recent_transactions">Recent Transactions</span>
+            </h6>
+            <span style="font-size: .68rem; color: var(--inv-muted);">
+                <span data-i18n="showing_latest">Showing latest</span>
+                <strong style="color: var(--inv-text);">{{ count($recentTransactions ?? []) }}</strong>
+                <span data-i18n="entries">entries</span>
             </span>
         </div>
         <div class="table-responsive">
-            <table class="table-premium table" id="recentTransactionsTable">
+            <table class="inv-table" id="recentTransactionsTable">
                 <thead>
                     <tr>
                         <th data-i18n="date">Date</th>
@@ -1721,42 +1799,48 @@
                 <tbody>
                     @forelse(($recentTransactions ?? collect()) as $transaction)
                     <tr>
-                        <td style="color: #1a1a2e;">
+                        <td style="color: var(--inv-text);">
                             {{ \Carbon\Carbon::parse($transaction->date ?? $transaction->created_at)->format('M d, Y') }}
                         </td>
-                        <td style="color: #1a1a2e;">
+                        <td style="color: var(--inv-text);">
                             <strong>{{ $transaction->description }}</strong>
                             @if($transaction->type == 'income' && $transaction->donor_name)
-                                <div class="small text-muted"><i class="fas fa-user me-1"></i> <span data-i18n="donor">Donor</span>: {{ $transaction->donor_name }}</div>
+                                <div style="font-size:.68rem; color: var(--inv-muted); margin-top:.15rem;">
+                                    <i class="fas fa-user" style="font-size:.58rem;"></i>
+                                    <span data-i18n="donor">Donor</span>: {{ $transaction->donor_name }}
+                                </div>
                             @elseif($transaction->type == 'expense' && $transaction->recipient)
-                                <div class="small text-muted"><i class="fas fa-user me-1"></i> <span data-i18n="recipient">Recipient</span>: {{ $transaction->recipient }}</div>
+                                <div style="font-size:.68rem; color: var(--inv-muted); margin-top:.15rem;">
+                                    <i class="fas fa-user" style="font-size:.58rem;"></i>
+                                    <span data-i18n="recipient">Recipient</span>: {{ $transaction->recipient }}
+                                </div>
                             @endif
                         </td>
-                        <td style="color: #1a1a2e;">
-                            <span class="category-badge-premium">{{ $transaction->category ?? '-' }}</span>
+                        <td style="color: var(--inv-text);">
+                            <span class="inv-cat-badge">{{ $transaction->category ?? '-' }}</span>
                         </td>
                         <td>
-                            <span class="type-badge-premium {{ $transaction->type == 'income' ? 'badge-income-premium' : 'badge-expense-premium' }}">
-                                <i class="fas {{ $transaction->type == 'income' ? 'fa-arrow-down' : 'fa-arrow-up' }} me-1"></i>
+                            <span class="inv-type-badge {{ $transaction->type == 'income' ? 'income' : 'expense' }}">
+                                <i class="fas {{ $transaction->type == 'income' ? 'fa-arrow-down' : 'fa-arrow-up' }}"></i>
                                 <span data-i18n="{{ $transaction->type == 'income' ? 'income' : 'expense' }}">
                                     {{ $transaction->type == 'income' ? 'Income' : 'Expense' }}
                                 </span>
                             </span>
                         </td>
                         <td>
-                            <strong class="{{ $transaction->type == 'income' ? 'amount-positive-premium' : 'amount-negative-premium' }}">
+                            <span class="{{ $transaction->type == 'income' ? 'inv-amount-pos' : 'inv-amount-neg' }}">
                                 {{ $transaction->type == 'income' ? '+' : '-' }} ₱{{ number_format($transaction->amount, 2) }}
-                            </strong>
+                            </span>
                         </td>
-                        <td style="color: #6b7280;">
-                            {{ $transaction->remarks ?? '-' }}
+                        <td style="color: var(--inv-muted);">
+                            {{ $transaction->remarks ?? '—' }}
                         </td>
                         <td style="text-align: center;">
-                            <div class="action-btns-premium">
-                                <a href="{{ route('inventory.edit', $transaction->id) }}" class="btn-edit-premium" title="Edit">
-                                    <i class="fas fa-edit"></i>
+                            <div class="inv-action-btns">
+                                <a href="{{ route('inventory.edit', $transaction->id) }}" class="inv-icon-btn edit" title="Edit">
+                                    <i class="fas fa-pen"></i>
                                 </a>
-                                <button class="btn-delete-premium" onclick="confirmDelete({{ $transaction->id }})" title="Delete">
+                                <button type="button" class="inv-icon-btn delete" onclick="confirmDelete({{ $transaction->id }})" title="Delete">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
@@ -1764,10 +1848,12 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="text-center py-4" style="color: #6b7280;">
-                            <i class="fas fa-receipt fa-2x mb-2 d-block" style="color: #6b7280;"></i>
-                            <p class="mb-0" style="color: #6b7280;" data-i18n="no_transactions">No transactions yet</p>
-                            <small style="color: #6b7280;" data-i18n="click_to_start">Click "Income" or "Expense" to get started</small>
+                        <td colspan="7">
+                            <div class="inv-empty">
+                                <i class="fas fa-receipt"></i>
+                                <p data-i18n="no_transactions">No transactions yet</p>
+                                <small data-i18n="click_to_start">Click "Income" or "Expense" to get started</small>
+                            </div>
                         </td>
                     </tr>
                     @endforelse
@@ -1783,34 +1869,34 @@
 <div class="export-modal-overlay" id="exportModal">
     <div class="export-modal-content">
         <div class="modal-header-custom">
-            <h3><i class="fas fa-file-export"></i> <span data-i18n="export_inventory_report">Export Inventory Report</span></h3>
-            <button class="close-btn" onclick="closeExportModal()">&times;</button>
+            <h3>
+                <i class="fas fa-file-export"></i>
+                <span data-i18n="export_inventory_report">Export Inventory Report</span>
+            </h3>
+            <button type="button" class="close-btn" onclick="closeExportModal()">&times;</button>
         </div>
-        
-        <div style="margin-bottom: 1.5rem;">
-            <p style="color: #6b7280; font-size: 0.85rem; margin: 0;" data-i18n="export_desc">
+
+        <div style="margin-bottom: 1.25rem;">
+            <p style="color: var(--inv-muted); font-size: .84rem; margin: 0; line-height: 1.5;" data-i18n="export_desc">
                 Select the date range and sections you want to include in your inventory report.
             </p>
         </div>
 
-        {{-- ===================== --}}
-        {{-- EXPORT FILTER SECTION --}}
-        {{-- ===================== --}}
-        <div class="modal-filter-container" style="margin-bottom: 1.5rem; padding: 0.8rem 1.2rem; background: #f9fafb; border-radius: 12px; border: 1px solid #e5e7eb; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+        <div class="modal-filter-container">
             <div style="flex: 1; min-width: 200px;">
-                <label style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #6b7280; font-family: 'Inter', sans-serif;" data-i18n="select_months">Select Months (Hold Ctrl for multiple)</label>
-                <select id="exportFilterMonths" multiple style="width: 100%; padding: 0.3rem 0.8rem; border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; color: #1a1a2e; font-size: 0.75rem; font-family: 'Inter', sans-serif; cursor: pointer; min-height: 80px;">
-                    <option value=""><span data-i18n="all_months">All Months</span></option>
+                <label style="display:block; margin-bottom:.35rem;" data-i18n="select_months">Select Months (Hold Ctrl for multiple)</label>
+                <select id="exportFilterMonths" multiple style="width: 100%; min-height: 80px;">
+                    <option value="" data-i18n="all_months">All Months</option>
                     @foreach(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'] as $num)
                         <option value="{{ $num }}">{{ \Carbon\Carbon::create()->month((int)$num)->format('F') }}</option>
                     @endforeach
                 </select>
             </div>
-            
+
             <div>
-                <label style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #6b7280; font-family: 'Inter', sans-serif;" data-i18n="year_label">Year</label>
-                <select id="exportFilterYear" style="padding: 0.3rem 0.8rem; border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; color: #1a1a2e; font-size: 0.75rem; font-family: 'Inter', sans-serif; cursor: pointer;">
-                    <option value=""><span data-i18n="all_years">All Years</span></option>
+                <label style="display:block; margin-bottom:.35rem;" data-i18n="year_label">Year</label>
+                <select id="exportFilterYear">
+                    <option value="" data-i18n="all_years">All Years</option>
                     @php
                         $currentYear = date('Y');
                         for($y = $currentYear - 5; $y <= $currentYear; $y++) {
@@ -1819,25 +1905,29 @@
                     @endphp
                 </select>
             </div>
-            
+
             <div>
-                <label style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #6b7280; font-family: 'Inter', sans-serif;" data-i18n="week_label">Week</label>
-                <input type="week" id="exportFilterWeek" style="padding: 0.3rem 0.8rem; border: 1px solid #e5e7eb; border-radius: 8px; background: #ffffff; color: #1a1a2e; font-size: 0.75rem; font-family: 'Inter', sans-serif; cursor: pointer;">
+                <label style="display:block; margin-bottom:.35rem;" data-i18n="week_label">Week</label>
+                <input type="week" id="exportFilterWeek">
             </div>
-            
+
             <div>
-                <button class="modal-filter-btn" onclick="loadExportData()" style="padding: 0.4rem 1.2rem; background: var(--gradient-primary); color: white; border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    <i class="fas fa-sync-alt me-1"></i> <span data-i18n="load_data">Load Data</span>
+                <button type="button" class="modal-filter-btn" onclick="loadExportData()">
+                    <i class="fas fa-sync-alt"></i>
+                    <span data-i18n="load_data">Load Data</span>
                 </button>
             </div>
         </div>
-        
+
         <div class="export-section-group">
             <div class="select-all-row" onclick="toggleAllSections()">
                 <input type="checkbox" id="selectAll" checked>
-                <label for="selectAll"><i class="fas fa-check-circle"></i> <span data-i18n="select_all_sections">Select All Sections</span></label>
+                <label for="selectAll">
+                    <i class="fas fa-check-circle"></i>
+                    <span data-i18n="select_all_sections">Select All Sections</span>
+                </label>
             </div>
-            
+
             <div class="checkbox-grid">
                 <div class="checkbox-item">
                     <input type="checkbox" class="section-checkbox" value="stats" checked>
@@ -1857,23 +1947,26 @@
                 </div>
             </div>
         </div>
-        
-        <div style="padding: 0.8rem 1rem; background: rgba(79,70,229,0.05); border-radius: 10px; border: 1px solid rgba(79,70,229,0.1); margin-bottom: 1.5rem;">
-            <p style="font-size: 0.75rem; color: #6b7280; margin: 0;" data-i18n="export_info">
-                <i class="fas fa-info-circle" style="color: #4F46E5;"></i> 
+
+        <div style="padding: .75rem 1rem; background: var(--inv-primary-soft); border-radius: 10px; margin-bottom: 1.25rem;">
+            <p style="font-size: .76rem; color: var(--inv-primary); margin: 0; font-weight: 500;" data-i18n="export_info">
+                <i class="fas fa-info-circle"></i>
                 Only the sections you select will appear in the exported PDF/Print.
             </p>
         </div>
-        
+
         <div class="export-actions">
-            <button class="btn-export btn-export-cancel" onclick="closeExportModal()">
-                <i class="fas fa-times"></i> <span data-i18n="cancel">Cancel</span>
+            <button type="button" class="btn-export btn-export-cancel" onclick="closeExportModal()">
+                <i class="fas fa-times"></i>
+                <span data-i18n="cancel">Cancel</span>
             </button>
-            <button class="btn-export btn-export-print" onclick="exportPrint()">
-                <i class="fas fa-print"></i> <span data-i18n="print">Print</span>
+            <button type="button" class="btn-export btn-export-print" onclick="exportPrint()">
+                <i class="fas fa-print"></i>
+                <span data-i18n="print">Print</span>
             </button>
-            <button class="btn-export btn-export-pdf" onclick="exportPDF()">
-                <i class="fas fa-file-pdf"></i> <span data-i18n="export_pdf">Export PDF</span>
+            <button type="button" class="btn-export btn-export-pdf" onclick="exportPDF()">
+                <i class="fas fa-file-pdf"></i>
+                <span data-i18n="export_pdf">Export PDF</span>
             </button>
         </div>
     </div>
@@ -1888,7 +1981,7 @@
             <div class="modal-header modal-header-premium">
                 <div>
                     <h5 class="modal-title">
-                        <i class="fas fa-arrow-down me-2" style="color: #10B981;"></i>
+                        <i class="fas fa-arrow-down" style="color: var(--inv-green);"></i>
                         <span data-i18n="record_income">Record Income</span>
                     </h5>
                     <p data-i18n="record_income_desc">Add money received by the church</p>
@@ -1899,15 +1992,23 @@
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="type" value="income">
-                    
-                    <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-tag"></i> <span data-i18n="description_label">Description</span> <span class="text-danger">*</span></label>
-                        <input type="text" name="description" class="form-control-premium" required 
+
+                    <div class="mb-3" style="margin-bottom: 1rem;">
+                        <label class="form-label-premium">
+                            <i class="fas fa-tag"></i>
+                            <span data-i18n="description_label">Description</span>
+                            <span style="color: var(--inv-rose);">*</span>
+                        </label>
+                        <input type="text" name="description" class="form-control-premium" required
                                placeholder="{{ __('e.g., Sunday Offering, Tithes, Special Donation') }}">
                     </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-folder"></i> <span data-i18n="category_label">Category</span> <span class="text-danger">*</span></label>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label class="form-label-premium">
+                            <i class="fas fa-folder"></i>
+                            <span data-i18n="category_label">Category</span>
+                            <span style="color: var(--inv-rose);">*</span>
+                        </label>
                         <div class="category-pills-premium">
                             <div class="category-pill-premium selected" data-category="Sunday Offering" onclick="selectIncomeCategory(this, 'Sunday Offering')">
                                 <i class="fas fa-church"></i> <span data-i18n="sunday_offering">Sunday Offering</span>
@@ -1939,50 +2040,70 @@
                         </div>
                         <input type="hidden" name="category" id="incomeCategory" value="Sunday Offering">
                     </div>
-                    
+
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-premium"><i class="fas fa-money-bill-wave"></i> <span data-i18n="amount_label">Amount</span> (₱) <span class="text-danger">*</span></label>
-                            <div class="input-group">
+                        <div class="col-md-6" style="margin-bottom: 1rem;">
+                            <label class="form-label-premium">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span data-i18n="amount_label">Amount</span> (₱)
+                                <span style="color: var(--inv-rose);">*</span>
+                            </label>
+                            <div class="input-group" style="display:flex;">
                                 <span class="input-group-text-premium">₱</span>
-                                <input type="number" name="amount" step="0.01" class="form-control-premium" required 
-                                       placeholder="0.00" id="incomeAmount" oninput="updateIncomePreview()" 
-                                       style="border-radius: 0 10px 10px 0;">
+                                <input type="number" name="amount" step="0.01" class="form-control-premium" required
+                                       placeholder="0.00" id="incomeAmount" oninput="updateIncomePreview()"
+                                       style="border-radius: 0 11px 11px 0;">
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-premium"><i class="fas fa-calendar"></i> <span data-i18n="date_label">Date</span> <span class="text-danger">*</span></label>
-                            <input type="date" name="date" class="form-control-premium" value="{{ date('Y-m-d') }}" 
+                        <div class="col-md-6" style="margin-bottom: 1rem;">
+                            <label class="form-label-premium">
+                                <i class="fas fa-calendar"></i>
+                                <span data-i18n="date_label">Date</span>
+                                <span style="color: var(--inv-rose);">*</span>
+                            </label>
+                            <input type="date" name="date" class="form-control-premium" value="{{ date('Y-m-d') }}"
                                    max="{{ date('Y-m-d') }}" required>
-                            <small class="text-muted" style="font-size: 0.6rem; display: block; margin-top: 3px;">
-                                <i class="fas fa-info-circle"></i> <span data-i18n="past_date_only">Only past or today's date allowed</span>
+                            <small style="font-size: .64rem; color: var(--inv-muted); display: block; margin-top: .25rem;">
+                                <i class="fas fa-info-circle"></i>
+                                <span data-i18n="past_date_only">Only past or today's date allowed</span>
                             </small>
                         </div>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-user"></i> <span data-i18n="donor_name">Donor Name</span></label>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label class="form-label-premium">
+                            <i class="fas fa-user"></i>
+                            <span data-i18n="donor_name">Donor Name</span>
+                        </label>
                         <input type="text" name="donor_name" class="form-control-premium" placeholder="{{ __('Optional - Name of the donor') }}">
                     </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-pen"></i> <span data-i18n="remarks_notes">Remarks / Notes</span></label>
+
+                    <div>
+                        <label class="form-label-premium">
+                            <i class="fas fa-pen"></i>
+                            <span data-i18n="remarks_notes">Remarks / Notes</span>
+                        </label>
                         <textarea name="remarks" class="form-control-premium" rows="2" placeholder="{{ __('Additional notes about this income...') }}" style="min-height: 50px;"></textarea>
                     </div>
-                    
+
                     <div class="amount-preview-premium alert-success-premium">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-calculator me-2"></i> <span data-i18n="amount_to_record">Amount to Record</span>:</span>
-                            <strong id="incomePreviewAmount" class="fs-5" style="color: #10B981;">₱0.00</strong>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>
+                                <i class="fas fa-calculator"></i>
+                                <span data-i18n="amount_to_record">Amount to Record</span>:
+                            </span>
+                            <strong id="incomePreviewAmount" style="font-size: 1rem; color: var(--inv-green);">₱0.00</strong>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-secondary-premium" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i> <span data-i18n="cancel">Cancel</span>
+                        <i class="fas fa-times"></i>
+                        <span data-i18n="cancel">Cancel</span>
                     </button>
                     <button type="submit" class="btn-success-premium">
-                        <i class="fas fa-save me-1"></i> <span data-i18n="save_income">Save Income</span>
+                        <i class="fas fa-save"></i>
+                        <span data-i18n="save_income">Save Income</span>
                     </button>
                 </div>
             </form>
@@ -1999,7 +2120,7 @@
             <div class="modal-header modal-header-premium">
                 <div>
                     <h5 class="modal-title">
-                        <i class="fas fa-arrow-up me-2" style="color: #EF4444;"></i>
+                        <i class="fas fa-arrow-up" style="color: var(--inv-rose);"></i>
                         <span data-i18n="record_expense">Record Expense</span>
                     </h5>
                     <p data-i18n="record_expense_desc">Record money spent by the church</p>
@@ -2010,15 +2131,23 @@
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="type" value="expense">
-                    
-                    <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-tag"></i> <span data-i18n="description_label">Description</span> <span class="text-danger">*</span></label>
-                        <input type="text" name="description" class="form-control-premium" required 
+
+                    <div style="margin-bottom: 1rem;">
+                        <label class="form-label-premium">
+                            <i class="fas fa-tag"></i>
+                            <span data-i18n="description_label">Description</span>
+                            <span style="color: var(--inv-rose);">*</span>
+                        </label>
+                        <input type="text" name="description" class="form-control-premium" required
                                placeholder="{{ __('e.g., Outreach Program, Church Supplies') }}">
                     </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-folder"></i> <span data-i18n="category_label">Category</span> <span class="text-danger">*</span></label>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label class="form-label-premium">
+                            <i class="fas fa-folder"></i>
+                            <span data-i18n="category_label">Category</span>
+                            <span style="color: var(--inv-rose);">*</span>
+                        </label>
                         <div class="category-pills-premium">
                             <div class="category-pill-premium selected" data-category="Church Help" onclick="selectExpenseCategory(this, 'Church Help')">
                                 <i class="fas fa-hands-helping"></i> <span data-i18n="church_help">Church Help</span>
@@ -2050,65 +2179,83 @@
                         </div>
                         <input type="hidden" name="category" id="expenseCategory" value="Church Help">
                     </div>
-                    
+
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-premium"><i class="fas fa-money-bill-wave"></i> <span data-i18n="amount_label">Amount</span> (₱) <span class="text-danger">*</span></label>
-                            <div class="input-group">
+                        <div class="col-md-6" style="margin-bottom: 1rem;">
+                            <label class="form-label-premium">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span data-i18n="amount_label">Amount</span> (₱)
+                                <span style="color: var(--inv-rose);">*</span>
+                            </label>
+                            <div class="input-group" style="display:flex;">
                                 <span class="input-group-text-premium">₱</span>
-                                <input type="number" name="amount" step="0.01" class="form-control-premium" required 
+                                <input type="number" name="amount" step="0.01" class="form-control-premium" required
                                        placeholder="0.00" id="expenseAmount" oninput="updateExpensePreview()"
-                                       style="border-radius: 0 10px 10px 0;">
+                                       style="border-radius: 0 11px 11px 0;">
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label-premium"><i class="fas fa-calendar"></i> <span data-i18n="date_label">Date</span> <span class="text-danger">*</span></label>
-                            <input type="date" name="date" class="form-control-premium" value="{{ date('Y-m-d') }}" 
+                        <div class="col-md-6" style="margin-bottom: 1rem;">
+                            <label class="form-label-premium">
+                                <i class="fas fa-calendar"></i>
+                                <span data-i18n="date_label">Date</span>
+                                <span style="color: var(--inv-rose);">*</span>
+                            </label>
+                            <input type="date" name="date" class="form-control-premium" value="{{ date('Y-m-d') }}"
                                    max="{{ date('Y-m-d') }}" required>
-                            <small class="text-muted" style="font-size: 0.6rem; display: block; margin-top: 3px;">
-                                <i class="fas fa-info-circle"></i> <span data-i18n="past_date_only">Only past or today's date allowed</span>
+                            <small style="font-size: .64rem; color: var(--inv-muted); display: block; margin-top: .25rem;">
+                                <i class="fas fa-info-circle"></i>
+                                <span data-i18n="past_date_only">Only past or today's date allowed</span>
                             </small>
                         </div>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-user"></i> <span data-i18n="recipient_label">Recipient / Beneficiary</span></label>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label class="form-label-premium">
+                            <i class="fas fa-user"></i>
+                            <span data-i18n="recipient_label">Recipient / Beneficiary</span>
+                        </label>
                         <input type="text" name="recipient" class="form-control-premium" placeholder="{{ __('Optional - Who received this amount?') }}">
                     </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label-premium"><i class="fas fa-pen"></i> <span data-i18n="remarks_notes">Remarks / Notes</span></label>
+
+                    <div>
+                        <label class="form-label-premium">
+                            <i class="fas fa-pen"></i>
+                            <span data-i18n="remarks_notes">Remarks / Notes</span>
+                        </label>
                         <textarea name="remarks" class="form-control-premium" rows="2" placeholder="{{ __('Additional notes about this expense...') }}" style="min-height: 50px;"></textarea>
                     </div>
-                    
+
                     <div class="amount-preview-premium alert-info-premium">
-                        <div class="d-flex justify-content-between mb-2">
-                            <span><i class="fas fa-wallet me-2"></i> <span data-i18n="current_balance">Current Balance</span>:</span>
-                            <strong id="currentBalance" style="font-family: 'Inter', sans-serif;">₱{{ number_format($allTimeBalance ?? 0, 2) }}</strong>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: .35rem;">
+                            <span><i class="fas fa-wallet"></i> <span data-i18n="current_balance">Current Balance</span>:</span>
+                            <strong id="currentBalance" style="font-variant-numeric: tabular-nums;">₱{{ number_format($allTimeBalance ?? 0, 2) }}</strong>
                         </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span><i class="fas fa-minus-circle me-2" style="color: #EF4444;"></i> <span data-i18n="amount_to_deduct">Amount to Deduct</span>:</span>
-                            <strong id="expensePreviewAmount" style="color: #EF4444; font-family: 'Inter', sans-serif;">₱0.00</strong>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: .35rem;">
+                            <span><i class="fas fa-minus-circle" style="color: var(--inv-rose);"></i> <span data-i18n="amount_to_deduct">Amount to Deduct</span>:</span>
+                            <strong id="expensePreviewAmount" style="color: var(--inv-rose); font-variant-numeric: tabular-nums;">₱0.00</strong>
                         </div>
-                        <div class="d-flex justify-content-between pt-2 border-top" style="border-top-color: #e5e7eb;">
-                            <span><i class="fas fa-calculator me-2"></i> <span data-i18n="remaining_balance">Remaining Balance</span>:</span>
-                            <strong id="remainingBalance" class="fs-5" style="color: #10B981; font-family: 'Inter', sans-serif;">₱{{ number_format($allTimeBalance ?? 0, 2) }}</strong>
+                        <div style="display: flex; justify-content: space-between; padding-top: .5rem; border-top: 1px solid var(--inv-border);">
+                            <span><i class="fas fa-calculator"></i> <span data-i18n="remaining_balance">Remaining Balance</span>:</span>
+                            <strong id="remainingBalance" style="color: var(--inv-green); font-size: .95rem; font-variant-numeric: tabular-nums;">₱{{ number_format($allTimeBalance ?? 0, 2) }}</strong>
                         </div>
                     </div>
-                    
+
                     @if(($allTimeBalance ?? 0) <= 0)
-                        <div class="alert-danger-premium" style="margin-top: 0.8rem;">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            <span data-i18n="insufficient_balance">Insufficient balance!</span> <span data-i18n="current_balance">Current balance</span>: ₱{{ number_format($allTimeBalance ?? 0, 2) }}
+                        <div class="alert-danger-premium">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span data-i18n="insufficient_balance">Insufficient balance!</span>
+                            <span data-i18n="current_balance">Current balance</span>: ₱{{ number_format($allTimeBalance ?? 0, 2) }}
                         </div>
                     @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-secondary-premium" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i> <span data-i18n="cancel">Cancel</span>
+                        <i class="fas fa-times"></i>
+                        <span data-i18n="cancel">Cancel</span>
                     </button>
                     <button type="submit" class="btn-danger-premium" id="expenseSubmitBtn" {{ ($allTimeBalance ?? 0) <= 0 ? 'disabled' : '' }}>
-                        <i class="fas fa-save me-1"></i> <span data-i18n="save_expense">Save Expense</span>
+                        <i class="fas fa-save"></i>
+                        <span data-i18n="save_expense">Save Expense</span>
                     </button>
                 </div>
             </form>
@@ -2125,28 +2272,33 @@
             <div class="modal-header modal-header-premium">
                 <div>
                     <h5 class="modal-title">
-                        <i class="fas fa-list me-2" style="color: #10B981;"></i>
+                        <i class="fas fa-list" style="color: var(--inv-primary);"></i>
                         <span data-i18n="all_transactions">All Transactions</span>
                     </h5>
                     <p data-i18n="complete_history">Complete financial history of your church</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body" style="padding: 1.5rem;">
-                
-                {{-- FILTER SECTION --}}
+            <div class="modal-body">
+
                 <div class="modal-filter-container">
-                    <label><i class="fas fa-calendar-alt me-1"></i> <span data-i18n="month_label">Month</span></label>
+                    <label>
+                        <i class="fas fa-calendar-alt"></i>
+                        <span data-i18n="month_label">Month</span>
+                    </label>
                     <select id="modalFilterMonth" onchange="applyModalFilters()">
-                        <option value=""><span data-i18n="all_months">All Months</span></option>
+                        <option value="" data-i18n="all_months">All Months</option>
                         @foreach(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'] as $num)
                             <option value="{{ $num }}">{{ \Carbon\Carbon::create()->month((int)$num)->format('F') }}</option>
                         @endforeach
                     </select>
-                    
-                    <label><i class="fas fa-calendar-year me-1"></i> <span data-i18n="year_label">Year</span></label>
+
+                    <label>
+                        <i class="fas fa-calendar"></i>
+                        <span data-i18n="year_label">Year</span>
+                    </label>
                     <select id="modalFilterYear" onchange="applyModalFilters()">
-                        <option value=""><span data-i18n="all_years">All Years</span></option>
+                        <option value="" data-i18n="all_years">All Years</option>
                         @php
                             $currentYear = date('Y');
                             for($y = $currentYear - 5; $y <= $currentYear; $y++) {
@@ -2154,43 +2306,53 @@
                             }
                         @endphp
                     </select>
-                    
-                    <label><i class="fas fa-calendar-week me-1"></i> <span data-i18n="week_label">Week</span></label>
+
+                    <label>
+                        <i class="fas fa-calendar-week"></i>
+                        <span data-i18n="week_label">Week</span>
+                    </label>
                     <input type="week" id="modalFilterWeek" onchange="applyModalFilters()">
-                    
-                    <button class="modal-filter-btn" onclick="resetModalFilters()">
-                        <i class="fas fa-undo me-1"></i> <span data-i18n="reset">Reset</span>
+
+                    <button type="button" class="modal-filter-btn" onclick="resetModalFilters()">
+                        <i class="fas fa-undo"></i>
+                        <span data-i18n="reset">Reset</span>
                     </button>
                 </div>
 
-                <!-- Filter Tabs -->
-                <div class="filter-tabs-premium mb-3">
-                    <button class="filter-tab-premium active" onclick="filterTransactions('all', event)"><span data-i18n="all_transactions">All Transactions</span></button>
-                    <button class="filter-tab-premium" onclick="filterTransactions('income', event)"><i class="fas fa-arrow-down me-1" style="color: #10B981;"></i> <span data-i18n="income">Income</span></button>
-                    <button class="filter-tab-premium" onclick="filterTransactions('expense', event)"><i class="fas fa-arrow-up me-1" style="color: #EF4444;"></i> <span data-i18n="expense">Expense</span></button>
+                <div class="filter-tabs-premium" style="margin-bottom: 1rem;">
+                    <button type="button" class="filter-tab-premium active" onclick="filterTransactions('all', event)">
+                        <span data-i18n="all_transactions">All Transactions</span>
+                    </button>
+                    <button type="button" class="filter-tab-premium" onclick="filterTransactions('income', event)">
+                        <i class="fas fa-arrow-down" style="color: var(--inv-green);"></i>
+                        <span data-i18n="income">Income</span>
+                    </button>
+                    <button type="button" class="filter-tab-premium" onclick="filterTransactions('expense', event)">
+                        <i class="fas fa-arrow-up" style="color: var(--inv-rose);"></i>
+                        <span data-i18n="expense">Expense</span>
+                    </button>
                 </div>
-                
-                <!-- Summary Stats -->
-                <div class="transaction-summary-premium mb-3" id="modalSummaryStats">
+
+                <div class="transaction-summary-premium" id="modalSummaryStats" style="margin-bottom: 1rem;">
                     <div class="summary-item-premium">
                         <div class="summary-icon-premium income-bg"><i class="fas fa-arrow-down"></i></div>
                         <div class="summary-info">
                             <span class="summary-label" data-i18n="total_income">Total Income</span>
-                            <span class="summary-value amount-positive-premium" id="modalTotalIncome">₱0.00</span>
+                            <span class="summary-value" id="modalTotalIncome" style="color: var(--inv-green);">₱0.00</span>
                         </div>
                     </div>
                     <div class="summary-item-premium">
                         <div class="summary-icon-premium expense-bg"><i class="fas fa-arrow-up"></i></div>
                         <div class="summary-info">
                             <span class="summary-label" data-i18n="total_expenses">Total Expenses</span>
-                            <span class="summary-value amount-negative-premium" id="modalTotalExpense">₱0.00</span>
+                            <span class="summary-value" id="modalTotalExpense" style="color: var(--inv-rose);">₱0.00</span>
                         </div>
                     </div>
                     <div class="summary-item-premium">
                         <div class="summary-icon-premium balance-bg"><i class="fas fa-calculator"></i></div>
                         <div class="summary-info">
                             <span class="summary-label" data-i18n="net_balance">Net Balance</span>
-                            <span class="summary-value" id="modalNetBalance" style="font-weight:800; font-size:0.9rem;">₱0.00</span>
+                            <span class="summary-value" id="modalNetBalance">₱0.00</span>
                         </div>
                     </div>
                     <div class="summary-item-premium">
@@ -2201,21 +2363,18 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Search Bar -->
-                <div class="search-bar-premium mb-3">
+
+                <div class="search-bar-premium" style="margin-bottom: 1rem;">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-search"></i></span>
-                        <input type="text" id="transactionSearch" class="form-control-premium" 
-                               placeholder="{{ __('Search transactions...') }}" 
-                               onkeyup="searchTransactions()"
-                               style="border-left: none; border-radius: 0 10px 10px 0;">
+                        <input type="text" id="transactionSearch" class="form-control-premium"
+                               placeholder="{{ __('Search transactions...') }}"
+                               onkeyup="searchTransactions()">
                     </div>
                 </div>
-                
-                <!-- Transactions Table -->
+
                 <div class="table-responsive">
-                    <table class="table-premium table" id="transactionsTable">
+                    <table class="inv-table" id="transactionsTable">
                         <thead>
                             <tr>
                                 <th data-i18n="date">Date</th>
@@ -2229,22 +2388,26 @@
                         </thead>
                         <tbody id="transactionsTableBody">
                             <tr>
-                                <td colspan="7" class="text-center py-4" style="color: #6b7280;">
-                                    <i class="fas fa-receipt fa-2x mb-2 d-block" style="color: #6b7280;"></i>
-                                    <p class="mb-0" style="color: #6b7280;" data-i18n="select_filter">Select a filter to view transactions</p>
+                                <td colspan="7">
+                                    <div class="inv-empty" style="padding: 2rem;">
+                                        <i class="fas fa-receipt"></i>
+                                        <p style="font-weight: 500; color: var(--inv-muted);" data-i18n="select_filter">Select a filter to view transactions</p>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                
-                <div style="margin-top: 0.5rem; font-size: 0.65rem; color: #6b7280; text-align: center;">
-                    <i class="fas fa-mouse-pointer me-1"></i> <span data-i18n="click_row_edit">Click on any row to edit the transaction</span>
+
+                <div style="margin-top: .65rem; font-size: .68rem; color: var(--inv-muted); text-align: center;">
+                    <i class="fas fa-mouse-pointer"></i>
+                    <span data-i18n="click_row_edit">Click on any row to edit the transaction</span>
                 </div>
             </div>
-            <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid #e5e7eb; background: #f9fafb;">
+            <div class="modal-footer">
                 <button type="button" class="btn-primary-premium" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i> <span data-i18n="close">Close</span>
+                    <i class="fas fa-times"></i>
+                    <span data-i18n="close">Close</span>
                 </button>
             </div>
         </div>
@@ -2260,18 +2423,18 @@
         <p><span data-i18n="church_financial_overview">Church financial overview - Income, Expenses, and Transactions</span></p>
         <div class="pdf-date"><span data-i18n="generated">Generated</span>: {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}</div>
     </div>
-    
+
     <div id="pdfContent">
         <div class="pdf-section" id="pdf-stats">
             <div class="pdf-section-title"><i class="fas fa-chart-pie"></i> <span data-i18n="financial_overview">Financial Overview</span></div>
             <div class="pdf-stats-grid" id="pdfStatsGrid"></div>
         </div>
-        
+
         <div class="pdf-section" id="pdf-summary" style="display:none;">
             <div class="pdf-section-title"><i class="fas fa-chart-line"></i> <span data-i18n="summary_label">Summary</span></div>
             <div id="pdfSummaryContent"></div>
         </div>
-        
+
         <div class="pdf-section" id="pdf-categories" style="display:none;">
             <div class="pdf-section-title">
                 <i class="fas fa-tags"></i> <span data-i18n="category_breakdown">Category Breakdown</span>
@@ -2296,7 +2459,7 @@
             </div>
             <div id="pdfCategoriesContent"></div>
         </div>
-        
+
         <div class="pdf-section" id="pdf-transactions" style="display:none;">
             <div class="pdf-section-title"><i class="fas fa-list"></i> <span data-i18n="recent_transactions">Recent Transactions</span></div>
             <table class="pdf-table" id="pdfTransactionsTable">
@@ -2314,7 +2477,7 @@
             </table>
         </div>
     </div>
-    
+
     <div class="pdf-footer">
         <span data-i18n="generated_by">Generated by</span> <strong>TINC Church Management System</strong> • {{ \Carbon\Carbon::now()->format('Y') }}
     </div>
@@ -2327,6 +2490,36 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // ============================================
+    // ⭐ SAFE DATE FORMATTER — prevents timezone off-by-one
+    // ============================================
+    function formatDateSafe(dateStr) {
+        if (!dateStr) return '—';
+
+        // Case 1: Plain date string "YYYY-MM-DD" → parse as LOCAL date
+        if (typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            const [y, m, d] = dateStr.split('-').map(Number);
+            return new Date(y, m - 1, d).toLocaleDateString('en-US', {
+                month: 'short', day: 'numeric', year: 'numeric'
+            });
+        }
+
+        // Case 2: Full ISO datetime "YYYY-MM-DDTHH:MM:SS..." → use only the date part
+        if (typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(dateStr)) {
+            const [y, m, d] = dateStr.substring(0, 10).split('-').map(Number);
+            return new Date(y, m - 1, d).toLocaleDateString('en-US', {
+                month: 'short', day: 'numeric', year: 'numeric'
+            });
+        }
+
+        // Case 3: Fallback — parse normally
+        const dt = new Date(dateStr);
+        if (isNaN(dt.getTime())) return '—';
+        return dt.toLocaleDateString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric'
+        });
+    }
+
+    // ============================================
     // CATEGORY SELECTION
     // ============================================
     function selectIncomeCategory(element, category) {
@@ -2336,7 +2529,7 @@
         element.classList.add('selected');
         document.getElementById('incomeCategory').value = category;
     }
-    
+
     function selectExpenseCategory(element, category) {
         document.querySelectorAll('#expenseModal .category-pill-premium').forEach(pill => {
             pill.classList.remove('selected');
@@ -2344,7 +2537,7 @@
         element.classList.add('selected');
         document.getElementById('expenseCategory').value = category;
     }
-    
+
     // ============================================
     // UPDATE PREVIEWS
     // ============================================
@@ -2355,25 +2548,25 @@
             preview.textContent = '₱' + amount.toFixed(2);
         }
     }
-    
+
     function updateExpensePreview() {
         let amount = parseFloat(document.getElementById('expenseAmount')?.value) || 0;
         let currentBalance = {{ $allTimeBalance ?? 0 }};
         let remainingBalance = currentBalance - amount;
-        
+
         let previewAmount = document.getElementById('expensePreviewAmount');
         let remainingSpan = document.getElementById('remainingBalance');
         let submitBtn = document.getElementById('expenseSubmitBtn');
-        
+
         if (previewAmount) {
             previewAmount.textContent = '₱' + amount.toFixed(2);
         }
-        
+
         if (remainingSpan) {
             remainingSpan.textContent = (remainingBalance >= 0 ? '₱' : '-₱') + Math.abs(remainingBalance).toFixed(2);
             remainingSpan.style.color = remainingBalance >= 0 ? '#10B981' : '#EF4444';
         }
-        
+
         if (submitBtn) {
             if (amount > currentBalance && currentBalance > 0) {
                 submitBtn.disabled = true;
@@ -2384,7 +2577,7 @@
             }
         }
     }
-    
+
     // ============================================
     // EXPORT MODAL
     // ============================================
@@ -2392,25 +2585,25 @@
         document.getElementById('exportModal').classList.add('active');
         document.body.style.overflow = 'hidden';
     }
-    
+
     function closeExportModal() {
         document.getElementById('exportModal').classList.remove('active');
         document.body.style.overflow = '';
     }
-    
+
     function toggleAllSections() {
         const selectAll = document.getElementById('selectAll');
         const checkboxes = document.querySelectorAll('.section-checkbox');
         checkboxes.forEach(cb => cb.checked = selectAll.checked);
     }
-    
+
     document.querySelectorAll('.section-checkbox').forEach(cb => {
         cb.addEventListener('change', function() {
             const allChecked = document.querySelectorAll('.section-checkbox:checked').length === document.querySelectorAll('.section-checkbox').length;
             document.getElementById('selectAll').checked = allChecked;
         });
     });
-    
+
     function getSelectedSections() {
         const selected = [];
         document.querySelectorAll('.section-checkbox:checked').forEach(cb => {
@@ -2418,20 +2611,20 @@
         });
         return selected;
     }
-    
+
     // ============================================
     // EXPORT DATA LOADING
     // ============================================
     let exportDataCache = null;
-    
+
     function loadExportData() {
         const months = Array.from(document.getElementById('exportFilterMonths').selectedOptions).map(opt => opt.value);
         const year = document.getElementById('exportFilterYear').value;
         const week = document.getElementById('exportFilterWeek').value;
-        
+
         let url = `{{ route('inventory.export-data') }}`;
         let params = [];
-        
+
         if (months.length > 0) {
             params.push(`months[]=${months.join(',')}`);
         }
@@ -2441,21 +2634,21 @@
         if (week) {
             params.push(`week=${week}`);
         }
-        
+
         if (params.length > 0) {
             url += '?' + params.join('&');
         }
-        
+
         const loadingText = window.t ? window.t('loading') : 'Loading...';
         const fetchText = window.t ? window.t('fetching_data') : 'Fetching data for export...';
-        
+
         Swal.fire({
             title: loadingText,
             text: fetchText,
             allowOutsideClick: false,
             didOpen: () => { Swal.showLoading(); }
         });
-        
+
         fetch(url)
             .then(response => response.json())
             .then(data => {
@@ -2493,7 +2686,7 @@
                 });
             });
     }
-    
+
     // ============================================
     // BUILD PDF CONTENT
     // ============================================
@@ -2509,12 +2702,12 @@
             });
             return false;
         }
-        
+
         const data = exportDataCache;
         const months = Array.from(document.getElementById('exportFilterMonths').selectedOptions).map(opt => opt.text);
         const year = document.getElementById('exportFilterYear').value;
         const week = document.getElementById('exportFilterWeek').value;
-        
+
         let filterDisplay = '';
         const forText = window.t ? window.t('for') : 'for';
         if (months.length > 0 && year) {
@@ -2526,12 +2719,12 @@
         } else if (week) {
             filterDisplay = ` ${forText} Week ${week}`;
         }
-        
+
         const reportTitle = window.t ? window.t('inventory_management') : 'Inventory Management Report';
         const generatedText = window.t ? window.t('generated') : 'Generated';
         document.querySelector('#pdfExportContainer .pdf-header h1').textContent = reportTitle + filterDisplay;
         document.querySelector('#pdfExportContainer .pdf-header .pdf-date').textContent = generatedText + ': ' + new Date().toLocaleString();
-        
+
         // Stats
         if (sections.includes('stats')) {
             document.getElementById('pdf-stats').style.display = 'block';
@@ -2540,7 +2733,7 @@
             const expensesLabel = window.t ? window.t('total_expenses') : 'Total Expenses';
             const netLabel = window.t ? window.t('net_balance') : 'Net Balance';
             const totalLabel = window.t ? window.t('total_transactions') : 'Total Transactions';
-            
+
             const stats = [
                 { label: incomeLabel, value: '₱' + data.totals.income, change: 'Money received', positive: true },
                 { label: expensesLabel, value: '₱' + data.totals.expense, change: 'Money spent', positive: false },
@@ -2557,7 +2750,7 @@
         } else {
             document.getElementById('pdf-stats').style.display = 'none';
         }
-        
+
         // Summary
         if (sections.includes('summary')) {
             document.getElementById('pdf-summary').style.display = 'block';
@@ -2584,17 +2777,17 @@
         } else {
             document.getElementById('pdf-summary').style.display = 'none';
         }
-        
+
         // Categories
         if (sections.includes('categories')) {
             document.getElementById('pdf-categories').style.display = 'block';
             const content = document.getElementById('pdfCategoriesContent');
-            
+
             const incomeCategories = {};
             const expenseCategories = {};
             let totalIncome = 0;
             let totalExpense = 0;
-            
+
             data.transactions.forEach(t => {
                 if (t.type === 'income') {
                     incomeCategories[t.category] = (incomeCategories[t.category] || 0) + parseFloat(t.amount);
@@ -2604,12 +2797,12 @@
                     totalExpense += parseFloat(t.amount);
                 }
             });
-            
+
             const incomeLabel = window.t ? window.t('income_categories') : 'Income Categories';
             const expensesLabel = window.t ? window.t('expense_categories') : 'Expense Categories';
             const totalIncomeLabel = window.t ? window.t('total_income') : 'Total Income';
             const totalExpensesLabel = window.t ? window.t('total_expenses') : 'Total Expenses';
-            
+
             let incomeHtml = `<div style="margin-bottom:15px;"><h4 style="font-size:14px;color:#10B981;margin:0 0 10px 0;">${incomeLabel}</h4>`;
             if (Object.keys(incomeCategories).length > 0) {
                 incomeHtml += '<table class="pdf-table"><thead><tr><th>Category</th><th style="text-align:right;">Amount</th></tr></thead><tbody>';
@@ -2623,7 +2816,7 @@
                 incomeHtml += `<p style="color:#999;">${noRecords}</p>`;
             }
             incomeHtml += '</div>';
-            
+
             let expenseHtml = `<div><h4 style="font-size:14px;color:#EF4444;margin:0 0 10px 0;">${expensesLabel}</h4>`;
             if (Object.keys(expenseCategories).length > 0) {
                 expenseHtml += '<table class="pdf-table"><thead><tr><th>Category</th><th style="text-align:right;">Amount</th></tr></thead><tbody>';
@@ -2637,17 +2830,17 @@
                 expenseHtml += `<p style="color:#999;">${noRecords}</p>`;
             }
             expenseHtml += '</div>';
-            
+
             content.innerHTML = incomeHtml + expenseHtml;
         } else {
             document.getElementById('pdf-categories').style.display = 'none';
         }
-        
+
         // Transactions
         if (sections.includes('transactions')) {
             document.getElementById('pdf-transactions').style.display = 'block';
             const body = document.getElementById('pdfTransactionsBody');
-            
+
             let html = '';
             const noTransactions = window.t ? window.t('no_transactions_period') : 'No transactions found for the selected period';
             if (data.transactions.length === 0) {
@@ -2656,8 +2849,8 @@
                 const incomeLabel = window.t ? window.t('income') : 'Income';
                 const expensesLabel = window.t ? window.t('expense') : 'Expense';
                 data.transactions.forEach(t => {
-                    const date = new Date(t.date || t.created_at);
-                    const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    // ⭐ FIX: Use formatDateSafe instead of `new Date(...)` to prevent timezone shift
+                    const formattedDate = formatDateSafe(t.date || t.created_at);
                     const isIncome = t.type === 'income';
                     html += `
                         <tr>
@@ -2675,10 +2868,10 @@
         } else {
             document.getElementById('pdf-transactions').style.display = 'none';
         }
-        
+
         return true;
     }
-    
+
     // ============================================
     // EXPORT FUNCTIONS
     // ============================================
@@ -2695,9 +2888,9 @@
             });
             return;
         }
-        
+
         loadExportData();
-        
+
         setTimeout(() => {
             if (!exportDataCache) {
                 const notLoaded = window.t ? window.t('data_not_loaded') : 'Data Not Loaded';
@@ -2710,15 +2903,15 @@
                 });
                 return;
             }
-            
+
             closeExportModal();
-            
+
             const success = buildPDFContent(sections);
             if (!success) return;
-            
+
             const container = document.getElementById('pdfExportContainer');
             container.style.display = 'block';
-            
+
             const preparing = window.t ? window.t('preparing_print') : 'Preparing Print...';
             const waitText = window.t ? window.t('please_wait') : 'Please wait...';
             Swal.fire({
@@ -2727,7 +2920,7 @@
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); }
             });
-            
+
             setTimeout(() => {
                 Swal.close();
                 window.print();
@@ -2737,7 +2930,7 @@
             }, 500);
         }, 1000);
     }
-    
+
     function exportPDF() {
         const sections = getSelectedSections();
         if (sections.length === 0) {
@@ -2751,9 +2944,9 @@
             });
             return;
         }
-        
+
         loadExportData();
-        
+
         setTimeout(() => {
             if (!exportDataCache) {
                 const notLoaded = window.t ? window.t('data_not_loaded') : 'Data Not Loaded';
@@ -2766,15 +2959,15 @@
                 });
                 return;
             }
-            
+
             closeExportModal();
-            
+
             const success = buildPDFContent(sections);
             if (!success) return;
-            
+
             const container = document.getElementById('pdfExportContainer');
             container.style.display = 'block';
-            
+
             const generating = window.t ? window.t('generating_pdf') : 'Generating PDF...';
             const waitText = window.t ? window.t('please_wait') : 'Please wait...';
             Swal.fire({
@@ -2783,7 +2976,7 @@
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); }
             });
-            
+
             const opt = {
                 margin: [10, 10, 10, 10],
                 filename: 'Inventory_Report_' + new Date().toISOString().slice(0,10) + '.pdf',
@@ -2791,7 +2984,7 @@
                 html2canvas: { scale: 2, useCORS: true, letterRendering: true, logging: false, backgroundColor: '#ffffff' },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
-            
+
             html2pdf().set(opt).from(container).save().then(function() {
                 container.style.display = 'none';
                 Swal.close();
@@ -2820,7 +3013,7 @@
             });
         }, 1000);
     }
-    
+
     // ============================================
     // DELETE TRANSACTION
     // ============================================
@@ -2834,7 +3027,7 @@
         const deletedTitle = window.t ? window.t('deleted') : 'Deleted!';
         const successMsg = window.t ? window.t('delete_success') : 'Transaction deleted successfully.';
         const errorTitle = window.t ? window.t('error') : 'Error';
-        
+
         Swal.fire({
             title: deleteTitle,
             text: deleteMsg,
@@ -2852,7 +3045,7 @@
                     allowOutsideClick: false,
                     didOpen: () => { Swal.showLoading(); }
                 });
-                
+
                 fetch(`/inventory/destroy/${id}`, {
                     method: 'DELETE',
                     headers: {
@@ -2897,7 +3090,7 @@
             }
         });
     }
-    
+
     // ============================================
     // FILTER TRANSACTIONS (Type)
     // ============================================
@@ -2906,12 +3099,12 @@
             document.querySelectorAll('.filter-tab-premium').forEach(tab => {
                 tab.classList.remove('active');
             });
-            event.target.classList.add('active');
+            event.target.closest('.filter-tab-premium').classList.add('active');
         }
-        
+
         const rows = document.querySelectorAll('#transactionsTableBody tr');
         let visibleCount = 0;
-        
+
         rows.forEach(row => {
             if (type === 'all') {
                 row.style.display = '';
@@ -2923,13 +3116,13 @@
                 row.style.display = 'none';
             }
         });
-        
+
         const totalSpan = document.getElementById('modalTotalTransactions');
         if (totalSpan) {
             totalSpan.textContent = visibleCount;
         }
     }
-    
+
     // ============================================
     // SEARCH TRANSACTIONS
     // ============================================
@@ -2937,7 +3130,7 @@
         const searchTerm = document.getElementById('transactionSearch').value.toLowerCase();
         const rows = document.querySelectorAll('#transactionsTableBody tr');
         let visibleCount = 0;
-        
+
         rows.forEach(row => {
             const searchData = row.getAttribute('data-search') || '';
             if (searchData.includes(searchTerm) || searchTerm === '') {
@@ -2947,13 +3140,13 @@
                 row.style.display = 'none';
             }
         });
-        
+
         const totalSpan = document.getElementById('modalTotalTransactions');
         if (totalSpan) {
             totalSpan.textContent = visibleCount;
         }
     }
-    
+
     // ============================================
     // MODAL FILTER FUNCTIONS
     // ============================================
@@ -2961,22 +3154,24 @@
         const month = document.getElementById('modalFilterMonth').value;
         const year = document.getElementById('modalFilterYear').value;
         const week = document.getElementById('modalFilterWeek').value;
-        
+
         let url = `{{ route('inventory.transactions') }}`;
         let params = [];
         if (month) params.push(`month=${month}`);
         if (year) params.push(`year=${year}`);
         if (week) params.push(`week=${week}`);
-        
+
         if (params.length > 0) {
             url += '?' + params.join('&');
         } else {
             const selectFilter = window.t ? window.t('select_filter') : 'Select a filter to view transactions';
             document.getElementById('transactionsTableBody').innerHTML = `
                 <tr>
-                    <td colspan="7" class="text-center py-4" style="color: #6b7280;">
-                        <i class="fas fa-receipt fa-2x mb-2 d-block" style="color: #6b7280;"></i>
-                        <p class="mb-0" style="color: #6b7280;">${selectFilter}</p>
+                    <td colspan="7">
+                        <div class="inv-empty" style="padding: 2rem;">
+                            <i class="fas fa-receipt"></i>
+                            <p style="font-weight: 500; color: var(--inv-muted);">${selectFilter}</p>
+                        </div>
                     </td>
                 </tr>
             `;
@@ -2986,18 +3181,20 @@
             document.getElementById('modalTotalTransactions').textContent = '0';
             return;
         }
-        
+
         const tbody = document.getElementById('transactionsTableBody');
         const loading = window.t ? window.t('loading_transactions') : 'Loading transactions...';
         tbody.innerHTML = `
             <tr>
-                <td colspan="7" class="text-center py-4" style="color: #6b7280;">
-                    <i class="fas fa-spinner fa-spin fa-2x mb-2 d-block" style="color: #4F46E5;"></i>
-                    <p class="mb-0" style="color: #6b7280;">${loading}</p>
+                <td colspan="7">
+                    <div class="inv-empty" style="padding: 2rem;">
+                        <i class="fas fa-spinner fa-spin" style="opacity: 1; color: var(--inv-primary);"></i>
+                        <p style="font-weight: 500; color: var(--inv-muted);">${loading}</p>
+                    </div>
                 </td>
             </tr>
         `;
-        
+
         fetch(url)
             .then(response => response.json())
             .then(data => {
@@ -3025,38 +3222,40 @@
                 });
             });
     }
-    
+
     function resetModalFilters() {
         document.getElementById('modalFilterMonth').value = '';
         document.getElementById('modalFilterYear').value = '';
         document.getElementById('modalFilterWeek').value = '';
         applyModalFilters();
     }
-    
+
     function updateTransactionsTable(transactions, totals) {
         const tbody = document.getElementById('transactionsTableBody');
         const totalIncomeSpan = document.getElementById('modalTotalIncome');
         const totalExpenseSpan = document.getElementById('modalTotalExpense');
         const netBalanceSpan = document.getElementById('modalNetBalance');
         const totalCountSpan = document.getElementById('modalTotalTransactions');
-        
+
         if (totalIncomeSpan) totalIncomeSpan.textContent = '₱' + totals.income;
         if (totalExpenseSpan) totalExpenseSpan.textContent = '₱' + totals.expense;
         if (netBalanceSpan) {
             const bal = parseFloat(totals.balance.replace(/,/g, ''));
             netBalanceSpan.textContent = (bal >= 0 ? '+' : '-') + ' ₱' + Math.abs(bal).toFixed(2);
-            netBalanceSpan.style.color = bal >= 0 ? '#10B981' : '#EF4444';
+            netBalanceSpan.style.color = bal >= 0 ? 'var(--inv-green)' : 'var(--inv-rose)';
         }
         if (totalCountSpan) totalCountSpan.textContent = totals.count;
-        
+
         let html = '';
         const noTransactions = window.t ? window.t('no_transactions_filter') : 'No transactions found for this filter';
         if (transactions.length === 0) {
             html = `
                 <tr>
-                    <td colspan="7" class="text-center py-4" style="color: #6b7280;">
-                        <i class="fas fa-receipt fa-2x mb-2 d-block" style="color: #6b7280;"></i>
-                        <p class="mb-0" style="color: #6b7280;">${noTransactions}</p>
+                    <td colspan="7">
+                        <div class="inv-empty" style="padding: 2rem;">
+                            <i class="fas fa-receipt"></i>
+                            <p style="font-weight: 500; color: var(--inv-muted);">${noTransactions}</p>
+                        </div>
                     </td>
                 </tr>
             `;
@@ -3065,42 +3264,43 @@
             const expensesLabel = window.t ? window.t('expense') : 'Expense';
             const donorLabel = window.t ? window.t('donor') : 'Donor';
             const recipientLabel = window.t ? window.t('recipient') : 'Recipient';
-            
+
             transactions.forEach(t => {
-                const date = new Date(t.date || t.created_at);
-                const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                // ⭐ FIX: Use formatDateSafe instead of `new Date(...)` to prevent timezone shift
+                const formattedDate = formatDateSafe(t.date || t.created_at);
+
                 const isIncome = t.type === 'income';
-                const donorHtml = (isIncome && t.donor_name) ? `<div class="small text-muted"><i class="fas fa-user me-1"></i> ${donorLabel}: ${t.donor_name}</div>` : '';
-                const recipientHtml = (!isIncome && t.recipient) ? `<div class="small text-muted"><i class="fas fa-user me-1"></i> ${recipientLabel}: ${t.recipient}</div>` : '';
-                
+                const donorHtml = (isIncome && t.donor_name) ? `<div style="font-size:.68rem;color:var(--inv-muted);margin-top:.15rem;"><i class="fas fa-user" style="font-size:.58rem;"></i> ${donorLabel}: ${t.donor_name}</div>` : '';
+                const recipientHtml = (!isIncome && t.recipient) ? `<div style="font-size:.68rem;color:var(--inv-muted);margin-top:.15rem;"><i class="fas fa-user" style="font-size:.58rem;"></i> ${recipientLabel}: ${t.recipient}</div>` : '';
+
                 html += `
-                    <tr data-type="${t.type}" data-search="${(t.description + ' ' + (t.category || '') + ' ' + (t.remarks || '')).toLowerCase()}" data-id="${t.id}" class="clickable-row">
-                        <td style="color: #1a1a2e;">${formattedDate}</td>
-                        <td style="color: #1a1a2e;">
+                    <tr data-type="${t.type}" data-search="${(t.description + ' ' + (t.category || '') + ' ' + (t.remarks || '')).toLowerCase()}" data-id="${t.id}" class="clickable-row" style="cursor:pointer;">
+                        <td style="color: var(--inv-text);">${formattedDate}</td>
+                        <td style="color: var(--inv-text);">
                             <strong>${t.description}</strong>
                             ${donorHtml}${recipientHtml}
                         </td>
-                        <td style="color: #1a1a2e;">
-                            <span class="category-badge-premium">${t.category || 'Uncategorized'}</span>
+                        <td style="color: var(--inv-text);">
+                            <span class="inv-cat-badge">${t.category || 'Uncategorized'}</span>
                         </td>
                         <td>
-                            <span class="type-badge-premium ${isIncome ? 'badge-income-premium' : 'badge-expense-premium'}">
-                                <i class="fas ${isIncome ? 'fa-arrow-down' : 'fa-arrow-up'} me-1"></i>
+                            <span class="inv-type-badge ${isIncome ? 'income' : 'expense'}">
+                                <i class="fas ${isIncome ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
                                 ${isIncome ? incomeLabel : expensesLabel}
                             </span>
                         </td>
                         <td>
-                            <strong class="${isIncome ? 'amount-positive-premium' : 'amount-negative-premium'}">
+                            <span class="${isIncome ? 'inv-amount-pos' : 'inv-amount-neg'}">
                                 ${isIncome ? '+' : '-'} ₱${parseFloat(t.amount).toFixed(2)}
-                            </strong>
+                            </span>
                         </td>
-                        <td style="color: #6b7280;">${t.remarks || '—'}</td>
+                        <td style="color: var(--inv-muted);">${t.remarks || '—'}</td>
                         <td style="text-align: center;">
-                            <div class="action-btns-premium">
-                                <a href="/inventory/${t.id}/edit" class="btn-edit-premium" title="Edit">
-                                    <i class="fas fa-edit"></i>
+                            <div class="inv-action-btns">
+                                <a href="/inventory/${t.id}/edit" class="inv-icon-btn edit" title="Edit" onclick="event.stopPropagation();">
+                                    <i class="fas fa-pen"></i>
                                 </a>
-                                <button class="btn-delete-premium" onclick="event.stopPropagation(); confirmDelete(${t.id})" title="Delete">
+                                <button type="button" class="inv-icon-btn delete" title="Delete" onclick="event.stopPropagation(); confirmDelete(${t.id})">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
@@ -3110,10 +3310,10 @@
             });
         }
         tbody.innerHTML = html;
-        
+
         tbody.querySelectorAll('.clickable-row').forEach(row => {
             row.addEventListener('click', function(e) {
-                if (e.target.closest('.action-btns-premium') || e.target.closest('.btn-edit-premium') || e.target.closest('.btn-delete-premium')) {
+                if (e.target.closest('.inv-action-btns') || e.target.closest('.inv-icon-btn')) {
                     return;
                 }
                 const id = this.getAttribute('data-id');
@@ -3122,34 +3322,36 @@
                 }
             });
         });
-        
+
         document.querySelectorAll('.filter-tab-premium').forEach(tab => tab.classList.remove('active'));
         document.querySelector('.filter-tab-premium[onclick*="all"]')?.classList.add('active');
-        
+
         const searchVal = document.getElementById('transactionSearch').value;
         if (searchVal) {
             searchTransactions();
         }
     }
-    
+
     // ============================================
     // INITIALIZE
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('transactionsTableBody').innerHTML = `
             <tr>
-                <td colspan="7" class="text-center py-4" style="color: #6b7280;">
-                    <i class="fas fa-receipt fa-2x mb-2 d-block" style="color: #6b7280;"></i>
-                    <p class="mb-0" style="color: #6b7280;">${window.t ? window.t('select_filter') : 'Select a filter to view transactions'}</p>
+                <td colspan="7">
+                    <div class="inv-empty" style="padding: 2rem;">
+                        <i class="fas fa-receipt"></i>
+                        <p style="font-weight: 500; color: var(--inv-muted);">${window.t ? window.t('select_filter') : 'Select a filter to view transactions'}</p>
+                    </div>
                 </td>
             </tr>
         `;
     });
-    
+
     document.getElementById('incomeModal')?.addEventListener('shown.bs.modal', function() {
         updateIncomePreview();
     });
-    
+
     document.getElementById('expenseModal')?.addEventListener('shown.bs.modal', function() {
         updateExpensePreview();
     });

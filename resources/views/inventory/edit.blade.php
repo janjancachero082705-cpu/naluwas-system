@@ -5,965 +5,1171 @@
 @section('content')
 
 <style>
-    /* ============================================
-       PREMIUM EDIT FORM DESIGN FOR INVENTORY
-    ============================================ */
-    
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-    
-    .edit-hero {
-        border-radius: 24px;
-        padding: 2rem 2.5rem;
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    /* ==========================================================
+       EDIT TRANSACTION — 2025 REDESIGN
+       Flat · bordered · airy · Inter
+       (functionality unchanged — design only)
+    ========================================================== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    .et {
+        --et-card: var(--card-bg, #ffffff);
+        --et-border: var(--border-color, #e8eaf0);
+        --et-text: var(--text-primary, #0f172a);
+        --et-muted: var(--text-muted, #7c8494);
+        --et-soft: var(--bg-tertiary, #f5f6fa);
+
+        --et-primary: #4f46e5;
+        --et-primary-soft: rgba(79, 70, 229, .08);
+        --et-primary-ring: rgba(79, 70, 229, .18);
+
+        --et-green: #059669;
+        --et-green-soft: rgba(5, 150, 105, .10);
+        --et-rose: #e11d48;
+        --et-rose-soft: rgba(225, 29, 72, .09);
+        --et-amber: #d97706;
+        --et-amber-soft: rgba(217, 119, 6, .10);
+        --et-violet: #7c3aed;
+        --et-violet-soft: rgba(124, 58, 237, .10);
+
+        --et-shadow-sm: 0 1px 2px rgba(15, 23, 42, .04);
+        --et-shadow-md: 0 10px 28px -14px rgba(15, 23, 42, .22);
+        --et-radius: 16px;
+
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: var(--et-text);
+        padding-bottom: 2rem;
+        max-width: 980px;
+        margin: 0 auto;
     }
-    
-    .edit-hero.income-hero {
-        background: linear-gradient(135deg, #10B981, #059669);
-        box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+
+    [data-theme="dark"] .et {
+        --et-primary: #6366f1;
+        --et-primary-soft: rgba(99, 102, 241, .16);
+        --et-primary-ring: rgba(99, 102, 241, .28);
+        --et-green: #34d399;
+        --et-green-soft: rgba(16, 185, 129, .14);
+        --et-rose: #fb7185;
+        --et-rose-soft: rgba(244, 63, 94, .14);
+        --et-amber: #fbbf24;
+        --et-amber-soft: rgba(245, 158, 11, .14);
+        --et-violet: #a78bfa;
+        --et-violet-soft: rgba(139, 92, 246, .16);
+        --et-shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+        --et-shadow-md: 0 14px 30px -16px rgba(0, 0, 0, .75);
     }
-    
-    .edit-hero.expense-hero {
-        background: linear-gradient(135deg, #EF4444, #DC2626);
-        box-shadow: 0 8px 32px rgba(239, 68, 68, 0.3);
-    }
-    
-    .edit-hero::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -20%;
-        width: 60%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-        animation: heroPulse 6s ease-in-out infinite;
-    }
-    
-    .edit-hero::after {
-        content: '';
-        position: absolute;
-        bottom: -40%;
-        left: -10%;
-        width: 40%;
-        height: 180%;
-        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
-        animation: heroPulse 8s ease-in-out infinite reverse;
-    }
-    
-    @keyframes heroPulse {
-        0%, 100% { transform: scale(1); opacity: 0.5; }
-        50% { transform: scale(1.1); opacity: 1; }
-    }
-    
-    .edit-hero .hero-content {
-        position: relative;
-        z-index: 1;
+
+    .et * { box-sizing: border-box; }
+
+    /* ---------------- HEADER ---------------- */
+    .et-head {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+        gap: 1.25rem;
         flex-wrap: wrap;
-        gap: 1rem;
-    }
-    
-    .edit-hero .hero-left {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-    }
-    
-    .edit-hero .hero-avatar {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.15);
-        border: 3px solid rgba(255,255,255,0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: white;
-        font-weight: 800;
-        flex-shrink: 0;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-    }
-    
-    .edit-hero .hero-text h1 {
-        font-size: 1.6rem;
-        font-weight: 800;
-        color: white;
-        margin: 0;
-        font-family: 'Inter', sans-serif;
-        letter-spacing: -0.5px;
-    }
-    
-    .edit-hero .hero-text .hero-sub {
-        color: rgba(255,255,255,0.85);
-        font-size: 0.85rem;
-        margin: 4px 0 0 0;
-    }
-    
-    .edit-hero .hero-text .hero-sub i {
-        margin-right: 6px;
-    }
-    
-    .edit-hero .hero-text .hero-sub .badge-type {
-        display: inline-block;
-        padding: 2px 12px;
-        border-radius: 20px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        background: rgba(255,255,255,0.2);
-        color: white;
-        margin-left: 6px;
-    }
-    
-    .edit-hero .hero-actions {
-        display: flex;
-        gap: 0.6rem;
-        flex-wrap: wrap;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .btn-hero-edit {
-        padding: 0.5rem 1.5rem;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 0.75rem;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        border: none;
-        text-decoration: none;
-    }
-    
-    .btn-hero-edit-white {
-        background: white;
-        color: #10B981;
-    }
-    
-    .btn-hero-edit-white:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-        color: #10B981;
-        text-decoration: none;
-    }
-    
-    .btn-hero-edit-ghost {
-        background: rgba(255,255,255,0.15);
-        color: white;
-        border: 1px solid rgba(255,255,255,0.2);
-    }
-    
-    .btn-hero-edit-ghost:hover {
-        background: rgba(255,255,255,0.25);
-        transform: translateY(-2px);
-        color: white;
-        text-decoration: none;
-    }
-    
-    .edit-card {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-        transition: all 0.3s ease;
-    }
-    
-    .edit-card:hover {
-        box-shadow: 0 24px 80px rgba(0,0,0,0.12);
-    }
-    
-    .edit-card-header {
-        padding: 1.2rem 1.8rem;
-        border-bottom: 1px solid #e5e7eb;
-        background: #f9fafb;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 0.8rem;
-    }
-    
-    .edit-card-header h5 {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin: 0;
-        color: #1a1a2e;
-        font-family: 'Inter', sans-serif;
-    }
-    
-    .edit-card-header h5 i {
-        color: #4F46E5;
-        margin-right: 10px;
-    }
-    
-    .edit-card-header .transaction-id-badge {
-        font-size: 0.7rem;
-        color: #6b7280;
-        background: #ffffff;
-        padding: 4px 14px;
-        border-radius: 20px;
-        border: 1px solid #e5e7eb;
-        font-weight: 600;
-    }
-    
-    .edit-card-body {
-        padding: 2rem;
-    }
-    
-    .form-group {
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid var(--et-border);
         margin-bottom: 1.5rem;
     }
-    
-    .form-label {
-        font-size: 0.75rem;
-        font-weight: 600;
+
+    .et-head-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        min-width: 0;
+    }
+
+    .et-avatar {
+        width: 60px; height: 60px;
+        border-radius: 18px;
+        display: grid;
+        place-items: center;
+        font-size: 1.25rem;
+        flex: 0 0 auto;
+    }
+
+    .et-avatar.income {
+        background: var(--et-green-soft);
+        color: var(--et-green);
+    }
+
+    .et-avatar.expense {
+        background: var(--et-rose-soft);
+        color: var(--et-rose);
+    }
+
+    .et-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        font-size: .66rem;
+        font-weight: 700;
+        letter-spacing: .13em;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: #6b7280;
-        margin-bottom: 0.4rem;
-        display: block;
-        font-family: 'Inter', sans-serif;
+        color: var(--et-muted);
+        margin-bottom: .4rem;
     }
-    
-    .form-label .required {
-        color: #EF4444;
-        margin-left: 3px;
+
+    .et-eyebrow .et-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: var(--et-violet);
+        box-shadow: 0 0 0 3px var(--et-violet-soft);
     }
-    
-    .form-label i {
-        margin-right: 6px;
-        opacity: 0.6;
-    }
-    
-    .form-control {
-        width: 100% !important;
-        padding: 12px 16px !important;
-        border: 2px solid #d1d5db !important;
-        border-radius: 12px !important;
-        font-size: 15px !important;
-        color: #1a1a2e !important;
-        background: #ffffff !important;
-        transition: all 0.25s ease !important;
-        outline: none !important;
-        box-sizing: border-box !important;
-        font-family: 'Inter', sans-serif !important;
-        cursor: text !important;
-        pointer-events: auto !important;
-        -webkit-appearance: none !important;
-        appearance: none !important;
-        user-select: text !important;
-        -webkit-user-select: text !important;
-    }
-    
-    .form-control:hover {
-        border-color: #4F46E5 !important;
-        background: #fafaff !important;
-    }
-    
-    .form-control:focus {
-        border-color: #4F46E5 !important;
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12) !important;
-        background: #ffffff !important;
-        outline: none !important;
-    }
-    
-    .form-control.is-invalid {
-        border-color: #EF4444 !important;
-    }
-    
-    .form-control.is-invalid:focus {
-        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.08) !important;
-    }
-    
-    .form-control::placeholder {
-        color: #9ca3af;
-        opacity: 0.7;
-    }
-    
-    .form-control[type="date"] {
-        cursor: pointer !important;
-        min-height: 48px !important;
-    }
-    
-    .form-control[type="number"] {
-        -moz-appearance: textfield !important;
-    }
-    
-    .form-control[type="number"]::-webkit-outer-spin-button,
-    .form-control[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none !important;
-        margin: 0 !important;
-    }
-    
-    select.form-control {
-        cursor: pointer !important;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
-        background-repeat: no-repeat !important;
-        background-position: right 16px center !important;
-        padding-right: 40px !important;
-    }
-    
-    textarea.form-control {
-        resize: vertical !important;
-        min-height: 80px !important;
-        line-height: 1.6 !important;
-    }
-    
-    .invalid-feedback {
-        color: #EF4444;
-        font-size: 0.75rem;
-        margin-top: 0.3rem;
+
+    .et-title {
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: .55rem;
+        margin: 0;
+        font-size: 1.45rem;
+        font-weight: 800;
+        letter-spacing: -.035em;
+        line-height: 1.15;
     }
-    
-    .invalid-feedback i {
-        font-size: 0.7rem;
+
+    .et-title i { font-size: 1.05rem; color: var(--et-primary); }
+
+    .et-sub {
+        margin: .45rem 0 0;
+        font-size: .8rem;
+        color: var(--et-muted);
+        line-height: 1.5;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        flex-wrap: wrap;
     }
-    
-    .amount-input-wrapper {
-        display: flex !important;
-        align-items: center !important;
-        border: 2px solid #d1d5db !important;
-        border-radius: 12px !important;
-        background: #ffffff !important;
-        transition: all 0.25s ease !important;
-        overflow: hidden !important;
-    }
-    
-    .amount-input-wrapper:hover {
-        border-color: #4F46E5 !important;
-        background: #fafaff !important;
-    }
-    
-    .amount-input-wrapper:focus-within {
-        border-color: #4F46E5 !important;
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12) !important;
-    }
-    
-    .amount-input-wrapper .currency-symbol {
-        padding: 12px 16px !important;
-        background: #f9fafb !important;
-        color: #6b7280 !important;
-        font-weight: 700 !important;
-        font-size: 15px !important;
-        border-right: 2px solid #d1d5db !important;
-        flex-shrink: 0 !important;
-        font-family: 'Inter', sans-serif !important;
-        cursor: default !important;
-    }
-    
-    .amount-input-wrapper input {
-        width: 100% !important;
-        padding: 12px 16px !important;
-        border: none !important;
-        font-size: 15px !important;
-        color: #1a1a2e !important;
-        background: transparent !important;
-        outline: none !important;
-        box-sizing: border-box !important;
-        font-family: 'Inter', sans-serif !important;
-        cursor: text !important;
-        pointer-events: auto !important;
-    }
-    
-    .amount-input-wrapper input:hover {
-        background: transparent !important;
-    }
-    
-    .amount-input-wrapper input:focus {
-        background: transparent !important;
-    }
-    
-    .amount-input-wrapper input::-webkit-outer-spin-button,
-    .amount-input-wrapper input::-webkit-inner-spin-button {
-        -webkit-appearance: none !important;
-        margin: 0 !important;
-    }
-    
-    .amount-input-wrapper input[type="number"] {
-        -moz-appearance: textfield !important;
-    }
-    
-    .type-select-wrapper {
-        display: flex !important;
-        align-items: center !important;
-        gap: 12px !important;
-    }
-    
-    .type-select-wrapper select {
-        flex: 1 !important;
-        padding: 12px 16px !important;
-        border: 2px solid #d1d5db !important;
-        border-radius: 12px !important;
-        font-size: 15px !important;
-        color: #1a1a2e !important;
-        background: #ffffff !important;
-        transition: all 0.25s ease !important;
-        outline: none !important;
-        cursor: pointer !important;
-        font-family: 'Inter', sans-serif !important;
-        min-height: 48px !important;
-        -webkit-appearance: none !important;
-        appearance: none !important;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
-        background-repeat: no-repeat !important;
-        background-position: right 16px center !important;
-        padding-right: 40px !important;
-        pointer-events: auto !important;
-    }
-    
-    .type-select-wrapper select:hover {
-        border-color: #4F46E5 !important;
-        background-color: #fafaff !important;
-    }
-    
-    .type-select-wrapper select:focus {
-        border-color: #4F46E5 !important;
-        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12) !important;
-    }
-    
-    .type-badge-display {
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-        padding: 8px 18px !important;
-        border-radius: 20px !important;
-        font-size: 13px !important;
-        font-weight: 600 !important;
-        white-space: nowrap !important;
-        font-family: 'Inter', sans-serif !important;
-        flex-shrink: 0 !important;
-    }
-    
-    .type-badge-display.income {
-        background: rgba(16, 185, 129, 0.12) !important;
-        color: #10B981 !important;
-    }
-    
-    .type-badge-display.expense {
-        background: rgba(239, 68, 68, 0.12) !important;
-        color: #EF4444 !important;
-    }
-    
-    .info-section {
-        background: linear-gradient(135deg, rgba(79, 70, 229, 0.04), rgba(139, 92, 246, 0.04));
-        border-radius: 16px;
-        padding: 1.5rem;
-        border: 2px solid rgba(79, 70, 229, 0.08);
-        margin-top: 0.5rem;
-        transition: all 0.3s ease;
-    }
-    
-    .info-section:hover {
-        border-color: rgba(79, 70, 229, 0.15);
-        box-shadow: 0 4px 20px rgba(79, 70, 229, 0.05);
-    }
-    
-    .info-section .info-title {
-        font-size: 0.8rem;
+
+    .et-sub .sep { opacity: .4; }
+    .et-sub i { font-size: .68rem; }
+
+    .et-type-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        padding: .15rem .55rem;
+        border-radius: 20px;
+        font-size: .66rem;
         font-weight: 700;
-        color: #4F46E5;
-        margin-bottom: 1rem;
-        display: flex;
+        letter-spacing: .03em;
+    }
+
+    .et-type-pill.income {
+        background: var(--et-green-soft);
+        color: var(--et-green);
+    }
+
+    .et-type-pill.expense {
+        background: var(--et-rose-soft);
+        color: var(--et-rose);
+    }
+
+    .et-type-pill i { font-size: .55rem; }
+
+    .et-amount-pill {
+        display: inline-flex;
         align-items: center;
-        gap: 8px;
-        font-family: 'Inter', sans-serif;
+        gap: .3rem;
+        padding: .15rem .6rem;
+        border-radius: 20px;
+        font-size: .68rem;
+        font-weight: 700;
+        background: var(--et-soft);
+        color: var(--et-text);
+        font-variant-numeric: tabular-nums;
     }
-    
-    .info-section .info-title i {
-        font-size: 1rem;
+
+    .et-head-actions {
+        display: flex;
+        gap: .55rem;
+        flex-wrap: wrap;
     }
-    
-    .btn-back-edit {
-        padding: 0.5rem 1.2rem;
-        border-radius: 10px;
+
+    /* ---------------- BUTTONS ---------------- */
+    .et-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .6rem 1.1rem;
+        border-radius: 11px;
+        font-size: .79rem;
         font-weight: 600;
-        font-size: 0.75rem;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
+        font-family: inherit;
+        line-height: 1.2;
+        text-decoration: none;
+        border: 1px solid transparent;
         cursor: pointer;
-        border: 2px solid #e5e7eb;
-        background: transparent;
-        color: #6b7280;
-        text-decoration: none;
-        font-family: 'Inter', sans-serif;
+        white-space: nowrap;
+        transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease, border-color .18s ease;
     }
-    
-    .btn-back-edit:hover {
-        background: #f9fafb;
-        color: #1a1a2e;
-        text-decoration: none;
-        transform: translateX(-3px);
-        border-color: #1a1a2e;
+
+    .et-btn-primary {
+        background: var(--et-primary);
+        color: #fff;
+        box-shadow: 0 8px 18px -10px rgba(79, 70, 229, .9);
     }
-    
-    .btn-update-edit {
-        padding: 0.7rem 2.5rem;
-        border-radius: 12px;
-        font-weight: 700;
-        font-size: 0.8rem;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        border: none;
-        background: linear-gradient(135deg, #10B981, #059669);
-        color: white;
-        text-decoration: none;
-        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25);
-        font-family: 'Inter', sans-serif;
-        letter-spacing: 0.3px;
+    .et-btn-primary:hover {
+        background: #4338ca;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 12px 22px -10px rgba(79, 70, 229, .9);
     }
-    
-    .btn-update-edit:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 32px rgba(16, 185, 129, 0.35);
-        color: white;
+
+    .et-btn-rose {
+        background: var(--et-rose);
+        color: #fff;
+        box-shadow: 0 8px 18px -10px rgba(225, 29, 72, .9);
     }
-    
-    .btn-update-edit:active {
-        transform: scale(0.97);
+    .et-btn-rose:hover {
+        background: #be123c;
+        color: #fff;
+        transform: translateY(-1px);
     }
-    
-    .btn-danger-edit {
-        padding: 0.7rem 1.5rem;
-        border-radius: 12px;
-        font-weight: 700;
-        font-size: 0.8rem;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        border: none;
-        background: linear-gradient(135deg, #EF4444, #DC2626);
-        color: white;
-        text-decoration: none;
-        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.25);
-        font-family: 'Inter', sans-serif;
-        letter-spacing: 0.3px;
+
+    .et-btn-ghost {
+        background: var(--et-card);
+        color: var(--et-text);
+        border-color: var(--et-border);
     }
-    
-    .btn-danger-edit:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 32px rgba(239, 68, 68, 0.35);
-        color: white;
+    .et-btn-ghost:hover {
+        background: var(--et-soft);
+        color: var(--et-text);
+        transform: translateY(-1px);
     }
-    
-    .btn-danger-edit:active {
-        transform: scale(0.97);
+
+    /* ---------------- CARD ---------------- */
+    .et-card {
+        background: var(--et-card);
+        border: 1px solid var(--et-border);
+        border-radius: var(--et-radius);
+        overflow: hidden;
+        box-shadow: var(--et-shadow-sm);
     }
-    
-    .form-actions {
+
+    .et-card-head {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        flex-wrap: wrap;
         gap: 1rem;
+        flex-wrap: wrap;
+        padding: 1rem 1.35rem;
+        border-bottom: 1px solid var(--et-border);
+        background: var(--et-soft);
+    }
+
+    .et-card-head-left {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+    }
+
+    .et-card-head-icon {
+        width: 36px; height: 36px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        font-size: .85rem;
+        background: var(--et-primary-soft);
+        color: var(--et-primary);
+        flex: 0 0 auto;
+    }
+
+    .et-card-head-title {
+        font-size: .92rem;
+        font-weight: 700;
+        letter-spacing: -.01em;
+        line-height: 1.2;
+    }
+
+    .et-card-head-sub {
+        font-size: .7rem;
+        color: var(--et-muted);
+        margin-top: .15rem;
+    }
+
+    .et-card-head-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        padding: .28rem .7rem;
+        border-radius: 20px;
+        border: 1px solid var(--et-border);
+        background: var(--et-card);
+        font-size: .68rem;
+        font-weight: 600;
+        color: var(--et-muted);
+        white-space: nowrap;
+    }
+
+    .et-card-head-tag i { font-size: .6rem; }
+
+    .et-card-body {
+        padding: 1.5rem 1.35rem;
+    }
+
+    /* ---------------- SECTION ---------------- */
+    .et-section + .et-section {
         margin-top: 2rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid #e5e7eb;
+        padding-top: 1.75rem;
+        border-top: 1px solid var(--et-border);
     }
-    
-    /* Category dropdown styling */
-    .category-select-wrapper {
-        position: relative;
+
+    .et-section-head {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        margin-bottom: 1.15rem;
     }
-    
-    .category-select-wrapper select.form-control {
-        cursor: pointer !important;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E") !important;
-        background-repeat: no-repeat !important;
-        background-position: right 16px center !important;
-        padding-right: 40px !important;
-        min-height: 48px !important;
+
+    .et-section-icon {
+        width: 32px; height: 32px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        font-size: .78rem;
+        background: var(--et-primary-soft);
+        color: var(--et-primary);
+        flex: 0 0 auto;
     }
-    
-    .category-select-wrapper select.form-control option {
-        padding: 8px 12px;
-        font-family: 'Inter', sans-serif;
+
+    .et-section-title {
+        font-size: .95rem;
+        font-weight: 700;
+        letter-spacing: -.01em;
+        line-height: 1.2;
+        margin: 0;
     }
-    
+
+    .et-section-sub {
+        font-size: .7rem;
+        color: var(--et-muted);
+        margin-top: .1rem;
+    }
+
+    /* ---------------- FORM ---------------- */
+    .et-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.15rem 1.25rem;
+    }
+
+    .et-field { min-width: 0; }
+    .et-field.is-full { grid-column: 1 / -1; }
+
+    .et-label {
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+        font-size: .68rem;
+        font-weight: 700;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--et-muted);
+        margin-bottom: .45rem;
+    }
+
+    .et-label i {
+        font-size: .62rem;
+        color: var(--et-primary);
+        width: 14px;
+        text-align: center;
+    }
+
+    .et-label .et-req { color: var(--et-rose); font-size: .8rem; line-height: 1; }
+
+    .et-input-wrap { position: relative; }
+
+    .et-input-wrap > .et-input-icon {
+        position: absolute;
+        left: .9rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: .72rem;
+        color: var(--et-muted);
+        pointer-events: none;
+        z-index: 2;
+        transition: color .18s ease;
+    }
+
+    .et-input,
+    .et-select,
+    .et-textarea {
+        width: 100%;
+        padding: .68rem .9rem .68rem 2.35rem;
+        border-radius: 11px;
+        border: 1px solid var(--et-border);
+        background: var(--et-soft);
+        color: var(--et-text);
+        font-size: .84rem;
+        font-family: inherit;
+        line-height: 1.35;
+        transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .et-textarea {
+        padding-left: .9rem;
+        min-height: 80px;
+        resize: vertical;
+        line-height: 1.55;
+    }
+
+    .et-input::placeholder,
+    .et-textarea::placeholder { color: var(--et-muted); opacity: .8; }
+
+    .et-input:focus,
+    .et-select:focus,
+    .et-textarea:focus {
+        outline: none;
+        background: var(--et-card);
+        border-color: var(--et-primary);
+        box-shadow: 0 0 0 3px var(--et-primary-ring);
+    }
+
+    .et-input-wrap:focus-within > .et-input-icon { color: var(--et-primary); }
+
+    .et-input.is-invalid,
+    .et-select.is-invalid,
+    .et-textarea.is-invalid {
+        border-color: var(--et-rose);
+    }
+
+    .et-input.is-invalid:focus,
+    .et-select.is-invalid:focus,
+    .et-textarea.is-invalid:focus {
+        box-shadow: 0 0 0 3px var(--et-rose-soft);
+    }
+
+    .et-select {
+        appearance: none;
+        -webkit-appearance: none;
+        padding-right: 2.4rem;
+        cursor: pointer;
+    }
+
+    .et-select option { background: var(--et-card); color: var(--et-text); }
+
+    .et-select-caret {
+        position: absolute;
+        right: .95rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: .58rem;
+        color: var(--et-muted);
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    /* Amount input */
+    .et-amount-wrap {
+        display: flex;
+        align-items: stretch;
+        border-radius: 11px;
+        border: 1px solid var(--et-border);
+        background: var(--et-soft);
+        overflow: hidden;
+        transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .et-amount-wrap:focus-within {
+        background: var(--et-card);
+        border-color: var(--et-primary);
+        box-shadow: 0 0 0 3px var(--et-primary-ring);
+    }
+
+    .et-amount-wrap.is-invalid { border-color: var(--et-rose); }
+
+    .et-amount-symbol {
+        display: grid;
+        place-items: center;
+        padding: 0 1rem;
+        font-size: .85rem;
+        font-weight: 700;
+        color: var(--et-muted);
+        background: transparent;
+        border-right: 1px solid var(--et-border);
+    }
+
+    .et-amount-input {
+        flex: 1;
+        width: 100%;
+        border: none;
+        background: transparent;
+        padding: .68rem .9rem;
+        font-size: .9rem;
+        font-weight: 600;
+        color: var(--et-text);
+        font-family: inherit;
+        outline: none;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .et-amount-input::-webkit-outer-spin-button,
+    .et-amount-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .et-amount-input[type="number"] { -moz-appearance: textfield; }
+
+    /* Type select with live badge */
+    .et-type-row {
+        display: flex;
+        align-items: stretch;
+        gap: .55rem;
+    }
+
+    .et-type-row .et-input-wrap { flex: 1; }
+
+    .et-type-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        padding: 0 .9rem;
+        border-radius: 11px;
+        font-size: .72rem;
+        font-weight: 700;
+        white-space: nowrap;
+        flex: 0 0 auto;
+        transition: background .18s ease, color .18s ease;
+    }
+
+    .et-type-badge.income {
+        background: var(--et-green-soft);
+        color: var(--et-green);
+    }
+
+    .et-type-badge.expense {
+        background: var(--et-rose-soft);
+        color: var(--et-rose);
+    }
+
+    .et-type-badge i { font-size: .6rem; }
+
+    /* Errors */
+    .et-error {
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+        margin-top: .35rem;
+        font-size: .7rem;
+        color: var(--et-rose);
+        font-weight: 500;
+    }
+
+    .et-error i { font-size: .6rem; }
+
+    /* ---------------- FINANCIAL IMPACT BOX ---------------- */
+    .et-impact {
+        background: var(--et-primary-soft);
+        border: 1px solid transparent;
+        border-radius: 14px;
+        padding: 1.15rem 1.25rem;
+    }
+
+    .et-impact-head {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .78rem;
+        font-weight: 700;
+        color: var(--et-primary);
+        margin-bottom: .9rem;
+    }
+
+    .et-impact-head i { font-size: .82rem; }
+
+    .et-impact-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: .9rem;
+    }
+
+    .et-impact-item {
+        background: var(--et-card);
+        border: 1px solid var(--et-border);
+        border-radius: 11px;
+        padding: .85rem .95rem;
+    }
+
+    .et-impact-label {
+        font-size: .62rem;
+        font-weight: 700;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--et-muted);
+        margin: 0 0 .35rem;
+    }
+
+    .et-impact-value {
+        font-size: 1.05rem;
+        font-weight: 800;
+        letter-spacing: -.02em;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.2;
+    }
+
+    .et-impact-value.is-green { color: var(--et-green); }
+    .et-impact-value.is-rose  { color: var(--et-rose); }
+    .et-impact-value.is-primary { color: var(--et-primary); }
+    .et-impact-value.is-default { color: var(--et-text); }
+
+    .et-impact-hint {
+        display: flex;
+        align-items: center;
+        gap: .45rem;
+        margin-top: .9rem;
+        padding-top: .9rem;
+        border-top: 1px solid var(--et-border);
+        font-size: .72rem;
+        color: var(--et-muted);
+        line-height: 1.5;
+    }
+
+    .et-impact-hint i { color: var(--et-amber); flex: 0 0 auto; }
+
+    /* ---------------- FOOTER ---------------- */
+    .et-foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: .7rem;
+        flex-wrap: wrap;
+        padding: 1.1rem 1.35rem;
+        border-top: 1px solid var(--et-border);
+        background: var(--et-soft);
+    }
+
+    .et-foot-right {
+        display: flex;
+        gap: .55rem;
+        flex-wrap: wrap;
+    }
+
+    /* ---------------- RESPONSIVE ---------------- */
     @media (max-width: 768px) {
-        .edit-hero {
-            padding: 1.5rem;
-        }
-        
-        .edit-hero .hero-content {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .edit-hero .hero-actions {
-            width: 100%;
-        }
-        
-        .edit-hero .hero-left {
-            width: 100%;
-        }
-        
-        .edit-hero .hero-avatar {
-            width: 55px;
-            height: 55px;
-            font-size: 1.4rem;
-        }
-        
-        .edit-hero .hero-text h1 {
-            font-size: 1.3rem;
-        }
-        
-        .edit-card-header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .edit-card-body {
-            padding: 1.2rem;
-        }
-        
-        .type-select-wrapper {
-            flex-direction: column !important;
-            align-items: stretch !important;
-        }
-        
-        .type-select-wrapper select {
-            flex: none !important;
-        }
-        
-        .type-badge-display {
-            align-self: flex-start !important;
-        }
-        
-        .form-actions {
-            flex-direction: column-reverse;
-            align-items: stretch;
-        }
-        
-        .btn-update-edit, .btn-danger-edit {
-            justify-content: center;
-            padding: 0.7rem 1.5rem;
-        }
-        
-        .btn-back-edit {
-            justify-content: center;
-        }
+        .et-head { flex-direction: column; align-items: flex-start; }
+        .et-head-left { width: 100%; }
+        .et-head-actions { width: 100%; }
+        .et-head-actions .et-btn { flex: 1; justify-content: center; }
+
+        .et-avatar { width: 50px; height: 50px; border-radius: 15px; font-size: 1.05rem; }
+        .et-title { font-size: 1.2rem; }
+
+        .et-grid { grid-template-columns: 1fr; }
+        .et-card-body { padding: 1.15rem 1rem; }
+        .et-card-head { padding: .9rem 1rem; }
+
+        .et-impact-grid { grid-template-columns: 1fr; }
+
+        .et-type-row { flex-direction: column; }
+        .et-type-badge { padding: .55rem .9rem; justify-content: center; }
+
+        .et-foot { flex-direction: column-reverse; align-items: stretch; padding: 1rem; }
+        .et-foot-right { width: 100%; }
+        .et-foot .et-btn { width: 100%; flex: 1; justify-content: center; }
     }
-    
+
     @media (max-width: 480px) {
-        .edit-hero .hero-avatar {
-            width: 45px;
-            height: 45px;
-            font-size: 1.2rem;
-        }
-        
-        .edit-hero .hero-text h1 {
-            font-size: 1.1rem;
-        }
-        
-        .edit-card-body {
-            padding: 1rem;
-        }
+        .et-card-body { padding: 1rem .85rem; }
+        .et-impact { padding: 1rem .9rem; }
     }
 </style>
 
-<div class="container-fluid px-0">
-    <div class="edit-hero {{ $transaction->type == 'income' ? 'income-hero' : 'expense-hero' }}">
-        <div class="hero-content">
-            <div class="hero-left">
-                <div class="hero-avatar">
-                    <i class="fas {{ $transaction->type == 'income' ? 'fa-arrow-down' : 'fa-arrow-up' }}"></i>
-                </div>
-                <div class="hero-text">
-                    <h1>Edit Transaction</h1>
-                    <p class="hero-sub">
-                        <i class="fas fa-tag"></i>
-                        {{ $transaction->description ?? 'Untitled' }}
-                        <span style="opacity: 0.5; margin: 0 6px;">·</span>
-                        <i class="fas fa-{{ $transaction->type == 'income' ? 'arrow-down' : 'arrow-up' }}"></i>
-                        {{ ucfirst($transaction->type) }}
-                        <span class="badge-type">₱{{ number_format($transaction->amount ?? 0, 2) }}</span>
-                    </p>
-                </div>
-            </div>
-            <div class="hero-actions">
-                <a href="{{ route('inventory.index') }}" class="btn-hero-edit btn-hero-edit-white">
-                    <i class="fas fa-arrow-left"></i> Back to Inventory
-                </a>
-            </div>
-        </div>
-    </div>
+<div class="et container-fluid px-0">
 
-    <div class="row">
-        <div class="col-lg-10 mx-auto">
-            <div class="edit-card">
-                <div class="edit-card-header">
-                    <h5>
-                        <i class="fas fa-edit"></i> Edit Transaction Details
-                    </h5>
-                    <span class="transaction-id-badge">
-                        <i class="fas fa-hashtag"></i> {{ str_pad($transaction->id ?? 0, 4, '0', STR_PAD_LEFT) }}
-                        <span style="opacity:0.3; margin:0 6px;">·</span>
-                        <i class="fas fa-clock"></i> {{ $transaction->updated_at ? \Carbon\Carbon::parse($transaction->updated_at)->diffForHumans() : 'Never' }}
+    {{-- ============================================
+         HEADER
+    ============================================ --}}
+    <header class="et-head">
+        <div class="et-head-left">
+            <div class="et-avatar {{ $transaction->type == 'income' ? 'income' : 'expense' }}">
+                <i class="fas {{ $transaction->type == 'income' ? 'fa-arrow-down' : 'fa-arrow-up' }}"></i>
+            </div>
+            <div style="min-width:0;">
+                <div class="et-eyebrow">
+                    <span class="et-dot"></span>
+                    <span>{{ __('Inventory Management') }}</span>
+                </div>
+                <h1 class="et-title">
+                    <i class="fas fa-pen-to-square"></i>
+                    <span>{{ __('Edit Transaction') }}</span>
+                </h1>
+                <p class="et-sub">
+                    <span>{{ $transaction->description ?? 'Untitled' }}</span>
+                    <span class="sep">·</span>
+                    <span class="et-type-pill {{ $transaction->type }}">
+                        <i class="fas {{ $transaction->type == 'income' ? 'fa-arrow-down' : 'fa-arrow-up' }}"></i>
+                        {{ ucfirst($transaction->type) }}
                     </span>
-                </div>
-                <div class="edit-card-body">
-                    <form action="{{ route('inventory.update', $transaction->id) }}" method="POST" id="editForm">
-                        @csrf
-                        @method('PUT')
-                        
-                        {{-- Hidden fields to track old values for balance recalculation --}}
-                        <input type="hidden" name="old_type" value="{{ $transaction->type }}">
-                        <input type="hidden" name="old_amount" value="{{ $transaction->amount }}">
-                        
-                        <div class="row g-4">
-                            <div class="col-12">
-                                <h6 class="fw-bold text-primary mb-3" style="font-family: 'Inter', sans-serif;">
-                                    <i class="fas fa-info-circle me-2"></i> Transaction Details
-                                </h6>
-                            </div>
-                            
-                            <!-- DESCRIPTION -->
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <i class="fas fa-tag"></i> Description <span class="required">*</span>
-                                    </label>
-                                    <input type="text" name="description" class="form-control @error('description') is-invalid @enderror" 
-                                           value="{{ old('description', $transaction->description) }}" 
-                                           placeholder="Enter transaction description" required>
-                                    @error('description')
-                                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            
-                            <!-- CATEGORY - DROPDOWN WITH SPECIFIED OPTIONS -->
-                            <div class="col-md-6">
-                                <div class="form-group category-select-wrapper">
-                                    <label class="form-label">
-                                        <i class="fas fa-folder"></i> Category <span class="required">*</span>
-                                    </label>
-                                    <select name="category" class="form-control @error('category') is-invalid @enderror" required>
-                                        @php
-                                            $incomeCategories = [
-                                                'Sunday Offering', 'Tithes', 'Special Donation', 
-                                                'Building Fund', 'Missions', 'Benevolence', 
-                                                'Thanksgiving', 'Rental Income', 'Other Income'
-                                            ];
-                                            $expenseCategories = [
-                                                'Church Help', 'Outreach', 'Donation to Others',
-                                                'Maintenance', 'Utilities', 'Staff Salary',
-                                                'Equipment', 'Events', 'Other Expense'
-                                            ];
-                                            $allCategories = array_merge($incomeCategories, $expenseCategories);
-                                            sort($allCategories);
-                                        @endphp
-                                        <option value="">-- Select Category --</option>
-                                        @foreach($allCategories as $cat)
-                                            <option value="{{ $cat }}" 
-                                                {{ old('category', $transaction->category) == $cat ? 'selected' : '' }}>
-                                                {{ $cat }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('category')
-                                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            
-                            <!-- AMOUNT -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <i class="fas fa-money-bill-wave"></i> Amount (₱) <span class="required">*</span>
-                                    </label>
-                                    <div class="amount-input-wrapper">
-                                        <span class="currency-symbol">₱</span>
-                                        <input type="number" name="amount" step="0.01" 
-                                               class="@error('amount') is-invalid @enderror" 
-                                               value="{{ old('amount', $transaction->amount) }}" 
-                                               placeholder="0.00" required
-                                               style="width: 100%; padding: 12px 16px; border: none; font-size: 15px; color: #1a1a2e; background: transparent; outline: none; box-sizing: border-box; font-family: 'Inter', sans-serif; cursor: text !important;">
-                                    </div>
-                                    @error('amount')
-                                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            
-                            <!-- DATE -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <i class="fas fa-calendar"></i> Date <span class="required">*</span>
-                                    </label>
-                                    <input type="date" name="date" class="form-control @error('date') is-invalid @enderror" 
-                                           value="{{ old('date', $transaction->date ? \Carbon\Carbon::parse($transaction->date)->format('Y-m-d') : '') }}" required>
-                                    @error('date')
-                                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            
-                            <!-- TYPE -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <i class="fas fa-info-circle"></i> Type <span class="required">*</span>
-                                    </label>
-                                    <div class="type-select-wrapper">
-                                        <select name="type" id="type" class="form-control @error('type') is-invalid @enderror" required>
-                                            <option value="income" {{ old('type', $transaction->type) == 'income' ? 'selected' : '' }}>Income</option>
-                                            <option value="expense" {{ old('type', $transaction->type) == 'expense' ? 'selected' : '' }}>Expense</option>
-                                        </select>
-                                        <span id="typeDisplay" class="type-badge-display {{ $transaction->type }}">
-                                            <i class="fas {{ $transaction->type == 'income' ? 'fa-arrow-down' : 'fa-arrow-up' }}"></i>
-                                            {{ ucfirst($transaction->type) }}
-                                        </span>
-                                    </div>
-                                    @error('type')
-                                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            
-                            <!-- DONOR NAME (for Income) -->
-                            <div id="donorGroup" class="col-md-6" style="{{ old('type', $transaction->type) == 'income' ? 'display:block;' : 'display:none;' }}">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <i class="fas fa-user"></i> Donor Name
-                                    </label>
-                                    <input type="text" name="donor_name" id="donor_name" class="form-control @error('donor_name') is-invalid @enderror" 
-                                           value="{{ old('donor_name', $transaction->donor_name) }}" 
-                                           placeholder="Enter donor name">
-                                    @error('donor_name')
-                                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            
-                            <!-- RECIPIENT (for Expense) -->
-                            <div id="recipientGroup" class="col-md-6" style="{{ old('type', $transaction->type) == 'expense' ? 'display:block;' : 'display:none;' }}">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <i class="fas fa-user"></i> Recipient / Beneficiary
-                                    </label>
-                                    <input type="text" name="recipient" id="recipient" class="form-control @error('recipient') is-invalid @enderror" 
-                                           value="{{ old('recipient', $transaction->recipient) }}" 
-                                           placeholder="Enter recipient name">
-                                    @error('recipient')
-                                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            
-                            <!-- REMARKS -->
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        <i class="fas fa-pen"></i> Remarks / Notes
-                                    </label>
-                                    <textarea name="remarks" class="form-control @error('remarks') is-invalid @enderror" 
-                                              rows="3" placeholder="Enter additional notes...">{{ old('remarks', $transaction->remarks) }}</textarea>
-                                    @error('remarks')
-                                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            
-                            <!-- Balance Info -->
-                            <div class="col-12">
-                                <div class="info-section">
-                                    <div class="info-title">
-                                        <i class="fas fa-wallet"></i> Financial Impact
-                                    </div>
-                                    <div class="row g-3">
-                                        <div class="col-md-4">
-                                            <div class="small text-muted">Current Transaction</div>
-                                            <div class="fw-bold {{ $transaction->type == 'income' ? 'text-success' : 'text-danger' }}" style="font-size: 1.2rem;">
-                                                {{ $transaction->type == 'income' ? '+' : '-' }} ₱{{ number_format($transaction->amount ?? 0, 2) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="small text-muted">Balance Without This Transaction</div>
-                                            <div class="fw-bold text-primary" style="font-size: 1.2rem;">
-                                                ₱{{ number_format($balance ?? 0, 2) }}
-                                            </div>
-                                            <div class="small text-muted" style="font-size: 0.65rem;">
-                                                (Balance before editing this transaction)
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="small text-muted">Total Transactions</div>
-                                            <div class="fw-bold" style="font-size: 1.2rem;">
-                                                {{ \App\Models\MoneyTransaction::where('church_id', $transaction->church_id)->count() }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-3 pt-2 border-top">
-                                        <div class="col-12">
-                                            <div class="small text-muted mb-1">💡 Note: Changing the amount or type will automatically recalculate the church balance.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <a href="{{ route('inventory.index') }}" class="btn-back-edit">
-                                <i class="fas fa-times"></i> Cancel
-                            </a>
-                            <div class="d-flex gap-2 flex-wrap">
-                                <button type="button" class="btn-danger-edit" onclick="confirmDelete({{ $transaction->id }})">
-                                    <i class="fas fa-trash-alt"></i> Delete
-                                </button>
-                                <button type="submit" class="btn-update-edit">
-                                    <i class="fas fa-save"></i> Update Transaction
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    <span class="et-amount-pill">₱{{ number_format($transaction->amount ?? 0, 2) }}</span>
+                </p>
             </div>
         </div>
+        <div class="et-head-actions">
+            <a href="{{ route('inventory.index') }}" class="et-btn et-btn-ghost" id="backBtn">
+                <i class="fas fa-arrow-left"></i>
+                <span>{{ __('Back to Inventory') }}</span>
+            </a>
+        </div>
+    </header>
+
+    {{-- ============================================
+         CARD
+    ============================================ --}}
+    <div class="et-card">
+
+        <div class="et-card-head">
+            <div class="et-card-head-left">
+                <div class="et-card-head-icon"><i class="fas fa-receipt"></i></div>
+                <div>
+                    <div class="et-card-head-title">{{ __('Edit Transaction Details') }}</div>
+                    <div class="et-card-head-sub">{{ __('Update the fields below and save your changes') }}</div>
+                </div>
+            </div>
+            <span class="et-card-head-tag">
+                <i class="fas fa-hashtag"></i>
+                {{ str_pad($transaction->id ?? 0, 4, '0', STR_PAD_LEFT) }}
+                <span style="opacity:.4;">·</span>
+                <i class="fas fa-clock"></i>
+                {{ $transaction->updated_at ? \Carbon\Carbon::parse($transaction->updated_at)->diffForHumans() : __('Never') }}
+            </span>
+        </div>
+
+        <form action="{{ route('inventory.update', $transaction->id) }}" method="POST" id="editForm">
+            @csrf
+            @method('PUT')
+
+            {{-- Hidden fields to track old values for balance recalculation --}}
+            <input type="hidden" name="old_type" value="{{ $transaction->type }}">
+            <input type="hidden" name="old_amount" value="{{ $transaction->amount }}">
+
+            <div class="et-card-body">
+
+                {{-- ============================================
+                     TRANSACTION DETAILS
+                ============================================ --}}
+                <section class="et-section">
+                    <div class="et-section-head">
+                        <div class="et-section-icon"><i class="fas fa-info-circle"></i></div>
+                        <div>
+                            <h2 class="et-section-title">{{ __('Transaction Details') }}</h2>
+                            <div class="et-section-sub">{{ __('Description, category, amount and date') }}</div>
+                        </div>
+                    </div>
+
+                    <div class="et-grid">
+
+                        {{-- DESCRIPTION --}}
+                        <div class="et-field is-full">
+                            <label class="et-label" for="description">
+                                <i class="fas fa-tag"></i>
+                                <span>{{ __('Description') }}</span>
+                                <span class="et-req">*</span>
+                            </label>
+                            <div class="et-input-wrap">
+                                <input type="text"
+                                       id="description"
+                                       name="description"
+                                       class="et-input @error('description') is-invalid @enderror"
+                                       value="{{ old('description', $transaction->description) }}"
+                                       placeholder="{{ __('Enter transaction description') }}"
+                                       required>
+                                <i class="fas fa-tag et-input-icon"></i>
+                            </div>
+                            @error('description')
+                                <div class="et-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- CATEGORY --}}
+                        <div class="et-field">
+                            <label class="et-label" for="category">
+                                <i class="fas fa-folder"></i>
+                                <span>{{ __('Category') }}</span>
+                                <span class="et-req">*</span>
+                            </label>
+                            <div class="et-input-wrap">
+                                <select id="category"
+                                        name="category"
+                                        class="et-select @error('category') is-invalid @enderror"
+                                        required>
+                                    @php
+                                        $incomeCategories = [
+                                            'Sunday Offering', 'Tithes', 'Special Donation',
+                                            'Building Fund', 'Missions', 'Benevolence',
+                                            'Thanksgiving', 'Rental Income', 'Other Income'
+                                        ];
+                                        $expenseCategories = [
+                                            'Church Help', 'Outreach', 'Donation to Others',
+                                            'Maintenance', 'Utilities', 'Staff Salary',
+                                            'Equipment', 'Events', 'Other Expense'
+                                        ];
+                                        $allCategories = array_merge($incomeCategories, $expenseCategories);
+                                        sort($allCategories);
+                                    @endphp
+                                    <option value="">— {{ __('Select Category') }} —</option>
+                                    @foreach($allCategories as $cat)
+                                        <option value="{{ $cat }}"
+                                            {{ old('category', $transaction->category) == $cat ? 'selected' : '' }}>
+                                            {{ $cat }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <i class="fas fa-folder et-input-icon"></i>
+                                <i class="fas fa-chevron-down et-select-caret"></i>
+                            </div>
+                            @error('category')
+                                <div class="et-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- AMOUNT --}}
+                        <div class="et-field">
+                            <label class="et-label" for="amount">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>{{ __('Amount') }} (₱)</span>
+                                <span class="et-req">*</span>
+                            </label>
+                            <div class="et-amount-wrap @error('amount') is-invalid @enderror">
+                                <span class="et-amount-symbol">₱</span>
+                                <input type="number"
+                                       id="amount"
+                                       name="amount"
+                                       step="0.01"
+                                       class="et-amount-input"
+                                       value="{{ old('amount', $transaction->amount) }}"
+                                       placeholder="0.00"
+                                       required>
+                            </div>
+                            @error('amount')
+                                <div class="et-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- DATE --}}
+                        <div class="et-field">
+                            <label class="et-label" for="date">
+                                <i class="fas fa-calendar"></i>
+                                <span>{{ __('Date') }}</span>
+                                <span class="et-req">*</span>
+                            </label>
+                            <div class="et-input-wrap">
+                                <input type="date"
+                                       id="date"
+                                       name="date"
+                                       class="et-input @error('date') is-invalid @enderror"
+                                       value="{{ old('date', $transaction->date ? \Carbon\Carbon::parse($transaction->date)->format('Y-m-d') : '') }}"
+                                       required>
+                                <i class="fas fa-calendar et-input-icon"></i>
+                            </div>
+                            @error('date')
+                                <div class="et-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- TYPE --}}
+                        <div class="et-field">
+                            <label class="et-label" for="type">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>{{ __('Type') }}</span>
+                                <span class="et-req">*</span>
+                            </label>
+                            <div class="et-type-row">
+                                <div class="et-input-wrap">
+                                    <select id="type"
+                                            name="type"
+                                            class="et-select @error('type') is-invalid @enderror"
+                                            required>
+                                        <option value="income"  {{ old('type', $transaction->type) == 'income'  ? 'selected' : '' }}>{{ __('Income') }}</option>
+                                        <option value="expense" {{ old('type', $transaction->type) == 'expense' ? 'selected' : '' }}>{{ __('Expense') }}</option>
+                                    </select>
+                                    <i class="fas fa-exchange-alt et-input-icon"></i>
+                                    <i class="fas fa-chevron-down et-select-caret"></i>
+                                </div>
+                                <span id="typeDisplay" class="et-type-badge {{ $transaction->type }}">
+                                    <i class="fas {{ $transaction->type == 'income' ? 'fa-arrow-down' : 'fa-arrow-up' }}"></i>
+                                    {{ ucfirst($transaction->type) }}
+                                </span>
+                            </div>
+                            @error('type')
+                                <div class="et-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- DONOR NAME (Income) --}}
+                        <div id="donorGroup"
+                             class="et-field"
+                             style="{{ old('type', $transaction->type) == 'income' ? 'display:block;' : 'display:none;' }}">
+                            <label class="et-label" for="donor_name">
+                                <i class="fas fa-user"></i>
+                                <span>{{ __('Donor Name') }}</span>
+                            </label>
+                            <div class="et-input-wrap">
+                                <input type="text"
+                                       id="donor_name"
+                                       name="donor_name"
+                                       class="et-input @error('donor_name') is-invalid @enderror"
+                                       value="{{ old('donor_name', $transaction->donor_name) }}"
+                                       placeholder="{{ __('Enter donor name') }}">
+                                <i class="fas fa-user et-input-icon"></i>
+                            </div>
+                            @error('donor_name')
+                                <div class="et-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- RECIPIENT (Expense) --}}
+                        <div id="recipientGroup"
+                             class="et-field"
+                             style="{{ old('type', $transaction->type) == 'expense' ? 'display:block;' : 'display:none;' }}">
+                            <label class="et-label" for="recipient">
+                                <i class="fas fa-user"></i>
+                                <span>{{ __('Recipient / Beneficiary') }}</span>
+                            </label>
+                            <div class="et-input-wrap">
+                                <input type="text"
+                                       id="recipient"
+                                       name="recipient"
+                                       class="et-input @error('recipient') is-invalid @enderror"
+                                       value="{{ old('recipient', $transaction->recipient) }}"
+                                       placeholder="{{ __('Enter recipient name') }}">
+                                <i class="fas fa-user et-input-icon"></i>
+                            </div>
+                            @error('recipient')
+                                <div class="et-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- REMARKS --}}
+                        <div class="et-field is-full">
+                            <label class="et-label" for="remarks">
+                                <i class="fas fa-pen"></i>
+                                <span>{{ __('Remarks / Notes') }}</span>
+                            </label>
+                            <div class="et-input-wrap">
+                                <textarea id="remarks"
+                                          name="remarks"
+                                          class="et-textarea @error('remarks') is-invalid @enderror"
+                                          rows="3"
+                                          placeholder="{{ __('Enter additional notes...') }}">{{ old('remarks', $transaction->remarks) }}</textarea>
+                            </div>
+                            @error('remarks')
+                                <div class="et-error"><i class="fas fa-circle-exclamation"></i> {{ $message }}</div>
+                            @enderror
+                        </div>
+
+                    </div>
+                </section>
+
+                {{-- ============================================
+                     FINANCIAL IMPACT
+                ============================================ --}}
+                <section class="et-section">
+                    <div class="et-section-head">
+                        <div class="et-section-icon"><i class="fas fa-wallet"></i></div>
+                        <div>
+                            <h2 class="et-section-title">{{ __('Financial Impact') }}</h2>
+                            <div class="et-section-sub">{{ __('Summary of how this transaction affects the balance') }}</div>
+                        </div>
+                    </div>
+
+                    <div class="et-impact">
+                        <div class="et-impact-head">
+                            <i class="fas fa-calculator"></i>
+                            <span>{{ __('Balance Overview') }}</span>
+                        </div>
+                        <div class="et-impact-grid">
+                            <div class="et-impact-item">
+                                <p class="et-impact-label">{{ __('Current Transaction') }}</p>
+                                <div class="et-impact-value {{ $transaction->type == 'income' ? 'is-green' : 'is-rose' }}">
+                                    {{ $transaction->type == 'income' ? '+' : '-' }} ₱{{ number_format($transaction->amount ?? 0, 2) }}
+                                </div>
+                            </div>
+                            <div class="et-impact-item">
+                                <p class="et-impact-label">{{ __('Balance Without This') }}</p>
+                                <div class="et-impact-value is-primary">
+                                    ₱{{ number_format($balance ?? 0, 2) }}
+                                </div>
+                            </div>
+                            <div class="et-impact-item">
+                                <p class="et-impact-label">{{ __('Total Transactions') }}</p>
+                                <div class="et-impact-value is-default">
+                                    {{ \App\Models\MoneyTransaction::where('church_id', $transaction->church_id)->count() }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="et-impact-hint">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>{{ __('Changing the amount or type will automatically recalculate the church balance.') }}</span>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            {{-- ============================================
+                 ACTIONS
+            ============================================ --}}
+            <div class="et-foot">
+                {{-- ⭐ Cancel button now uses custom confirmation --}}
+                <button type="button" class="et-btn et-btn-ghost" id="cancelBtn">
+                    <i class="fas fa-times"></i>
+                    <span>{{ __('Cancel') }}</span>
+                </button>
+                <div class="et-foot-right">
+                    <button type="button" class="et-btn et-btn-rose" onclick="confirmDelete({{ $transaction->id }})">
+                        <i class="fas fa-trash-alt"></i>
+                        <span>{{ __('Delete') }}</span>
+                    </button>
+                    <button type="submit" class="et-btn et-btn-primary" id="updateBtn">
+                        <i class="fas fa-check"></i>
+                        <span>{{ __('Update Transaction') }}</span>
+                    </button>
+                </div>
+            </div>
+
+        </form>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Type change handler
+        // ============================================
+        // FORM CHANGED TRACKING
+        // ============================================
+        let formChanged = false;
+        let allowNavigation = false; // flag to bypass beforeunload
+
+        const form = document.getElementById('editForm');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const backBtn = document.getElementById('backBtn');
+        const updateBtn = document.getElementById('updateBtn');
+
+        const inventoryUrl = '{{ route("inventory.index") }}';
+
+        if (form) {
+            const inputs = form.querySelectorAll('input, select, textarea');
+
+            inputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    formChanged = true;
+                });
+                if (input.type === 'text' || input.type === 'number' || input.tagName === 'TEXTAREA') {
+                    input.addEventListener('input', function() {
+                        formChanged = true;
+                    });
+                }
+            });
+
+            // ⭐ Only trigger browser warning when leaving the page via
+            //    browser back/refresh/close, NOT via our own buttons
+            window.addEventListener('beforeunload', function(e) {
+                if (formChanged && !allowNavigation) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                    return '';
+                }
+            });
+
+            form.addEventListener('submit', function() {
+                formChanged = false;
+                allowNavigation = true;
+            });
+        }
+
+        // ============================================
+        // ⭐ CUSTOM CANCEL CONFIRMATION
+        // ============================================
+        function navigateAway(url) {
+            allowNavigation = true;              // bypass beforeunload
+            window.location.href = url;
+        }
+
+        function showLeaveConfirm(onConfirm) {
+            Swal.fire({
+                title: 'Discard changes?',
+                html: `
+                    <div style="text-align:left; font-size:.86rem; line-height:1.55;">
+                        <p style="margin:0 0 .6rem;">You have <strong>unsaved changes</strong> in this transaction.</p>
+                        <p style="margin:0; color:#6b7280; font-size:.78rem;">
+                            If you leave now, your edits will be lost.
+                        </p>
+                    </div>
+                `,
+                icon: 'warning',
+                showCancelButton: true,
+                showDenyButton: true,
+                confirmButtonText: '<i class="fas fa-check"></i> Save & Leave',
+                denyButtonText: '<i class="fas fa-times"></i> Discard',
+                cancelButtonText: 'Stay',
+                confirmButtonColor: '#4f46e5',
+                denyButtonColor: '#e11d48',
+                cancelButtonColor: '#6c757d',
+                reverseButtons: true,
+                focusCancel: true,
+                background: 'var(--card-bg)',
+                color: 'var(--text-primary)',
+                customClass: {
+                    popup: 'swal-et-popup',
+                    title: 'swal-et-title',
+                    confirmButton: 'swal-et-confirm',
+                    denyButton: 'swal-et-deny',
+                    cancelButton: 'swal-et-cancel'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Save & Leave → submit the form
+                    allowNavigation = true;
+                    formChanged = false;
+                    form.submit();
+                } else if (result.isDenied) {
+                    // Discard → leave without saving
+                    onConfirm();
+                }
+                // Cancel → do nothing (stay)
+            });
+        }
+
+        // Cancel button (footer)
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function() {
+                if (formChanged) {
+                    showLeaveConfirm(() => navigateAway(inventoryUrl));
+                } else {
+                    navigateAway(inventoryUrl);
+                }
+            });
+        }
+
+        // Back to Inventory button (header) — same behavior
+        if (backBtn) {
+            backBtn.addEventListener('click', function(e) {
+                if (formChanged) {
+                    e.preventDefault();
+                    showLeaveConfirm(() => navigateAway(inventoryUrl));
+                }
+            });
+        }
+
+        // ============================================
+        // TYPE CHANGE HANDLER
+        // ============================================
         const typeSelect = document.getElementById('type');
         const typeDisplay = document.getElementById('typeDisplay');
         const donorGroup = document.getElementById('donorGroup');
         const recipientGroup = document.getElementById('recipientGroup');
         const donorName = document.getElementById('donor_name');
         const recipient = document.getElementById('recipient');
-        
+
         if (typeSelect) {
             typeSelect.addEventListener('change', function() {
                 if (this.value === 'income') {
-                    typeDisplay.className = 'type-badge-display income';
+                    typeDisplay.className = 'et-type-badge income';
                     typeDisplay.innerHTML = '<i class="fas fa-arrow-down"></i> Income';
                     donorGroup.style.display = 'block';
                     recipientGroup.style.display = 'none';
                     if (recipient) recipient.value = '';
                 } else {
-                    typeDisplay.className = 'type-badge-display expense';
+                    typeDisplay.className = 'et-type-badge expense';
                     typeDisplay.innerHTML = '<i class="fas fa-arrow-up"></i> Expense';
                     donorGroup.style.display = 'none';
                     recipientGroup.style.display = 'block';
@@ -971,8 +1177,10 @@
                 }
             });
         }
-        
-        // Delete confirmation - FIXED to use correct route
+
+        // ============================================
+        // DELETE CONFIRMATION
+        // ============================================
         window.confirmDelete = function(id) {
             Swal.fire({
                 title: 'Delete Transaction?',
@@ -982,7 +1190,9 @@
                 confirmButtonColor: '#EF4444',
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
+                cancelButtonText: 'Cancel',
+                background: 'var(--card-bg)',
+                color: 'var(--text-primary)'
             }).then((result) => {
                 if (result.isConfirmed) {
                     Swal.fire({
@@ -991,8 +1201,7 @@
                         allowOutsideClick: false,
                         didOpen: () => { Swal.showLoading(); }
                     });
-                    
-                    // Use the correct route for deletion
+
                     fetch(`/inventory/${id}`, {
                         method: 'DELETE',
                         headers: {
@@ -1005,6 +1214,8 @@
                     .then(data => {
                         Swal.close();
                         if (data.success) {
+                            allowNavigation = true;
+                            formChanged = false;
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Deleted!',
@@ -1015,14 +1226,16 @@
                                 position: 'top-end'
                             });
                             setTimeout(() => {
-                                window.location.href = '{{ route("inventory.index") }}';
+                                window.location.href = inventoryUrl;
                             }, 500);
                         } else {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
                                 text: data.message || 'Failed to delete transaction.',
-                                confirmButtonColor: '#EF4444'
+                                confirmButtonColor: '#EF4444',
+                                background: 'var(--card-bg)',
+                                color: 'var(--text-primary)'
                             });
                         }
                     })
@@ -1033,62 +1246,106 @@
                             icon: 'error',
                             title: 'Error',
                             text: 'Something went wrong. Please try again.',
-                            confirmButtonColor: '#EF4444'
+                            confirmButtonColor: '#EF4444',
+                            background: 'var(--card-bg)',
+                            color: 'var(--text-primary)'
                         });
                     });
                 }
             });
         };
-        
-        // Form changed warning
-        let formChanged = false;
-        const form = document.getElementById('editForm');
-        if (form) {
-            const inputs = form.querySelectorAll('input, select, textarea');
-            
-            inputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    formChanged = true;
-                });
-                if (input.type === 'text' || input.type === 'number' || input.tagName === 'TEXTAREA') {
-                    input.addEventListener('input', function() {
-                        formChanged = true;
-                    });
-                }
-            });
-            
-            window.addEventListener('beforeunload', function(e) {
-                if (formChanged) {
-                    e.preventDefault();
-                    e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
-                    return e.returnValue;
-                }
-            });
-            
-            form.addEventListener('submit', function() {
-                formChanged = false;
-            });
-        }
-        
-        // Invalid fields focus
+
+        // ============================================
+        // INVALID FIELDS FOCUS
+        // ============================================
         const invalidFields = document.querySelectorAll('.is-invalid');
         if (invalidFields.length > 0) {
             invalidFields[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
             invalidFields[0].focus();
         }
-        
-        // Card animation
-        const card = document.querySelector('.edit-card');
+
+        // ============================================
+        // CARD ENTRANCE ANIMATION
+        // ============================================
+        const card = document.querySelector('.et-card');
         if (card) {
             card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            card.style.transform = 'translateY(14px)';
+            requestAnimationFrame(() => {
+                card.style.transition = 'opacity .5s cubic-bezier(0.4, 0, 0.2, 1), transform .5s cubic-bezier(0.4, 0, 0.2, 1)';
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';
-            }, 100);
+            });
         }
     });
 </script>
+
+<style>
+    /* ⭐ SweetAlert custom styling for the leave confirmation */
+    .swal-et-popup {
+        border-radius: 16px !important;
+        padding: 1.75rem 1.5rem !important;
+        border: 1px solid var(--border-color, #e8eaf0) !important;
+        box-shadow: 0 24px 60px -20px rgba(15, 23, 42, .4) !important;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    }
+
+    .swal-et-popup .swal2-title {
+        font-size: 1.15rem !important;
+        font-weight: 800 !important;
+        letter-spacing: -.02em !important;
+        color: var(--text-primary, #0f172a) !important;
+    }
+
+    .swal-et-popup .swal2-icon {
+        margin-top: 0 !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .swal-et-popup .swal2-html-container {
+        margin: 0 0 1.15rem !important;
+        color: var(--text-primary, #0f172a) !important;
+    }
+
+    .swal-et-popup .swal2-actions {
+        gap: .5rem !important;
+        width: 100% !important;
+        justify-content: center !important;
+        margin-top: .5rem !important;
+    }
+
+    .swal-et-popup .swal2-confirm,
+    .swal-et-popup .swal2-deny,
+    .swal-et-popup .swal2-cancel {
+        border-radius: 11px !important;
+        font-weight: 700 !important;
+        font-size: .8rem !important;
+        font-family: inherit !important;
+        padding: .65rem 1.2rem !important;
+        min-width: 130px !important;
+        border: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: .4rem !important;
+        transition: background .18s ease, transform .18s ease, box-shadow .18s ease !important;
+    }
+
+    .swal-et-popup .swal2-confirm:hover { transform: translateY(-1px) !important; }
+    .swal-et-popup .swal2-deny:hover    { transform: translateY(-1px) !important; }
+    .swal-et-popup .swal2-cancel:hover  { transform: translateY(-1px) !important; }
+
+    .swal-et-popup .swal2-cancel {
+        background: #f1f5f9 !important;
+        color: #334155 !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+
+    [data-theme="dark"] .swal-et-popup .swal2-cancel {
+        background: #2a2a3d !important;
+        color: #f1f5f9 !important;
+        border-color: #3a3a4d !important;
+    }
+</style>
 
 @endsection
