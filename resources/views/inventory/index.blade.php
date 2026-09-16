@@ -118,6 +118,7 @@
         display: flex;
         gap: .55rem;
         flex-wrap: wrap;
+        align-items: center;
     }
 
     /* ---------------- BUTTONS ---------------- */
@@ -181,6 +182,20 @@
         background: var(--inv-soft);
         color: var(--inv-text);
         transform: translateY(-1px);
+    }
+
+    /* Icon-only button variant */
+    .inv-btn-icon {
+        padding: 0;
+        width: 38px;
+        height: 38px;
+        justify-content: center;
+        border-radius: 11px;
+        flex: 0 0 auto;
+    }
+
+    .inv-btn-icon i {
+        font-size: .95rem;
     }
 
     /* ---------------- STATS ---------------- */
@@ -712,6 +727,14 @@
         margin: .25rem 0 0;
     }
 
+    /* Header actions group (for icon button + close) */
+    .modal-header-actions {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        flex-shrink: 0;
+    }
+
     .modal-body { padding: 1.35rem; }
 
     .modal-footer {
@@ -1219,6 +1242,51 @@
         transform: rotate(90deg);
     }
 
+    /* ⭐ NEW: Export scope preview box */
+    .export-scope-box {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        padding: .85rem 1.1rem;
+        border-radius: 12px;
+        background: var(--inv-primary-soft);
+        border: 1px solid transparent;
+        margin-bottom: 1rem;
+    }
+
+    .export-scope-box .scope-icon {
+        width: 38px; height: 38px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        font-size: .9rem;
+        background: var(--inv-primary);
+        color: #fff;
+        flex: 0 0 auto;
+    }
+
+    .export-scope-box .scope-body { min-width: 0; flex: 1; }
+
+    .export-scope-box .scope-label {
+        display: block;
+        font-size: .62rem;
+        font-weight: 700;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        color: var(--inv-primary);
+        margin-bottom: .15rem;
+        opacity: .75;
+    }
+
+    .export-scope-box .scope-value {
+        display: block;
+        font-size: .9rem;
+        font-weight: 700;
+        color: var(--inv-text);
+        line-height: 1.3;
+        word-break: break-word;
+    }
+
     .export-section-group { margin-bottom: 1.25rem; }
 
     .export-section-group .checkbox-grid {
@@ -1373,10 +1441,29 @@
         font-size: 14px;
     }
 
+    /* ⭐ NEW: Clear filter badge under PDF title */
+    .pdf-export-wrapper .pdf-filter-line {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+        padding: 8px 18px;
+        background: #eef2ff;
+        border: 1px solid #c7d2fe;
+        border-radius: 30px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #4F46E5;
+    }
+
+    .pdf-export-wrapper .pdf-filter-line i {
+        font-size: 12px;
+    }
+
     .pdf-export-wrapper .pdf-header .pdf-date {
         font-size: 12px;
         color: #999;
-        margin-top: 5px;
+        margin-top: 10px;
     }
 
     .pdf-export-wrapper .pdf-section {
@@ -1503,6 +1590,7 @@
         .inv-head { flex-direction: column; align-items: flex-start; }
         .inv-head-actions { width: 100%; }
         .inv-head-actions .inv-btn { flex: 1; justify-content: center; }
+        .inv-head-actions .inv-btn-icon { flex: 0 0 auto; }
         .inv-category-grid { grid-template-columns: 1fr; }
         .export-section-group .checkbox-grid { grid-template-columns: 1fr; }
     }
@@ -1543,6 +1631,7 @@
     @media (max-width: 480px) {
         .inv-head-actions { flex-direction: column; }
         .inv-head-actions .inv-btn { width: 100%; justify-content: center; }
+        .inv-head-actions .inv-btn-icon { width: 38px; }
         .transaction-summary-premium { grid-template-columns: 1fr; }
     }
 
@@ -1581,10 +1670,6 @@
             <button type="button" class="inv-btn inv-btn-ghost" data-bs-toggle="modal" data-bs-target="#transactionsModal">
                 <i class="fas fa-list"></i>
                 <span data-i18n="all_transactions">All Transactions</span>
-            </button>
-            <button type="button" class="inv-btn inv-btn-primary" onclick="openExportModal()">
-                <i class="fas fa-file-pdf"></i>
-                <span data-i18n="export_pdf">Export PDF</span>
             </button>
         </div>
     </header>
@@ -1882,10 +1967,19 @@
             </p>
         </div>
 
+        {{-- ⭐ NEW: Live "Report Scope" preview — updates as you change filters --}}
+        <div class="export-scope-box" id="exportScopeBox">
+            <div class="scope-icon"><i class="fas fa-filter"></i></div>
+            <div class="scope-body">
+                <span class="scope-label" data-i18n="report_scope">Report Scope</span>
+                <span class="scope-value" id="exportScopeValue">All Records (All Time)</span>
+            </div>
+        </div>
+
         <div class="modal-filter-container">
             <div style="flex: 1; min-width: 200px;">
                 <label style="display:block; margin-bottom:.35rem;" data-i18n="select_months">Select Months (Hold Ctrl for multiple)</label>
-                <select id="exportFilterMonths" multiple style="width: 100%; min-height: 80px;">
+                <select id="exportFilterMonths" multiple style="width: 100%; min-height: 80px;" onchange="updateExportScope()">
                     <option value="" data-i18n="all_months">All Months</option>
                     @foreach(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'] as $num)
                         <option value="{{ $num }}">{{ \Carbon\Carbon::create()->month((int)$num)->format('F') }}</option>
@@ -1894,21 +1988,8 @@
             </div>
 
             <div>
-                <label style="display:block; margin-bottom:.35rem;" data-i18n="year_label">Year</label>
-                <select id="exportFilterYear">
-                    <option value="" data-i18n="all_years">All Years</option>
-                    @php
-                        $currentYear = date('Y');
-                        for($y = $currentYear - 5; $y <= $currentYear; $y++) {
-                            echo "<option value=\"$y\">$y</option>";
-                        }
-                    @endphp
-                </select>
-            </div>
-
-            <div>
                 <label style="display:block; margin-bottom:.35rem;" data-i18n="week_label">Week</label>
-                <input type="week" id="exportFilterWeek">
+                <input type="week" id="exportFilterWeek" onchange="updateExportScope()">
             </div>
 
             <div>
@@ -2277,7 +2358,12 @@
                     </h5>
                     <p data-i18n="complete_history">Complete financial history of your church</p>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header-actions">
+                    <button type="button" class="inv-btn inv-btn-primary inv-btn-icon" onclick="openExportModal()" title="Export PDF" data-i18n-title="export_pdf" aria-label="Export PDF">
+                        <i class="fas fa-file-pdf"></i>
+                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
             </div>
             <div class="modal-body">
 
@@ -2291,20 +2377,6 @@
                         @foreach(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'] as $num)
                             <option value="{{ $num }}">{{ \Carbon\Carbon::create()->month((int)$num)->format('F') }}</option>
                         @endforeach
-                    </select>
-
-                    <label>
-                        <i class="fas fa-calendar"></i>
-                        <span data-i18n="year_label">Year</span>
-                    </label>
-                    <select id="modalFilterYear" onchange="applyModalFilters()">
-                        <option value="" data-i18n="all_years">All Years</option>
-                        @php
-                            $currentYear = date('Y');
-                            for($y = $currentYear - 5; $y <= $currentYear; $y++) {
-                                echo "<option value=\"$y\">$y</option>";
-                            }
-                        @endphp
                     </select>
 
                     <label>
@@ -2421,6 +2493,11 @@
     <div class="pdf-header">
         <h1><span data-i18n="inventory_management">Inventory Management Report</span></h1>
         <p><span data-i18n="church_financial_overview">Church financial overview - Income, Expenses, and Transactions</span></p>
+        {{-- ⭐ NEW: Clear filter line showing exactly what's included --}}
+        <div class="pdf-filter-line" id="pdfFilterLine">
+            <i class="fas fa-filter"></i>
+            <span id="pdfFilterText">Showing: All Records (All Time)</span>
+        </div>
         <div class="pdf-date"><span data-i18n="generated">Generated</span>: {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}</div>
     </div>
 
@@ -2438,24 +2515,6 @@
         <div class="pdf-section" id="pdf-categories" style="display:none;">
             <div class="pdf-section-title">
                 <i class="fas fa-tags"></i> <span data-i18n="category_breakdown">Category Breakdown</span>
-                <span class="pdf-date-badge" id="pdfCategoryDateRange">
-                    @php
-                        $allDates = [];
-                        if(isset($recentTransactions)) {
-                            foreach($recentTransactions as $t) {
-                                if($t->date) {
-                                    $allDates[] = $t->date;
-                                }
-                            }
-                        }
-                        if(!empty($allDates)) {
-                            sort($allDates);
-                            echo \Carbon\Carbon::parse($allDates[0])->format('M d, Y') . ' - ' . \Carbon\Carbon::parse(end($allDates))->format('M d, Y');
-                        } else {
-                            echo __('No records yet');
-                        }
-                    @endphp
-                </span>
             </div>
             <div id="pdfCategoriesContent"></div>
         </div>
@@ -2495,7 +2554,6 @@
     function formatDateSafe(dateStr) {
         if (!dateStr) return '—';
 
-        // Case 1: Plain date string "YYYY-MM-DD" → parse as LOCAL date
         if (typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
             const [y, m, d] = dateStr.split('-').map(Number);
             return new Date(y, m - 1, d).toLocaleDateString('en-US', {
@@ -2503,7 +2561,6 @@
             });
         }
 
-        // Case 2: Full ISO datetime "YYYY-MM-DDTHH:MM:SS..." → use only the date part
         if (typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(dateStr)) {
             const [y, m, d] = dateStr.substring(0, 10).split('-').map(Number);
             return new Date(y, m - 1, d).toLocaleDateString('en-US', {
@@ -2511,12 +2568,78 @@
             });
         }
 
-        // Case 3: Fallback — parse normally
         const dt = new Date(dateStr);
         if (isNaN(dt.getTime())) return '—';
         return dt.toLocaleDateString('en-US', {
             month: 'short', day: 'numeric', year: 'numeric'
         });
+    }
+
+    // ============================================
+    // ⭐ HELPER — derive the year for month filtering
+    // ============================================
+    function deriveYearFromWeek(weekValue) {
+        if (weekValue && /^\d{4}-W\d{1,2}$/.test(weekValue)) {
+            const y = parseInt(weekValue.split('-')[0], 10);
+            if (!isNaN(y)) return y;
+        }
+        return new Date().getFullYear();
+    }
+
+    // ============================================
+    // ⭐ NEW: Build a human-readable filter description
+    // ============================================
+    function buildFilterDescription(months, week, opts) {
+        opts = opts || {};
+        const allRecordsText = opts.allRecordsText || 'All Records (All Time)';
+        const showingText = opts.showingText || 'Showing';
+        const weekLabel = opts.weekLabel || 'Week';
+
+        const parts = [];
+        if (months && months.length > 0) {
+            const year = deriveYearFromWeek(week);
+            parts.push(`${months.join(', ')} ${year}`);
+        }
+        if (week) {
+            parts.push(`${weekLabel} ${week}`);
+        }
+
+        if (parts.length === 0) {
+            return `${showingText}: ${allRecordsText}`;
+        }
+        return `${showingText}: ${parts.join(' • ')}`;
+    }
+
+    // ============================================
+    // ⭐ NEW: Update the live "Report Scope" preview in export modal
+    // ============================================
+    function updateExportScope() {
+        const months = Array.from(document.getElementById('exportFilterMonths').selectedOptions)
+            .map(opt => opt.value)
+            .filter(v => v !== '');
+        const monthsText = Array.from(document.getElementById('exportFilterMonths').selectedOptions)
+            .filter(opt => opt.value !== '')
+            .map(opt => opt.text);
+        const week = document.getElementById('exportFilterWeek').value;
+
+        const el = document.getElementById('exportScopeValue');
+        if (!el) return;
+
+        // Build a clear, human-friendly description
+        const parts = [];
+        if (monthsText.length > 0) {
+            const year = deriveYearFromWeek(week);
+            parts.push(`${monthsText.join(', ')} ${year}`);
+        }
+        if (week) {
+            parts.push(`Week ${week}`);
+        }
+
+        if (parts.length === 0) {
+            el.textContent = 'All Records (All Time)';
+        } else {
+            el.textContent = parts.join(' • ');
+        }
     }
 
     // ============================================
@@ -2582,6 +2705,7 @@
     // EXPORT MODAL
     // ============================================
     function openExportModal() {
+        updateExportScope();  // ⭐ refresh scope when modal opens
         document.getElementById('exportModal').classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -2619,7 +2743,6 @@
 
     function loadExportData() {
         const months = Array.from(document.getElementById('exportFilterMonths').selectedOptions).map(opt => opt.value);
-        const year = document.getElementById('exportFilterYear').value;
         const week = document.getElementById('exportFilterWeek').value;
 
         let url = `{{ route('inventory.export-data') }}`;
@@ -2627,8 +2750,7 @@
 
         if (months.length > 0) {
             params.push(`months[]=${months.join(',')}`);
-        }
-        if (year) {
+            const year = deriveYearFromWeek(week);
             params.push(`year=${year}`);
         }
         if (week) {
@@ -2704,25 +2826,31 @@
         }
 
         const data = exportDataCache;
-        const months = Array.from(document.getElementById('exportFilterMonths').selectedOptions).map(opt => opt.text);
-        const year = document.getElementById('exportFilterYear').value;
+        const monthTexts = Array.from(document.getElementById('exportFilterMonths').selectedOptions)
+            .filter(opt => opt.value !== '')
+            .map(opt => opt.text);
         const week = document.getElementById('exportFilterWeek').value;
 
-        let filterDisplay = '';
-        const forText = window.t ? window.t('for') : 'for';
-        if (months.length > 0 && year) {
-            filterDisplay = ` ${forText} ${months.join(', ')} ${year}`;
-        } else if (months.length > 0) {
-            filterDisplay = ` ${forText} ${months.join(', ')}`;
-        } else if (year) {
-            filterDisplay = ` ${forText} ${year}`;
-        } else if (week) {
-            filterDisplay = ` ${forText} Week ${week}`;
+        // ⭐ Build a clear filter description for the PDF header
+        const filterDescription = buildFilterDescription(
+            monthTexts,
+            week,
+            {
+                showingText: 'Showing',
+                allRecordsText: 'All Records (All Time)',
+                weekLabel: 'Week'
+            }
+        );
+
+        // Set the visible filter line in the PDF header
+        const filterTextEl = document.getElementById('pdfFilterText');
+        if (filterTextEl) {
+            filterTextEl.textContent = filterDescription;
         }
 
         const reportTitle = window.t ? window.t('inventory_management') : 'Inventory Management Report';
         const generatedText = window.t ? window.t('generated') : 'Generated';
-        document.querySelector('#pdfExportContainer .pdf-header h1').textContent = reportTitle + filterDisplay;
+        document.querySelector('#pdfExportContainer .pdf-header h1').textContent = reportTitle;
         document.querySelector('#pdfExportContainer .pdf-header .pdf-date').textContent = generatedText + ': ' + new Date().toLocaleString();
 
         // Stats
@@ -2849,7 +2977,6 @@
                 const incomeLabel = window.t ? window.t('income') : 'Income';
                 const expensesLabel = window.t ? window.t('expense') : 'Expense';
                 data.transactions.forEach(t => {
-                    // ⭐ FIX: Use formatDateSafe instead of `new Date(...)` to prevent timezone shift
                     const formattedDate = formatDateSafe(t.date || t.created_at);
                     const isIncome = t.type === 'income';
                     html += `
@@ -3152,14 +3279,19 @@
     // ============================================
     function applyModalFilters() {
         const month = document.getElementById('modalFilterMonth').value;
-        const year = document.getElementById('modalFilterYear').value;
         const week = document.getElementById('modalFilterWeek').value;
 
         let url = `{{ route('inventory.transactions') }}`;
         let params = [];
-        if (month) params.push(`month=${month}`);
-        if (year) params.push(`year=${year}`);
-        if (week) params.push(`week=${week}`);
+
+        if (month) {
+            params.push(`month=${month}`);
+            const year = deriveYearFromWeek(week);
+            params.push(`year=${year}`);
+        }
+        if (week) {
+            params.push(`week=${week}`);
+        }
 
         if (params.length > 0) {
             url += '?' + params.join('&');
@@ -3225,7 +3357,6 @@
 
     function resetModalFilters() {
         document.getElementById('modalFilterMonth').value = '';
-        document.getElementById('modalFilterYear').value = '';
         document.getElementById('modalFilterWeek').value = '';
         applyModalFilters();
     }
@@ -3266,7 +3397,6 @@
             const recipientLabel = window.t ? window.t('recipient') : 'Recipient';
 
             transactions.forEach(t => {
-                // ⭐ FIX: Use formatDateSafe instead of `new Date(...)` to prevent timezone shift
                 const formattedDate = formatDateSafe(t.date || t.created_at);
 
                 const isIncome = t.type === 'income';
@@ -3346,6 +3476,9 @@
                 </td>
             </tr>
         `;
+
+        // ⭐ Initialize the export scope preview
+        updateExportScope();
     });
 
     document.getElementById('incomeModal')?.addEventListener('shown.bs.modal', function() {
