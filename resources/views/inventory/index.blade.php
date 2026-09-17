@@ -9,7 +9,6 @@
 <style>
     /* ==========================================================
        INVENTORY MANAGEMENT — 2025 REDESIGN
-       Flat · bordered · airy · Inter
     ========================================================== */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
@@ -184,7 +183,6 @@
         transform: translateY(-1px);
     }
 
-    /* Icon-only button variant */
     .inv-btn-icon {
         padding: 0;
         width: 38px;
@@ -565,16 +563,8 @@
         white-space: nowrap;
     }
 
-    .inv-type-badge.income {
-        background: var(--inv-green-soft);
-        color: var(--inv-green);
-    }
-
-    .inv-type-badge.expense {
-        background: var(--inv-rose-soft);
-        color: var(--inv-rose);
-    }
-
+    .inv-type-badge.income { background: var(--inv-green-soft); color: var(--inv-green); }
+    .inv-type-badge.expense { background: var(--inv-rose-soft); color: var(--inv-rose); }
     .inv-type-badge i { font-size: .58rem; }
 
     .inv-cat-badge {
@@ -591,11 +581,7 @@
     .inv-amount-pos { color: var(--inv-green) !important; font-weight: 700; font-variant-numeric: tabular-nums; }
     .inv-amount-neg { color: var(--inv-rose) !important; font-weight: 700; font-variant-numeric: tabular-nums; }
 
-    .inv-action-btns {
-        display: flex;
-        gap: 4px;
-        justify-content: center;
-    }
+    .inv-action-btns { display: flex; gap: 4px; justify-content: center; }
 
     .inv-icon-btn {
         width: 30px; height: 30px;
@@ -615,26 +601,13 @@
     .inv-icon-btn.edit:hover   { background: var(--inv-primary-soft); color: var(--inv-primary); border-color: transparent; }
     .inv-icon-btn.delete:hover { background: var(--inv-rose-soft);    color: var(--inv-rose);    border-color: transparent; }
 
-    /* ---------------- EMPTY ---------------- */
-    .inv-empty {
-        text-align: center;
-        padding: 3rem 1.5rem;
-        color: var(--inv-muted);
-    }
-
-    .inv-empty i {
-        font-size: 2.4rem;
-        color: var(--inv-muted);
-        opacity: .35;
-        display: block;
-        margin-bottom: .9rem;
-    }
-
+    .inv-empty { text-align: center; padding: 3rem 1.5rem; color: var(--inv-muted); }
+    .inv-empty i { font-size: 2.4rem; color: var(--inv-muted); opacity: .35; display: block; margin-bottom: .9rem; }
     .inv-empty p { font-size: .85rem; margin: 0 0 .35rem; font-weight: 600; color: var(--inv-text); }
     .inv-empty small { font-size: .75rem; color: var(--inv-muted); }
 
     /* ==========================================================
-       MODALS — FIXED
+       MODALS
     ========================================================== */
     .modal-content-premium {
         --inv-card: var(--card-bg, #ffffff);
@@ -689,12 +662,8 @@
         backdrop-filter: blur(3px);
         -webkit-backdrop-filter: blur(3px);
     }
-
     .modal-backdrop.show { opacity: 1 !important; }
-
-    [data-theme="dark"] .modal-backdrop {
-        background: rgba(0, 0, 0, .7) !important;
-    }
+    [data-theme="dark"] .modal-backdrop { background: rgba(0, 0, 0, .7) !important; }
 
     .modal-dialog { z-index: 1056; }
 
@@ -721,19 +690,9 @@
 
     .modal-header-premium .modal-title i { font-size: .95rem; }
 
-    .modal-header-premium p {
-        color: var(--inv-muted);
-        font-size: .72rem;
-        margin: .25rem 0 0;
-    }
+    .modal-header-premium p { color: var(--inv-muted); font-size: .72rem; margin: .25rem 0 0; }
 
-    /* Header actions group (for icon button + close) */
-    .modal-header-actions {
-        display: flex;
-        align-items: center;
-        gap: .5rem;
-        flex-shrink: 0;
-    }
+    .modal-header-actions { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; }
 
     .modal-body { padding: 1.35rem; }
 
@@ -747,12 +706,7 @@
         flex-wrap: wrap;
     }
 
-    /* Category Pills */
-    .category-pills-premium {
-        display: flex;
-        flex-wrap: wrap;
-        gap: .45rem;
-    }
+    .category-pills-premium { display: flex; flex-wrap: wrap; gap: .45rem; }
 
     .category-pill-premium {
         display: inline-flex;
@@ -785,7 +739,6 @@
         box-shadow: 0 6px 16px -8px rgba(79, 70, 229, .9);
     }
 
-    /* Form */
     .form-label-premium {
         display: flex;
         align-items: center;
@@ -840,17 +793,8 @@
         font-size: .82rem;
     }
 
-    .alert-success-premium {
-        background: var(--inv-green-soft);
-        color: var(--inv-green);
-        border-color: transparent;
-    }
-
-    .alert-info-premium {
-        background: var(--inv-primary-soft);
-        color: var(--inv-primary);
-        border-color: transparent;
-    }
+    .alert-success-premium { background: var(--inv-green-soft); color: var(--inv-green); border-color: transparent; }
+    .alert-info-premium { background: var(--inv-primary-soft); color: var(--inv-primary); border-color: transparent; }
 
     .alert-danger-premium {
         background: var(--inv-rose-soft);
@@ -862,7 +806,6 @@
         margin-top: .8rem;
     }
 
-    /* Buttons */
     .btn-secondary-premium {
         display: inline-flex;
         align-items: center;
@@ -878,11 +821,7 @@
         cursor: pointer;
         transition: background .16s ease, transform .16s ease;
     }
-
-    .btn-secondary-premium:hover {
-        background: var(--inv-soft);
-        transform: translateY(-1px);
-    }
+    .btn-secondary-premium:hover { background: var(--inv-soft); transform: translateY(-1px); }
 
     .btn-success-premium {
         display: inline-flex;
@@ -900,12 +839,7 @@
         box-shadow: 0 8px 18px -10px rgba(5, 150, 105, .9);
         transition: background .16s ease, transform .16s ease, box-shadow .16s ease;
     }
-
-    .btn-success-premium:hover {
-        background: #047857;
-        transform: translateY(-1px);
-        color: #fff;
-    }
+    .btn-success-premium:hover { background: #047857; transform: translateY(-1px); color: #fff; }
 
     .btn-danger-premium {
         display: inline-flex;
@@ -923,18 +857,8 @@
         box-shadow: 0 8px 18px -10px rgba(225, 29, 72, .9);
         transition: background .16s ease, transform .16s ease, box-shadow .16s ease;
     }
-
-    .btn-danger-premium:hover:not(:disabled) {
-        background: #be123c;
-        transform: translateY(-1px);
-        color: #fff;
-    }
-
-    .btn-danger-premium:disabled {
-        opacity: .45;
-        cursor: not-allowed;
-        box-shadow: none;
-    }
+    .btn-danger-premium:hover:not(:disabled) { background: #be123c; transform: translateY(-1px); color: #fff; }
+    .btn-danger-premium:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
 
     .btn-primary-premium {
         display: inline-flex;
@@ -952,14 +876,8 @@
         box-shadow: 0 8px 18px -10px rgba(79, 70, 229, .9);
         transition: background .16s ease, transform .16s ease, box-shadow .16s ease;
     }
+    .btn-primary-premium:hover { background: #4338ca; transform: translateY(-1px); color: #fff; }
 
-    .btn-primary-premium:hover {
-        background: #4338ca;
-        transform: translateY(-1px);
-        color: #fff;
-    }
-
-    /* Filter tabs */
     .filter-tabs-premium {
         display: flex;
         gap: .4rem;
@@ -983,22 +901,10 @@
         cursor: pointer;
         transition: background .16s ease, color .16s ease, border-color .16s ease, transform .16s ease;
     }
-
-    .filter-tab-premium:hover {
-        background: var(--inv-soft);
-        color: var(--inv-text);
-        transform: translateY(-1px);
-    }
-
-    .filter-tab-premium.active {
-        background: var(--inv-primary);
-        border-color: var(--inv-primary);
-        color: #fff;
-    }
-
+    .filter-tab-premium:hover { background: var(--inv-soft); color: var(--inv-text); transform: translateY(-1px); }
+    .filter-tab-premium.active { background: var(--inv-primary); border-color: var(--inv-primary); color: #fff; }
     .filter-tab-premium i { font-size: .65rem; }
 
-    /* Modal filter container */
     .modal-filter-container {
         display: flex;
         flex-wrap: wrap;
@@ -1058,19 +964,9 @@
         cursor: pointer;
         transition: background .16s ease, transform .16s ease;
     }
+    .modal-filter-btn:hover { background: #4338ca; transform: translateY(-1px); }
+    .modal-filter-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 
-    .modal-filter-btn:hover {
-        background: #4338ca;
-        transform: translateY(-1px);
-    }
-
-    .modal-filter-btn:disabled {
-        opacity: .5;
-        cursor: not-allowed;
-        transform: none;
-    }
-
-    /* Transaction summary */
     .transaction-summary-premium {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -1087,11 +983,7 @@
         border-radius: 12px;
         transition: transform .2s ease, border-color .2s ease;
     }
-
-    .summary-item-premium:hover {
-        transform: translateY(-2px);
-        border-color: transparent;
-    }
+    .summary-item-premium:hover { transform: translateY(-2px); border-color: transparent; }
 
     .summary-icon-premium {
         width: 38px; height: 38px;
@@ -1128,9 +1020,9 @@
         letter-spacing: -.01em;
     }
 
-    /* Search */
     .search-bar-premium { max-width: 320px; }
     .search-bar-premium .input-group { display: flex; }
+
     .search-bar-premium .input-group-text {
         display: grid;
         place-items: center;
@@ -1143,10 +1035,7 @@
         font-size: .75rem;
     }
 
-    .search-bar-premium .form-control-premium {
-        border-left: none;
-        border-radius: 0 10px 10px 0;
-    }
+    .search-bar-premium .form-control-premium { border-left: none; border-radius: 0 10px 10px 0; }
 
     /* ---------------- EXPORT MODAL ---------------- */
     .export-modal-overlay {
@@ -1162,7 +1051,6 @@
         animation: invFadeIn .22s ease;
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
-
     .export-modal-overlay.active { display: flex; }
 
     .export-modal-content {
@@ -1236,13 +1124,8 @@
         padding: 0 .35rem;
         transition: color .2s ease, transform .2s ease;
     }
+    .export-modal-content .modal-header-custom .close-btn:hover { color: var(--inv-text); transform: rotate(90deg); }
 
-    .export-modal-content .modal-header-custom .close-btn:hover {
-        color: var(--inv-text);
-        transform: rotate(90deg);
-    }
-
-    /* ⭐ NEW: Export scope preview box */
     .export-scope-box {
         display: flex;
         align-items: center;
@@ -1307,10 +1190,7 @@
         cursor: pointer;
     }
 
-    .export-section-group .checkbox-item:hover {
-        border-color: var(--inv-primary);
-        background: var(--inv-primary-soft);
-    }
+    .export-section-group .checkbox-item:hover { border-color: var(--inv-primary); background: var(--inv-primary-soft); }
 
     .export-section-group .checkbox-item input[type="checkbox"] {
         width: 16px;
@@ -1389,28 +1269,16 @@
         transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
     }
 
-    .btn-export-pdf {
-        background: var(--inv-primary);
-        color: #fff;
-        box-shadow: 0 8px 18px -10px rgba(79, 70, 229, .9);
-    }
+    .btn-export-pdf { background: var(--inv-primary); color: #fff; box-shadow: 0 8px 18px -10px rgba(79, 70, 229, .9); }
     .btn-export-pdf:hover { background: #4338ca; transform: translateY(-1px); }
 
-    .btn-export-print {
-        background: var(--inv-green);
-        color: #fff;
-        box-shadow: 0 8px 18px -10px rgba(5, 150, 105, .9);
-    }
+    .btn-export-print { background: var(--inv-green); color: #fff; box-shadow: 0 8px 18px -10px rgba(5, 150, 105, .9); }
     .btn-export-print:hover { background: #047857; transform: translateY(-1px); }
 
-    .btn-export-cancel {
-        background: var(--inv-card);
-        color: var(--inv-text);
-        border: 1px solid var(--inv-border);
-    }
+    .btn-export-cancel { background: var(--inv-card); color: var(--inv-text); border: 1px solid var(--inv-border); }
     .btn-export-cancel:hover { background: var(--inv-soft); transform: translateY(-1px); }
 
-    /* ---------------- PDF EXPORT WRAPPER (print) ---------------- */
+    /* ---------------- PDF EXPORT WRAPPER ---------------- */
     .pdf-export-wrapper {
         display: none;
         background: white;
@@ -1435,13 +1303,8 @@
         margin: 0 0 5px 0;
     }
 
-    .pdf-export-wrapper .pdf-header p {
-        color: #666;
-        margin: 0;
-        font-size: 14px;
-    }
+    .pdf-export-wrapper .pdf-header p { color: #666; margin: 0; font-size: 14px; }
 
-    /* ⭐ NEW: Clear filter badge under PDF title */
     .pdf-export-wrapper .pdf-filter-line {
         display: inline-flex;
         align-items: center;
@@ -1456,20 +1319,11 @@
         color: #4F46E5;
     }
 
-    .pdf-export-wrapper .pdf-filter-line i {
-        font-size: 12px;
-    }
+    .pdf-export-wrapper .pdf-filter-line i { font-size: 12px; }
 
-    .pdf-export-wrapper .pdf-header .pdf-date {
-        font-size: 12px;
-        color: #999;
-        margin-top: 10px;
-    }
+    .pdf-export-wrapper .pdf-header .pdf-date { font-size: 12px; color: #999; margin-top: 10px; }
 
-    .pdf-export-wrapper .pdf-section {
-        margin-bottom: 25px;
-        page-break-inside: avoid;
-    }
+    .pdf-export-wrapper .pdf-section { margin-bottom: 25px; page-break-inside: avoid; }
 
     .pdf-export-wrapper .pdf-section .pdf-section-title {
         font-size: 16px;
@@ -1510,12 +1364,7 @@
         text-align: center;
     }
 
-    .pdf-export-wrapper .pdf-stat-card .pdf-stat-value {
-        font-size: 22px;
-        font-weight: 800;
-        color: #1a1a2e;
-    }
-
+    .pdf-export-wrapper .pdf-stat-card .pdf-stat-value { font-size: 22px; font-weight: 800; color: #1a1a2e; }
     .pdf-export-wrapper .pdf-stat-card .pdf-stat-label {
         font-size: 11px;
         text-transform: uppercase;
@@ -1523,21 +1372,11 @@
         font-weight: 600;
         letter-spacing: 0.5px;
     }
-
-    .pdf-export-wrapper .pdf-stat-card .pdf-stat-change {
-        font-size: 11px;
-        font-weight: 600;
-        margin-top: 4px;
-    }
-
+    .pdf-export-wrapper .pdf-stat-card .pdf-stat-change { font-size: 11px; font-weight: 600; margin-top: 4px; }
     .pdf-export-wrapper .pdf-stat-card .pdf-stat-change.positive { color: #10B981; }
     .pdf-export-wrapper .pdf-stat-card .pdf-stat-change.negative { color: #EF4444; }
 
-    .pdf-export-wrapper .pdf-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-    }
+    .pdf-export-wrapper .pdf-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 
     .pdf-export-wrapper .pdf-table thead th {
         background: #f9fafb;
@@ -1582,9 +1421,7 @@
     .pdf-export-wrapper .pdf-footer strong { color: #4F46E5; }
 
     /* ---------------- RESPONSIVE ---------------- */
-    @media (max-width: 1200px) {
-        .inv-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
+    @media (max-width: 1200px) { .inv-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
     @media (max-width: 992px) {
         .inv-head { flex-direction: column; align-items: flex-start; }
@@ -1777,9 +1614,7 @@
                         }
                         if(!empty($incomeDates)) {
                             sort($incomeDates);
-                            $firstIncome = $incomeDates[0];
-                            $lastIncome = end($incomeDates);
-                            echo \Carbon\Carbon::parse($firstIncome)->format('M d, Y') . ' - ' . \Carbon\Carbon::parse($lastIncome)->format('M d, Y');
+                            echo \Carbon\Carbon::parse($incomeDates[0])->format('M d, Y') . ' - ' . \Carbon\Carbon::parse(end($incomeDates))->format('M d, Y');
                         } else {
                             echo __('No records yet');
                         }
@@ -1828,9 +1663,7 @@
                         }
                         if(!empty($expenseDates)) {
                             sort($expenseDates);
-                            $firstExpense = $expenseDates[0];
-                            $lastExpense = end($expenseDates);
-                            echo \Carbon\Carbon::parse($firstExpense)->format('M d, Y') . ' - ' . \Carbon\Carbon::parse($lastExpense)->format('M d, Y');
+                            echo \Carbon\Carbon::parse($expenseDates[0])->format('M d, Y') . ' - ' . \Carbon\Carbon::parse(end($expenseDates))->format('M d, Y');
                         } else {
                             echo __('No records yet');
                         }
@@ -1917,9 +1750,7 @@
                                 {{ $transaction->type == 'income' ? '+' : '-' }} ₱{{ number_format($transaction->amount, 2) }}
                             </span>
                         </td>
-                        <td style="color: var(--inv-muted);">
-                            {{ $transaction->remarks ?? '—' }}
-                        </td>
+                        <td style="color: var(--inv-muted);">{{ $transaction->remarks ?? '—' }}</td>
                         <td style="text-align: center;">
                             <div class="inv-action-btns">
                                 <a href="{{ route('inventory.edit', $transaction->id) }}" class="inv-icon-btn edit" title="Edit">
@@ -1967,20 +1798,19 @@
             </p>
         </div>
 
-        {{-- ⭐ NEW: Live "Report Scope" preview — updates as you change filters --}}
         <div class="export-scope-box" id="exportScopeBox">
             <div class="scope-icon"><i class="fas fa-filter"></i></div>
             <div class="scope-body">
                 <span class="scope-label" data-i18n="report_scope">Report Scope</span>
-                <span class="scope-value" id="exportScopeValue">All Records (All Time)</span>
+                <span class="scope-value" id="exportScopeValue">All Months (All Time)</span>
             </div>
         </div>
 
         <div class="modal-filter-container">
             <div style="flex: 1; min-width: 200px;">
                 <label style="display:block; margin-bottom:.35rem;" data-i18n="select_months">Select Months (Hold Ctrl for multiple)</label>
-                <select id="exportFilterMonths" multiple style="width: 100%; min-height: 80px;" onchange="updateExportScope()">
-                    <option value="" data-i18n="all_months">All Months</option>
+                <select id="exportFilterMonths" multiple style="width: 100%; min-height: 80px;">
+                    <option value="" selected data-i18n="all_months">All Months</option>
                     @foreach(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'] as $num)
                         <option value="{{ $num }}">{{ \Carbon\Carbon::create()->month((int)$num)->format('F') }}</option>
                     @endforeach
@@ -2091,31 +1921,31 @@
                             <span style="color: var(--inv-rose);">*</span>
                         </label>
                         <div class="category-pills-premium">
-                            <div class="category-pill-premium selected" data-category="Sunday Offering" onclick="selectIncomeCategory(this, 'Sunday Offering')">
+                            <div class="category-pill-premium selected" onclick="selectIncomeCategory(this, 'Sunday Offering')">
                                 <i class="fas fa-church"></i> <span data-i18n="sunday_offering">Sunday Offering</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Tithes" onclick="selectIncomeCategory(this, 'Tithes')">
+                            <div class="category-pill-premium" onclick="selectIncomeCategory(this, 'Tithes')">
                                 <i class="fas fa-hand-holding-heart"></i> <span data-i18n="tithes">Tithes</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Special Donation" onclick="selectIncomeCategory(this, 'Special Donation')">
+                            <div class="category-pill-premium" onclick="selectIncomeCategory(this, 'Special Donation')">
                                 <i class="fas fa-gift"></i> <span data-i18n="special_donation">Special Donation</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Building Fund" onclick="selectIncomeCategory(this, 'Building Fund')">
+                            <div class="category-pill-premium" onclick="selectIncomeCategory(this, 'Building Fund')">
                                 <i class="fas fa-building"></i> <span data-i18n="building_fund">Building Fund</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Missions" onclick="selectIncomeCategory(this, 'Missions')">
+                            <div class="category-pill-premium" onclick="selectIncomeCategory(this, 'Missions')">
                                 <i class="fas fa-globe"></i> <span data-i18n="missions">Missions</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Benevolence" onclick="selectIncomeCategory(this, 'Benevolence')">
+                            <div class="category-pill-premium" onclick="selectIncomeCategory(this, 'Benevolence')">
                                 <i class="fas fa-hands-helping"></i> <span data-i18n="benevolence">Benevolence</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Thanksgiving" onclick="selectIncomeCategory(this, 'Thanksgiving')">
+                            <div class="category-pill-premium" onclick="selectIncomeCategory(this, 'Thanksgiving')">
                                 <i class="fas fa-hands-praying"></i> <span data-i18n="thanksgiving">Thanksgiving</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Rental Income" onclick="selectIncomeCategory(this, 'Rental Income')">
+                            <div class="category-pill-premium" onclick="selectIncomeCategory(this, 'Rental Income')">
                                 <i class="fas fa-home"></i> <span data-i18n="rental_income">Rental Income</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Other Income" onclick="selectIncomeCategory(this, 'Other Income')">
+                            <div class="category-pill-premium" onclick="selectIncomeCategory(this, 'Other Income')">
                                 <i class="fas fa-ellipsis-h"></i> <span data-i18n="other_income">Other Income</span>
                             </div>
                         </div>
@@ -2230,31 +2060,31 @@
                             <span style="color: var(--inv-rose);">*</span>
                         </label>
                         <div class="category-pills-premium">
-                            <div class="category-pill-premium selected" data-category="Church Help" onclick="selectExpenseCategory(this, 'Church Help')">
+                            <div class="category-pill-premium selected" onclick="selectExpenseCategory(this, 'Church Help')">
                                 <i class="fas fa-hands-helping"></i> <span data-i18n="church_help">Church Help</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Outreach" onclick="selectExpenseCategory(this, 'Outreach')">
+                            <div class="category-pill-premium" onclick="selectExpenseCategory(this, 'Outreach')">
                                 <i class="fas fa-hand-holding-heart"></i> <span data-i18n="outreach">Outreach</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Donation to Others" onclick="selectExpenseCategory(this, 'Donation to Others')">
+                            <div class="category-pill-premium" onclick="selectExpenseCategory(this, 'Donation to Others')">
                                 <i class="fas fa-gift"></i> <span data-i18n="donation">Donation</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Maintenance" onclick="selectExpenseCategory(this, 'Maintenance')">
+                            <div class="category-pill-premium" onclick="selectExpenseCategory(this, 'Maintenance')">
                                 <i class="fas fa-tools"></i> <span data-i18n="maintenance">Maintenance</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Utilities" onclick="selectExpenseCategory(this, 'Utilities')">
+                            <div class="category-pill-premium" onclick="selectExpenseCategory(this, 'Utilities')">
                                 <i class="fas fa-bolt"></i> <span data-i18n="utilities">Utilities</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Staff Salary" onclick="selectExpenseCategory(this, 'Staff Salary')">
+                            <div class="category-pill-premium" onclick="selectExpenseCategory(this, 'Staff Salary')">
                                 <i class="fas fa-user-tie"></i> <span data-i18n="staff_salary">Staff Salary</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Equipment" onclick="selectExpenseCategory(this, 'Equipment')">
+                            <div class="category-pill-premium" onclick="selectExpenseCategory(this, 'Equipment')">
                                 <i class="fas fa-microphone"></i> <span data-i18n="equipment">Equipment</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Events" onclick="selectExpenseCategory(this, 'Events')">
+                            <div class="category-pill-premium" onclick="selectExpenseCategory(this, 'Events')">
                                 <i class="fas fa-calendar-check"></i> <span data-i18n="events">Events</span>
                             </div>
-                            <div class="category-pill-premium" data-category="Other Expense" onclick="selectExpenseCategory(this, 'Other Expense')">
+                            <div class="category-pill-premium" onclick="selectExpenseCategory(this, 'Other Expense')">
                                 <i class="fas fa-ellipsis-h"></i> <span data-i18n="other_expense">Other Expense</span>
                             </div>
                         </div>
@@ -2359,7 +2189,7 @@
                     <p data-i18n="complete_history">Complete financial history of your church</p>
                 </div>
                 <div class="modal-header-actions">
-                    <button type="button" class="inv-btn inv-btn-primary inv-btn-icon" onclick="openExportModal()" title="Export PDF" data-i18n-title="export_pdf" aria-label="Export PDF">
+                    <button type="button" class="inv-btn inv-btn-primary inv-btn-icon" onclick="openExportModal()" title="Export PDF" aria-label="Export PDF">
                         <i class="fas fa-file-pdf"></i>
                     </button>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -2373,7 +2203,7 @@
                         <span data-i18n="month_label">Month</span>
                     </label>
                     <select id="modalFilterMonth" onchange="applyModalFilters()">
-                        <option value="" data-i18n="all_months">All Months</option>
+                        <option value="" selected data-i18n="all_months">All Months</option>
                         @foreach(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'] as $num)
                             <option value="{{ $num }}">{{ \Carbon\Carbon::create()->month((int)$num)->format('F') }}</option>
                         @endforeach
@@ -2462,8 +2292,8 @@
                             <tr>
                                 <td colspan="7">
                                     <div class="inv-empty" style="padding: 2rem;">
-                                        <i class="fas fa-receipt"></i>
-                                        <p style="font-weight: 500; color: var(--inv-muted);" data-i18n="select_filter">Select a filter to view transactions</p>
+                                        <i class="fas fa-spinner fa-spin" style="opacity: 1; color: var(--inv-primary);"></i>
+                                        <p style="font-weight: 500; color: var(--inv-muted);">Loading transactions...</p>
                                     </div>
                                 </td>
                             </tr>
@@ -2493,10 +2323,9 @@
     <div class="pdf-header">
         <h1><span data-i18n="inventory_management">Inventory Management Report</span></h1>
         <p><span data-i18n="church_financial_overview">Church financial overview - Income, Expenses, and Transactions</span></p>
-        {{-- ⭐ NEW: Clear filter line showing exactly what's included --}}
         <div class="pdf-filter-line" id="pdfFilterLine">
             <i class="fas fa-filter"></i>
-            <span id="pdfFilterText">Showing: All Records (All Time)</span>
+            <span id="pdfFilterText">Showing: All Months (All Time)</span>
         </div>
         <div class="pdf-date"><span data-i18n="generated">Generated</span>: {{ \Carbon\Carbon::now()->format('F d, Y h:i A') }}</div>
     </div>
@@ -2549,7 +2378,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // ============================================
-    // ⭐ SAFE DATE FORMATTER — prevents timezone off-by-one
+    // SAFE DATE FORMATTER
     // ============================================
     function formatDateSafe(dateStr) {
         if (!dateStr) return '—';
@@ -2576,7 +2405,7 @@
     }
 
     // ============================================
-    // ⭐ HELPER — derive the year for month filtering
+    // HELPER — derive year from week picker
     // ============================================
     function deriveYearFromWeek(weekValue) {
         if (weekValue && /^\d{4}-W\d{1,2}$/.test(weekValue)) {
@@ -2587,59 +2416,125 @@
     }
 
     // ============================================
-    // ⭐ NEW: Build a human-readable filter description
+    // ⭐ NEW: Check if a transaction falls within the selected filter
+    // Used as a client-side safety filter so the PDF matches exactly
+    // what the user picked — even if the backend is lenient.
     // ============================================
-    function buildFilterDescription(months, week, opts) {
-        opts = opts || {};
-        const allRecordsText = opts.allRecordsText || 'All Records (All Time)';
-        const showingText = opts.showingText || 'Showing';
-        const weekLabel = opts.weekLabel || 'Week';
+    function isTransactionInFilter(transaction, months, year, week) {
+        // If neither month nor week is applied → everything matches
+        if ((!months || months.length === 0) && !week) return true;
 
-        const parts = [];
-        if (months && months.length > 0) {
-            const year = deriveYearFromWeek(week);
-            parts.push(`${months.join(', ')} ${year}`);
+        const dateStr = transaction.date || transaction.created_at;
+        if (!dateStr) return false;
+
+        // Parse YYYY-MM-DD safely
+        let y, m, d;
+        if (/^\d{4}-\d{2}-\d{2}/.test(String(dateStr))) {
+            const parts = String(dateStr).substring(0, 10).split('-');
+            y = parseInt(parts[0], 10);
+            m = parts[1];           // "01".."12"
+            d = parseInt(parts[2], 10);
+        } else {
+            const dt = new Date(dateStr);
+            if (isNaN(dt.getTime())) return false;
+            y = dt.getFullYear();
+            m = String(dt.getMonth() + 1).padStart(2, '0');
+            d = dt.getDate();
         }
+
+        // Year must match if a year was derived
+        if (year && y !== parseInt(year, 10)) return false;
+
+        // Month must match if specific months were selected
+        if (months && months.length > 0 && !months.includes(m)) return false;
+
+        // Week must match if a week was selected
         if (week) {
-            parts.push(`${weekLabel} ${week}`);
+            const wkYear = parseInt(week.split('-')[0], 10);
+            const wkNum = parseInt(week.split('-W')[1], 10);
+            if (y !== wkYear) return false;
+            if (getWeekNumber(y, parseInt(m, 10), d) !== wkNum) return false;
         }
 
-        if (parts.length === 0) {
-            return `${showingText}: ${allRecordsText}`;
-        }
-        return `${showingText}: ${parts.join(' • ')}`;
+        return true;
+    }
+
+    // ISO week number helper
+    function getWeekNumber(y, m, d) {
+        const date = new Date(Date.UTC(y, m - 1, d));
+        const dayNum = date.getUTCDay() || 7;
+        date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+        const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+        return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
     }
 
     // ============================================
-    // ⭐ NEW: Update the live "Report Scope" preview in export modal
+    // "All Months" toggle for EXPORT MODAL
     // ============================================
+    function setupAllMonthsToggle() {
+        const monthsSelect = document.getElementById('exportFilterMonths');
+        if (!monthsSelect) return;
+
+        monthsSelect.addEventListener('change', function(e) {
+            const allOpt = Array.from(this.options).find(o => o.value === '');
+            const specificOpts = Array.from(this.options).filter(o => o.value !== '');
+
+            if (e.target === allOpt) {
+                if (allOpt.selected) {
+                    specificOpts.forEach(o => o.selected = false);
+                } else {
+                    const anySpecific = specificOpts.some(o => o.selected);
+                    if (!anySpecific) allOpt.selected = true;
+                }
+            } else {
+                if (e.target.selected) {
+                    if (allOpt) allOpt.selected = false;
+                } else {
+                    const anySpecific = specificOpts.some(o => o.selected);
+                    if (!anySpecific && allOpt) allOpt.selected = true;
+                }
+            }
+
+            updateExportScope();
+        });
+    }
+
+    function getExportMonthsState() {
+        const select = document.getElementById('exportFilterMonths');
+        if (!select) return { allMonths: true, months: [], monthsText: [] };
+
+        const allOpt = Array.from(select.options).find(o => o.value === '');
+        const allMonths = allOpt ? allOpt.selected : false;
+
+        const months = [];
+        const monthsText = [];
+        Array.from(select.selectedOptions).forEach(opt => {
+            if (opt.value !== '') {
+                months.push(opt.value);
+                monthsText.push(opt.text);
+            }
+        });
+
+        return { allMonths, months, monthsText };
+    }
+
     function updateExportScope() {
-        const months = Array.from(document.getElementById('exportFilterMonths').selectedOptions)
-            .map(opt => opt.value)
-            .filter(v => v !== '');
-        const monthsText = Array.from(document.getElementById('exportFilterMonths').selectedOptions)
-            .filter(opt => opt.value !== '')
-            .map(opt => opt.text);
+        const state = getExportMonthsState();
         const week = document.getElementById('exportFilterWeek').value;
 
         const el = document.getElementById('exportScopeValue');
         if (!el) return;
 
-        // Build a clear, human-friendly description
         const parts = [];
-        if (monthsText.length > 0) {
+        if (!state.allMonths && state.monthsText.length > 0) {
             const year = deriveYearFromWeek(week);
-            parts.push(`${monthsText.join(', ')} ${year}`);
+            parts.push(`${state.monthsText.join(', ')} ${year}`);
         }
         if (week) {
             parts.push(`Week ${week}`);
         }
 
-        if (parts.length === 0) {
-            el.textContent = 'All Records (All Time)';
-        } else {
-            el.textContent = parts.join(' • ');
-        }
+        el.textContent = (parts.length === 0) ? 'All Months (All Time)' : parts.join(' • ');
     }
 
     // ============================================
@@ -2667,9 +2562,7 @@
     function updateIncomePreview() {
         let amount = parseFloat(document.getElementById('incomeAmount')?.value) || 0;
         let preview = document.getElementById('incomePreviewAmount');
-        if (preview) {
-            preview.textContent = '₱' + amount.toFixed(2);
-        }
+        if (preview) preview.textContent = '₱' + amount.toFixed(2);
     }
 
     function updateExpensePreview() {
@@ -2681,9 +2574,7 @@
         let remainingSpan = document.getElementById('remainingBalance');
         let submitBtn = document.getElementById('expenseSubmitBtn');
 
-        if (previewAmount) {
-            previewAmount.textContent = '₱' + amount.toFixed(2);
-        }
+        if (previewAmount) previewAmount.textContent = '₱' + amount.toFixed(2);
 
         if (remainingSpan) {
             remainingSpan.textContent = (remainingBalance >= 0 ? '₱' : '-₱') + Math.abs(remainingBalance).toFixed(2);
@@ -2705,7 +2596,7 @@
     // EXPORT MODAL
     // ============================================
     function openExportModal() {
-        updateExportScope();  // ⭐ refresh scope when modal opens
+        updateExportScope();
         document.getElementById('exportModal').classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -2717,8 +2608,7 @@
 
     function toggleAllSections() {
         const selectAll = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.section-checkbox');
-        checkboxes.forEach(cb => cb.checked = selectAll.checked);
+        document.querySelectorAll('.section-checkbox').forEach(cb => cb.checked = selectAll.checked);
     }
 
     document.querySelectorAll('.section-checkbox').forEach(cb => {
@@ -2738,18 +2628,21 @@
 
     // ============================================
     // EXPORT DATA LOADING
+    // ⭐ FIX: Send each month as a SEPARATE months[] param
+    // ⭐ FIX: Client-side safety filter to guarantee only chosen months appear
     // ============================================
     let exportDataCache = null;
 
     function loadExportData() {
-        const months = Array.from(document.getElementById('exportFilterMonths').selectedOptions).map(opt => opt.value);
+        const state = getExportMonthsState();
         const week = document.getElementById('exportFilterWeek').value;
 
         let url = `{{ route('inventory.export-data') }}`;
         let params = [];
 
-        if (months.length > 0) {
-            params.push(`months[]=${months.join(',')}`);
+        // ⭐ Send each month as its own `months[]=` param so Laravel reads it as an array
+        if (!state.allMonths && state.months.length > 0) {
+            state.months.forEach(m => params.push(`months[]=${m}`));
             const year = deriveYearFromWeek(week);
             params.push(`year=${year}`);
         }
@@ -2776,6 +2669,39 @@
             .then(data => {
                 Swal.close();
                 if (data.success) {
+                    // ⭐ CLIENT-SIDE SAFETY FILTER
+                    // If the backend returned extra months (because it ignored or mis-parsed params),
+                    // we filter them out here so the PDF only shows exactly what was selected.
+                    const yearForFilter = (!state.allMonths && state.months.length > 0)
+                        ? deriveYearFromWeek(week) : null;
+                    const monthsForFilter = (!state.allMonths && state.months.length > 0)
+                        ? state.months : null;
+
+                    if (Array.isArray(data.transactions)) {
+                        const beforeCount = data.transactions.length;
+                        data.transactions = data.transactions.filter(t =>
+                            isTransactionInFilter(t, monthsForFilter, yearForFilter, week || null)
+                        );
+
+                        // Recalculate totals based on the filtered list
+                        let income = 0, expense = 0;
+                        data.transactions.forEach(t => {
+                            const amt = parseFloat(t.amount) || 0;
+                            if (t.type === 'income') income += amt;
+                            else expense += amt;
+                        });
+                        data.totals = {
+                            income: income.toFixed(2),
+                            expense: expense.toFixed(2),
+                            balance: (income - expense).toFixed(2),
+                            count: data.transactions.length
+                        };
+
+                        if (beforeCount !== data.transactions.length) {
+                            console.log(`Client-side filter reduced results from ${beforeCount} to ${data.transactions.length}`);
+                        }
+                    }
+
                     exportDataCache = data;
                     const foundText = window.t ? window.t('found_transactions') : 'Found';
                     const transactionsText = window.t ? window.t('transactions') : 'transactions';
@@ -2814,39 +2740,32 @@
     // ============================================
     function buildPDFContent(sections) {
         if (!exportDataCache) {
-            const noDataText = window.t ? window.t('no_data') : 'No Data';
-            const loadFirstText = window.t ? window.t('load_data_first') : 'Please load the data first by clicking "Load Data".';
             Swal.fire({
                 icon: 'warning',
-                title: noDataText,
-                text: loadFirstText,
+                title: window.t ? window.t('no_data') : 'No Data',
+                text: window.t ? window.t('load_data_first') : 'Please load the data first by clicking "Load Data".',
                 confirmButtonColor: '#4F46E5'
             });
             return false;
         }
 
         const data = exportDataCache;
-        const monthTexts = Array.from(document.getElementById('exportFilterMonths').selectedOptions)
-            .filter(opt => opt.value !== '')
-            .map(opt => opt.text);
+        const state = getExportMonthsState();
         const week = document.getElementById('exportFilterWeek').value;
 
-        // ⭐ Build a clear filter description for the PDF header
-        const filterDescription = buildFilterDescription(
-            monthTexts,
-            week,
-            {
-                showingText: 'Showing',
-                allRecordsText: 'All Records (All Time)',
-                weekLabel: 'Week'
-            }
-        );
-
-        // Set the visible filter line in the PDF header
-        const filterTextEl = document.getElementById('pdfFilterText');
-        if (filterTextEl) {
-            filterTextEl.textContent = filterDescription;
+        let filterDescription = 'Showing: ';
+        const parts = [];
+        if (!state.allMonths && state.monthsText.length > 0) {
+            const year = deriveYearFromWeek(week);
+            parts.push(`${state.monthsText.join(', ')} ${year}`);
         }
+        if (week) {
+            parts.push(`Week ${week}`);
+        }
+        filterDescription += (parts.length === 0) ? 'All Months (All Time)' : parts.join(' • ');
+
+        const filterTextEl = document.getElementById('pdfFilterText');
+        if (filterTextEl) filterTextEl.textContent = filterDescription;
 
         const reportTitle = window.t ? window.t('inventory_management') : 'Inventory Management Report';
         const generatedText = window.t ? window.t('generated') : 'Generated';
@@ -2940,8 +2859,7 @@
                 incomeHtml += `<tr style="font-weight:700;border-top:2px solid #e5e7eb;"><td>${totalIncomeLabel}</td><td style="text-align:right;color:#10B981;">₱${totalIncome.toFixed(2)}</td></tr>`;
                 incomeHtml += '</tbody></table>';
             } else {
-                const noRecords = window.t ? window.t('no_income_records') : 'No income records yet';
-                incomeHtml += `<p style="color:#999;">${noRecords}</p>`;
+                incomeHtml += `<p style="color:#999;">${window.t ? window.t('no_income_records') : 'No income records yet'}</p>`;
             }
             incomeHtml += '</div>';
 
@@ -2954,8 +2872,7 @@
                 expenseHtml += `<tr style="font-weight:700;border-top:2px solid #e5e7eb;"><td>${totalExpensesLabel}</td><td style="text-align:right;color:#EF4444;">₱${totalExpense.toFixed(2)}</td></tr>`;
                 expenseHtml += '</tbody></table>';
             } else {
-                const noRecords = window.t ? window.t('no_expense_records') : 'No expense records yet';
-                expenseHtml += `<p style="color:#999;">${noRecords}</p>`;
+                expenseHtml += `<p style="color:#999;">${window.t ? window.t('no_expense_records') : 'No expense records yet'}</p>`;
             }
             expenseHtml += '</div>';
 
@@ -2970,8 +2887,8 @@
             const body = document.getElementById('pdfTransactionsBody');
 
             let html = '';
-            const noTransactions = window.t ? window.t('no_transactions_period') : 'No transactions found for the selected period';
             if (data.transactions.length === 0) {
+                const noTransactions = window.t ? window.t('no_transactions_period') : 'No transactions found for the selected period';
                 html = `<tr><td colspan="6" style="text-align:center; color:#999; padding:20px;">${noTransactions}</td></tr>`;
             } else {
                 const incomeLabel = window.t ? window.t('income') : 'Income';
@@ -3005,12 +2922,10 @@
     function exportPrint() {
         const sections = getSelectedSections();
         if (sections.length === 0) {
-            const noSelection = window.t ? window.t('no_selection') : 'No Selection';
-            const selectSection = window.t ? window.t('select_section') : 'Please select at least one section to export.';
             Swal.fire({
                 icon: 'warning',
-                title: noSelection,
-                text: selectSection,
+                title: window.t ? window.t('no_selection') : 'No Selection',
+                text: window.t ? window.t('select_section') : 'Please select at least one section to export.',
                 confirmButtonColor: '#4F46E5'
             });
             return;
@@ -3020,30 +2935,24 @@
 
         setTimeout(() => {
             if (!exportDataCache) {
-                const notLoaded = window.t ? window.t('data_not_loaded') : 'Data Not Loaded';
-                const waitText = window.t ? window.t('wait_load_data') : 'Please wait for data to load or click "Load Data" again.';
                 Swal.fire({
                     icon: 'error',
-                    title: notLoaded,
-                    text: waitText,
+                    title: 'Data Not Loaded',
+                    text: 'Please wait for data to load or click "Load Data" again.',
                     confirmButtonColor: '#EF4444'
                 });
                 return;
             }
 
             closeExportModal();
-
-            const success = buildPDFContent(sections);
-            if (!success) return;
+            if (!buildPDFContent(sections)) return;
 
             const container = document.getElementById('pdfExportContainer');
             container.style.display = 'block';
 
-            const preparing = window.t ? window.t('preparing_print') : 'Preparing Print...';
-            const waitText = window.t ? window.t('please_wait') : 'Please wait...';
             Swal.fire({
-                title: preparing,
-                text: waitText,
+                title: 'Preparing Print...',
+                text: 'Please wait...',
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); }
             });
@@ -3051,9 +2960,7 @@
             setTimeout(() => {
                 Swal.close();
                 window.print();
-                setTimeout(() => {
-                    container.style.display = 'none';
-                }, 1000);
+                setTimeout(() => { container.style.display = 'none'; }, 1000);
             }, 500);
         }, 1000);
     }
@@ -3061,12 +2968,10 @@
     function exportPDF() {
         const sections = getSelectedSections();
         if (sections.length === 0) {
-            const noSelection = window.t ? window.t('no_selection') : 'No Selection';
-            const selectSection = window.t ? window.t('select_section') : 'Please select at least one section to export.';
             Swal.fire({
                 icon: 'warning',
-                title: noSelection,
-                text: selectSection,
+                title: window.t ? window.t('no_selection') : 'No Selection',
+                text: window.t ? window.t('select_section') : 'Please select at least one section to export.',
                 confirmButtonColor: '#4F46E5'
             });
             return;
@@ -3076,30 +2981,24 @@
 
         setTimeout(() => {
             if (!exportDataCache) {
-                const notLoaded = window.t ? window.t('data_not_loaded') : 'Data Not Loaded';
-                const waitText = window.t ? window.t('wait_load_data') : 'Please wait for data to load or click "Load Data" again.';
                 Swal.fire({
                     icon: 'error',
-                    title: notLoaded,
-                    text: waitText,
+                    title: 'Data Not Loaded',
+                    text: 'Please wait for data to load or click "Load Data" again.',
                     confirmButtonColor: '#EF4444'
                 });
                 return;
             }
 
             closeExportModal();
-
-            const success = buildPDFContent(sections);
-            if (!success) return;
+            if (!buildPDFContent(sections)) return;
 
             const container = document.getElementById('pdfExportContainer');
             container.style.display = 'block';
 
-            const generating = window.t ? window.t('generating_pdf') : 'Generating PDF...';
-            const waitText = window.t ? window.t('please_wait') : 'Please wait...';
             Swal.fire({
-                title: generating,
-                text: waitText,
+                title: 'Generating PDF...',
+                text: 'Please wait...',
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); }
             });
@@ -3115,12 +3014,10 @@
             html2pdf().set(opt).from(container).save().then(function() {
                 container.style.display = 'none';
                 Swal.close();
-                const exported = window.t ? window.t('pdf_exported') : 'PDF Exported!';
-                const successMsg = window.t ? window.t('pdf_success') : 'Your inventory report has been downloaded successfully.';
                 Swal.fire({
                     icon: 'success',
-                    title: exported,
-                    text: successMsg,
+                    title: 'PDF Exported!',
+                    text: 'Your inventory report has been downloaded successfully.',
                     timer: 2000,
                     showConfirmButton: false,
                     toast: true,
@@ -3129,12 +3026,10 @@
             }).catch(function(err) {
                 container.style.display = 'none';
                 Swal.close();
-                const failed = window.t ? window.t('export_failed') : 'Export Failed';
-                const tryAgain = window.t ? window.t('try_again') : 'Something went wrong. Please try again.';
                 Swal.fire({
                     icon: 'error',
-                    title: failed,
-                    text: err.message || tryAgain,
+                    title: 'Export Failed',
+                    text: err.message || 'Something went wrong. Please try again.',
                     confirmButtonColor: '#EF4444'
                 });
             });
@@ -3145,30 +3040,20 @@
     // DELETE TRANSACTION
     // ============================================
     function confirmDelete(id) {
-        const deleteTitle = window.t ? window.t('delete_transaction') : 'Delete Transaction?';
-        const deleteMsg = window.t ? window.t('delete_confirm') : 'This action cannot be undone. Are you sure?';
-        const confirmText = window.t ? window.t('yes_delete') : 'Yes, delete it!';
-        const cancelText = window.t ? window.t('cancel') : 'Cancel';
-        const deleting = window.t ? window.t('deleting') : 'Deleting...';
-        const waitText = window.t ? window.t('please_wait') : 'Please wait...';
-        const deletedTitle = window.t ? window.t('deleted') : 'Deleted!';
-        const successMsg = window.t ? window.t('delete_success') : 'Transaction deleted successfully.';
-        const errorTitle = window.t ? window.t('error') : 'Error';
-
         Swal.fire({
-            title: deleteTitle,
-            text: deleteMsg,
+            title: 'Delete Transaction?',
+            text: 'This action cannot be undone. Are you sure?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#EF4444',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: confirmText,
-            cancelButtonText: cancelText
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire({
-                    title: deleting,
-                    text: waitText,
+                    title: 'Deleting...',
+                    text: 'Please wait...',
                     allowOutsideClick: false,
                     didOpen: () => { Swal.showLoading(); }
                 });
@@ -3186,20 +3071,18 @@
                     if (data.success) {
                         Swal.fire({
                             icon: 'success',
-                            title: deletedTitle,
-                            text: data.message || successMsg,
+                            title: 'Deleted!',
+                            text: data.message || 'Transaction deleted successfully.',
                             timer: 2000,
                             showConfirmButton: false,
                             toast: true,
                             position: 'top-end'
                         });
-                        setTimeout(() => {
-                            location.reload();
-                        }, 500);
+                        setTimeout(() => { location.reload(); }, 500);
                     } else {
                         Swal.fire({
                             icon: 'error',
-                            title: errorTitle,
+                            title: 'Error',
                             text: data.message || 'Failed to delete transaction.',
                             confirmButtonColor: '#EF4444'
                         });
@@ -3209,8 +3092,8 @@
                     Swal.close();
                     Swal.fire({
                         icon: 'error',
-                        title: errorTitle,
-                        text: window.t ? window.t('something_wrong') : 'Something went wrong. Please try again.',
+                        title: 'Error',
+                        text: 'Something went wrong. Please try again.',
                         confirmButtonColor: '#EF4444'
                     });
                 });
@@ -3223,9 +3106,7 @@
     // ============================================
     function filterTransactions(type, event) {
         if (event) {
-            document.querySelectorAll('.filter-tab-premium').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            document.querySelectorAll('.filter-tab-premium').forEach(tab => tab.classList.remove('active'));
             event.target.closest('.filter-tab-premium').classList.add('active');
         }
 
@@ -3245,9 +3126,7 @@
         });
 
         const totalSpan = document.getElementById('modalTotalTransactions');
-        if (totalSpan) {
-            totalSpan.textContent = visibleCount;
-        }
+        if (totalSpan) totalSpan.textContent = visibleCount;
     }
 
     // ============================================
@@ -3269,9 +3148,7 @@
         });
 
         const totalSpan = document.getElementById('modalTotalTransactions');
-        if (totalSpan) {
-            totalSpan.textContent = visibleCount;
-        }
+        if (totalSpan) totalSpan.textContent = visibleCount;
     }
 
     // ============================================
@@ -3286,8 +3163,7 @@
 
         if (month) {
             params.push(`month=${month}`);
-            const year = deriveYearFromWeek(week);
-            params.push(`year=${year}`);
+            params.push(`year=${deriveYearFromWeek(week)}`);
         }
         if (week) {
             params.push(`week=${week}`);
@@ -3295,33 +3171,15 @@
 
         if (params.length > 0) {
             url += '?' + params.join('&');
-        } else {
-            const selectFilter = window.t ? window.t('select_filter') : 'Select a filter to view transactions';
-            document.getElementById('transactionsTableBody').innerHTML = `
-                <tr>
-                    <td colspan="7">
-                        <div class="inv-empty" style="padding: 2rem;">
-                            <i class="fas fa-receipt"></i>
-                            <p style="font-weight: 500; color: var(--inv-muted);">${selectFilter}</p>
-                        </div>
-                    </td>
-                </tr>
-            `;
-            document.getElementById('modalTotalIncome').textContent = '₱0.00';
-            document.getElementById('modalTotalExpense').textContent = '₱0.00';
-            document.getElementById('modalNetBalance').textContent = '₱0.00';
-            document.getElementById('modalTotalTransactions').textContent = '0';
-            return;
         }
 
         const tbody = document.getElementById('transactionsTableBody');
-        const loading = window.t ? window.t('loading_transactions') : 'Loading transactions...';
         tbody.innerHTML = `
             <tr>
                 <td colspan="7">
                     <div class="inv-empty" style="padding: 2rem;">
                         <i class="fas fa-spinner fa-spin" style="opacity: 1; color: var(--inv-primary);"></i>
-                        <p style="font-weight: 500; color: var(--inv-muted);">${loading}</p>
+                        <p style="font-weight: 500; color: var(--inv-muted);">Loading transactions...</p>
                     </div>
                 </td>
             </tr>
@@ -3333,23 +3191,19 @@
                 if (data.success) {
                     updateTransactionsTable(data.transactions, data.totals);
                 } else {
-                    const errorTitle = window.t ? window.t('error') : 'Error';
-                    const failed = window.t ? window.t('failed_load_transactions') : 'Failed to load transactions.';
                     Swal.fire({
                         icon: 'error',
-                        title: errorTitle,
-                        text: failed,
+                        title: 'Error',
+                        text: 'Failed to load transactions.',
                         confirmButtonColor: '#EF4444'
                     });
                 }
             })
             .catch(error => {
-                const errorTitle = window.t ? window.t('error') : 'Error';
-                const tryAgain = window.t ? window.t('something_wrong') : 'Something went wrong. Please try again.';
                 Swal.fire({
                     icon: 'error',
-                    title: errorTitle,
-                    text: tryAgain,
+                    title: 'Error',
+                    text: 'Something went wrong. Please try again.',
                     confirmButtonColor: '#EF4444'
                 });
             });
@@ -3371,37 +3225,30 @@
         if (totalIncomeSpan) totalIncomeSpan.textContent = '₱' + totals.income;
         if (totalExpenseSpan) totalExpenseSpan.textContent = '₱' + totals.expense;
         if (netBalanceSpan) {
-            const bal = parseFloat(totals.balance.replace(/,/g, ''));
+            const bal = parseFloat(String(totals.balance).replace(/,/g, ''));
             netBalanceSpan.textContent = (bal >= 0 ? '+' : '-') + ' ₱' + Math.abs(bal).toFixed(2);
             netBalanceSpan.style.color = bal >= 0 ? 'var(--inv-green)' : 'var(--inv-rose)';
         }
         if (totalCountSpan) totalCountSpan.textContent = totals.count;
 
         let html = '';
-        const noTransactions = window.t ? window.t('no_transactions_filter') : 'No transactions found for this filter';
         if (transactions.length === 0) {
             html = `
                 <tr>
                     <td colspan="7">
                         <div class="inv-empty" style="padding: 2rem;">
                             <i class="fas fa-receipt"></i>
-                            <p style="font-weight: 500; color: var(--inv-muted);">${noTransactions}</p>
+                            <p style="font-weight: 500; color: var(--inv-muted);">No transactions found for this filter</p>
                         </div>
                     </td>
                 </tr>
             `;
         } else {
-            const incomeLabel = window.t ? window.t('income') : 'Income';
-            const expensesLabel = window.t ? window.t('expense') : 'Expense';
-            const donorLabel = window.t ? window.t('donor') : 'Donor';
-            const recipientLabel = window.t ? window.t('recipient') : 'Recipient';
-
             transactions.forEach(t => {
                 const formattedDate = formatDateSafe(t.date || t.created_at);
-
                 const isIncome = t.type === 'income';
-                const donorHtml = (isIncome && t.donor_name) ? `<div style="font-size:.68rem;color:var(--inv-muted);margin-top:.15rem;"><i class="fas fa-user" style="font-size:.58rem;"></i> ${donorLabel}: ${t.donor_name}</div>` : '';
-                const recipientHtml = (!isIncome && t.recipient) ? `<div style="font-size:.68rem;color:var(--inv-muted);margin-top:.15rem;"><i class="fas fa-user" style="font-size:.58rem;"></i> ${recipientLabel}: ${t.recipient}</div>` : '';
+                const donorHtml = (isIncome && t.donor_name) ? `<div style="font-size:.68rem;color:var(--inv-muted);margin-top:.15rem;"><i class="fas fa-user" style="font-size:.58rem;"></i> Donor: ${t.donor_name}</div>` : '';
+                const recipientHtml = (!isIncome && t.recipient) ? `<div style="font-size:.68rem;color:var(--inv-muted);margin-top:.15rem;"><i class="fas fa-user" style="font-size:.58rem;"></i> Recipient: ${t.recipient}</div>` : '';
 
                 html += `
                     <tr data-type="${t.type}" data-search="${(t.description + ' ' + (t.category || '') + ' ' + (t.remarks || '')).toLowerCase()}" data-id="${t.id}" class="clickable-row" style="cursor:pointer;">
@@ -3416,7 +3263,7 @@
                         <td>
                             <span class="inv-type-badge ${isIncome ? 'income' : 'expense'}">
                                 <i class="fas ${isIncome ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
-                                ${isIncome ? incomeLabel : expensesLabel}
+                                ${isIncome ? 'Income' : 'Expense'}
                             </span>
                         </td>
                         <td>
@@ -3443,13 +3290,9 @@
 
         tbody.querySelectorAll('.clickable-row').forEach(row => {
             row.addEventListener('click', function(e) {
-                if (e.target.closest('.inv-action-btns') || e.target.closest('.inv-icon-btn')) {
-                    return;
-                }
+                if (e.target.closest('.inv-action-btns') || e.target.closest('.inv-icon-btn')) return;
                 const id = this.getAttribute('data-id');
-                if (id) {
-                    window.location.href = `/inventory/${id}/edit`;
-                }
+                if (id) window.location.href = `/inventory/${id}/edit`;
             });
         });
 
@@ -3457,28 +3300,20 @@
         document.querySelector('.filter-tab-premium[onclick*="all"]')?.classList.add('active');
 
         const searchVal = document.getElementById('transactionSearch').value;
-        if (searchVal) {
-            searchTransactions();
-        }
+        if (searchVal) searchTransactions();
     }
 
     // ============================================
     // INITIALIZE
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('transactionsTableBody').innerHTML = `
-            <tr>
-                <td colspan="7">
-                    <div class="inv-empty" style="padding: 2rem;">
-                        <i class="fas fa-receipt"></i>
-                        <p style="font-weight: 500; color: var(--inv-muted);">${window.t ? window.t('select_filter') : 'Select a filter to view transactions'}</p>
-                    </div>
-                </td>
-            </tr>
-        `;
-
-        // ⭐ Initialize the export scope preview
+        setupAllMonthsToggle();
         updateExportScope();
+    });
+
+    // Auto-load ALL transactions when the All Transactions modal opens
+    document.getElementById('transactionsModal')?.addEventListener('shown.bs.modal', function() {
+        applyModalFilters();
     });
 
     document.getElementById('incomeModal')?.addEventListener('shown.bs.modal', function() {
