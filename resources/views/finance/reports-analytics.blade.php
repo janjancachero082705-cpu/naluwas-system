@@ -1,1075 +1,463 @@
-@extends('layouts.sidebar')
+@extends('layouts.app')
 
-@section('header')
-    <span data-i18n="reports_analytics">{{ __("Reports & Analytics") }}</span>
-@endsection
+@section('header', 'Reports & Analytics')
+@section('subheader', __('Income, expenses and trends for your church'))
+
+@push('styles')
+    @include('finance._styles')
+@endpush
 
 @section('content')
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-<style>
-:root {
-    --primary: #3b82f6;
-    --primary-dark: #2563eb;
-    --success: #10b981;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-    --info: #8b5cf6;
-    --gray-50: #f8fafc;
-    --gray-100: #f1f5f9;
-    --gray-200: #e2e8f0;
-    --gray-600: #475569;
-    --gray-700: #334155;
-    --gray-800: #1e293b;
-    --gray-900: #0f172a;
-}
-
-.reports-container {
-    max-width: 100%;
-    margin: 0;
-}
-
-@media print {
-    .no-print, .filter-section, .action-buttons, .print-modal, .btn, .modal {
-        display: none !important;
-    }
-    .print-section { break-inside: avoid; }
-    .print-header { display: block !important; text-align: center; margin-bottom: 20px; }
-    .print-footer { display: block !important; text-align: center; margin-top: 20px; font-size: 10px; }
-}
-
-.print-header, .print-footer { display: none; }
-
-.pro-card {
-    background: white;
-    border-radius: 20px;
-    border: 1px solid var(--gray-200);
-    transition: all 0.3s ease;
-    margin-bottom: 1.5rem;
-    overflow: hidden;
-}
-
-.pro-card-header {
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--gray-200);
-    background: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.pro-card-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--gray-800);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.pro-card-title i {
-    color: var(--primary);
-    font-size: 1.2rem;
-}
-
-.pro-card-body {
-    padding: 1.5rem;
-}
-
-.kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.kpi-card {
-    background: white;
-    border-radius: 20px;
-    padding: 1.25rem;
-    border: 1px solid var(--gray-200);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--primary), var(--info));
-}
-
-.kpi-card.income::before { background: linear-gradient(90deg, #10b981, #34d399); }
-.kpi-card.expense::before { background: linear-gradient(90deg, #ef4444, #f87171); }
-.kpi-card.balance::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-.kpi-card.avg::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-
-.kpi-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.1);
-}
-
-.kpi-label {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
-    color: var(--gray-600);
-    margin-bottom: 0.5rem;
-}
-
-.kpi-value {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: var(--gray-800);
-    line-height: 1.2;
-    margin-bottom: 0.25rem;
-}
-
-.kpi-trend {
-    font-size: 0.7rem;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.trend-up { color: #10b981; }
-.trend-down { color: #ef4444; }
-
-.filter-section {
-    background: white;
-    border-radius: 20px;
-    padding: 1rem 1.5rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--gray-200);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: flex-end;
-}
-
-.filter-group {
-    flex: 1;
-    min-width: 150px;
-}
-
-.filter-group label {
-    display: block;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--gray-600);
-    margin-bottom: 0.25rem;
-}
-
-.filter-group select, .filter-group input {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--gray-200);
-    border-radius: 10px;
-    font-size: 0.85rem;
-    background: white;
-    transition: all 0.2s;
-}
-
-.filter-group select:focus, .filter-group input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.btn-pro {
-    padding: 0.5rem 1.25rem;
-    border-radius: 10px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn-pro-primary {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: white;
-}
-
-.btn-pro-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.btn-pro-secondary {
-    background: var(--gray-100);
-    color: var(--gray-700);
-    border: 1px solid var(--gray-200);
-}
-
-.btn-pro-secondary:hover {
-    background: var(--gray-200);
-}
-
-.btn-pro-info {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-    color: white;
-}
-
-.btn-pro-info:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-}
-
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.data-table th {
-    text-align: left;
-    padding: 0.75rem 0.5rem;
-    background: var(--gray-50);
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--gray-600);
-    border-bottom: 1px solid var(--gray-200);
-}
-
-.data-table td {
-    padding: 0.75rem 0.5rem;
-    font-size: 0.8rem;
-    border-bottom: 1px solid var(--gray-100);
-}
-
-.data-table tbody tr:hover {
-    background: var(--gray-50);
-}
-
-.category-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.category-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.6rem 0;
-    border-bottom: 1px solid var(--gray-100);
-}
-
-.category-name {
-    font-size: 0.85rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.category-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-}
-
-.category-dot.income { background: #10b981; }
-.category-dot.expense { background: #ef4444; }
-
-.category-amount {
-    font-size: 0.85rem;
-    font-weight: 700;
-}
-
-.income-color { color: #10b981; }
-.expense-color { color: #ef4444; }
-
-.summary-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.75rem 0;
-    margin-top: 0.5rem;
-    border-top: 2px solid var(--gray-200);
-    font-weight: 700;
-}
-
-.chart-wrapper {
-    background: white;
-    border-radius: 16px;
-    padding: 0.5rem;
-}
-
-.chart-box {
-    height: 320px;
-    position: relative;
-}
-
-.badge-pro {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.65rem;
-    font-weight: 600;
-}
-
-.badge-income { background: #d1fae5; color: #065f46; }
-.badge-expense { background: #fee2e2; color: #991b1b; }
-
-.print-modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 10000;
-    align-items: center;
-    justify-content: center;
-}
-
-.print-modal-content {
-    background: white;
-    width: 480px;
-    max-width: 90%;
-    border-radius: 20px;
-    overflow: hidden;
-    animation: modalFadeIn 0.2s ease;
-}
-
-.print-modal-header {
-    padding: 1.25rem 1.5rem;
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    color: white;
-}
-
-.print-modal-header h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-}
-
-.print-modal-body {
-    padding: 1.5rem;
-}
-
-.print-option {
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    border: 1px solid var(--gray-200);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.print-option:hover {
-    background: var(--gray-50);
-    border-color: var(--primary);
-}
-
-.print-option.selected {
-    background: #eff6ff;
-    border-color: var(--primary);
-}
-
-.print-option-title {
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.print-option-desc {
-    font-size: 0.7rem;
-    color: var(--gray-600);
-}
-
-.print-modal-footer {
-    padding: 1rem 1.5rem;
-    border-top: 1px solid var(--gray-200);
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.75rem;
-}
-
-.format-group {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--gray-200);
-}
-
-.format-label {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-.format-options {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.format-option {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    font-size: 0.8rem;
-}
-
-@keyframes modalFadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-@media (max-width: 768px) {
-    .filter-section {
-        flex-direction: column;
-    }
-    .filter-group {
-        width: 100%;
-    }
-    .kpi-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-    }
-    .kpi-value {
-        font-size: 1.25rem;
-    }
-    .pro-card-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
-</style>
-
-<div class="reports-container">
-
 @php
-    $selectedMonth = request('month');
-    $selectedYear = request('year');
-    $selectedType = request('type');
-    $churchId = session('current_church_id', auth()->user()->church_id);
+    $peso       = "\u{20B1}";
+    $month      = request('month');
+    $year       = request('year');
+    $type       = request('type');
+    $churchId   = session('current_church_id', auth()->user()->church_id);
     $churchName = auth()->user()->church->name ?? 'My Church';
-    
-    $query = App\Models\MoneyTransaction::where('church_id', $churchId);
-    if ($selectedMonth && $selectedMonth != '') $query->whereMonth('date', $selectedMonth);
-    if ($selectedYear && $selectedYear != '') $query->whereYear('date', $selectedYear);
-    if ($selectedType && $selectedType != '') $query->where('type', $selectedType);
-    
-    $transactions = $query->orderBy('date', 'desc')->get();
-    
-    $totalIncome = $transactions->where('type', 'income')->sum('amount');
-    $totalExpense = $transactions->where('type', 'expense')->sum('amount');
-    $balance = $totalIncome - $totalExpense;
-    
-    $allTimeIncome = App\Models\MoneyTransaction::where('church_id', $churchId)->where('type', 'income')->sum('amount');
-    $allTimeExpense = App\Models\MoneyTransaction::where('church_id', $churchId)->where('type', 'expense')->sum('amount');
-    $allTimeBalance = $allTimeIncome - $allTimeExpense;
-    
-    $incomeByCategory = App\Models\MoneyTransaction::where('church_id', $churchId)
-        ->where('type', 'income')
-        ->selectRaw('category, SUM(amount) as total')
-        ->groupBy('category')
+
+    $base = \App\Models\MoneyTransaction::where('church_id', $churchId);
+
+    // ---- filtered transactions (everything below uses these) ----
+    $transactions = (clone $base)
+        ->when($month, fn ($q) => $q->whereMonth('date', $month))
+        ->when($year,  fn ($q) => $q->whereYear('date', $year))
+        ->when($type,  fn ($q) => $q->where('type', $type))
+        ->orderBy('date', 'desc')
         ->get();
-    
-    $expenseByCategory = App\Models\MoneyTransaction::where('church_id', $churchId)
-        ->where('type', 'expense')
-        ->selectRaw('category, SUM(amount) as total')
-        ->groupBy('category')
+
+    $incomeRows   = $transactions->where('type', 'income');
+    $expenseRows  = $transactions->where('type', 'expense');
+    $totalIncome  = $incomeRows->sum('amount');
+    $totalExpense = $expenseRows->sum('amount');
+    $balance      = $totalIncome - $totalExpense;
+
+    $allTimeBalance = (clone $base)->where('type', 'income')->sum('amount')
+                    - (clone $base)->where('type', 'expense')->sum('amount');
+
+    $incomeByCategory  = $incomeRows->groupBy('category')->map->sum('amount')->sortDesc();
+    $expenseByCategory = $expenseRows->groupBy('category')->map->sum('amount')->sortDesc();
+    $topIncome         = $incomeRows->sortByDesc('amount')->take(5);
+    $topExpense        = $expenseRows->sortByDesc('amount')->take(5);
+
+    // ---- last 12 months chart (one query) ----
+    $start   = now()->startOfMonth()->subMonths(11);
+    $monthly = (clone $base)
+        ->where('date', '>=', $start)
+        ->selectRaw('YEAR(date) as y, MONTH(date) as m, type, SUM(amount) as total')
+        ->groupBy('y', 'm', 'type')
         ->get();
-    
-    $topIncome = App\Models\MoneyTransaction::where('church_id', $churchId)
-        ->where('type', 'income')
-        ->orderBy('amount', 'desc')
-        ->limit(5)
-        ->get();
-    
-    $topExpense = App\Models\MoneyTransaction::where('church_id', $churchId)
-        ->where('type', 'expense')
-        ->orderBy('amount', 'desc')
-        ->limit(5)
-        ->get();
-    
-    $months = [];
-    $monthlyIncome = [];
-    $monthlyExpense = [];
-    for ($i = 11; $i >= 0; $i--) {
-        $month = Carbon\Carbon::now()->subMonths($i);
-        $months[] = $month->format('M Y');
-        $monthlyIncome[] = (float) App\Models\MoneyTransaction::where('church_id', $churchId)
-            ->where('type', 'income')
-            ->whereYear('date', $month->year)
-            ->whereMonth('date', $month->month)
-            ->sum('amount');
-        $monthlyExpense[] = (float) App\Models\MoneyTransaction::where('church_id', $churchId)
-            ->where('type', 'expense')
-            ->whereYear('date', $month->year)
-            ->whereMonth('date', $month->month)
-            ->sum('amount');
+
+    $months = $monthlyIncome = $monthlyExpense = [];
+    for ($i = 0; $i < 12; $i++) {
+        $d    = $start->copy()->addMonths($i);
+        $rows = $monthly->where('y', $d->year)->where('m', $d->month);
+        $months[]         = $d->format('M Y');
+        $monthlyIncome[]  = (float) $rows->where('type', 'income')->sum('total');
+        $monthlyExpense[] = (float) $rows->where('type', 'expense')->sum('total');
     }
-    
-    $avgMonthlyIncome = $totalIncome / max(1, $transactions->pluck('date')->map(function($d) { return date('Y-m', strtotime($d)); })->unique()->count());
-    $avgMonthlyExpense = $totalExpense / max(1, $transactions->pluck('date')->map(function($d) { return date('Y-m', strtotime($d)); })->unique()->count());
-    
-    $isFiltered = ($selectedMonth && $selectedMonth != '') || ($selectedYear && $selectedYear != '');
-    $displayMonth = $selectedMonth ? date('F', mktime(0,0,0,$selectedMonth,1)) : 'All Months';
-    $displayYear = $selectedYear ?: 'All Years';
+
+    // ---- export rows ----
+    $exportRows = $transactions->map(fn ($t) => [
+        \Carbon\Carbon::parse($t->date)->toDateString(),
+        $t->description,
+        $t->category ?? '-',
+        ucfirst($t->type),
+        (float) $t->amount,
+        $t->remarks ?? '-',
+    ])->values();
+
+    $isFiltered = $month || $year;
+    $periodText = ($month ? date('F', mktime(0, 0, 0, $month, 1)) : __('All Months')) . ' ' . ($year ?: __('All Years'));
+
+    $kpis = [
+        ['fa-arrow-down',     'green', __('Total Income'),   $peso . number_format($totalIncome, 2),  $isFiltered ? __('Filtered Period') : __('All Time'), ''],
+        ['fa-arrow-up',       'red',   __('Total Expenses'), $peso . number_format($totalExpense, 2), $isFiltered ? __('Filtered Period') : __('All Time'), ''],
+        ['fa-scale-balanced', '',      __('Net Balance'),    ($balance >= 0 ? '+' : '-') . $peso . number_format(abs($balance), 2), $balance >= 0 ? __('Surplus') : __('Deficit'), $balance >= 0 ? 'trend-up' : 'trend-down'],
+        ['fa-wallet',         '',      __('Church Balance'), $peso . number_format($allTimeBalance, 2), __('Lifetime Balance'), ''],
+    ];
 @endphp
 
-{{-- Print Header --}}
-<div class="print-header">
-    <h2>{{ $churchName }}</h2>
-    <p>{{ __("Financial Report") }} - {{ now()->format('F d, Y') }}</p>
-    <p>{{ __("Period:") }} {{ $displayMonth }} {{ $displayYear }}</p>
-    <hr>
-</div>
+{{-- ============ FILTERS ============ --}}
+<form method="GET" action="{{ route('reports.analytics') }}" class="panel mb-4 no-print">
+    <div class="panel-body d-flex flex-wrap align-items-end gap-3">
+        <div style="flex:1 1 150px;">
+            <label for="month" class="form-label" data-i18n="month">{{ __("Month") }}</label>
+            <select id="month" name="month" class="form-select">
+                <option value="">{{ __("All Months") }}</option>
+                @foreach(range(1, 12) as $m)
+                    <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>{{ date('F', mktime(0, 0, 0, $m, 1)) }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div style="flex:1 1 150px;">
+            <label for="year" class="form-label" data-i18n="year">{{ __("Year") }}</label>
+            <select id="year" name="year" class="form-select">
+                <option value="">{{ __("All Years") }}</option>
+                @for($y = date('Y'); $y >= date('Y') - 5; $y--)
+                    <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>{{ $y }}</option>
+                @endfor
+            </select>
+        </div>
+        <div style="flex:1 1 150px;">
+            <label for="type" class="form-label" data-i18n="type">{{ __("Type") }}</label>
+            <select id="type" name="type" class="form-select">
+                <option value="">{{ __("All Types") }}</option>
+                <option value="income"  {{ $type == 'income'  ? 'selected' : '' }}>{{ __("Income Only") }}</option>
+                <option value="expense" {{ $type == 'expense' ? 'selected' : '' }}>{{ __("Expense Only") }}</option>
+            </select>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn-cyan"><i class="fas fa-search"></i> {{ __("Apply") }}</button>
+            <a href="{{ route('reports.analytics') }}" class="btn-ghost"><i class="fas fa-undo"></i> {{ __("Reset") }}</a>
+            <button type="button" class="btn-ghost" data-bs-toggle="modal" data-bs-target="#exportModal">
+                <i class="fas fa-download"></i> {{ __("Export") }}
+            </button>
+        </div>
+    </div>
+</form>
 
-{{-- Filter Section --}}
-<div class="filter-section no-print">
-    <div class="filter-group">
-        <label><i class="fas fa-calendar-alt"></i> <span data-i18n="month">{{ __("Month") }}</span></label>
-        <select id="monthFilter">
-            <option value="">{{ __("All Months") }}</option>
-            @foreach(range(1,12) as $m)
-                <option value="{{ $m }}" {{ $selectedMonth == $m ? 'selected' : '' }}>{{ date('F', mktime(0,0,0,$m,1)) }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="filter-group">
-        <label><i class="fas fa-calendar-year"></i> <span data-i18n="year">{{ __("Year") }}</span></label>
-        <select id="yearFilter">
-            <option value="">{{ __("All Years") }}</option>
-            @php $currentYear = date('Y'); @endphp
-            @for($y = $currentYear; $y >= $currentYear - 5; $y--)
-                <option value="{{ $y }}" {{ $selectedYear == $y ? 'selected' : '' }}>{{ $y }}</option>
-            @endfor
-        </select>
-    </div>
-    <div class="filter-group">
-        <label><i class="fas fa-chart-line"></i> <span data-i18n="type">{{ __("Type") }}</span></label>
-        <select id="typeFilter">
-            <option value="">{{ __("All Types") }}</option>
-            <option value="income" {{ $selectedType == 'income' ? 'selected' : '' }}>{{ __("Income Only") }}</option>
-            <option value="expense" {{ $selectedType == 'expense' ? 'selected' : '' }}>{{ __("Expense Only") }}</option>
-        </select>
-    </div>
-    <div class="action-buttons">
-        <button class="btn-pro btn-pro-primary" onclick="applyFilters()">
-            <i class="fas fa-search"></i> <span data-i18n="apply">{{ __("Apply") }}</span>
-        </button>
-        <button class="btn-pro btn-pro-secondary" onclick="resetFilters()">
-            <i class="fas fa-undo"></i> <span data-i18n="reset">{{ __("Reset") }}</span>
-        </button>
-        <button class="btn-pro btn-pro-info" onclick="openPrintModal()">
-            <i class="fas fa-print"></i> <span data-i18n="export">{{ __("Export") }}</span>
-        </button>
-    </div>
-</div>
-
-{{-- KPI Cards --}}
-<div class="kpi-grid print-section" id="stats-section">
-    <div class="kpi-card income">
-        <div class="kpi-label"><span data-i18n="total_income">{{ __("Total Income") }}</span></div>
-        <div class="kpi-value">₱{{ number_format($totalIncome, 2) }}</div>
-        <div class="kpi-trend trend-up">
-            <i class="fas fa-arrow-up"></i> 
-            <span data-i18n="{{ $isFiltered ? 'filtered_period' : 'all_time' }}">
-                {{ $isFiltered ? __("Filtered Period") : __("All Time") }}
-            </span>
-        </div>
-    </div>
-    <div class="kpi-card expense">
-        <div class="kpi-label"><span data-i18n="total_expenses">{{ __("Total Expenses") }}</span></div>
-        <div class="kpi-value">₱{{ number_format($totalExpense, 2) }}</div>
-        <div class="kpi-trend trend-down">
-            <i class="fas fa-arrow-down"></i> 
-            <span data-i18n="{{ $isFiltered ? 'filtered_period' : 'all_time' }}">
-                {{ $isFiltered ? __("Filtered Period") : __("All Time") }}
-            </span>
-        </div>
-    </div>
-    <div class="kpi-card balance">
-        <div class="kpi-label"><span data-i18n="net_balance">{{ __("Net Balance") }}</span></div>
-        <div class="kpi-value {{ $balance >= 0 ? 'text-success' : 'text-danger' }}">
-            {{ $balance >= 0 ? '+' : '-' }}₱{{ number_format(abs($balance), 2) }}
-        </div>
-        <div class="kpi-trend">
-            <span data-i18n="{{ $balance >= 0 ? 'surplus' : 'deficit' }}">
-                {{ $balance >= 0 ? __("Surplus") : __("Deficit") }}
-            </span>
-        </div>
-    </div>
-    <div class="kpi-card avg">
-        <div class="kpi-label"><span data-i18n="church_balance">{{ __("Church Balance") }}</span></div>
-        <div class="kpi-value">₱{{ number_format($allTimeBalance, 2) }}</div>
-        <div class="kpi-trend"><span data-i18n="lifetime_balance">{{ __("Lifetime Balance") }}</span></div>
-    </div>
-</div>
-
-{{-- Chart Section --}}
-<div class="pro-card print-section" id="chart-section">
-    <div class="pro-card-header">
-        <div class="pro-card-title">
-            <i class="fas fa-chart-line"></i> <span data-i18n="income_vs_expenses_trend">{{ __("Income vs Expenses Trend") }}</span>
-        </div>
-        <div>
-            <span class="badge-pro badge-income"><i class="fas fa-chart-line"></i> <span data-i18n="last_12_months">{{ __("Last 12 Months") }}</span></span>
-        </div>
-    </div>
-    <div class="pro-card-body">
-        <div class="chart-wrapper">
-            <div class="chart-box">
-                <canvas id="financialChart"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- Category Breakdowns --}}
-<div class="row g-4 mb-4 print-section" id="category-section">
-    <div class="col-md-6">
-        <div class="pro-card">
-            <div class="pro-card-header">
-                <div class="pro-card-title">
-                    <i class="fas fa-arrow-down text-success"></i> <span data-i18n="income_by_category">{{ __("Income by Category") }}</span>
+{{-- ============ KPI CARDS ============ --}}
+<div class="row g-3 mb-4" id="stats-section">
+    @foreach($kpis as [$icon, $color, $label, $value, $sub, $subClass])
+        <div class="col-6 col-xl-3">
+            <div class="stat-card f-stat h-100">
+                <div class="stat-icon {{ $color }}"><i class="fas {{ $icon }}"></i></div>
+                <div style="min-width:0;">
+                    <div class="stat-label">{{ $label }}</div>
+                    <div class="stat-value">{{ $value }}</div>
+                    <div class="stat-trend {{ $subClass }}">{{ $sub }}</div>
                 </div>
             </div>
-            <div class="pro-card-body">
-                <div class="category-list">
-                    @forelse($incomeByCategory as $category)
-                        <div class="category-item">
-                            <div class="category-name">
-                                <span class="category-dot income"></span>
-                                {{ $category->category ?? __("Uncategorized") }}
-                            </div>
-                            <div class="category-amount income-color">₱{{ number_format($category->total, 2) }}</div>
+        </div>
+    @endforeach
+</div>
+
+{{-- ============ TREND CHART ============ --}}
+<div class="panel mb-4" id="chart-section">
+    <div class="panel-head flex-wrap">
+        <i class="fas fa-chart-line"></i>
+        <span data-i18n="income_vs_expenses_trend">{{ __("Income vs Expenses Trend") }}</span>
+        <span class="f-pill ms-auto"><i class="fas fa-clock"></i> {{ __("Last 12 Months") }}</span>
+    </div>
+    <div class="panel-body">
+        <div class="f-legend">
+            <span><i class="income"></i> {{ __("Income") }}</span>
+            <span><i class="expense"></i> {{ __("Expenses") }}</span>
+        </div>
+        <div class="f-chart"><canvas id="financialChart"></canvas></div>
+    </div>
+</div>
+
+{{-- ============ CATEGORY BREAKDOWN ============ --}}
+<div class="row g-3 mb-4" id="category-section">
+    @foreach([
+        ['income',  __('Income by Category'),  'fa-arrow-down', $incomeByCategory,  $totalIncome,  __('No income records found')],
+        ['expense', __('Expense by Category'), 'fa-arrow-up',   $expenseByCategory, $totalExpense, __('No expense records found')],
+    ] as [$kind, $title, $icon, $list, $total, $emptyText])
+        <div class="col-md-6">
+            <div class="panel h-100">
+                <div class="panel-head"><i class="fas {{ $icon }}"></i> {{ $title }}</div>
+                <div class="panel-body">
+                    @forelse($list as $cat => $sum)
+                        <div class="f-list-item">
+                            <span><i class="f-dot {{ $kind }}"></i> {{ $cat ?: __("Uncategorized") }}</span>
+                            <strong class="f-{{ $kind }}">{{ $peso }}{{ number_format($sum, 2) }}</strong>
                         </div>
                     @empty
-                        <div class="text-center text-muted py-4"><span data-i18n="no_income_records">{{ __("No income records found") }}</span></div>
+                        <div class="f-empty py-4"><p>{{ $emptyText }}</p></div>
                     @endforelse
-                    <div class="summary-row">
-                        <span data-i18n="total_income">{{ __("Total Income") }}</span>
-                        <span class="income-color">₱{{ number_format($totalIncome, 2) }}</span>
+                    <div class="f-list-total">
+                        <span>{{ $kind == 'income' ? __("Total Income") : __("Total Expenses") }}</span>
+                        <span class="f-{{ $kind }}">{{ $peso }}{{ number_format($total, 2) }}</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="pro-card">
-            <div class="pro-card-header">
-                <div class="pro-card-title">
-                    <i class="fas fa-arrow-up text-danger"></i> <span data-i18n="expense_by_category">{{ __("Expense by Category") }}</span>
-                </div>
-            </div>
-            <div class="pro-card-body">
-                <div class="category-list">
-                    @forelse($expenseByCategory as $category)
-                        <div class="category-item">
-                            <div class="category-name">
-                                <span class="category-dot expense"></span>
-                                {{ $category->category ?? __("Uncategorized") }}
-                            </div>
-                            <div class="category-amount expense-color">₱{{ number_format($category->total, 2) }}</div>
-                        </div>
-                    @empty
-                        <div class="text-center text-muted py-4"><span data-i18n="no_expense_records">{{ __("No expense records found") }}</span></div>
-                    @endforelse
-                    <div class="summary-row">
-                        <span data-i18n="total_expenses">{{ __("Total Expenses") }}</span>
-                        <span class="expense-color">₱{{ number_format($totalExpense, 2) }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @endforeach
 </div>
 
-{{-- Top Transactions --}}
-<div class="row g-4 mb-4 print-section" id="transactions-section">
-    <div class="col-md-6">
-        <div class="pro-card">
-            <div class="pro-card-header">
-                <div class="pro-card-title">
-                    <i class="fas fa-trophy text-warning"></i> <span data-i18n="top_5_income">{{ __("Top 5 Income") }}</span>
+{{-- ============ TOP 5 ============ --}}
+<div class="row g-3 mb-4" id="transactions-section">
+    @foreach([
+        ['income',  __('Top 5 Income'),   'fa-trophy',               $topIncome,  '+'],
+        ['expense', __('Top 5 Expenses'), 'fa-exclamation-triangle', $topExpense, '-'],
+    ] as [$kind, $title, $icon, $list, $sign])
+        <div class="col-md-6">
+            <div class="panel h-100">
+                <div class="panel-head"><i class="fas {{ $icon }}"></i> {{ $title }}</div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>{{ __("Date") }}</th>
+                                <th>{{ __("Description") }}</th>
+                                <th class="text-end">{{ __("Amount") }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($list as $t)
+                                <tr>
+                                    <td>{{ \Carbon\Carbon::parse($t->date)->format('M d, Y') }}</td>
+                                    <td>{{ \Illuminate\Support\Str::limit($t->description, 25) }}</td>
+                                    <td class="text-end fw-semibold f-{{ $kind }}">{{ $sign }}{{ $peso }}{{ number_format($t->amount, 2) }}</td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="3" class="text-center text-muted">{{ __("No records") }}</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="pro-card-body">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th data-i18n="date">{{ __("Date") }}</th>
-                            <th data-i18n="description">{{ __("Description") }}</th>
-                            <th data-i18n="amount">{{ __("Amount") }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($topIncome as $t)
-                        <tr>
-                            <td>{{ \Carbon\Carbon::parse($t->date)->format('M d, Y') }}</td>
-                            <td>{{ Str::limit($t->description, 25) }}</td>
-                            <td class="text-success">+₱{{ number_format($t->amount, 2) }}</td>
-                        </tr>
-                        @empty
-                        <tr><td colspan="3" class="text-center text-muted"><span data-i18n="no_records">{{ __("No records") }}</span></td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="pro-card">
-            <div class="pro-card-header">
-                <div class="pro-card-title">
-                    <i class="fas fa-exclamation-triangle text-warning"></i> <span data-i18n="top_5_expenses">{{ __("Top 5 Expenses") }}</span>
-                </div>
-            </div>
-            <div class="pro-card-body">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th data-i18n="date">{{ __("Date") }}</th>
-                            <th data-i18n="description">{{ __("Description") }}</th>
-                            <th data-i18n="amount">{{ __("Amount") }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($topExpense as $t)
-                        <tr>
-                            <td>{{ \Carbon\Carbon::parse($t->date)->format('M d, Y') }}</td>
-                            <td>{{ Str::limit($t->description, 25) }}</td>
-                            <td class="text-danger">-₱{{ number_format($t->amount, 2) }}</td>
-                        </tr>
-                        @empty
-                        <tr><td colspan="3" class="text-center text-muted"><span data-i18n="no_records">{{ __("No records") }}</span></td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    @endforeach
 </div>
 
-{{-- All Transactions --}}
-<div class="pro-card print-section" id="all-transactions-section">
-    <div class="pro-card-header">
-        <div class="pro-card-title">
-            <i class="fas fa-list-ul"></i> <span data-i18n="all_transactions">{{ __("All Transactions") }}</span>
-        </div>
-        <div><span class="badge-pro badge-income">{{ $transactions->count() }} <span data-i18n="records">{{ __("records") }}</span></span></div>
+{{-- ============ ALL TRANSACTIONS ============ --}}
+<div class="panel" id="all-transactions-section">
+    <div class="panel-head">
+        <i class="fas fa-list-ul"></i>
+        <span data-i18n="all_transactions">{{ __("All Transactions") }}</span>
+        <span class="f-pill ms-auto">{{ $transactions->count() }} <span data-i18n="records">{{ __("records") }}</span></span>
     </div>
-    <div class="pro-card-body">
-        <div class="table-responsive">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th data-i18n="date">{{ __("Date") }}</th>
-                        <th data-i18n="description">{{ __("Description") }}</th>
-                        <th data-i18n="category">{{ __("Category") }}</th>
-                        <th data-i18n="type">{{ __("Type") }}</th>
-                        <th data-i18n="amount">{{ __("Amount") }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($transactions as $t)
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>{{ __("Date") }}</th>
+                    <th>{{ __("Description") }}</th>
+                    <th>{{ __("Category") }}</th>
+                    <th>{{ __("Type") }}</th>
+                    <th class="text-end">{{ __("Amount") }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($transactions as $t)
+                    @php $isIncome = $t->type == 'income'; @endphp
                     <tr>
                         <td>{{ \Carbon\Carbon::parse($t->date)->format('M d, Y') }}</td>
-                        <td>{{ Str::limit($t->description, 30) }}</td>
+                        <td>{{ \Illuminate\Support\Str::limit($t->description, 30) }}</td>
                         <td>{{ $t->category ?? '-' }}</td>
-                        <td><span class="badge-pro {{ $t->type == 'income' ? 'badge-income' : 'badge-expense' }}" data-i18n="{{ $t->type }}">{{ $t->type == 'income' ? __("Income") : __("Expense") }}</span></td>
-                        <td class="{{ $t->type == 'income' ? 'text-success' : 'text-danger' }}">{{ $t->type == 'income' ? '+' : '-' }} ₱{{ number_format($t->amount, 2) }}</td>
+                        <td><span class="f-pill {{ $isIncome ? 'income' : 'expense' }}">{{ $isIncome ? __("Income") : __("Expense") }}</span></td>
+                        <td class="text-end fw-semibold {{ $isIncome ? 'f-income' : 'f-expense' }}">
+                            {{ $isIncome ? '+' : '-' }}{{ $peso }}{{ number_format($t->amount, 2) }}
+                        </td>
                     </tr>
-                    @empty
-                    <tr><td colspan="5" class="text-center text-muted py-4"><span data-i18n="no_transactions_found">{{ __("No transactions found") }}</span></td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                @empty
+                    <tr>
+                        <td colspan="5">
+                            <div class="f-empty"><i class="fas fa-receipt"></i><h5>{{ __("No transactions found") }}</h5></div>
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 
-{{-- Print Footer --}}
-<div class="print-footer">
-    <p>{{ __("Generated on") }} {{ now()->format('F d, Y h:i A') }} | {{ $churchName }} {{ __("Financial Report") }}</p>
-    <p>{{ __("This is a computer-generated document. No signature required.") }}</p>
-</div>
+{{-- ============ EXPORT MODAL ============ --}}
+<div class="modal fade no-print" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exportModalLabel" style="font-size:1rem;font-weight:700;">
+                    <i class="fas fa-download me-2" style="color:var(--primary);"></i>{{ __("Export Report") }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="f-subtitle">{{ __("Include") }}</div>
+                @foreach([
+                    ['stats-section',            __('Key Metrics')],
+                    ['chart-section',            __('Trend Chart')],
+                    ['category-section',         __('Category Breakdown')],
+                    ['transactions-section',     __('Top Transactions')],
+                    ['all-transactions-section', __('All Transactions')],
+                ] as [$sectionId, $sectionLabel])
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="chk-{{ $sectionId }}" data-section="{{ $sectionId }}" checked>
+                        <label class="form-check-label" for="chk-{{ $sectionId }}">{{ $sectionLabel }}</label>
+                    </div>
+                @endforeach
 
-</div>
-
-{{-- Print Modal --}}
-<div id="printModal" class="print-modal no-print">
-    <div class="print-modal-content">
-        <div class="print-modal-header">
-            <h3><i class="fas fa-print me-2"></i> <span data-i18n="export_report">{{ __("Export Report") }}</span></h3>
-        </div>
-        <div class="print-modal-body">
-            <div class="print-option selected" onclick="togglePrintSection('stats')">
-                <div class="print-option-title">
-                    <input type="checkbox" id="chk-stats" checked class="me-2"> 📊 <span data-i18n="key_metrics">{{ __("Key Metrics") }}</span>
+                <div class="f-subtitle mt-4">{{ __("Export Format") }}</div>
+                <div class="d-flex flex-wrap gap-3">
+                    @foreach(['print' => 'Print', 'pdf' => 'PDF', 'excel' => 'Excel', 'csv' => 'CSV'] as $val => $label)
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="exportFormat" id="fmt-{{ $val }}" value="{{ $val }}" {{ $val == 'print' ? 'checked' : '' }}>
+                            <label class="form-check-label" for="fmt-{{ $val }}">{{ $label }}</label>
+                        </div>
+                    @endforeach
                 </div>
-                <div class="print-option-desc"><span data-i18n="key_metrics_desc">{{ __("Income, Expenses, Balance summary cards") }}</span></div>
+                <p class="text-muted mt-3 mb-0" style="font-size:.75rem;">
+                    {{ __("Excel and CSV export the transaction list. Sections apply to Print and PDF.") }}
+                </p>
             </div>
-            <div class="print-option selected" onclick="togglePrintSection('chart')">
-                <div class="print-option-title">
-                    <input type="checkbox" id="chk-chart" checked class="me-2"> 📈 <span data-i18n="trend_chart">{{ __("Trend Chart") }}</span>
-                </div>
-                <div class="print-option-desc"><span data-i18n="trend_chart_desc">{{ __("12-month income vs expense visualization") }}</span></div>
+            <div class="modal-footer">
+                <button type="button" class="btn-ghost" data-bs-dismiss="modal">{{ __("Cancel") }}</button>
+                <button type="button" class="btn-cyan" id="exportBtn"><i class="fas fa-download"></i> {{ __("Export") }}</button>
             </div>
-            <div class="print-option selected" onclick="togglePrintSection('category')">
-                <div class="print-option-title">
-                    <input type="checkbox" id="chk-category" checked class="me-2"> 📂 <span data-i18n="category_breakdown">{{ __("Category Breakdown") }}</span>
-                </div>
-                <div class="print-option-desc"><span data-i18n="category_breakdown_desc">{{ __("Income and expense by category") }}</span></div>
-            </div>
-            <div class="print-option selected" onclick="togglePrintSection('transactions')">
-                <div class="print-option-title">
-                    <input type="checkbox" id="chk-transactions" checked class="me-2"> 🏆 <span data-i18n="top_transactions">{{ __("Top Transactions") }}</span>
-                </div>
-                <div class="print-option-desc"><span data-i18n="top_transactions_desc">{{ __("Top 5 income and expense transactions") }}</span></div>
-            </div>
-            <div class="print-option selected" onclick="togglePrintSection('all-transactions')">
-                <div class="print-option-title">
-                    <input type="checkbox" id="chk-all-transactions" checked class="me-2"> 📋 <span data-i18n="all_transactions">{{ __("All Transactions") }}</span>
-                </div>
-                <div class="print-option-desc"><span data-i18n="all_transactions_desc">{{ __("Complete transaction history") }}</span></div>
-            </div>
-            <div class="format-group">
-                <div class="format-label"><span data-i18n="export_format">{{ __("Export Format:") }}</span></div>
-                <div class="format-options">
-                    <label class="format-option"><input type="radio" name="exportFormat" value="print" checked> 🖨️ <span data-i18n="print">{{ __("Print") }}</span></label>
-                    <label class="format-option"><input type="radio" name="exportFormat" value="pdf"> 📄 <span data-i18n="pdf">{{ __("PDF") }}</span></label>
-                    <label class="format-option"><input type="radio" name="exportFormat" value="excel"> 📊 <span data-i18n="excel">{{ __("Excel") }}</span></label>
-                    <label class="format-option"><input type="radio" name="exportFormat" value="csv"> 📎 <span data-i18n="csv">{{ __("CSV") }}</span></label>
-                </div>
-            </div>
-        </div>
-        <div class="print-modal-footer">
-            <button class="btn-pro btn-pro-secondary" onclick="closePrintModal()"><span data-i18n="cancel">{{ __("Cancel") }}</span></button>
-            <button class="btn-pro btn-pro-primary" onclick="executeExport()"><span data-i18n="export">{{ __("Export") }}</span></button>
         </div>
     </div>
 </div>
+@endsection
 
+@push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 <script>
-// ⭐ Helper function for translations
-function t(key, fallback) {
-    if (typeof window.t === 'function') return window.t(key, fallback);
-    if (typeof window.__t === 'function') return window.__t(key, fallback);
-    return fallback || key;
-}
+(function () {
+    'use strict';
 
-let financialChart = null;
+    var CHURCH  = @json($churchName);
+    var PERIOD  = @json($periodText);
+    var ROWS    = @json($exportRows);
+    var LABELS  = @json($months);
+    var INCOME  = @json($monthlyIncome);
+    var EXPENSE = @json($monthlyExpense);
+    var HEAD    = ['Date', 'Description', 'Category', 'Type', 'Amount', 'Remarks'];
+    var PESO    = '\u20B1';
+    var chart   = null;
 
-function buildFinancialChart() {
-    const canvas = document.getElementById('financialChart');
-    if (!canvas) return;
-    
-    if (financialChart) financialChart.destroy();
-    
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const tickColor = isDark ? 'rgba(255,255,255,0.4)' : '#888';
-    const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
-    const ptBorderColor = isDark ? '#1e1e1e' : '#fff';
-    
-    const incomeLabel = t('income', 'Income');
-    const expensesLabel = t('expenses', 'Expenses');
-    
-    financialChart = new Chart(canvas, {
-        type: 'line',
-        data: {
-            labels: @json($months),
-            datasets: [
-                { 
-                    label: incomeLabel, 
-                    data: @json($monthlyIncome), 
-                    borderColor: '#10b981', 
-                    backgroundColor: 'rgba(16,185,129,0.05)', 
-                    fill: true, 
-                    tension: 0.4, 
-                    pointRadius: 4, 
-                    pointBackgroundColor: '#10b981', 
-                    pointBorderColor: ptBorderColor, 
-                    pointBorderWidth: 2 
-                },
-                { 
-                    label: expensesLabel, 
-                    data: @json($monthlyExpense), 
-                    borderColor: '#ef4444', 
-                    backgroundColor: 'rgba(239,68,68,0.05)', 
-                    fill: true, 
-                    tension: 0.4, 
-                    pointRadius: 4, 
-                    pointBackgroundColor: '#ef4444', 
-                    pointBorderColor: ptBorderColor, 
-                    pointBorderWidth: 2 
-                }
-            ]
-        },
-        options: { 
-            responsive: true, 
-            maintainAspectRatio: false, 
-            plugins: { 
-                legend: { 
-                    position: 'top', 
-                    labels: { 
-                        usePointStyle: true, 
-                        boxWidth: 8,
-                        color: tickColor
-                    } 
-                }, 
-                tooltip: { 
-                    callbacks: { 
-                        label: (ctx) => `${ctx.dataset.label}: ₱${ctx.parsed.y.toLocaleString()}` 
-                    } 
-                } 
-            }, 
-            scales: { 
-                y: { 
-                    beginAtZero: true, 
-                    ticks: { 
-                        callback: (v) => '₱' + v.toLocaleString(),
-                        color: tickColor
-                    },
-                    grid: { color: gridColor }
-                },
-                x: {
-                    ticks: { color: tickColor },
-                    grid: { display: false }
-                }
-            } 
+    function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+    function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
+    function fileBase() { return CHURCH.replace(/[^a-zA-Z0-9]/g, '_') + '_Report_' + new Date().toISOString().slice(0, 10); }
+
+
+    /* ---------------- CHART ---------------- */
+    function buildChart() {
+        var canvas = document.getElementById('financialChart');
+        if (!canvas || !window.Chart) return;
+        if (chart) chart.destroy();
+
+        var grid = css('--border-color'), tick = css('--text-muted');
+
+        function line(label, data, color, dashed) {
+            return {
+                label: label, data: data, borderColor: color, backgroundColor: color + '14',
+                borderWidth: 2.5, borderDash: dashed ? [5, 4] : [], fill: true, tension: 0.4,
+                pointRadius: 3, pointBackgroundColor: color,
+                pointBorderColor: css('--bg-card'), pointBorderWidth: 2, pointHoverRadius: 5
+            };
         }
+
+        chart = new Chart(canvas, {
+            type: 'line',
+            data: { labels: LABELS, datasets: [line('Income', INCOME, '#22C55E', false), line('Expenses', EXPENSE, '#EF4444', true)] },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                interaction: { intersect: false, mode: 'index' },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: css('--bg-card'), titleColor: css('--text-main'), bodyColor: tick,
+                        borderColor: grid, borderWidth: 1, cornerRadius: 8, padding: 10,
+                        callbacks: { label: function (c) { return c.dataset.label + ': ' + PESO + c.parsed.y.toLocaleString(); } }
+                    }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: grid }, ticks: { color: tick, font: { size: 10 }, callback: function (v) { return PESO + v.toLocaleString(); } } },
+                    x: { grid: { display: false }, ticks: { color: tick, font: { size: 10 } } }
+                }
+            }
+        });
+    }
+
+    buildChart();
+    window.addEventListener('themechanged', buildChart);   // fired by app-shell.js
+
+
+    /* ---------------- EXPORT ---------------- */
+    function selectedHtml() {
+        var html = '';
+        document.querySelectorAll('#exportModal [data-section]:checked').forEach(function (cb) {
+            var el = document.getElementById(cb.dataset.section);
+            if (!el) return;
+            var clone = el.cloneNode(true);
+            clone.querySelectorAll('canvas').forEach(function (c) {
+                if (chart) {
+                    var img = new Image();
+                    img.src = chart.toBase64Image();
+                    img.style.maxWidth = '100%';
+                    c.replaceWith(img);
+                } else { c.remove(); }
+            });
+            html += clone.outerHTML;
+        });
+        return html;
+    }
+
+    function reportHtml() {
+        return '<div style="text-align:center;border-bottom:2px solid #333;margin-bottom:16px;padding-bottom:8px;">' +
+                   '<h2>' + esc(CHURCH) + '</h2>' +
+                   '<p>Financial Report - ' + new Date().toLocaleDateString() + '</p>' +
+                   '<p>' + esc(PERIOD) + '</p>' +
+               '</div>' + selectedHtml() +
+               '<p style="text-align:center;font-size:10px;margin-top:16px;border-top:1px solid #ccc;padding-top:8px;">Generated on ' +
+               new Date().toLocaleString() + ' | ' + esc(CHURCH) + '</p>';
+    }
+
+    var PRINT_CSS =
+        'body{font-family:Arial,sans-serif;margin:24px;color:#111}' +
+        '.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.col-6,.col-xl-3{display:block}' +
+        '#stats-section{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}' +
+        '.stat-card{border:1px solid #ddd;border-radius:8px;padding:12px}.stat-icon{display:none}' +
+        '.stat-label{font-size:10px;text-transform:uppercase;color:#666}.stat-value{font-size:20px;font-weight:700}' +
+        '.panel{border:1px solid #ddd;border-radius:8px;margin:14px 0;break-inside:avoid}' +
+        '.panel-head{padding:10px 14px;font-weight:700;border-bottom:1px solid #ddd}.panel-body{padding:14px}' +
+        'table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid #eee;padding:6px;text-align:left;font-size:12px}' +
+        '.text-end{text-align:right!important}.f-income{color:#16a34a}.f-expense{color:#dc2626}' +
+        '.f-list-item,.f-list-total{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee}' +
+        '.f-legend,.f-dot,.f-pill i{display:none}.f-pill{font-size:11px}';
+
+    function doPrint() {
+        var w = window.open('', '_blank');
+        w.document.write('<!DOCTYPE html><html><head><title>' + esc(CHURCH) + ' Report</title><style>' + PRINT_CSS + '</style></head><body>' + reportHtml() + '</body></html>');
+        w.document.close();
+        w.focus();
+        w.print();
+    }
+
+    function doPdf() {
+        var el = document.createElement('div');
+        el.style.padding = '20px';
+        el.innerHTML = reportHtml();
+        html2pdf().set({
+            margin: 0.5, filename: fileBase() + '.pdf',
+            image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        }).from(el).save();
+    }
+
+    function doExcel() {
+        var ws = XLSX.utils.aoa_to_sheet([HEAD].concat(ROWS));
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Financial Report');
+        XLSX.writeFile(wb, fileBase() + '.xlsx');
+    }
+
+    function doCsv() {
+        var cell = function (v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; };
+        var lines = [HEAD].concat(ROWS).map(function (r) { return r.map(cell).join(','); });
+        var blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = fileBase() + '.csv';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    document.getElementById('exportBtn').addEventListener('click', function () {
+        var format = document.querySelector('input[name="exportFormat"]:checked').value;
+        var modal = bootstrap.Modal.getInstance(document.getElementById('exportModal'));
+        if (modal) modal.hide();
+        ({ print: doPrint, pdf: doPdf, excel: doExcel, csv: doCsv })[format]();
     });
-}
 
-document.addEventListener('DOMContentLoaded', buildFinancialChart);
-
-let selectedSections = { stats: true, chart: true, category: true, transactions: true, allTransactions: true };
-
-function openPrintModal() { document.getElementById('printModal').style.display = 'flex'; }
-function closePrintModal() { document.getElementById('printModal').style.display = 'none'; }
-
-function togglePrintSection(section) { 
-    let cb = document.getElementById(`chk-${section}`); 
-    cb.checked = !cb.checked; 
-    selectedSections[section] = cb.checked; 
-    cb.closest('.print-option').classList.toggle('selected', cb.checked); 
-}
-
-function applyFilters() { 
-    let url = "{{ route('reports.analytics') }}?"; 
-    if (document.getElementById('monthFilter').value) url += 'month=' + document.getElementById('monthFilter').value + '&'; 
-    if (document.getElementById('yearFilter').value) url += 'year=' + document.getElementById('yearFilter').value + '&'; 
-    if (document.getElementById('typeFilter').value) url += 'type=' + document.getElementById('typeFilter').value + '&'; 
-    window.location.href = url; 
-}
-
-function resetFilters() { window.location.href = "{{ route('reports.analytics') }}"; }
-
-function executeExport() {
-    let format = document.querySelector('input[name="exportFormat"]:checked').value;
-    closePrintModal();
-    if (format === 'print') printSelected();
-    else if (format === 'pdf') generatePDF();
-    else if (format === 'excel') exportToExcel();
-    else if (format === 'csv') exportToCSV();
-}
-
-function printSelected() {
-    let content = '<div class="print-header"><h2>{{ $churchName }}</h2><p>' + t('financial_report', 'Financial Report') + ' - ' + new Date().toLocaleDateString() + '</p><hr></div>';
-    if (selectedSections.stats) content += document.getElementById('stats-section').innerHTML;
-    if (selectedSections.chart) content += document.getElementById('chart-section').innerHTML;
-    if (selectedSections.category) content += document.getElementById('category-section').innerHTML;
-    if (selectedSections.transactions) content += document.getElementById('transactions-section').innerHTML;
-    if (selectedSections.allTransactions) content += document.getElementById('all-transactions-section').innerHTML;
-    content += '<div class="print-footer"><p>' + t('generated_on', 'Generated on') + ' ' + new Date().toLocaleString() + '</p></div>';
-    let w = window.open('', '_blank');
-    w.document.write(`<!DOCTYPE html><html><head><title>{{ $churchName }} ` + t('report', 'Report') + `</title><style>body{font-family:Arial,sans-serif;margin:20px}.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.kpi-card{border:1px solid #ddd;border-radius:10px;padding:15px;text-align:center}.kpi-value{font-size:24px;font-weight:bold}.text-success{color:#10b981}.text-danger{color:#ef4444}.data-table{width:100%;border-collapse:collapse}.data-table th,.data-table td{border:1px solid #ddd;padding:8px;text-align:left}.data-table th{background:#f5f5f5}.category-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee}.summary-row{display:flex;justify-content:space-between;padding:10px 0;border-top:2px solid #ddd;font-weight:bold}.print-header{text-align:center;margin-bottom:20px;border-bottom:2px solid #333}.print-footer{text-align:center;margin-top:20px;border-top:1px solid #ccc;padding-top:10px;font-size:10px}.badge-pro{padding:3px 8px;border-radius:5px;font-size:11px}.badge-income{background:#d1fae5;color:#065f46}.badge-expense{background:#fee2e2;color:#991b1b}</style></head><body>${content}</body></html>`);
-    w.document.close(); 
-    w.print();
-}
-
-function generatePDF() {
-    let element = document.createElement('div'); 
-    element.style.padding = '20px';
-    let content = '<div class="print-header"><h2>{{ $churchName }}</h2><p>' + t('financial_report', 'Financial Report') + ' - ' + new Date().toLocaleDateString() + '</p><hr></div>';
-    if (selectedSections.stats) content += document.getElementById('stats-section').innerHTML;
-    if (selectedSections.chart) content += document.getElementById('chart-section').innerHTML;
-    if (selectedSections.category) content += document.getElementById('category-section').innerHTML;
-    if (selectedSections.transactions) content += document.getElementById('transactions-section').innerHTML;
-    if (selectedSections.allTransactions) content += document.getElementById('all-transactions-section').innerHTML;
-    content += '<div class="print-footer"><p>' + t('generated_on', 'Generated on') + ' ' + new Date().toLocaleString() + '</p></div>';
-    element.innerHTML = content;
-    html2pdf().set({ 
-        margin: [0.5,0.5,0.5,0.5], 
-        filename: '{{ preg_replace('/[^a-zA-Z0-9]/', '_', $churchName) }}_Report.pdf', 
-        image: { type: 'jpeg', quality: 0.98 }, 
-        html2canvas: { scale: 2 }, 
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } 
-    }).from(element).save();
-}
-
-function exportToExcel() {
-    let data = [[
-        t('date', 'Date'),
-        t('description', 'Description'),
-        t('category', 'Category'),
-        t('type', 'Type'),
-        t('amount', 'Amount'),
-        t('remarks', 'Remarks')
-    ]];
-    @foreach($transactions as $t)
-    data.push(['{{ $t->date }}', '{{ addslashes($t->description) }}', '{{ $t->category ?? "-" }}', '{{ ucfirst($t->type) }}', {{ $t->amount }}, '{{ addslashes($t->remarks ?? "-") }}']); 
-    @endforeach
-    let ws = XLSX.utils.aoa_to_sheet(data); 
-    let wb = XLSX.utils.book_new(); 
-    XLSX.utils.book_append_sheet(wb, ws, t('financial_report', 'Financial Report')); 
-    XLSX.writeFile(wb, `{{ preg_replace('/[^a-zA-Z0-9]/', '_', $churchName) }}_Report_${new Date().toISOString().slice(0,10)}.xlsx`);
-}
-
-function exportToCSV() {
-    let csv = t('date', 'Date') + ',' + t('description', 'Description') + ',' + t('category', 'Category') + ',' + t('type', 'Type') + ',' + t('amount', 'Amount') + ',' + t('remarks', 'Remarks') + '\n';
-    @foreach($transactions as $t)
-    csv += `"{{ $t->date }}","{{ addslashes($t->description) }}","{{ $t->category ?? "-" }}","{{ ucfirst($t->type) }}",{{ $t->amount }},"{{ addslashes($t->remarks ?? "-") }}"\n`; 
-    @endforeach
-    let blob = new Blob([csv], { type: 'text/csv' }); 
-    let link = document.createElement('a'); 
-    link.href = URL.createObjectURL(blob); 
-    link.download = `{{ preg_replace('/[^a-zA-Z0-9]/', '_', $churchName) }}_Report_${new Date().toISOString().slice(0,10)}.csv`; 
-    link.click(); 
-    URL.revokeObjectURL(link.href);
-}
-
-// ⭐ LISTEN FOR LANGUAGE CHANGES
-window.addEventListener('localeChanged', function(e) {
-    if (typeof window.applyTranslations === 'function') {
-        window.applyTranslations();
-    }
-    buildFinancialChart();
-    console.log('[Reports] Locale changed to:', e.detail.locale);
-});
-
-// ⭐ Rebuild chart on theme change
-document.addEventListener('click', function(e) {
-    if (e.target.closest('#themeToggleBtn')) {
-        setTimeout(buildFinancialChart, 150);
-    }
-});
+    window.addEventListener('localeChanged', function () {
+        if (typeof window.applyTranslations === 'function') window.applyTranslations();
+    });
+})();
 </script>
-
-@endsection
+@endpush

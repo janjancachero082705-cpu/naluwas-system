@@ -2,52 +2,66 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MoneyTransaction extends Model
 {
-    use HasFactory;
+    public const INCOME  = 'income';   // Sunday collection
+    public const EXPENSE = 'expense';  // deduction
 
-    protected $table = 'money_transactions';
+    public const FUNDS = [
+        'fellowship' => 'Fellowship',
+        'missions'   => 'Missions',
+        'offering'   => 'Offering',
+    ];
 
     protected $fillable = [
-        'description',
-        'type',
-        'category',
-        'amount',
-        'recipient',
-        'donor_name',
-        'remarks',
-        'date',
-        'church_id',
+        'church_id', 'type', 'fund', 'category', 'description', 'amount', 'date',
+        'donor_name', 'recipient', 'purpose', 'remarks', 'created_by',
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
-        'date' => 'date',
+        'date'   => 'date',
     ];
 
-    public function church()
-    {
-        return $this->belongsTo(Church::class);
-    }
-
-    // Scope for current church
-    public function scopeForChurch($query, $churchId)
+    public function scopeForChurch(Builder $query, int $churchId): Builder
     {
         return $query->where('church_id', $churchId);
     }
 
-    // Scope for income only
-    public function scopeIncome($query)
+    public function isCollection(): bool
     {
-        return $query->where('type', 'income');
+        return $this->type === self::INCOME;
     }
 
-    // Scope for expense only
-    public function scopeExpense($query)
+    public function fundLabel(): string
     {
-        return $query->where('type', 'expense');
+        return self::FUNDS[$this->fund] ?? ucfirst((string) $this->fund);
     }
-}
+
+    public static function fundBalance(int $churchId, string $fund, ?int $excludeId = null, bool $lock = false): float
+    {
+        $query = static::query()
+            ->where('church_id', $churchId)
+            ->where('fund', $fund);
+
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+        if ($lock) {
+            $query->lockForUpdate();
+        }
+
+        $row = $query->selectRaw(
+            "COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END), 0) AS balance"
+        )->first();
+
+        return round((float) ($row->balance ?? 0), 2);
+    }
+
+    public function church(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Church::class, 'church_id');
+    }}

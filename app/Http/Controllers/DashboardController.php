@@ -2,369 +2,77 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Member;
-use App\Models\ChoirSchedule;
-use App\Models\Attendance;
 use App\Models\MoneyTransaction;
 use App\Models\InventoryItem;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $churchId = session('current_church_id', auth()->user()->church_id);
+        $user = Auth::user();
+        $churchId = $user->church_id ?? 1;
 
-        // Get current month and year
-        $currentMonth = Carbon::now()->month;
-        $currentYear  = Carbon::now()->year;
-
-        // ─────────────────────────────────────────
-        // FINANCIAL STATS
-        // ─────────────────────────────────────────
-        $totalIncome  = MoneyTransaction::where('church_id', $churchId)->where('type', 'income')->sum('amount');
-        $totalExpense = MoneyTransaction::where('church_id', $churchId)->where('type', 'expense')->sum('amount');
-
-        $monthlyIncome = MoneyTransaction::where('church_id', $churchId)
-            ->where('type', 'income')
-            ->whereMonth('date', $currentMonth)
-            ->whereYear('date', $currentYear)
-            ->sum('amount');
-
-        $monthlyExpense = MoneyTransaction::where('church_id', $churchId)
-            ->where('type', 'expense')
-            ->whereMonth('date', $currentMonth)
-            ->whereYear('date', $currentYear)
-            ->sum('amount');
-
-        $balance        = $totalIncome - $totalExpense;
-        $monthlyBalance = $monthlyIncome - $monthlyExpense;
-
-        // ─────────────────────────────────────────
-        // MEMBER STATS
-        // ─────────────────────────────────────────
+        // 1. MEMBERS STATS
         $totalMembers = Member::where('church_id', $churchId)->where('is_deceased', false)->count();
-        $choirMembers = Member::where('church_id', $churchId)->where('is_choir', true)->where('is_deceased', false)->count();
+        $choirMembers = Member::where('church_id', $churchId)->where('is_deceased', false)->where('is_choir', true)->count();
+        
+        // Gender Demographics
+        $maleCount = Member::where('church_id', $churchId)->where('is_deceased', false)->where('gender', 'male')->count();
+        $femaleCount = Member::where('church_id', $churchId)->where('is_deceased', false)->where('gender', 'female')->count();
 
-        $newMembersThisMonth = Member::where('church_id', $churchId)
-            ->where('is_deceased', false)
-            ->whereMonth('created_at', $currentMonth)
-            ->whereYear('created_at', $currentYear)
-            ->count();
-
-        // ─────────────────────────────────────────
-        // TODAY'S ATTENDANCE
-        // ─────────────────────────────────────────
-        $todayAttendance = Attendance::where('church_id', $churchId)
-            ->whereDate('service_date', Carbon::today())
-            ->count();
-
-        // ─────────────────────────────────────────
-        // RECENT MEMBERS
-        // ─────────────────────────────────────────
-        $recentMembers = Member::where('church_id', $churchId)
-            ->where('is_deceased', false)
-            ->orderBy('created_at', 'desc')
-            ->limit(5)
-            ->get();
-
-        // ─────────────────────────────────────────
-        // UPCOMING BIRTHDAYS
-        // ─────────────────────────────────────────
-        $upcomingBirthdays = Member::where('church_id', $churchId)
-            ->where('is_deceased', false)
-            ->whereNotNull('birthday')
-            ->whereRaw("DATE_FORMAT(birthday, '%m-%d') >= DATE_FORMAT(NOW(), '%m-%d')")
-            ->orderByRaw("DATE_FORMAT(birthday, '%m-%d')")
-            ->limit(10)
-            ->get();
-
-        foreach ($upcomingBirthdays as $birthday) {
-            $birthdayDate = Carbon::parse($birthday->birthday);
-            $today        = Carbon::today();
-            $nextBirthday = Carbon::create($today->year, $birthdayDate->month, $birthdayDate->day);
-
-            if ($nextBirthday->lt($today)) {
-                $nextBirthday->addYear();
-            }
-
-            $birthday->days_until = $today->diffInDays($nextBirthday);
-            $birthday->age        = $nextBirthday->year - $birthdayDate->year;
+        // 2. ATTENDANCE STATS
+        $dateColumn = 'created_at';
+        if (Schema::hasColumn('attendances', 'date')) {
+            $dateColumn = 'date';
+        } elseif (Schema::hasColumn('attendances', 'attendance_date')) {
+            $dateColumn = 'attendance_date';
+        } elseif (Schema::hasColumn('attendances', 'service_date')) {
+            $dateColumn = 'service_date';
         }
+        $todayAttendance = 0; // attendance removed
 
-        // ─────────────────────────────────────────
-        // UPCOMING SUNDAY SCHEDULES
-        // ─────────────────────────────────────────
-        $upcomingSunday  = $this->getUpcomingSundaySchedule(0);
-        $nextSunday      = $this->getUpcomingSundaySchedule(7);
-        $followingSunday = $this->getUpcomingSundaySchedule(14);
+        // 3. FINANCE STATS
+        $totalIncome = MoneyTransaction::where('church_id', $churchId)->where('type', 'income')->sum('amount');
+        $totalExpense = MoneyTransaction::where('church_id', $churchId)->where('type', 'expense')->sum('amount');
+        $monthlyBalance = $totalIncome - $totalExpense;
 
-        // Next 4 weeks
-        $nextWeeks = [];
-        for ($i = 7; $i <= 28; $i += 7) {
-            $nextWeeks[] = $this->getUpcomingSundaySchedule($i);
-        }
+        // 4. RECENT TRANSACTIONS
+        $txDateColumn = Schema::hasColumn('money_transactions', 'date') ? 'date' : 'created_at';
+        $recentActivities = MoneyTransaction::where('church_id', $churchId)->latest($txDateColumn)->take(5)->get();
 
-        // ─────────────────────────────────────────
-        // RECENT TRANSACTIONS
-        // ─────────────────────────────────────────
-        $recentTransactions = MoneyTransaction::where('church_id', $churchId)
-            ->orderBy('created_at', 'desc')
-            ->limit(5)
-            ->get();
-
-        // Recent activities (for compatibility with dashboard view)
-        $recentActivities = $recentTransactions;
-
-        // ─────────────────────────────────────────
-        // CHART DATA (last 6 months)
-        // ─────────────────────────────────────────
-        $months      = [];
-        $incomeData  = [];
-        $expenseData = [];
-        $monthlyData = []; // ⭐ For dashboard chart
-
+        // 5. CHART DATA (Last 6 Months)
+        $monthlyData = [];
         for ($i = 5; $i >= 0; $i--) {
-            $month      = Carbon::now()->subMonths($i);
-            $monthLabel = $month->format('M');
+            $date = Carbon::now()->subMonths($i);
+            $inc = MoneyTransaction::where('church_id', $churchId)->where('type', 'income')->whereMonth($txDateColumn, $date->month)->whereYear($txDateColumn, $date->year)->sum('amount');
+            $exp = MoneyTransaction::where('church_id', $churchId)->where('type', 'expense')->whereMonth($txDateColumn, $date->month)->whereYear($txDateColumn, $date->year)->sum('amount');
 
-            $months[] = $monthLabel;
-
-            $income = MoneyTransaction::where('church_id', $churchId)
-                ->where('type', 'income')
-                ->whereMonth('date', $month->month)
-                ->whereYear('date', $month->year)
-                ->sum('amount');
-
-            $expense = MoneyTransaction::where('church_id', $churchId)
-                ->where('type', 'expense')
-                ->whereMonth('date', $month->month)
-                ->whereYear('date', $month->year)
-                ->sum('amount');
-
-            $incomeData[]  = (float) $income;
-            $expenseData[] = (float) $expense;
-
-            // ⭐ For dashboard chart
             $monthlyData[] = [
-                'month'   => $monthLabel,
-                'income'  => (float) $income,
-                'expense' => (float) $expense,
+                'month'   => $date->format('M'),
+                'income'  => (float) $inc,
+                'expense' => (float) $exp,
             ];
         }
+
+        // 6. MINISTRY FUNDS
+        $fundBalances = InventoryItem::where('church_id', $churchId)->orderBy('quantity', 'desc')->take(4)->get();
+        $inventoryValue = InventoryItem::where('church_id', $churchId)->sum('quantity');
+
+        // 7. UPCOMING BIRTHDAYS
+        $upcomingBirthdays = Member::where('church_id', $churchId)
+            ->where('is_deceased', false)->whereNotNull('birthday')
+            ->whereRaw("DATE_FORMAT(birthday, '%m-%d') >= DATE_FORMAT(NOW(), '%m-%d')")
+            ->orderByRaw("DATE_FORMAT(birthday, '%m-%d')")->limit(4)->get();
 
         return view('dashboard', compact(
-            'totalMembers', 'choirMembers', 'newMembersThisMonth', 'todayAttendance',
-            'monthlyBalance', 'totalIncome', 'totalExpense', 'balance',
-            'monthlyIncome', 'monthlyExpense',
-            'recentMembers', 'upcomingBirthdays',
-            'upcomingSunday', 'nextSunday', 'followingSunday', 'nextWeeks',
-            'recentTransactions', 'recentActivities',
-            'months', 'incomeData', 'expenseData',
-            'monthlyData' // ⭐ IDAGDAG ITO
+            'totalIncome', 'totalExpense', 'monthlyBalance', 'totalMembers', 
+            'choirMembers', 'todayAttendance', 'recentActivities', 'monthlyData', 
+            'maleCount', 'femaleCount', 'fundBalances', 'upcomingBirthdays', 'inventoryValue'
         ));
-    }
-
-    /**
-     * Get the schedule for an upcoming Sunday
-     */
-    private function getUpcomingSundaySchedule($daysFromNow = 0)
-    {
-        $churchId = session('current_church_id', auth()->user()->church_id);
-
-        // Calculate the target Sunday
-        $targetDate = Carbon::now()->addDays($daysFromNow);
-        while ($targetDate->dayOfWeek != Carbon::SUNDAY) {
-            $targetDate->addDay();
-        }
-        $dateStr = $targetDate->format('Y-m-d');
-
-        // Get the schedule for this date
-        $schedule = ChoirSchedule::where('church_id', $churchId)
-            ->where('service_date', $dateStr)
-            ->with('group')
-            ->first();
-
-        if (!$schedule || !$schedule->group_id) {
-            return [
-                'date'          => $dateStr,
-                'group_name'    => 'Not Scheduled',
-                'group_color'   => '#6b7280',
-                'members_count' => 0,
-                'members'       => collect(),
-            ];
-        }
-
-        // Get members directly from the schedule's members relationship
-        $members = $schedule->members;
-
-        return [
-            'date'          => $dateStr,
-            'group_name'    => $schedule->group->name,
-            'group_color'   => $schedule->group->color,
-            'members_count' => $members->count(),
-            'members'       => $members->take(5),
-        ];
-    }
-
-    /**
-     * Get notifications for the authenticated user
-     */
-    public function getNotifications()
-    {
-        $user     = Auth::user();
-        $churchId = session('current_church_id', $user->church_id);
-        $today    = Carbon::today();
-        $next7Days = Carbon::today()->addDays(7);
-
-        $notifications = [];
-
-        // ─────────────────────────────────────────
-        // 1. Check for upcoming birthdays (next 7 days)
-        // ─────────────────────────────────────────
-        $birthdays = Member::where('church_id', $churchId)
-            ->where('is_deceased', false)
-            ->whereNotNull('birthday')
-            ->whereRaw("DATE_FORMAT(birthday, '%m-%d') BETWEEN ? AND ?", [
-                $today->format('m-d'),
-                $next7Days->format('m-d'),
-            ])
-            ->orderByRaw("DATE_FORMAT(birthday, '%m-%d')")
-            ->limit(5)
-            ->get();
-
-        foreach ($birthdays as $member) {
-            $birthDate         = Carbon::parse($member->birthday);
-            $birthDateThisYear = Carbon::createFromDate($today->year, $birthDate->month, $birthDate->day);
-
-            if ($birthDateThisYear->isPast()) {
-                $birthDateThisYear->addYear();
-            }
-
-            $daysUntil = $today->diffInDays($birthDateThisYear);
-
-            if ($daysUntil == 0) {
-                $message   = "🎂 Today is {$member->first_name} {$member->last_name}'s birthday!";
-                $timeLabel = "Today";
-            } elseif ($daysUntil == 1) {
-                $message   = "🎂 {$member->first_name} {$member->last_name}'s birthday is tomorrow!";
-                $timeLabel = "Tomorrow";
-            } else {
-                $message   = "🎂 {$member->first_name} {$member->last_name}'s birthday is in {$daysUntil} days";
-                $timeLabel = "In {$daysUntil} days";
-            }
-
-            $notifications[] = [
-                'id'         => 'birthday_' . $member->id,
-                'title'      => 'Upcoming Birthday 🎂',
-                'message'    => $message,
-                'type'       => 'birthday',
-                'link'       => route('members.show', $member->id),
-                'time'       => $timeLabel,
-                'created_at' => now()->toISOString(),
-            ];
-        }
-
-        // ─────────────────────────────────────────
-        // 2. Check for upcoming choir schedules (next 7 days)
-        // ─────────────────────────────────────────
-        $upcomingSchedules = ChoirSchedule::where('church_id', $churchId)
-            ->where('service_date', '>=', $today)
-            ->where('service_date', '<=', $next7Days)
-            ->orderBy('service_date', 'asc')
-            ->limit(5)
-            ->get();
-
-        foreach ($upcomingSchedules as $schedule) {
-            $scheduleDate = Carbon::parse($schedule->service_date);
-            $daysUntil    = $today->diffInDays($scheduleDate);
-
-            if ($daysUntil == 0) {
-                $timeLabel = "Today";
-            } elseif ($daysUntil == 1) {
-                $timeLabel = "Tomorrow";
-            } else {
-                $timeLabel = "In {$daysUntil} days";
-            }
-
-            $groupName = $schedule->group ? $schedule->group->name : 'Choir';
-
-            $notifications[] = [
-                'id'         => 'schedule_' . $schedule->id,
-                'title'      => 'Choir Schedule 🎵',
-                'message'    => "{$groupName} is scheduled for " . $scheduleDate->format('D, M d, Y'),
-                'type'       => 'schedule',
-                'link'       => route('choir-schedules.index'),
-                'time'       => $timeLabel,
-                'created_at' => $schedule->created_at,
-            ];
-        }
-
-        // ─────────────────────────────────────────
-        // 3. Check for attendance reminder (if Sunday & no attendance)
-        // ─────────────────────────────────────────
-        if ($today->isSunday()) {
-            $todayAttendance = Attendance::where('church_id', $churchId)
-                ->whereDate('service_date', $today)
-                ->count();
-
-            if ($todayAttendance == 0) {
-                $notifications[] = [
-                    'id'         => 'attendance_reminder',
-                    'title'      => 'Attendance Reminder 📋',
-                    'message'    => "No attendance recorded for today's Sunday service. Don't forget to mark attendance!",
-                    'type'       => 'reminder',
-                    'link'       => route('sunday-attendance.index'),
-                    'time'       => 'Today',
-                    'created_at' => now()->toISOString(),
-                ];
-            }
-        }
-
-        // ─────────────────────────────────────────
-        // 4. Check for low inventory items
-        // ─────────────────────────────────────────
-        if (class_exists(InventoryItem::class)) {
-            $lowInventory = InventoryItem::where('church_id', $churchId)
-                ->whereColumn('quantity', '<=', 'reorder_level')
-                ->where('reorder_level', '>', 0)
-                ->limit(3)
-                ->get();
-
-            foreach ($lowInventory as $item) {
-                $notifications[] = [
-                    'id'         => 'inventory_' . $item->id,
-                    'title'      => 'Low Inventory ⚠️',
-                    'message'    => "{$item->name} is running low! Only {$item->quantity} left.",
-                    'type'       => 'inventory',
-                    'link'       => route('inventory.index'),
-                    'time'       => 'Urgent',
-                    'created_at' => now()->toISOString(),
-                ];
-            }
-        }
-
-        // ─────────────────────────────────────────
-        // Sort notifications by urgency
-        // ─────────────────────────────────────────
-        usort($notifications, function ($a, $b) {
-            $priority = ['Today' => 0, 'Urgent' => 0, 'Tomorrow' => 1, 'In' => 2];
-            $aKey     = explode(' ', $a['time'])[0];
-            $bKey     = explode(' ', $b['time'])[0];
-            $aPriority = $priority[$aKey] ?? 3;
-            $bPriority = $priority[$bKey] ?? 3;
-            return $aPriority - $bPriority;
-        });
-
-        // Limit to 10 notifications
-        $notifications = array_slice($notifications, 0, 10);
-
-        return response()->json([
-            'success'       => true,
-            'notifications' => $notifications,
-            'count'         => count($notifications),
-        ]);
     }
 }

@@ -1,0 +1,509 @@
+@extends('layouts.app')
+
+@section('title', __('Inventory'))
+@section('header', __('Inventory'))
+@section('subheader', __('Sunday collections and fund spending'))
+
+@section('content')
+@php
+    $peso  = fn ($n) => '₱' . number_format((float) $n, 2);
+    $icons = ['fellowship' => 'fa-people-group', 'missions' => 'fa-earth-asia', 'offering' => 'fa-hand-holding-heart'];
+    $hasRange  = !empty($filters['from']) || !empty($filters['to']);
+    $hasFilter = collect($filters)->filter()->isNotEmpty();
+    $collectionBag = $errors->getBag('collection');
+    $deductionBag  = $errors->getBag('deduction');
+@endphp
+
+<style>
+    .inv { max-width: 1600px; margin: 0 auto; }
+
+    .fund-fellowship { --fc: #0BA5C0; }
+    .fund-missions   { --fc: #3157D5; }
+    .fund-offering   { --fc: #7C5CF0; }
+    [data-theme="dark"] .fund-fellowship { --fc: #22D3EE; }
+    [data-theme="dark"] .fund-missions   { --fc: #7C9BFF; }
+    [data-theme="dark"] .fund-offering   { --fc: #A78BFA; }
+
+    .fund-pill {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 3px 10px; border-radius: 999px;
+        font-size: .72rem; font-weight: 700; white-space: nowrap;
+        color: var(--fc);
+        background: color-mix(in srgb, var(--fc) 14%, transparent);
+    }
+    .fund-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--fc); }
+
+    .fund-card { height: 100%; display: flex; gap: 16px; align-items: flex-start; }
+    .fund-card .stat-icon { background: var(--fc); box-shadow: 0 0 0 6px color-mix(in srgb, var(--fc) 14%, transparent); }
+    .fund-card .stat-icon.total { background: var(--navy); }
+    [data-theme="dark"] .fund-card .stat-icon.total { background: var(--primary); color: var(--navy-deep); }
+    .fund-meta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; font-size: .72rem; font-weight: 600; color: var(--text-muted); }
+    .fund-meta b { color: var(--text-main); font-weight: 700; }
+    .fund-meta .in b  { color: #16A34A; }
+    .fund-meta .out b { color: #DC2626; }
+
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+    .filter-bar .fg { display: flex; flex-direction: column; gap: 4px; min-width: 140px; }
+    .filter-bar .fg.grow { flex: 1; min-width: 200px; }
+    .filter-bar label { font-size: .68rem; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--text-muted); }
+    .preset-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-color); align-items: center; }
+    .preset-row a, .preset-chip { font-size: .75rem; font-weight: 600; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border-color); color: var(--text-muted) !important; }
+    .preset-row a:hover { border-color: var(--primary); color: var(--text-main) !important; }
+
+    .amt-in  { color: #16A34A; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .amt-out { color: #DC2626; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+    .cell-sub { font-size: .75rem; color: var(--text-muted); margin-top: 2px; }
+    .type-tag { font-size: .7rem; font-weight: 700; padding: 3px 9px; border-radius: 4px; }
+    .type-tag.in  { background: rgba(34,197,94,.12); color: #16A34A; }
+    .type-tag.out { background: rgba(239,68,68,.10); color: #DC2626; }
+    .row-actions { display: flex; gap: 6px; justify-content: flex-end; }
+    .row-actions .icon-btn { width: 32px; height: 32px; font-size: .78rem; border: 1px solid var(--border-color); }
+    .row-actions .icon-btn.del:hover { color: #DC2626; background: rgba(239,68,68,.1); }
+    .tfoot-total td { font-weight: 800; background: var(--bg-hover); }
+    .empty-note { padding: 36px 0; text-align: center; color: var(--text-muted); font-size: .88rem; }
+    .empty-note i { display: block; font-size: 1.8rem; margin-bottom: 10px; opacity: .4; }
+
+    .money-input { display: flex; align-items: stretch; }
+    .money-input span { display: grid; place-items: center; padding: 0 14px; border: 1px solid var(--border-color); border-right: 0; border-radius: var(--radius) 0 0 var(--radius); background: var(--bg-hover); font-weight: 700; color: var(--text-muted); }
+    .money-input .form-control { border-radius: 0 var(--radius) var(--radius) 0; }
+    .modal-title { font-weight: 800; letter-spacing: -.3px; }
+    .form-label { font-size: .72rem; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); }
+    .preview-box { padding: 12px 16px; border-radius: var(--radius); background: var(--primary-soft); font-size: .85rem; }
+    .preview-box .row-line { display: flex; justify-content: space-between; gap: 12px; padding: 2px 0; }
+    .preview-box .bad { color: #DC2626; }
+    .fund-field { display: flex; align-items: center; gap: 12px; }
+    .fund-field .fund-pill { min-width: 108px; justify-content: flex-start; padding: 8px 12px; }
+    .fund-field .money-input { flex: 1; }
+
+    @media print {
+        .sidebar-container, .top-header, .page-intro, .mbar, .scrim, .no-print, .modal { display: none !important; }
+        .shell { margin-left: 0 !important; }
+        .content-area { padding: 0 !important; }
+        .panel, .stat-card { box-shadow: none !important; break-inside: avoid; }
+        body { background: #fff !important; color: #000 !important; }
+    }
+    @media (max-width: 575px) { .fund-field { flex-direction: column; align-items: stretch; } }
+</style>
+
+<div class="inv container-fluid px-0">
+
+    @if(session('success'))
+        <div class="alert alert-success d-flex align-items-center gap-2 no-print" role="alert">
+            <i class="fas fa-circle-check"></i> {{ session('success') }}
+        </div>
+    @endif
+    @if($errors->has('general'))
+        <div class="alert alert-danger d-flex align-items-center gap-2 no-print" role="alert">
+            <i class="fas fa-triangle-exclamation"></i> {{ $errors->first('general') }}
+        </div>
+    @endif
+
+    <div class="d-flex flex-wrap gap-2 mb-4 no-print">
+        <button type="button" class="btn-cyan" data-bs-toggle="modal" data-bs-target="#collectionModal">
+            <i class="fas fa-plus"></i> {{ __('Record Sunday collection') }}
+        </button>
+        <button type="button" class="btn-ghost" data-bs-toggle="modal" data-bs-target="#deductionModal">
+            <i class="fas fa-minus"></i> {{ __('Deduct from a fund') }}
+        </button>
+        <a href="{{ route('inventory.export', array_filter($filters)) }}" class="btn-ghost ms-lg-auto">
+            <i class="fas fa-file-csv"></i> {{ __('Export CSV') }}
+        </a>
+        <button type="button" class="btn-ghost" onclick="window.print()">
+            <i class="fas fa-print"></i> {{ __('Print') }}
+        </button>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="stat-card fund-card">
+                <div class="stat-icon total"><i class="fas fa-wallet"></i></div>
+                <div>
+                    <div class="stat-label">{{ __('Total balance') }}</div>
+                    <div class="stat-value">{{ $peso($totalBalance) }}</div>
+                    <div class="fund-meta"><span>{{ __('All three funds') }}</span></div>
+                </div>
+            </div>
+        </div>
+
+        @foreach($funds as $key => $fund)
+            <div class="col-md-6 col-xl-3">
+                <div class="stat-card fund-card fund-{{ $key }}">
+                    <div class="stat-icon"><i class="fas {{ $icons[$key] }}"></i></div>
+                    <div>
+                        <div class="stat-label">{{ __($fund['label']) }} {{ __('fund') }}</div>
+                        <div class="stat-value">{{ $peso($fund['balance']) }}</div>
+                        <div class="fund-meta">
+                            <span class="in">{{ $hasRange ? __('In range') : __('Collected') }} <b>{{ $peso($hasRange ? $fund['range_collected'] : $fund['collected']) }}</b></span>
+                            <span class="out">{{ __('Spent') }} <b>{{ $peso($hasRange ? $fund['range_spent'] : $fund['spent']) }}</b></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+    <div class="panel mb-4 no-print">
+        <div class="panel-body">
+            <form method="GET" action="{{ route('inventory.index') }}" class="filter-bar">
+                <div class="fg">
+                    <label for="f_from">{{ __('From') }}</label>
+                    <input type="date" id="f_from" name="from" class="form-control" value="{{ $filters['from'] ?? '' }}">
+                </div>
+                <div class="fg">
+                    <label for="f_to">{{ __('To') }}</label>
+                    <input type="date" id="f_to" name="to" class="form-control" value="{{ $filters['to'] ?? '' }}">
+                </div>
+                <div class="fg">
+                    <label for="f_fund">{{ __('Fund') }}</label>
+                    <select id="f_fund" name="fund" class="form-select">
+                        <option value="">{{ __('All funds') }}</option>
+                        @foreach($funds as $key => $fund)
+                            <option value="{{ $key }}" @selected(($filters['fund'] ?? '') === $key)>{{ __($fund['label']) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="fg">
+                    <label for="f_type">{{ __('Type') }}</label>
+                    <select id="f_type" name="type" class="form-select">
+                        <option value="">{{ __('Collections & deductions') }}</option>
+                        <option value="income"  @selected(($filters['type'] ?? '') === 'income')>{{ __('Collections only') }}</option>
+                        <option value="expense" @selected(($filters['type'] ?? '') === 'expense')>{{ __('Deductions only') }}</option>
+                    </select>
+                </div>
+                <div class="fg grow">
+                    <label for="f_q">{{ __('Search') }}</label>
+                    <input type="search" id="f_q" name="q" maxlength="100" class="form-control" placeholder="{{ __('Name or purpose') }}" value="{{ $filters['q'] ?? '' }}">
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn-cyan"><i class="fas fa-filter"></i> {{ __('Apply') }}</button>
+                    @if($hasFilter)
+                        <a href="{{ route('inventory.index') }}" class="btn-ghost">{{ __('Reset') }}</a>
+                    @endif
+                </div>
+            </form>
+
+            @if($errors->has('from') || $errors->has('to'))
+                <div class="text-danger mt-2" style="font-size:.8rem;">{{ $errors->first('to') ?: $errors->first('from') }}</div>
+            @endif
+
+            <div class="preset-row">
+                <span class="cell-sub" style="margin:0;">{{ __('Quick range') }}:</span>
+                @foreach($presets as $label => $range)
+                    <a href="{{ route('inventory.index', array_merge(array_filter($filters), $range)) }}">{{ __($label) }}</a>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <div class="panel mb-4">
+        <div class="panel-head">
+            <i class="fas fa-church"></i> {{ __('Sunday collections') }}
+            <span class="cell-sub ms-auto" style="margin:0;">
+                {{ $hasRange ? __('Within selected dates') : __('Latest 12 Sundays') }}
+            </span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>{{ __('Date') }}</th>
+                        @foreach($funds as $key => $fund)
+                            <th class="text-end">{{ __($fund['label']) }}</th>
+                        @endforeach
+                        <th class="text-end">{{ __('Total') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($weekly as $date => $rows)
+                        @php $byFund = $rows->pluck('total', 'fund'); @endphp
+                        <tr>
+                            <td class="fw-semibold">{{ \Carbon\Carbon::parse($date)->format('D, M d, Y') }}</td>
+                            @foreach($funds as $key => $fund)
+                                <td class="num">{{ isset($byFund[$key]) ? $peso($byFund[$key]) : '—' }}</td>
+                            @endforeach
+                            <td class="num fw-bold">{{ $peso($byFund->sum()) }}</td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="{{ count($funds) + 2 }}"><div class="empty-note"><i class="fas fa-church"></i>{{ __('No collections recorded for this period yet.') }}</div></td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-head">
+            <i class="fas fa-receipt"></i> {{ __('Transactions') }}
+            <span class="cell-sub ms-auto" style="margin:0;">
+                @if($hasRange)
+                    {{ !empty($filters['from']) ? \Carbon\Carbon::parse($filters['from'])->format('M d, Y') : __('Start') }}
+                    –
+                    {{ !empty($filters['to']) ? \Carbon\Carbon::parse($filters['to'])->format('M d, Y') : __('Today') }}
+                @else
+                    {{ __('All dates') }}
+                @endif
+            </span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>{{ __('Date') }}</th>
+                        <th>{{ __('Fund') }}</th>
+                        <th>{{ __('Type') }}</th>
+                        <th>{{ __('Description') }}</th>
+                        <th class="text-end">{{ __('Amount') }}</th>
+                        <th class="no-print" style="width:90px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($transactions as $t)
+                        @php $isIn = $t->isCollection(); @endphp
+                        <tr>
+                            <td class="text-nowrap">{{ $t->date->format('M d, Y') }}</td>
+                            <td><span class="fund-pill fund-{{ $t->fund }}"><span class="fund-dot"></span>{{ $t->fundLabel() }}</span></td>
+                            <td><span class="type-tag {{ $isIn ? 'in' : 'out' }}">{{ $isIn ? __('Collection') : __('Deduction') }}</span></td>
+                            <td>
+                                @if($isIn)
+                                    <div class="fw-semibold">{{ $t->description }}</div>
+                                    @if($t->donor_name)<div class="cell-sub">{{ __('From') }}: {{ $t->donor_name }}</div>@endif
+                                @else
+                                    <div class="fw-semibold">{{ __('Taken by') }}: {{ $t->recipient ?: '—' }}</div>
+                                    <div class="cell-sub">{{ $t->purpose ?: $t->description }}</div>
+                                @endif
+                            </td>
+                            <td class="text-end {{ $isIn ? 'amt-in' : 'amt-out' }}">{{ $isIn ? '+' : '−' }}{{ $peso($t->amount) }}</td>
+                            <td class="no-print">
+                                <div class="row-actions">
+                                    <a href="{{ route('inventory.edit', $t) }}" class="icon-btn" title="{{ __('Edit') }}" aria-label="{{ __('Edit') }}"><i class="fas fa-pen"></i></a>
+                                    <button type="button" class="icon-btn del" title="{{ __('Delete') }}" aria-label="{{ __('Delete') }}"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                            data-action="{{ route('inventory.destroy', $t) }}"
+                                            data-label="{{ $t->fundLabel() }} · {{ $peso($t->amount) }} · {{ $t->date->format('M d, Y') }}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="6"><div class="empty-note"><i class="fas fa-receipt"></i>{{ $hasFilter ? __('No transactions match these filters.') : __('No transactions yet. Record your first Sunday collection.') }}</div></td></tr>
+                    @endforelse
+                </tbody>
+                @if($transactions->total() > 0)
+                    <tfoot class="tfoot-total">
+                        <tr>
+                            <td colspan="4" class="text-end">{{ __('Totals for this filter') }}</td>
+                            <td class="text-end">
+                                <div class="amt-in">+{{ $peso($totals->collected) }}</div>
+                                <div class="amt-out">−{{ $peso($totals->spent) }}</div>
+                            </td>
+                            <td class="no-print"></td>
+                        </tr>
+                    </tfoot>
+                @endif
+            </table>
+        </div>
+        @if($transactions->hasPages())
+            <div class="panel-body no-print">{{ $transactions->links('pagination::bootstrap-5') }}</div>
+        @endif
+    </div>
+</div>
+
+<div class="modal fade" id="collectionModal" tabindex="-1" aria-labelledby="collectionTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form method="POST" action="{{ route('inventory.collections.store') }}" class="modal-content" autocomplete="off">
+            @csrf
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="collectionTitle">{{ __('Record Sunday collection') }}</h5>
+                    <div class="cell-sub">{{ __('Leave a fund empty if nothing was collected for it.') }}</div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if($collectionBag->any())
+                    <div class="alert alert-danger py-2" style="font-size:.82rem;">
+                        @foreach($collectionBag->all() as $msg)<div>{{ $msg }}</div>@endforeach
+                    </div>
+                @endif
+
+                <div class="mb-3">
+                    <label class="form-label" for="c_date">{{ __('Sunday date') }}</label>
+                    <input type="date" id="c_date" name="date" class="form-control" required max="{{ $today }}"
+                           value="{{ old('date', $lastSunday) }}">
+                </div>
+
+                <div class="d-grid gap-2 mb-3">
+                    @foreach($funds as $key => $fund)
+                        <div class="fund-field">
+                            <span class="fund-pill fund-{{ $key }}"><i class="fas {{ $icons[$key] }}"></i> {{ __($fund['label']) }}</span>
+                            <div class="money-input">
+                                <span>₱</span>
+                                <input type="number" name="amounts[{{ $key }}]" class="form-control collect-amt" step="0.01" min="0" max="99999999.99"
+                                       inputmode="decimal" placeholder="0.00" aria-label="{{ $fund['label'] }} amount"
+                                       value="{{ old('amounts.' . $key) }}">
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="c_note">{{ __('Note') }} <span class="text-muted fw-normal text-lowercase">({{ __('optional') }})</span></label>
+                    <input type="text" id="c_note" name="note" class="form-control" maxlength="200" placeholder="{{ __('e.g. Anniversary Sunday') }}" value="{{ old('note') }}">
+                </div>
+
+                <div class="preview-box">
+                    <div class="row-line"><span>{{ __('Total for this Sunday') }}</span><strong id="collectTotal">₱0.00</strong></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-ghost" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                <button type="submit" class="btn-cyan"><i class="fas fa-check"></i> {{ __('Save collection') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="deductionModal" tabindex="-1" aria-labelledby="deductionTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form method="POST" action="{{ route('inventory.deductions.store') }}" class="modal-content" id="deductionForm" autocomplete="off">
+            @csrf
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="deductionTitle">{{ __('Deduct from a fund') }}</h5>
+                    <div class="cell-sub">{{ __('Say who took the money and what it is for.') }}</div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if($deductionBag->any())
+                    <div class="alert alert-danger py-2" style="font-size:.82rem;">
+                        @foreach($deductionBag->all() as $msg)<div>{{ $msg }}</div>@endforeach
+                    </div>
+                @endif
+
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label class="form-label" for="d_fund">{{ __('Fund') }}</label>
+                        <select id="d_fund" name="fund" class="form-select" required>
+                            @foreach($funds as $key => $fund)
+                                <option value="{{ $key }}" data-balance="{{ $fund['balance'] }}" @selected(old('fund') === $key)>
+                                    {{ __($fund['label']) }} — {{ $peso($fund['balance']) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label" for="d_date">{{ __('Date') }}</label>
+                        <input type="date" id="d_date" name="date" class="form-control" required max="{{ $today }}" value="{{ old('date', $today) }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="d_amount">{{ __('Amount') }}</label>
+                        <div class="money-input">
+                            <span>₱</span>
+                            <input type="number" id="d_amount" name="amount" class="form-control" step="0.01" min="0.01" max="99999999.99"
+                                   inputmode="decimal" placeholder="0.00" required value="{{ old('amount') }}">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="d_recipient">{{ __('Taken by') }}</label>
+                        <input type="text" id="d_recipient" name="recipient" class="form-control" maxlength="120" required
+                               placeholder="{{ __('Full name of the person who took the money') }}" value="{{ old('recipient') }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="d_purpose">{{ __('Purpose') }}</label>
+                        <textarea id="d_purpose" name="purpose" class="form-control" rows="3" minlength="3" maxlength="500" required
+                                  placeholder="{{ __('What is the money for?') }}">{{ old('purpose') }}</textarea>
+                    </div>
+                    <div class="col-12">
+                        <div class="preview-box">
+                            <div class="row-line"><span>{{ __('Available') }}</span><strong id="dAvailable">₱0.00</strong></div>
+                            <div class="row-line"><span>{{ __('Deducting') }}</span><strong id="dDeduct">₱0.00</strong></div>
+                            <div class="row-line" style="border-top:1px solid var(--border-color); margin-top:4px; padding-top:6px;">
+                                <span>{{ __('Remaining') }}</span><strong id="dRemain">₱0.00</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-ghost" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                <button type="submit" class="btn-cyan" id="deductSubmit"><i class="fas fa-check"></i> {{ __('Save deduction') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <form method="POST" action="#" class="modal-content" id="deleteForm">
+            @csrf
+            @method('DELETE')
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTitle">{{ __('Delete transaction?') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-1" style="font-size:.88rem;">{{ __('This cannot be undone.') }}</p>
+                <p class="mb-0 cell-sub" id="deleteLabel"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-ghost" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                <button type="submit" class="btn btn-danger">{{ __('Delete') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var peso = function (n) {
+        return '₱' + Number(n || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    };
+
+    var collectInputs = document.querySelectorAll('.collect-amt');
+    var collectTotal  = document.getElementById('collectTotal');
+    function updateCollect() {
+        var sum = 0;
+        collectInputs.forEach(function (i) { sum += parseFloat(i.value) || 0; });
+        collectTotal.textContent = peso(sum);
+    }
+    collectInputs.forEach(function (i) { i.addEventListener('input', updateCollect); });
+    updateCollect();
+
+    var fundSel = document.getElementById('d_fund');
+    var amtIn   = document.getElementById('d_amount');
+    var submit  = document.getElementById('deductSubmit');
+    function updateDeduct() {
+        var bal = parseFloat(fundSel.selectedOptions[0].dataset.balance) || 0;
+        var amt = parseFloat(amtIn.value) || 0;
+        var rem = bal - amt;
+        document.getElementById('dAvailable').textContent = peso(bal);
+        document.getElementById('dDeduct').textContent    = peso(amt);
+        var remEl = document.getElementById('dRemain');
+        remEl.textContent = peso(rem);
+        remEl.classList.toggle('bad', rem < 0);
+        submit.disabled = rem < -0.004;
+    }
+    fundSel.addEventListener('change', updateDeduct);
+    amtIn.addEventListener('input', updateDeduct);
+    updateDeduct();
+
+    document.getElementById('deleteModal').addEventListener('show.bs.modal', function (e) {
+        var btn = e.relatedTarget;
+        if (!btn) return;
+        document.getElementById('deleteForm').action = btn.getAttribute('data-action');
+        document.getElementById('deleteLabel').textContent = btn.getAttribute('data-label') || '';
+    });
+
+    @if($collectionBag->any())
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('collectionModal')).show();
+    @elseif($deductionBag->any())
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('deductionModal')).show();
+    @endif
+});
+</script>
+@endpush

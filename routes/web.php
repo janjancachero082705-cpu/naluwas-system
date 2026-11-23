@@ -5,14 +5,10 @@ use App\Http\Controllers\ProfilePictureController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InventoryController;
-use App\Http\Controllers\ChoirMemberController;
-use App\Http\Controllers\ChoirScheduleController;
 use App\Http\Controllers\MemberController;
-use App\Http\Controllers\SundayAttendanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ChurchSettingController;
-use App\Http\Controllers\ChoirPracticeController;
 use App\Http\Controllers\WeeklyScheduleController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\MessageController;
@@ -75,25 +71,25 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 Route::middleware('auth')->group(function () {
     // Profile page
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 
-    // Profile update (AJAX — used by the profile page)
-    Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
-    Route::patch('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update.patch');
 
-    // ✅ NEW: Language update from profile page
-    Route::post('/profile/language/update', [ProfileController::class, 'updateLanguage'])->name('profile.language.update');
+    // Profile update (AJAX ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â used by the profile page)
+
+
+
+    // ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ NEW: Language update from profile page
+
 
     // Password update (from security modal)
     Route::post('/password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
 
     // Account deletion
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 
     // Profile picture (both aliases for compatibility)
-    Route::post('/profile/picture/upload', [ProfilePictureController::class, 'upload'])->name('profile.picture.upload');
-    Route::post('/profile/picture', [ProfilePictureController::class, 'upload'])->name('profile.picture.update');  // alias
-    Route::delete('/profile/picture/remove', [ProfilePictureController::class, 'remove'])->name('profile.picture.remove');
+
+  // alias
+
 
     Route::post('/logout', function (Request $request) {
         Auth::logout();
@@ -151,54 +147,25 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/members/{member}/remove-group', [MemberController::class, 'removeFromGroup'])->name('members.remove-group');
 
     // ============================================
-    // CHOIR MEMBERS
     // ============================================
-    Route::resource('choir-members', ChoirMemberController::class);
 
     // ============================================
-    // CHOIR SCHEDULES & GROUPS
     // ============================================
-    Route::get('/choir-schedules/groups', [ChoirScheduleController::class, 'groups'])->name('choir-schedules.groups');
-    Route::post('/choir-schedules/groups', [ChoirScheduleController::class, 'storeGroup'])->name('choir-schedules.groups.store');
-    Route::put('/choir-schedules/groups/{id}', [ChoirScheduleController::class, 'updateGroup'])->name('choir-schedules.groups.update');
-    Route::delete('/choir-schedules/groups/{id}', [ChoirScheduleController::class, 'destroyGroup'])->name('choir-schedules.groups.destroy');
-    Route::post('/choir-schedules/assign-member', [ChoirScheduleController::class, 'assignMemberToGroup'])->name('choir-schedules.assign-member');
-    Route::delete('/choir-schedules/remove-group-member/{memberId}', [ChoirScheduleController::class, 'removeMemberFromGroup'])->name('choir-schedules.remove-group-member');
 
-    Route::resource('choir-schedules', ChoirScheduleController::class);
-    Route::post('/choir-schedules/auto-schedule', [ChoirScheduleController::class, 'autoSchedule'])->name('choir-schedules.auto-schedule');
-    Route::post('/choir-schedules/generate-alternating', [ChoirScheduleController::class, 'generateAlternatingScheduleForAll'])->name('choir-schedules.generate-alternating');
-    Route::post('/choir-schedules/auto-rotate', [ChoirScheduleController::class, 'autoRotate'])->name('choir-schedules.auto-rotate');
-    Route::post('/choir-schedules/update-rotation', [ChoirScheduleController::class, 'updateRotationOrder'])->name('choir-schedules.update-rotation');
 
-    Route::get('/choir-schedules/get-schedule/{date}', [ChoirScheduleController::class, 'getScheduleByDate'])->name('choir-schedules.get-schedule');
-    Route::post('/choir-schedules/add-member', [ChoirScheduleController::class, 'addMemberToSchedule'])->name('choir-schedules.add-member');
-    Route::delete('/choir-schedules/remove-schedule-member', [ChoirScheduleController::class, 'removeMemberFromSchedule'])->name('choir-schedules.remove-schedule-member');
-    Route::post('/choir-schedules/store-direct', [ChoirScheduleController::class, 'storeDirect'])->name('choir-schedules.store-direct');
 
     // ============================================
-    // SUNDAY ATTENDANCE
     // ============================================
-    Route::get('/sunday-attendance', [SundayAttendanceController::class, 'index'])->name('sunday-attendance.index');
-    Route::get('/sunday-attendance/entry/{date}', [SundayAttendanceController::class, 'create'])->name('sunday-attendance.entry');
-    Route::post('/sunday-attendance', [SundayAttendanceController::class, 'store'])->name('sunday-attendance.store');
-    Route::get('/sunday-attendance/get-attendance', [SundayAttendanceController::class, 'getAttendance'])->name('sunday-attendance.get-attendance');
-    Route::get('/sunday-attendance/report', [SundayAttendanceController::class, 'report'])->name('sunday-attendance.report');
-    Route::get('/sunday-attendance/records', [SundayAttendanceController::class, 'records'])->name('sunday-attendance.records');
 
     // ============================================
     // CHURCH SETTINGS
     // ============================================
-    Route::post('/settings/profile', [ChurchSettingController::class, 'updateProfile'])->name('settings.profile.update');
+
     Route::post('/settings/logo', [ChurchSettingController::class, 'updateLogo'])->name('settings.logo.update');
     Route::delete('/settings/logo', [ChurchSettingController::class, 'removeLogo'])->name('settings.logo.remove');
 
     // ============================================
-    // CHOIR PRACTICES
     // ============================================
-    Route::get('/choir-practices/get', [ChoirPracticeController::class, 'getPractices'])->name('choir.practices.get');
-    Route::post('/choir-practices/store', [ChoirPracticeController::class, 'store'])->name('choir.practices.store');
-    Route::delete('/choir-practices/{id}', [ChoirPracticeController::class, 'destroy'])->name('choir.practices.delete');
 
     // ============================================
     // WEEKLY SCHEDULES
@@ -211,12 +178,6 @@ Route::middleware(['auth'])->group(function () {
     // FINANCE
     // ============================================
     Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
-    Route::get('/finance/create', [FinanceController::class, 'create'])->name('finance.create');
-    Route::post('/finance/store', [FinanceController::class, 'store'])->name('finance.store');
-    Route::get('/finance/{id}', [FinanceController::class, 'show'])->name('finance.show');
-    Route::get('/finance/{id}/edit', [FinanceController::class, 'edit'])->name('finance.edit');
-    Route::put('/finance/{id}', [FinanceController::class, 'update'])->name('finance.update');
-    Route::delete('/finance/{id}', [FinanceController::class, 'destroy'])->name('finance.destroy');
 
     Route::get('/reports/analytics', [FinanceController::class, 'reportsAnalytics'])->name('reports.analytics');
 
@@ -265,7 +226,7 @@ Route::middleware('guest')->group(function () {
 
             $user = Auth::user();
 
-            // ✅ Track last login
+            // ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ Track last login
             $user->last_login_at = now();
             $user->last_activity = now();
             $user->save();
@@ -337,5 +298,38 @@ Route::middleware('guest')->group(function () {
         ]);
 
         return redirect('/dashboard')->with('success', 'Welcome to ' . $request->church_name . '! Your church has been successfully registered.');
+    });
+});
+// ==========================================
+// PROFILE ROUTES (Gi-dugang para mo-gana)
+// ==========================================
+Route::middleware(['auth'])->group(function () {
+
+
+
+});
+// ==========================================
+// PROFILE ROUTES (LIMPYO UG SAKTONG METHOD)
+// ==========================================
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::match(['put', 'patch'], '/profile/update', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::match(['put', 'patch'], '/profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password');
+});
+Route::post('/ai-chat', [\App\Http\Controllers\AiChatController::class, 'send'])->middleware('auth');
+
+Route::get('/ai', fn () => view('ai-chat'))->middleware('auth');
+
+// ===== Inventory (funds) =====
+Route::middleware(['auth'])->prefix('inventory')->name('inventory.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\InventoryController::class, 'index'])->name('index');
+    Route::get('/export', [\App\Http\Controllers\InventoryController::class, 'export'])->name('export');
+
+    Route::middleware('throttle:30,1')->group(function () {
+        Route::post('/collections', [\App\Http\Controllers\InventoryController::class, 'storeCollection'])->name('collections.store');
+        Route::post('/deductions',  [\App\Http\Controllers\InventoryController::class, 'storeDeduction'])->name('deductions.store');
+        Route::get('/{transaction}/edit', [\App\Http\Controllers\InventoryController::class, 'edit'])->whereNumber('transaction')->name('edit');
+        Route::put('/{transaction}',      [\App\Http\Controllers\InventoryController::class, 'update'])->whereNumber('transaction')->name('update');
+        Route::delete('/{transaction}',   [\App\Http\Controllers\InventoryController::class, 'destroy'])->whereNumber('transaction')->name('destroy');
     });
 });

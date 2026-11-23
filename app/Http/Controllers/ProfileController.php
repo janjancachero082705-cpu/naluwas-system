@@ -2,336 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password;
-use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    // ============================================
-    // PAGE RENDERING
-    // ============================================
-
-    /**
-     * Display the user's profile page.
-     */
-    public function edit(Request $request): View
+    public function edit()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        return view('profile.edit');
     }
 
-    // ============================================
-    // PROFILE UPDATE (WEB FORM — redirect-based)
-    // ============================================
-
-    /**
-     * Update the user's profile via standard web form.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request)
     {
-        $user = $request->user();
-        $user->fill($request->validated());
+        $user = Auth::user();
 
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
+        // Partial Validation: I-validate ra kung naa ang field
+        $rules = [];
+        if ($request->filled('name')) $rules['name'] = 'required|string|max:255';
+        if ($request->filled('email')) $rules['email'] = 'required|email|max:255|unique:users,email,' . $user->id;
+        if ($request->hasFile('profile_picture')) $rules['profile_picture'] = 'nullable|image|max:2048';
+        if ($request->filled('church_name')) $rules['church_name'] = 'nullable|string|max:255';
+
+        $request->validate($rules);
+
+        $data = [];
+        if ($request->filled('name')) $data['name'] = $request->name;
+        if ($request->filled('email')) $data['email'] = $request->email;
+
+        if ($request->filled('church_name') && $user->church) {
+            $user->church->update(['name' => $request->church_name]);
         }
 
-        // ✅ Handle profile picture if uploaded via standard form
         if ($request->hasFile('profile_picture')) {
-            $request->validate([
-                'profile_picture' => ['file', 'max:10240'],
-            ]);
-
-            // Delete old picture
-            $this->deleteOldProfilePicture($user);
-
-            // Store new picture
-            $path = $request->file('profile_picture')->store('profile-pictures', 'public');
-            $user->profile_picture = $path;
+            if ($user->profile_picture) {
+                Storage::disk('public')->delete($user->profile_picture);
+            }
+            $data['profile_picture'] = $request->file('profile_picture')->store('profile-pictures', 'public');
         }
 
-        $user->save();
+        if (!empty($data)) {
+            $user->update($data);
+        }
 
-        // ✅ CRITICAL: Refresh the authenticated user so session data is updated
-        Auth::setUser($user->fresh());
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return back()->with('success', 'Profile updated successfully!');
     }
 
-    // ============================================
-    // PROFILE UPDATE (AJAX — used by the profile page)
-    // ============================================
-
-    /**
-     * Update profile via AJAX request.
-     * Returns JSON response.
-     */
-    public function updateProfile(Request $request): JsonResponse
-    {
-        $user = $request->user();
-
-        $validator = Validator::make($request->all(), [
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'phone'    => ['nullable', 'string', 'max:30'],
-            'birthday' => ['nullable', 'date'],
-            'address'  => ['nullable', 'string', 'max:500'],
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first(),
-                'errors'  => $validator->errors(),
-            ], 422);
-        }
-
-        $user->name     = $request->input('name');
-        $user->email    = $request->input('email');
-        $user->phone    = $request->input('phone');
-        $user->birthday = $request->input('birthday');
-        $user->address  = $request->input('address');
-
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
-        $user->save();
-
-        // ✅ Refresh auth session
-        Auth::setUser($user->fresh());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Profile updated successfully!',
-            'user' => [
-                'name'     => $user->name,
-                'email'    => $user->email,
-                'phone'    => $user->phone,
-                'birthday' => $user->birthday?->format('Y-m-d'),
-                'address'  => $user->address,
-            ],
-        ]);
-    }
-
-    // ============================================
-    // LANGUAGE UPDATE (from profile dropdown)  ✅ NEW
-    // ============================================
-
-    /**
-     * Update the user's preferred language.
-     * Called by the language dropdown on the profile page.
-     */
-    public function updateLanguage(Request $request): JsonResponse
-    {
-        $validator = Validator::make($request->all(), [
-            'preferred_language' => ['required', 'string', 'in:en,tl,ceb'],
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first(),
-                'errors'  => $validator->errors(),
-            ], 422);
-        }
-
-        $user = $request->user();
-        $user->preferred_language = $request->input('preferred_language');
-        $user->save();
-
-        // ✅ Refresh auth session so $user->preferred_language is up to date
-        Auth::setUser($user->fresh());
-
-        $labels = [
-            'en'  => 'English',
-            'tl'  => 'Tagalog',
-            'ceb' => 'Bisaya',
-        ];
-
-        return response()->json([
-            'success'  => true,
-            'message'  => 'Language preference updated!',
-            'language' => $user->preferred_language,
-            'label'    => $labels[$user->preferred_language] ?? 'English',
-        ]);
-    }
-
-    // ============================================
-    // PROFILE PICTURE UPLOAD
-    // ============================================
-
-    /**
-     * Update the user's profile picture.
-     * Returns JSON with the new picture URL.
-     */
-    public function updatePicture(Request $request): JsonResponse
+    public function updatePassword(Request $request)
     {
         $request->validate([
-            'profile_picture' => ['required', 'file', 'max:10240'],
+            'current_password' => 'required|current_password',
+            'password' => 'required|min:8|confirmed',
         ]);
 
-        $user = $request->user();
-
-        // ✅ Delete old picture
-        $this->deleteOldProfilePicture($user);
-
-        // ✅ Store new picture
-        $path = $request->file('profile_picture')->store('profile-pictures', 'public');
-
-        // ✅ Save only the relative path
-        $user->profile_picture = $path;
-        $user->save();
-
-        // ✅ Refresh auth session
-        Auth::setUser($user->fresh());
-
-        // ✅ Build URL with cache-buster
-        $url = Storage::disk('public')->url($path);
-        $urlWithCacheBuster = $url . '?v=' . $user->updated_at->timestamp;
-
-        return response()->json([
-            'success'             => true,
-            'message'             => 'Profile picture updated!',
-            'profile_picture'     => $path,
-            'profile_picture_url' => $urlWithCacheBuster,
-            'updated_at'          => $user->updated_at->timestamp,
-        ]);
-    }
-
-    /**
-     * Delete the user's profile picture.
-     */
-    public function deletePicture(Request $request): JsonResponse
-    {
-        $user = $request->user();
-
-        if ($user->deleteProfilePicture()) {
-            // ✅ Refresh auth session
-            Auth::setUser($user->fresh());
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Profile picture removed.',
-            ]);
-        }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'No profile picture to delete.',
-        ], 404);
-    }
-
-    // ============================================
-    // PASSWORD MANAGEMENT
-    // ============================================
-
-    /**
-     * Update the user's password (AJAX from security modal).
-     */
-    public function updatePassword(Request $request): JsonResponse
-    {
-        $passwordField = $request->has('new_password') ? 'new_password' : 'password';
-
-        $rules = [
-            'current_password' => ['required', 'current_password'],
-            $passwordField     => ['required', 'confirmed', Password::min(8)],
-        ];
-
-        if ($passwordField === 'new_password') {
-            $rules['new_password_confirmation'] = ['required', 'string', 'min:8'];
-        } else {
-            $rules['password_confirmation'] = ['required', 'string', 'min:8'];
-        }
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first(),
-                'errors'  => $validator->errors(),
-            ], 422);
-        }
-
-        $newPassword = $request->input($passwordField);
-
-        $request->user()->update([
-            'password' => Hash::make($newPassword),
+        Auth::user()->update([
+            'password' => Hash::make($request->password)
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Password changed successfully!',
-        ]);
-    }
-
-    // ============================================
-    // ACCOUNT DELETION
-    // ============================================
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
-    }
-
-    // ============================================
-    // PRIVATE HELPERS
-    // ============================================
-
-    /**
-     * Delete the user's existing profile picture from storage.
-     * Handles various legacy path formats.
-     */
-    private function deleteOldProfilePicture($user): void
-    {
-        if (empty($user->profile_picture)) {
-            return;
-        }
-
-        $oldPath = $user->profile_picture;
-
-        // Skip external URLs
-        if (filter_var($oldPath, FILTER_VALIDATE_URL)) {
-            return;
-        }
-
-        // Normalize legacy paths (some records may only store the filename)
-        if (
-            !str_starts_with($oldPath, 'profile-pictures/') &&
-            !str_starts_with($oldPath, 'profile_pictures/')
-        ) {
-            $oldPath = 'profile-pictures/' . $oldPath;
-        }
-
-        if (Storage::disk('public')->exists($oldPath)) {
-            Storage::disk('public')->delete($oldPath);
-        }
+        return back()->with('success', 'Password updated successfully!');
     }
 }

@@ -1,48 +1,30 @@
-<section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Update Password') }}
-        </h2>
+<section class="pf-card pf-danger">
+    <div class="pf-card-head">
+        <span class="pf-card-ico rose"><i class="fas fa-key"></i></span>
+        <div><h3>{{ __('Update Password') }}</h3><p>{{ __('Use a long, random password to stay secure.') }}</p></div>
+    </div>
 
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __('Ensure your account is using a long, random password to stay secure.') }}
-        </p>
-    </header>
-
-    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('password.update') }}">
         @csrf
         @method('put')
 
-        <div>
-            <x-input-label for="update_password_current_password" :value="__('Current Password')" />
-            <x-text-input id="update_password_current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" />
-            <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
-        </div>
+        @foreach ([
+            ['update_password_current_password', 'current_password', 'Current Password', 'current-password'],
+            ['update_password_password', 'password', 'New Password', 'new-password'],
+            ['update_password_password_confirmation', 'password_confirmation', 'Confirm Password', 'new-password'],
+        ] as [$id, $name, $label, $ac])
+            <div class="pf-field">
+                <label for="{{ $id }}">{{ __($label) }}</label>
+                <div class="pf-input"><i class="fas fa-lock lead"></i>
+                    <input id="{{ $id }}" name="{{ $name }}" type="password" autocomplete="{{ $ac }}">
+                </div>
+                @foreach($errors->updatePassword->get($name) as $m)<p class="pf-hint" style="color:#DC2626">{{ $m }}</p>@endforeach
+            </div>
+        @endforeach
 
-        <div>
-            <x-input-label for="update_password_password" :value="__('New Password')" />
-            <x-text-input id="update_password_password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
-        </div>
-
-        <div>
-            <x-input-label for="update_password_password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="update_password_password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
-
-            @if (session('status') === 'password-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
-            @endif
-        </div>
+        <button type="submit" class="pf-btn rose"><i class="fas fa-key"></i> {{ __('Update password') }}</button>
+        @if (session('status') === 'password-updated')
+            <p class="pf-hint" style="text-align:center;color:#16A34A">{{ __('Saved.') }}</p>
+        @endif
     </form>
 </section>

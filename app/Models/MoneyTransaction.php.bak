@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
+class MoneyTransaction extends Model
+{
+    public const INCOME  = 'income';   // Sunday collection
+    public const EXPENSE = 'expense';  // deduction
+
+    public const FUNDS = [
+        'fellowship' => 'Fellowship',
+        'missions'   => 'Missions',
+        'offering'   => 'Offering',
+    ];
+
+    protected $fillable = [
+        'church_id', 'type', 'fund', 'category', 'description', 'amount', 'date',
+        'donor_name', 'recipient', 'purpose', 'remarks', 'created_by',
+    ];
+
+    protected $casts = [
+        'amount' => 'decimal:2',
+        'date'   => 'date',
+    ];
+
+    public function scopeForChurch(Builder $query, int $churchId): Builder
+    {
+        return $query->where('church_id', $churchId);
+    }
+
+    public function isCollection(): bool
+    {
+        return $this->type === self::INCOME;
+    }
+
+    public function fundLabel(): string
+    {
+        return self::FUNDS[$this->fund] ?? ucfirst((string) $this->fund);
+    }
+
+    public static function fundBalance(int $churchId, string $fund, ?int $excludeId = null, bool $lock = false): float
+    {
+        $query = static::query()
+            ->where('church_id', $churchId)
+            ->where('fund', $fund);
+
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+        if ($lock) {
+            $query->lockForUpdate();
+        }
+
+        $row = $query->selectRaw(
+            "COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END), 0) AS balance"
+        )->first();
+
+        return round((float) ($row->balance ?? 0), 2);
+    }
+}

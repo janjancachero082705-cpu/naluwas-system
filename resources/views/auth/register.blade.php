@@ -1,1019 +1,229 @@
-﻿<!DOCTYPE html>
-<html lang="en" data-theme="auto">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Register — Naluwas Church System</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/logo1.png') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-    <style>
-        :root {
-            --gold:     #c9a84c;
-            --gold-lt:  #e8c96a;
-            --gold-dim: #8a6d28;
-            --gold-glow: rgba(201,168,76,0.3);
-            --ink:      #0d0c14;
-            --ink-2:    #1a1828;
-            --ink-3:    #252340;
-            --parchment:#faf8f3;
-            --parch-2:  #f0ebe0;
-            --primary:  #8B5CF6;
-            --primary-dark: #7C3AED;
-            --primary-light: #A78BFA;
-            --primary-glow: rgba(139,92,246,0.2);
-        }
-
-        [data-theme="dark"] {
-            --bg:        var(--ink);
-            --bg-panel:  var(--ink-2);
-            --bg-input:  rgba(255,255,255,0.05);
-            --bg-input-focus: rgba(255,255,255,0.08);
-            --border:    rgba(139,92,246,0.18);
-            --border-input: rgba(255,255,255,0.1);
-            --border-focus: var(--primary);
-            --text-h:    #f0ead8;
-            --text-b:    #c8c0b0;
-            --text-m:    #7a7260;
-            --text-label:#a09880;
-            --text-input:#e8e0d0;
-            --placeholder: #5a5548;
-        }
-        [data-theme="light"] {
-            --bg:        var(--parchment);
-            --bg-panel:  #ffffff;
-            --bg-input:  #fafaf8;
-            --bg-input-focus: #ffffff;
-            --border:    rgba(139,92,246,0.2);
-            --border-input: #ddd8ce;
-            --border-focus: var(--primary);
-            --text-h:    var(--ink);
-            --text-b:    #3a3228;
-            --text-m:    #7a7260;
-            --text-label:#5a5040;
-            --text-input:#1a1510;
-            --placeholder: #bbb5a8;
-        }
-
-        * { margin:0; padding:0; box-sizing:border-box; }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            transition: background 0.5s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Animated Background */
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .bg-animation .circle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(139,92,246,0.05);
-            animation: float 20s infinite ease-in-out;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(50px, -30px) scale(1.1); }
-            50% { transform: translate(-30px, 50px) scale(0.9); }
-            75% { transform: translate(40px, 40px) scale(1.05); }
-        }
-
-        .circle-1 { width: 400px; height: 400px; top: -100px; left: -150px; animation-delay: 0s; background: rgba(139,92,246,0.08); }
-        .circle-2 { width: 300px; height: 300px; bottom: -100px; right: -100px; animation-delay: 5s; background: rgba(139,92,246,0.06); }
-        .circle-3 { width: 200px; height: 200px; top: 40%; left: 10%; animation-delay: 2s; background: rgba(201,168,76,0.06); }
-        .circle-4 { width: 350px; height: 350px; bottom: 20%; right: 20%; animation-delay: 8s; background: rgba(139,92,246,0.04); }
-        .circle-5 { width: 150px; height: 150px; top: 20%; right: 15%; animation-delay: 3s; background: rgba(201,168,76,0.05); }
-
-        /* Auth Wrap */
-        .auth-wrap {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            max-width: 1000px;
-            height: 90vh;
-            max-height: 750px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            border-radius: 32px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            box-shadow: 0 40px 80px rgba(0,0,0,0.25);
-            animation: slideUp 0.7s cubic-bezier(.4,0,.2,1) both;
-            background: var(--bg-panel);
-            direction: ltr;
-        }
-
-        @keyframes slideUp {
-            from { opacity:0; transform: translateY(32px); }
-            to   { opacity:1; transform: translateY(0); }
-        }
-
-        /* Left Panel - Form */
-        .left-panel {
-            background: var(--bg-panel);
-            padding: 1.5rem 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transition: background 0.5s ease;
-            overflow-y: auto;
-            order: 1;
-        }
-
-        .left-panel::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .left-panel::-webkit-scrollbar-track {
-            background: var(--bg-input);
-            border-radius: 10px;
-        }
-
-        .left-panel::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-
-        /* Right Panel - Logo */
-        .right-panel {
-            background: linear-gradient(160deg, #0a0918 0%, #14102a 40%, #1a1230 70%, #0d0c20 100%);
-            padding: 2.5rem 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            text-align: center;
-            order: 2;
-        }
-
-        .right-panel::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(ellipse at center, rgba(139,92,246,0.08) 0%, transparent 60%);
-            pointer-events: none;
-            animation: pulseGlow 8s ease-in-out infinite;
-        }
-
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.1); }
-        }
-
-        .right-panel::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent 0%, var(--primary) 30%, var(--gold) 50%, var(--primary) 70%, transparent 100%);
-            opacity: 0.8;
-        }
-
-        /* Logo */
-        .logo-container {
-            position: relative;
-            z-index: 1;
-            margin-bottom: 1.5rem;
-        }
-
-        .logo-wrapper {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto;
-        }
-
-        .logo-wrapper .logo-ring {
-            position: absolute;
-            inset: -10px;
-            border-radius: 50%;
-            border: 2px solid rgba(139,92,246,0.2);
-            animation: spinRing 20s linear infinite;
-        }
-
-        .logo-wrapper .logo-ring:nth-child(2) {
-            inset: -20px;
-            border-color: rgba(201,168,76,0.15);
-            animation-duration: 15s;
-            animation-direction: reverse;
-        }
-
-        .logo-wrapper .logo-ring:nth-child(3) {
-            inset: -30px;
-            border-color: rgba(139,92,246,0.1);
-            animation-duration: 25s;
-        }
-
-        @keyframes spinRing {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .logo-image {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid rgba(139,92,246,0.3);
-            box-shadow: 0 0 40px rgba(139,92,246,0.15), 0 0 80px rgba(139,92,246,0.05);
-            animation: logoPulse 3s ease-in-out infinite;
-            position: relative;
-            z-index: 2;
-            background: #1a1230;
-        }
-
-        @keyframes logoPulse {
-            0%, 100% { 
-                box-shadow: 0 0 40px rgba(139,92,246,0.15), 0 0 80px rgba(139,92,246,0.05);
-                transform: scale(1);
-            }
-            50% { 
-                box-shadow: 0 0 60px rgba(139,92,246,0.25), 0 0 120px rgba(139,92,246,0.08);
-                transform: scale(1.02);
-            }
-        }
-
-        .logo-fallback {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: white;
-            border: 4px solid rgba(139,92,246,0.3);
-            box-shadow: 0 0 40px rgba(139,92,246,0.15);
-            animation: logoPulse 3s ease-in-out infinite;
-            position: relative;
-            z-index: 2;
-        }
-
-        .logo-fallback i {
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
-        }
-
-        .particles {
-            position: absolute;
-            inset: -50px;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--gold);
-            opacity: 0.3;
-            animation: floatParticle 4s ease-in-out infinite;
-        }
-
-        .particle:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-        .particle:nth-child(2) { top: 5%; right: 15%; animation-delay: 1.2s; }
-        .particle:nth-child(3) { bottom: 15%; left: 8%; animation-delay: 2.5s; }
-        .particle:nth-child(4) { bottom: 8%; right: 10%; animation-delay: 0.8s; }
-        .particle:nth-child(5) { top: 45%; left: 0%; animation-delay: 1.8s; }
-        .particle:nth-child(6) { top: 40%; right: 0%; animation-delay: 3s; }
-
-        @keyframes floatParticle {
-            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
-            25% { transform: translate(-10px, -15px) scale(1.5); opacity: 0.6; }
-            50% { transform: translate(10px, -5px) scale(0.8); opacity: 0.3; }
-            75% { transform: translate(-5px, 10px) scale(1.2); opacity: 0.5; }
-        }
-
-        .church-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #f0ead8;
-            margin-top: 0.8rem;
-            position: relative;
-            z-index: 1;
-            letter-spacing: 2px;
-        }
-
-        .church-name span {
-            color: var(--gold);
-        }
-
-        .church-tagline {
-            font-size: 0.75rem;
-            color: #7a7260;
-            position: relative;
-            z-index: 1;
-            margin-top: 0.2rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-        }
-
-        .divider-line {
-            width: 50px;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary), var(--gold));
-            margin: 1rem auto;
-            position: relative;
-            z-index: 1;
-            border-radius: 2px;
-        }
-
-        .panel-verse {
-            border-left: 2px solid rgba(139,92,246,0.4);
-            padding-left: 1rem;
-            position: relative;
-            z-index: 1;
-            max-width: 250px;
-            margin: 0 auto;
-        }
-
-        .verse-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: 0.85rem;
-            color: #a89870;
-            line-height: 1.6;
-            margin-bottom: 0.2rem;
-        }
-
-        .verse-ref {
-            font-size: 0.65rem;
-            color: #5a5040;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        /* Form Styles */
-        .form-head {
-            margin-bottom: 0.8rem;
-        }
-
-        .form-head h2 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--text-h);
-            margin-bottom: 0.2rem;
-        }
-
-        .form-head h2 i {
-            color: var(--primary);
-            margin-right: 8px;
-        }
-
-        .form-head p {
-            font-size: 0.75rem;
-            color: var(--text-m);
-        }
-
-        /* Alert */
-        .alert-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 0.5rem 0.8rem;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            margin-bottom: 0.8rem;
-            animation: shake 0.4s ease;
-        }
-
-        .alert-box.error {
-            background: rgba(220,38,38,0.08);
-            border: 1px solid rgba(220,38,38,0.25);
-            color: #ef4444;
-        }
-
-        .alert-box.success {
-            background: rgba(34,197,94,0.08);
-            border: 1px solid rgba(34,197,94,0.2);
-            color: #22c55e;
-        }
-
-        @keyframes shake {
-            0%,100%{ transform:translateX(0); }
-            25%    { transform:translateX(-4px); }
-            75%    { transform:translateX(4px); }
-        }
-
-        /* Section Label */
-        .section-label {
-            font-size: 0.6rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--primary);
-            margin-bottom: 0.4rem;
-            margin-top: 0.4rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .section-label i {
-            font-size: 0.7rem;
-        }
-
-        /* Field */
-        .field { margin-bottom: 0.5rem; }
-
-        .field label {
-            display: block;
-            font-size: 0.6rem;
-            font-weight: 600;
-            color: var(--text-label);
-            margin-bottom: 3px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        .field label .required {
-            color: #ef4444;
-        }
-
-        .input-wrap {
-            position: relative;
-        }
-
-        .input-wrap .input-icon {
-            position: absolute;
-            left: 0.8rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-m);
-            font-size: 0.75rem;
-            pointer-events: none;
-            transition: color 0.3s;
-            z-index: 2;
-        }
-
-        .input-wrap input {
-            width: 100%;
-            padding: 0.5rem 2.2rem 0.5rem 2rem;
-            background: var(--bg-input);
-            border: 1.5px solid var(--border-input);
-            border-radius: 10px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.78rem;
-            color: var(--text-input);
-            transition: all 0.3s ease;
-            outline: none;
-            position: relative;
-            z-index: 1;
-        }
-
-        .input-wrap input::placeholder { color: var(--placeholder); }
-
-        .input-wrap input:focus {
-            background: var(--bg-input-focus);
-            border-color: var(--border-focus);
-            box-shadow: 0 0 0 4px rgba(139,92,246,0.12);
-        }
-
-        .input-wrap input:focus ~ .input-icon,
-        .input-wrap:focus-within .input-icon { color: var(--primary); }
-
-        .input-hint {
-            font-size: 0.5rem;
-            color: var(--text-m);
-            margin-top: 2px;
-        }
-
-        .input-hint span {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        /* Eye button */
-        .eye-btn-inside {
-            position: absolute;
-            right: 0.6rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: transparent;
-            border: none;
-            color: var(--text-m);
-            cursor: pointer;
-            z-index: 3;
-            font-size: 0.8rem;
-            padding: 4px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .eye-btn-inside:hover {
-            color: var(--primary);
-            background: rgba(139,92,246,0.08);
-        }
-
-        .eye-btn-inside:active {
-            transform: translateY(-50%) scale(0.9);
-        }
-
-        .input-wrap input.has-eye {
-            padding-right: 2.2rem;
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 0.6rem;
-            border-radius: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.78rem;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            position: relative;
-            overflow: hidden;
-            margin-top: 0.5rem;
-        }
-
-        .btn-submit::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .btn-submit:hover::after { left: 100%; }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(139,92,246,0.35);
-        }
-
-        .btn-submit:active { transform: translateY(0); }
-
-        .form-footer {
-            text-align: center;
-            margin-top: 0.6rem;
-            font-size: 0.75rem;
-            color: var(--text-m);
-        }
-
-        .form-footer a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .form-footer a:hover { color: var(--primary-light); }
-
-        .security-note {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 0.4rem;
-            font-size: 0.55rem;
-            color: var(--text-m);
-            opacity: 0.6;
-        }
-
-        /* Back Link */
-        .back-link {
-            position: fixed;
-            top: 1.5rem;
-            left: 1.5rem;
-            z-index: 50;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.5);
-            text-decoration: none;
-            transition: color 0.3s;
-            background: rgba(0,0,0,0.2);
-            padding: 8px 16px;
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .back-link:hover { color: var(--gold); }
-
-        /* Theme Toggle */
-        .fab-theme {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            z-index: 50;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.7);
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .fab-theme:hover {
-            transform: scale(1.1);
-            color: var(--gold);
-            border-color: var(--gold);
-            background: rgba(255,255,255,0.2);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            body { padding: 1rem; }
-            .auth-wrap {
-                grid-template-columns: 1fr;
-                border-radius: 24px;
-                height: auto;
-                max-height: 95vh;
-                margin-top: 3rem;
-            }
-            .left-panel { 
-                padding: 1.2rem; 
-                order: 2;
-                max-height: 55vh; 
-                overflow-y: auto; 
-            }
-            .right-panel { 
-                padding: 1.2rem; 
-                order: 1;
-            }
-            .logo-wrapper {
-                width: 80px;
-                height: 80px;
-            }
-            .logo-image, .logo-fallback {
-                width: 80px;
-                height: 80px;
-                font-size: 1.5rem;
-            }
-            .logo-wrapper .logo-ring { display: none; }
-            .church-name { font-size: 1.3rem; }
-            .back-link { top: 0.5rem; left: 0.5rem; padding: 6px 12px; font-size: 0.7rem; }
-            .particles { display: none; }
-            .form-head h2 { font-size: 1.2rem; }
-        }
-
-        @media (max-width: 480px) {
-            .left-panel { padding: 0.8rem; }
-            .right-panel { padding: 0.8rem; }
-            .logo-wrapper {
-                width: 60px;
-                height: 60px;
-            }
-            .logo-image, .logo-fallback {
-                width: 60px;
-                height: 60px;
-                font-size: 1.2rem;
-            }
-            .church-name { font-size: 1rem; }
-            .panel-verse { max-width: 100%; }
-            .verse-text { font-size: 0.7rem; }
-            .field { margin-bottom: 0.4rem; }
-            .input-wrap input { 
-                padding: 0.4rem 2rem 0.4rem 1.8rem; 
-                font-size: 0.7rem; 
-            }
-            .btn-submit { padding: 0.5rem; font-size: 0.7rem; }
-            .section-label { font-size: 0.5rem; }
-            .field label { font-size: 0.55rem; }
-        }
-    </style>
+    <title>Create account - TINC Church System</title>
+
+    <script>
+        (function () { try { if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark'); } catch (e) {} })();
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {{-- CSS is embedded so the page never depends on the asset URL (tunnels, proxies, subfolders) --}}
+    <style>{!! @file_get_contents(public_path('css/auth.css')) !!}</style>
 </head>
 <body>
+@php
+    $assetPath = fn ($p) => parse_url(asset($p), PHP_URL_PATH);
+    $hasLogo = file_exists(public_path('images/logo1.png'));
+    $step1Err = $errors->has('church_name') || $errors->has('subdomain') || $errors->has('denomination');
+    $step2Err = $errors->has('name') || $errors->has('email') || $errors->has('password');
+    $startStep = ($step2Err && ! $step1Err) ? 2 : 1;
+@endphp
 
-<div class="bg-animation">
-    <div class="circle circle-1"></div>
-    <div class="circle circle-2"></div>
-    <div class="circle circle-3"></div>
-    <div class="circle circle-4"></div>
-    <div class="circle circle-5"></div>
-</div>
+<main class="auth reverse">
 
-<a href="{{ url('/') }}" class="back-link">
-    <i class="fas fa-arrow-left"></i> Back
-</a>
-
-<button class="fab-theme" id="fabThemeToggle" aria-label="Toggle theme">
-    <i class="fas fa-moon"></i>
-</button>
-
-<div class="auth-wrap" data-aos="fade-up" data-aos-duration="800">
-    <!-- Left Panel - Form -->
-    <div class="left-panel">
-        <div class="form-head">
-            <h2><i class="fas fa-church"></i> Create Account</h2>
-            <p>Register your church and start managing</p>
+    {{-- ===== FORM ===== --}}
+    <section class="form-side">
+        <div class="topline">
+            <div class="mini-brand"><span class="mark">@if($hasLogo)<img src="{{ $assetPath('images/logo1.png') }}" alt="">@else<i class="fas fa-church"></i>@endif</span> TINC Church</div>
+            <button type="button" class="theme-btn" id="themeBtn" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
         </div>
 
-        @if($errors->any())
-            <div class="alert-box error">
-                <i class="fas fa-exclamation-circle"></i>
-                <span>{{ $errors->first() }}</span>
-            </div>
-        @endif
+        <div class="form-inner">
+            <div class="m-badge" aria-hidden="true"><i class="fas fa-church"></i></div>
 
-        @if(session('success'))
-            <div class="alert-box success">
-                <i class="fas fa-check-circle"></i>
-                <span>{{ session('success') }}</span>
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('register') }}" id="registerForm">
-            @csrf
-
-            <!-- Church Information -->
-            <div class="section-label">
-                <i class="fas fa-building"></i> Church Information
+            <div class="head">
+                <h1>Create Account</h1>
+                <p class="lead">Set up your church in two quick steps.</p>
             </div>
 
-            <!-- Church Name -->
-            <div class="field">
-                <label>Church Name <span class="required">*</span></label>
-                <div class="input-wrap">
-                    <input type="text" name="church_name" value="{{ old('church_name') }}" required placeholder="Naluwas Church">
-                    <span class="input-icon"><i class="fas fa-church"></i></span>
+            <div class="progress" aria-hidden="true"><span class="seg on" id="seg1"></span><span class="seg" id="seg2"></span></div>
+            <div class="step-note">Step <b id="stepNo">1</b> of 2: <span id="stepName">Your church</span></div>
+
+            @if($errors->any())
+                <div class="alert" role="alert">
+                    <i class="fas fa-circle-exclamation"></i>
+                    <span>{{ $errors->first() }}</span>
                 </div>
-            </div>
+            @endif
 
-            <!-- Subdomain -->
-            <div class="field">
-                <label>Subdomain <span class="required">*</span></label>
-                <div class="input-wrap">
-                    <input type="text" name="subdomain" value="{{ old('subdomain') }}" required placeholder="yourchurch" id="subdomainInput">
-                    <span class="input-icon"><i class="fas fa-globe"></i></span>
-                </div>
-                <div class="input-hint">This will be your church's unique URL: <span id="subdomainPreview">yourchurch</span>.churchsystem.com</div>
-            </div>
+            <form method="POST" action="{{ route('register') }}" id="registerForm" novalidate>
+                @csrf
 
-            <!-- Denomination -->
-            <div class="field">
-                <label>Denomination</label>
-                <div class="input-wrap">
-                    <input type="text" name="denomination" value="{{ old('denomination') }}" placeholder="e.g., Iglesia Ni Cristo">
-                    <span class="input-icon"><i class="fas fa-tag"></i></span>
-                </div>
-            </div>
-
-            <!-- Church Location -->
-            <div class="field">
-                <label>Church Location</label>
-                <div class="input-wrap">
-                    <input type="text" name="church_location" value="{{ old('church_location') }}" placeholder="City, Address">
-                    <span class="input-icon"><i class="fas fa-map-marker-alt"></i></span>
-                </div>
-            </div>
-
-            <!-- Church Phone -->
-            <div class="field">
-                <label>Church Phone</label>
-                <div class="input-wrap">
-                    <input type="text" name="church_phone" value="{{ old('church_phone') }}" placeholder="0912-345-6789">
-                    <span class="input-icon"><i class="fas fa-phone"></i></span>
-                </div>
-            </div>
-
-            <!-- Administrator Account -->
-            <div class="section-label" style="margin-top: 0.6rem;">
-                <i class="fas fa-user-shield"></i> Administrator Account
-            </div>
-
-            <!-- Full Name -->
-            <div class="field">
-                <label>Full Name <span class="required">*</span></label>
-                <div class="input-wrap">
-                    <input type="text" name="name" value="{{ old('name') }}" required placeholder="John Doe">
-                    <span class="input-icon"><i class="fas fa-user"></i></span>
-                </div>
-            </div>
-
-            <!-- Email -->
-            <div class="field">
-                <label>Email Address <span class="required">*</span></label>
-                <div class="input-wrap">
-                    <input type="email" name="email" value="{{ old('email') }}" required placeholder="admin@yourchurch.com">
-                    <span class="input-icon"><i class="fas fa-envelope"></i></span>
-                </div>
-            </div>
-
-            <!-- Password -->
-            <div class="field">
-                <label>Password <span class="required">*</span></label>
-                <div class="input-wrap">
-                    <input type="password" name="password" id="password" class="has-eye" required placeholder="••••••••">
-                    <span class="input-icon"><i class="fas fa-lock"></i></span>
-                    <button type="button" class="eye-btn-inside" id="eyeBtn" aria-label="Toggle password visibility">
-                        <i class="fas fa-eye" id="eyeIcon"></i>
-                    </button>
-                </div>
-                <div class="input-hint">Minimum 8 characters</div>
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="field">
-                <label>Confirm Password <span class="required">*</span></label>
-                <div class="input-wrap">
-                    <input type="password" name="password_confirmation" id="passwordConfirm" class="has-eye" required placeholder="••••••••">
-                    <span class="input-icon"><i class="fas fa-lock"></i></span>
-                    <button type="button" class="eye-btn-inside" id="eyeBtnConfirm" aria-label="Toggle confirm password visibility">
-                        <i class="fas fa-eye" id="eyeIconConfirm"></i>
-                    </button>
-                </div>
-            </div>
-
-            <button type="submit" class="btn-submit" id="registerBtn">
-                <i class="fas fa-check-circle"></i> Create Account
-            </button>
-
-            <div class="form-footer">
-                Already have an account? <a href="{{ route('login') }}">Sign In →</a>
-            </div>
-
-            <div class="security-note">
-                <i class="fas fa-shield-alt"></i>
-                Faith-Based Security · Naluwas System
-            </div>
-        </form>
-    </div>
-
-    <!-- Right Panel - Logo -->
-    <div class="right-panel">
-        <div class="logo-container">
-            <div class="logo-wrapper">
-                <div class="logo-ring"></div>
-                <div class="logo-ring"></div>
-                <div class="logo-ring"></div>
-                
-                <div class="particles">
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                    <div class="particle"></div>
-                </div>
-
-                @if(file_exists(public_path('images/logo1.png')))
-                    <img src="{{ asset('images/logo1.png') }}" alt="Naluwas Church" class="logo-image">
-                @else
-                    <div class="logo-fallback">
-                        <i class="fas fa-church"></i>
+                {{-- STEP 1 --}}
+                <div class="step" id="step1">
+                    <div class="field">
+                        <div class="input">
+                            <input type="text" name="church_name" id="church_name" value="{{ old('church_name') }}" placeholder=" " required autocomplete="organization">
+                            <label for="church_name">Church name</label>
+                        </div>
                     </div>
-                @endif
-            </div>
-        </div>
 
-        <div class="church-name">
-            Naluwas <span>Church</span>
-        </div>
-        <div class="church-tagline">Management System</div>
-        <div class="divider-line"></div>
+                    <div class="field">
+                        <div class="input">
+                            <input type="text" name="subdomain" id="subdomainInput" value="{{ old('subdomain') }}" placeholder=" " required autocomplete="off" autocapitalize="off">
+                            <label for="subdomainInput">Web address (e.g. yourchurch)</label>
+                        </div>
+                        <div class="hint">Your team signs in at <b><span id="subdomainPreview">yourchurch</span>.churchsystem.com</b></div>
+                    </div>
 
-        <div class="panel-verse">
-            <div class="verse-text">"I am the way and the truth and the life."</div>
-            <div class="verse-ref">✝ John 14:6</div>
-        </div>
-    </div>
-</div>
+                    <div class="field">
+                        <div class="input">
+                            <input type="text" name="denomination" id="denomination" value="{{ old('denomination') }}" placeholder=" ">
+                            <label for="denomination">Denomination (optional)</label>
+                        </div>
+                    </div>
 
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+                    <div class="actions">
+                        <button type="button" class="btn" id="nextBtn"><span>Continue</span></button>
+                    </div>
+                </div>
+
+                {{-- STEP 2 --}}
+                <div class="step" id="step2">
+                    <div class="field">
+                        <div class="input">
+                            <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder=" " required autocomplete="name">
+                            <label for="name">Full name</label>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="input">
+                            <input type="email" name="email" id="email" value="{{ old('email') }}" placeholder=" " required autocomplete="username">
+                            <label for="email">Email</label>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="input">
+                            <input type="password" name="password" id="password" placeholder=" " required minlength="8" autocomplete="new-password">
+                            <label for="password">Password</label>
+                            <button type="button" class="eye" data-eye aria-label="Show password"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <div class="meter" id="pwMeter"><span></span><span></span><span></span><span></span></div>
+                        <div class="meter-text"><span id="pwText"></span></div>
+                    </div>
+
+                    <div class="field">
+                        <div class="input">
+                            <input type="password" name="password_confirmation" id="passwordConfirm" placeholder=" " required autocomplete="new-password">
+                            <label for="passwordConfirm">Confirm password</label>
+                            <button type="button" class="eye" data-eye aria-label="Show password"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <div class="meter-text"><span class="match" id="pwMatch"></span></div>
+                    </div>
+
+                    <div class="actions">
+                        <button type="button" class="btn ghost" id="backBtn" aria-label="Back"><i class="fas fa-arrow-left"></i></button>
+                        <button type="submit" class="btn" id="registerBtn"><span>Sign up</span></button>
+                    </div>
+                </div>
+
+                <p class="alt">Already have an account? <a class="link" href="{{ route('login') }}">Sign in</a></p>
+            </form>
+
+            <p class="m-verse">"I am the way, the truth, and the life."<small>John 14:6</small></p>
+        </div>
+    </section>
+
+    {{-- ===== BRAND (web) ===== --}}
+    <section class="brand-side">
+        <div class="scene">@include('auth.partials.church-scene')</div>
+        <blockquote class="verse">"I am the way, the truth, and the life."<small>John 14:6</small></blockquote>
+    </section>
+</main>
+
 <script>
-    AOS.init();
+    var step = {{ $startStep }};
+    var s1 = document.getElementById('step1'), s2 = document.getElementById('step2');
 
-    // Theme Toggle
-    const html = document.documentElement;
-    const themeBtn = document.getElementById('fabThemeToggle');
-    const savedTheme = localStorage.getItem('tinc-theme') || 'light';
-    html.setAttribute('data-theme', savedTheme);
-    updateThemeIcon(savedTheme);
-
-    themeBtn.addEventListener('click', () => {
-        const current = html.getAttribute('data-theme');
-        const newTheme = current === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('tinc-theme', newTheme);
-        updateThemeIcon(newTheme);
-    });
-
-    function updateThemeIcon(theme) {
-        const icon = themeBtn.querySelector('i');
-        if (theme === 'dark') {
-            icon.className = 'fas fa-sun';
-        } else {
-            icon.className = 'fas fa-moon';
+    function show(n, focus) {
+        step = n;
+        s1.classList.toggle('show', n === 1);
+        s2.classList.toggle('show', n === 2);
+        document.getElementById('seg1').className = 'seg on';
+        document.getElementById('seg2').className = 'seg' + (n === 2 ? ' on' : '');
+        document.getElementById('stepNo').textContent = n;
+        document.getElementById('stepName').textContent = n === 1 ? 'Your church' : 'Your account';
+        if (focus) {
+            var first = (n === 1 ? s1 : s2).querySelector('input');
+            if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, 50);
         }
     }
 
-    // Eye toggle - Password visibility
-    document.getElementById('eyeBtn').addEventListener('click', function(e) {
-        e.stopPropagation();
-        const inp = document.getElementById('password');
-        const ico = document.getElementById('eyeIcon');
-        
-        if (inp.type === 'password') {
-            inp.type = 'text';
-            ico.className = 'fas fa-eye-slash';
-            this.style.color = 'var(--primary)';
-        } else {
-            inp.type = 'password';
-            ico.className = 'fas fa-eye';
-            this.style.color = '';
-        }
+    document.getElementById('nextBtn').addEventListener('click', function () {
+        var ok = true;
+        s1.querySelectorAll('input[required]').forEach(function (i) { if (ok && !i.reportValidity()) ok = false; });
+        if (ok) show(2, true);
     });
+    document.getElementById('backBtn').addEventListener('click', function () { show(1, true); });
+    // Enter on step 1 moves forward instead of submitting
+    s1.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('nextBtn').click(); } });
 
-    // Eye toggle - Confirm Password visibility
-    document.getElementById('eyeBtnConfirm').addEventListener('click', function(e) {
-        e.stopPropagation();
-        const inp = document.getElementById('passwordConfirm');
-        const ico = document.getElementById('eyeIconConfirm');
-        
-        if (inp.type === 'password') {
-            inp.type = 'text';
-            ico.className = 'fas fa-eye-slash';
-            this.style.color = 'var(--primary)';
-        } else {
-            inp.type = 'password';
-            ico.className = 'fas fa-eye';
-            this.style.color = '';
-        }
-    });
+    // subdomain
+    var sub = document.getElementById('subdomainInput'), subPrev = document.getElementById('subdomainPreview');
+    function cleanSub() { var v = sub.value.toLowerCase().replace(/[^a-z0-9-]/g, ''); sub.value = v; subPrev.textContent = v || 'yourchurch'; }
+    sub.addEventListener('input', cleanSub); cleanSub();
 
-    // ============================================
-    // SUBDOMAIN LIVE PREVIEW
-    // ============================================
-    const subdomainInput = document.getElementById('subdomainInput');
-    const subdomainPreview = document.getElementById('subdomainPreview');
-
-    if (subdomainInput && subdomainPreview) {
-        subdomainInput.addEventListener('input', function() {
-            const value = this.value.trim().toLowerCase();
-            const cleanValue = value.replace(/[^a-z0-9-]/g, '');
-            this.value = cleanValue;
-            subdomainPreview.textContent = cleanValue || 'yourchurch';
+    // show / hide password
+    document.querySelectorAll('[data-eye]').forEach(function (b) {
+        b.addEventListener('click', function () {
+            var input = b.parentElement.querySelector('input'), show = input.type === 'password';
+            input.type = show ? 'text' : 'password';
+            b.querySelector('i').className = show ? 'fas fa-eye-slash' : 'fas fa-eye';
         });
+    });
+
+    // strength + match
+    var pw = document.getElementById('password'), cf = document.getElementById('passwordConfirm'),
+        bars = document.querySelectorAll('#pwMeter span'), txt = document.getElementById('pwText'), match = document.getElementById('pwMatch');
+    var labels = ['Too short', 'Weak', 'Fair', 'Good', 'Strong'], colors = ['#f43f5e', '#f43f5e', '#F5B544', '#84cc16', '#16A34A'];
+    function score(v) {
+        if (!v.length) return -1;
+        if (v.length < 8) return 0;
+        var s = 1;
+        if (/[a-z]/.test(v) && /[A-Z]/.test(v)) s++;
+        if (/\d/.test(v)) s++;
+        if (/[^A-Za-z0-9]/.test(v) || v.length >= 14) s++;
+        return Math.min(s, 4);
     }
+    function paint() {
+        var s = score(pw.value);
+        bars.forEach(function (b, i) { b.style.background = (s >= 0 && i < Math.max(s, 1)) ? colors[s] : ''; });
+        txt.textContent = s < 0 ? '' : labels[s]; txt.style.color = s < 0 ? '' : colors[s];
+        if (cf.value) {
+            var ok = cf.value === pw.value;
+            match.textContent = ok ? 'Passwords match' : 'Passwords do not match yet';
+            match.className = 'match ' + (ok ? 'ok' : 'bad');
+        } else { match.textContent = ''; }
+    }
+    pw.addEventListener('input', paint); cf.addEventListener('input', paint);
 
-    // ============================================
-    // FORM SUBMIT DISABLE BUTTON
-    // ============================================
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
-        const btn = document.getElementById('registerBtn');
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+    // submit loader
+    document.getElementById('registerForm').addEventListener('submit', function (e) {
+        if (pw.value !== cf.value) { e.preventDefault(); cf.focus(); paint(); return; }
+        var b = document.getElementById('registerBtn');
+        b.disabled = true; b.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Creating...</span>';
     });
 
-    // ============================================
-    // AUTO-SCROLL TO ERROR
-    // ============================================
-    document.addEventListener('DOMContentLoaded', function() {
-        const errorAlert = document.querySelector('.alert-box.error');
-        if (errorAlert) {
-            errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+    // theme
+    function syncThemeIcon() {
+        document.querySelector('#themeBtn i').className = document.documentElement.getAttribute('data-theme') === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    document.getElementById('themeBtn').addEventListener('click', function () {
+        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (dark) document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', 'dark');
+        try { localStorage.setItem('theme', dark ? 'light' : 'dark'); } catch (e) {}
+        syncThemeIcon();
     });
+    syncThemeIcon();
+    show(step, false);
 </script>
 </body>
 </html>

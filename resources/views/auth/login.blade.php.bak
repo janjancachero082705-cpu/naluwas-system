@@ -1,0 +1,245 @@
+﻿<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name', 'TINC Church System') }} - Login</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-body: #F4F5FE;
+            --primary: #6C5DD3;
+            --primary-hover: #5A4BCA;
+            --primary-soft: #F0EEFF;
+            --text-main: #1A1A1A;
+            --text-muted: #7A7A7A;
+            --border: #F0F0F0;
+            --card-bg: #FFFFFF;
+        }
+
+        body {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 1.5rem;
+            background: var(--bg-body);
+            background-image: radial-gradient(circle at top left, rgba(108, 93, 211, 0.08) 0%, transparent 40%);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-main);
+        }
+
+        .login-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+            max-width: 1000px;
+            background: var(--card-bg);
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(108, 93, 211, 0.15);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        /* Left Side: Form */
+        .form-side { padding: 3rem; display: flex; flex-direction: column; justify-content: center; }
+        .form-side h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+        .form-side .lead { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem; }
+
+        .error-box {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 1.5rem; padding: 1rem;
+            border-radius: 12px; background: #FEF2F2; color: #DC2626;
+            font-size: 0.85rem; font-weight: 500; border: 1px solid #FECACA;
+        }
+
+        .field { margin-bottom: 1.25rem; }
+        .field label { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+        .input-wrap { position: relative; }
+        .input-wrap i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem; }
+        .input-wrap input {
+            width: 100%; padding: 0.85rem 2.5rem 0.85rem 2.75rem;
+            border: 1px solid var(--border); border-radius: 12px;
+            background: var(--bg-body); font-family: inherit; font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        .input-wrap input:focus { outline: none; background: #fff; border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-soft); }
+        
+        .toggle-pw {
+            position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%);
+            width: 36px; height: 36px; border: none; border-radius: 8px;
+            background: transparent; color: var(--text-muted); cursor: pointer;
+        }
+        .toggle-pw:hover { color: var(--primary); background: var(--bg-body); }
+
+        .row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; font-size: 0.85rem; }
+        .remember { display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); cursor: pointer; }
+        .remember input { accent-color: var(--primary); width: 16px; height: 16px; }
+        .row a { color: var(--primary); font-weight: 600; text-decoration: none; }
+
+        .btn-login {
+            width: 100%; padding: 0.9rem; border: none; border-radius: 12px;
+            background: var(--primary); color: #fff; font-weight: 600; font-size: 1rem;
+            cursor: pointer; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px;
+            box-shadow: 0 8px 20px rgba(108, 93, 211, 0.3);
+        }
+        .btn-login:hover { background: var(--primary-hover); transform: translateY(-2px); }
+
+        .secure { margin-top: 1.5rem; text-align: center; font-size: 0.8rem; color: var(--text-muted); }
+
+        /* 🚨 BAG-O NGA CSS PARA SA REGISTER LINK */
+        .register-link {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .register-link a {
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .register-link a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+
+        /* Right Side: Branding */
+        .brand-side {
+            background: linear-gradient(135deg, #6C5DD3 0%, #4B3BB3 100%);
+            padding: 3rem; display: flex; flex-direction: column; justify-content: center;
+            color: #fff; position: relative; overflow: hidden;
+        }
+        .brand-side::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+        }
+        .brand-mark { display: flex; align-items: center; gap: 12px; margin-bottom: 3rem; position: relative; z-index: 1; }
+        .brand-mark .logo { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 14px; background: rgba(255,255,255,0.2); font-size: 1.2rem; backdrop-filter: blur(10px); }
+        .brand-mark .name { font-size: 1.2rem; font-weight: 700; }
+        .brand-mark .sub { font-size: 0.75rem; color: rgba(255,255,255,0.7); }
+
+        .brand-copy h2 { font-size: 2rem; font-weight: 700; line-height: 1.2; margin-bottom: 1rem; position: relative; z-index: 1; }
+        .brand-copy p { font-size: 0.95rem; color: rgba(255,255,255,0.8); max-width: 30ch; position: relative; z-index: 1; }
+
+        .brand-list { list-style: none; display: grid; gap: 1rem; margin-top: 2rem; position: relative; z-index: 1; }
+        .brand-list li { display: flex; align-items: center; gap: 12px; font-size: 0.9rem; font-weight: 500; }
+        .brand-list i { width: 20px; color: rgba(255,255,255,0.8); }
+
+        @media (max-width: 860px) {
+            .login-card { grid-template-columns: 1fr; max-width: 440px; border-radius: 24px; }
+            .brand-side { display: none; }
+            .form-side { padding: 2.5rem 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<main class="login-card">
+    <!-- FORM SIDE -->
+    <section class="form-side">
+        <h1>Welcome Back</h1>
+        <p class="lead">Sign in to access your church dashboard.</p>
+
+        @if(session('error') || $errors->any())
+            <div class="error-box" role="alert">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{{ session('error') ?? $errors->first() }}</span>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+
+            <div class="field">
+                <label for="email">Email Address</label>
+                <div class="input-wrap">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="email" id="email" value="{{ old('email') }}" autocomplete="username" required autofocus placeholder="admin@church.com">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="password">Password</label>
+                <div class="input-wrap">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" id="password" autocomplete="current-password" required placeholder="••••••••">
+                    <button type="button" class="toggle-pw" id="togglePw" aria-label="Show password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="remember">
+                    <input type="checkbox" name="remember"> Remember me
+                </label>
+                @if (Route::has('password.request'))
+                    <a href="{{ route('password.request') }}">Forgot password?</a>
+                @endif
+            </div>
+
+            <button type="submit" class="btn-login">
+                Sign In <i class="fas fa-arrow-right"></i>
+            </button>
+
+            <p class="secure"><i class="fas fa-shield-halved"></i> Secured by TINC System</p>
+
+            <!-- 🚨 BAG-O NGA REGISTER LINK (Makita sa Desktop ug Mobile) -->
+            @if (Route::has('register'))
+                <div class="register-link">
+                    Don't have an account? <a href="{{ route('register') }}">Register here</a>
+                </div>
+            @endif
+        </form>
+    </section>
+
+    <!-- BRANDING SIDE -->
+    <section class="brand-side">
+        <div class="brand-mark">
+            <div class="logo"><i class="fas fa-church"></i></div>
+            <div>
+                <div class="name">TINC</div>
+                <div class="sub">Church Management System</div>
+            </div>
+        </div>
+
+        <div class="brand-copy">
+            <h2>Manage your ministry with ease.</h2>
+            <p>Everything you need to track members, attendance, finances, and choir schedules.</p>
+        </div>
+
+        <ul class="brand-list">
+            <li><i class="fas fa-check-circle"></i> Member Management</li>
+            <li><i class="fas fa-check-circle"></i> Attendance Tracking</li>
+            <li><i class="fas fa-check-circle"></i> Financial Reports</li>
+        </ul>
+    </section>
+</main>
+
+<script>
+    document.getElementById('togglePw').addEventListener('click', function () {
+        var input = document.getElementById('password');
+        var icon = this.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.className = 'fas fa-eye-slash';
+        } else {
+            input.type = 'password';
+            icon.className = 'fas fa-eye';
+        }
+    });
+</script>
+
+</body>
+</html>
