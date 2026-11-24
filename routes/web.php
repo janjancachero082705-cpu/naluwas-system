@@ -1,5 +1,7 @@
 <?php
 
+
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilePictureController;
 use App\Http\Controllers\DashboardController;
@@ -16,6 +18,14 @@ use App\Http\Controllers\SettingsController;
 use App\Models\Church;
 use App\Models\User;
 use App\Models\ChurchSetting;
+
+// TINC welcome page (gibutang sa taas aron mao ang unang mo-match)
+Route::get('/', function () {
+    if (auth()->check() && Route::has('dashboard')) {
+        return redirect()->route('dashboard');
+    }
+    return view('tinc-welcome');
+})->name('tinc.welcome');
 
 /*
 |--------------------------------------------------------------------------
@@ -73,11 +83,11 @@ Route::middleware('auth')->group(function () {
     // Profile page
 
 
-    // Profile update (AJAX ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â used by the profile page)
+    // Profile update (AJAX ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â used by the profile page)
 
 
 
-    // ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ NEW: Language update from profile page
+    // ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ NEW: Language update from profile page
 
 
     // Password update (from security modal)
@@ -192,13 +202,13 @@ Route::middleware(['auth'])->group(function () {
     // ============================================
     Route::prefix('messages')->name('messages.')->group(function () {
         Route::get('/', [MessageController::class, 'index'])->name('index');
+        Route::get('/unread-count', [MessageController::class, 'unreadCount'])->name('unread-count');
+        Route::post('/mark-all-read', [MessageController::class, 'markAllRead'])->name('mark-all-read');
         Route::get('/create', [MessageController::class, 'create'])->name('create');
         Route::post('/', [MessageController::class, 'store'])->name('store');
         Route::get('/{id}', [MessageController::class, 'show'])->name('show');
         Route::get('/conversation/{churchId}', [MessageController::class, 'conversation'])->name('conversation');
         Route::post('/{id}/read', [MessageController::class, 'markRead'])->name('mark-read');
-        Route::post('/mark-all-read', [MessageController::class, 'markAllRead'])->name('mark-all-read');
-        Route::get('/unread-count', [MessageController::class, 'unreadCount'])->name('unread-count');
         Route::post('/{id}/archive', [MessageController::class, 'archive'])->name('archive');
         Route::delete('/{id}', [MessageController::class, 'destroy'])->name('destroy');
     });
@@ -226,7 +236,7 @@ Route::middleware('guest')->group(function () {
 
             $user = Auth::user();
 
-            // ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦ Track last login
+            // ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ Track last login
             $user->last_login_at = now();
             $user->last_activity = now();
             $user->save();
@@ -333,3 +343,5 @@ Route::middleware(['auth'])->prefix('inventory')->name('inventory.')->group(func
         Route::delete('/{transaction}',   [\App\Http\Controllers\InventoryController::class, 'destroy'])->whereNumber('transaction')->name('destroy');
     });
 });
+
+

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title') | {{ config('app.name', 'Church System') }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        /* remember that we came from the other auth page so the form can fade in */
+        try { if (sessionStorage.getItem('auSwap')) { document.documentElement.classList.add('swap-in'); sessionStorage.removeItem('auSwap'); } } catch (e) {}
+    </script>
+    <style>
+        :root{
+            --blue:#3B6BE8; --blue-d:#2f58c4; --coral:#F0575A; --ink:#1c1d21; --mut:#6b7280;
+            --line:#cbd2dc; --bg:#eef2ff; --panel:#f1f1f3; --danger:#e11d48; --ok:#16A34A;
+        }
+        *{box-sizing:border-box}
+        html,body{margin:0;min-height:100%}
+        body{font-family:'Poppins',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+        .au-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+
+        /* ---------- card ---------- */
+        .au-card{width:100%;max-width:1040px;background:#fff;border-radius:28px;padding:28px;display:flex;gap:32px;
+            box-shadow:0 20px 60px rgba(59,107,232,.12);overflow:hidden}
+        .au-card.rev{flex-direction:row-reverse}
+        .au-formside{flex:1 1 0;min-width:0;display:flex;flex-direction:column;padding:4px 12px}
+        .au-art{flex:0 0 46%;position:relative;background:var(--panel);border-radius:24px;min-height:560px;
+            display:flex;align-items:center;justify-content:center;overflow:hidden}
+        .au-art svg{width:78%;height:auto;max-height:80%}
+        .au-verse{position:absolute;left:20px;right:20px;bottom:44px;text-align:center;font-size:13px;color:var(--mut);line-height:1.5}
+        .au-verse small{display:block;margin-top:2px;font-size:11px;color:#9ca3af}
+        .au-dots{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+        .au-dots i{width:6px;height:6px;border-radius:99px;background:#d4d7dd}
+        .au-dots i:first-child{width:22px;background:var(--blue)}
+
+        .au-logo{display:flex;align-items:center;gap:8px;font-weight:600;font-size:18px;letter-spacing:-.01em}
+        .au-logo b{width:28px;height:28px;border-radius:50% 50% 50% 8px;background:var(--blue);color:#fff;
+            display:grid;place-items:center;font-size:13px}
+        .au-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:28px 0 12px;max-width:420px;width:100%}
+
+        /* ---------- heading ---------- */
+        .au-ico{display:none}
+        .au-head h1{margin:0 0 6px;font-size:28px;font-weight:600;letter-spacing:-.02em}
+        .au-head p{margin:0 0 24px;font-size:13px;color:var(--mut)}
+
+        /* ---------- fields (outlined, label sits on the border) ---------- */
+        .fld{position:relative;margin-bottom:18px}
+        .fld input{width:100%;height:46px;padding:0 14px;font:inherit;font-size:14px;color:var(--ink);background:#fff;
+            border:1px solid var(--line);border-radius:4px;outline:0;transition:border-color .2s,box-shadow .2s}
+        .fld input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,107,232,.14)}
+        .fld label{position:absolute;left:10px;top:-8px;padding:0 5px;background:#fff;font-size:12px;color:#4b5563;
+            transition:color .2s;pointer-events:none}
+        .fld input:focus + label{color:var(--blue)}
+        .fld .lead{display:none}
+        .fld:has(.eye) input{padding-right:46px}
+        .eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:none;
+            color:#6b7280;cursor:pointer;border-radius:50%}
+        .eye:hover{color:var(--ink)}
+        .hint{font-size:12px;color:var(--mut)}
+        .hint b{color:var(--ink);font-weight:500}
+
+        .au-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;margin-bottom:20px}
+        .au-check{display:flex;align-items:center;gap:8px;cursor:pointer;color:#374151}
+        .au-check input{width:15px;height:15px;accent-color:var(--blue)}
+        .au-link{color:var(--coral);text-decoration:none;font-weight:500}
+        .au-link:hover{text-decoration:underline}
+
+        /* ---------- buttons ---------- */
+        .au-actions{display:flex;gap:10px;margin-top:20px}
+        .au-actions .au-btn{margin-top:0}
+        .au-btn{width:100%;height:46px;margin-top:4px;border:0;border-radius:4px;background:var(--blue);color:#fff;font:inherit;
+            font-size:14px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+            transition:background .2s,transform .15s}
+        .au-btn:hover{background:var(--blue-d)}
+        .au-btn:active{transform:scale(.985)}
+        .au-btn:disabled{opacity:.7;cursor:wait}
+        .au-btn.ghost{flex:0 0 52px;width:52px;background:#fff;color:var(--blue);border:1px solid var(--blue)}
+        .au-btn.ghost:hover{background:#f1f5ff}
+        .au-alt{margin:18px 0 0;text-align:center;font-size:12px;color:#374151}
+
+        /* ---------- alerts ---------- */
+        .au-alert{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;margin-bottom:16px;border-radius:6px;
+            font-size:13px;background:#fff1f2;color:#9f1239;border:1px solid #fecdd3}
+        .au-alert.ok{background:#f0fdf4;color:#166534;border-color:#bbf7d0}
+
+        /* ---------- register steps ---------- */
+        .progress{display:flex;gap:6px;margin-bottom:8px}
+        .seg{flex:1;height:4px;border-radius:99px;background:#e5e7eb;transition:background .3s}
+        .seg:first-child,.seg.on{background:var(--blue)}
+        .step-note{font-size:12px;color:var(--mut);margin-bottom:18px}
+        .step-note b{color:var(--ink)}
+        .step{display:none}
+        .step.show{display:block;animation:stepIn .35s cubic-bezier(.2,.7,.2,1)}
+        @keyframes stepIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+        .meter{display:flex;gap:4px;margin-top:8px}
+        .meter span{flex:1;height:4px;border-radius:99px;background:#e5e7eb;transition:background .25s}
+        .meter-text{font-size:12px;min-height:18px;margin-top:4px}
+        .match.ok{color:var(--ok)} .match.bad{color:var(--danger)}
+
+        /* ---------- login <-> register swap animation ---------- */
+        .au-art,.au-formside{will-change:transform}
+        .swapping .au-art,.swapping .au-formside{transition:transform .62s cubic-bezier(.65,0,.25,1),opacity .35s ease}
+        .swapping .au-formside{pointer-events:none}
+        .swap-in .au-formside{animation:formIn .5s .05s cubic-bezier(.2,.7,.2,1) both}
+        @keyframes formIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+        /* floating illustration */
+        .float{animation:float 5s ease-in-out infinite;transform-origin:center}
+        .float2{animation:float 6.5s ease-in-out -2s infinite}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+        @media (prefers-reduced-motion:reduce){
+            .float,.float2,.step.show,.swap-in .au-formside{animation:none}
+        }
+
+        @media (max-width:860px){
+            .au-art{display:none}
+            .au-card{max-width:480px;padding:20px;border-radius:22px}
+            .au-body{max-width:none}
+        }
+            /* ---- scenes: image depende sa buhaton sa user ---- */
+        .au-art .scenes{position:relative;width:78%;aspect-ratio:360/420;max-height:80%}
+        .au-art .scenes svg{position:absolute;inset:0;width:100%;height:100%;max-height:none;opacity:0;transform:scale(.9) translateY(14px);
+            transition:opacity .45s ease,transform .55s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+        .au-art .scenes svg.on{opacity:1;transform:none}
+        @media (prefers-reduced-motion:reduce){.au-art .scenes svg{transition:none}}
+            /* v3: mas gamay + mas limpyo */
+        .au-dots{display:none}
+        .au-card{max-width:880px;padding:20px;gap:24px;border-radius:24px}
+        .au-formside{padding:2px 8px}
+        .au-art{flex:0 0 42%;min-height:420px;border-radius:20px;background:linear-gradient(160deg,#f6f8fe,#e8edfb)}
+        .au-art .scenes{width:70%;max-height:none}
+        .au-verse{bottom:20px;font-size:12px}
+        .au-verse small{font-size:10.5px}
+        .au-logo{font-size:15px}
+        .au-logo b{width:24px;height:24px;font-size:12px}
+        .au-body{max-width:330px;padding:16px 0 6px}
+        .au-head h1{font-size:22px;margin-bottom:4px}
+        .au-head p{font-size:12px;margin-bottom:16px}
+        .fld{margin-bottom:14px}
+        .fld input{height:40px;font-size:13px;padding:0 12px}
+        .fld label{font-size:11px;top:-7px}
+        .eye{width:32px;height:32px}
+        .au-btn{height:40px;font-size:13px}
+        .au-btn.ghost{flex:0 0 44px;width:44px}
+        .au-row{font-size:11.5px;margin-bottom:16px}
+        .au-alt{font-size:11.5px;margin-top:14px}
+        .hint{font-size:11.5px}
+        .step-note{font-size:11.5px;margin-bottom:14px}
+        .au-actions{margin-top:16px}
+    </style>
+</head>
+<body>
+<main class="au-page">
+    <div class="au-card @yield('modifier')" id="auCard">
+        <section class="au-formside" id="auForm">
+            <div class="au-logo"><b><i class="fas fa-church"></i></b> {{ config('app.name', 'Church System') }}</div>
+            <div class="au-body">
+                @yield('content')
+            </div>
+        </section>
+
+        <aside class="au-art" id="auArt" aria-hidden="true">
+            <div class="scenes">@hasSection('art')@yield('art')@else<svg class="scene on" data-scene="signin" viewBox="0 0 360 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="si-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b5ee3a"/><stop offset="1" stop-color="#5fb800"/></linearGradient>
+        <linearGradient id="si-b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7aa0f8"/><stop offset="1" stop-color="#2f58c4"/></linearGradient>
+        <filter id="si-s" x="-30%" y="-20%" width="160%" height="160%"><feDropShadow dx="0" dy="10" stdDeviation="9" flood-color="#2f58c4" flood-opacity=".28"/></filter>
+    </defs>
+    <circle cx="180" cy="214" r="150" fill="#fff" opacity=".65"/>
+    <circle cx="180" cy="214" r="108" fill="#fff" opacity=".6"/>
+    <ellipse cx="180" cy="396" rx="92" ry="11" fill="#000" opacity=".07"/>
+    <g filter="url(#si-s)"><rect x="102" y="46" width="156" height="328" rx="32" fill="url(#si-b)"/></g>
+    <rect x="110" y="54" width="140" height="312" rx="25" fill="#f8f9fe"/>
+    <rect x="152" y="62" width="56" height="10" rx="5" fill="#2f58c4"/>
+    <rect x="134" y="98" width="92" height="10" rx="5" fill="#dfe7fb"/>
+    <rect x="150" y="116" width="60" height="8" rx="4" fill="#eceffb"/>
+    <g class="float2">
+        <path d="M156 196v-20a24 24 0 0 1 48 0v20" stroke="#8da2e0" stroke-width="12" stroke-linecap="round"/>
+        <rect x="142" y="190" width="76" height="62" rx="15" fill="url(#si-g)"/>
+        <circle cx="180" cy="215" r="8" fill="#2f5a00"/>
+        <rect x="177" y="217" width="6" height="18" rx="3" fill="#2f5a00"/>
+    </g>
+    <rect x="128" y="274" width="104" height="32" rx="10" fill="#fff" stroke="#3B6BE8" stroke-width="3"/>
+    <g fill="#7ed321"><circle cx="150" cy="290" r="4.5"/><circle cx="168" cy="290" r="4.5"/><circle cx="186" cy="290" r="4.5"/><circle cx="204" cy="290" r="4.5"/></g>
+    <rect x="128" y="322" width="104" height="26" rx="9" fill="url(#si-b)"/>
+    <g class="float" filter="url(#si-s)">
+        <g transform="translate(100 122)">
+            <path d="M0 -46 L40 -32 V6 C40 32 22 50 0 60 C-22 50 -40 32 -40 6 V-32 Z" fill="url(#si-g)" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+            <path d="M-17 6 L-4 19 L19 -9" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+    </g>
+    <path transform="translate(292 96)" d="M0 -9L2.5 -2.5L9 0L2.5 2.5L0 9L-2.5 2.5L-9 0L-2.5 -2.5Z" fill="#8fd400"/>
+    <path transform="translate(62 262)" d="M0 -7L2 -2L7 0L2 2L0 7L-2 2L-7 0L-2 -2Z" fill="#3B6BE8" opacity=".7"/>
+    <circle cx="302" cy="300" r="5" fill="#3B6BE8" opacity=".35"/>
+</svg>@endif</div>
+            @hasSection('verse')
+                <div class="au-verse">@yield('verse')</div>
+            @endif
+            
+        </aside>
+    </div>
+</main>
+
+<script>
+(function () {
+    var card = document.getElementById('auCard'),
+        art  = document.getElementById('auArt'),
+        form = document.getElementById('auForm');
+
+    /* show / hide password */
+    document.querySelectorAll('[data-eye]').forEach(function (b) {
+        b.addEventListener('click', function () {
+            var i = b.parentNode.querySelector('input'), show = i.type === 'password';
+            i.type = show ? 'text' : 'password';
+            b.querySelector('i').className = 'fas ' + (show ? 'fa-eye-slash' : 'fa-eye');
+            b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+        });
+    });
+
+    /* login <-> register: the illustration and the form trade places, then we go to the other page */
+    document.querySelectorAll('[data-switch]').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+            e.preventDefault();
+            var href = a.href;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { location.href = href; return; }
+            try { sessionStorage.setItem('auSwap', '1'); } catch (x) {}
+
+            var fr = form.getBoundingClientRect(), ar = art.getBoundingClientRect(),
+                twoCol = getComputedStyle(art).display !== 'none';
+            card.classList.add('swapping');
+            if (twoCol) {
+                art.style.transform  = 'translateX(' + (fr.left - ar.left) + 'px)';
+                form.style.transform = 'translateX(' + (ar.right - fr.right) + 'px)';
+            }
+            form.style.opacity = 0;
+            setTimeout(function () { location.href = href; }, 640);
+        });
+    });
+
+    /* coming back with the browser Back button */
+    window.addEventListener('pageshow', function (e) {
+        if (!e.persisted) return;
+        card.classList.remove('swapping');
+        art.style.transform = form.style.transform = '';
+        form.style.opacity = '';
+    });
+})();
+</script>
+<script>window.auScene=function(n){document.querySelectorAll('.scenes .scene').forEach(function(s){s.classList.toggle('on',s.getAttribute('data-scene')===n);});};</script>
+@stack('scripts')
+</body>
+</html>

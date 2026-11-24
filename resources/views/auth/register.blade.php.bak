@@ -1,286 +1,148 @@
-﻿<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Register — TINC Church System</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+@extends('layouts.auth2')
+@section('title', 'Create account')
+@section('modifier', 'rev')
 
-    <style>
-        :root {
-            --bg-body: #F4F5FE;
-            --card-bg: #FFFFFF;
-            --primary: #6C5DD3;
-            --primary-hover: #5A4BCA;
-            --primary-soft: #F0EEFF;
-            --text-main: #1A1A1A;
-            --text-muted: #7A7A7A;
-            --border: #F0F0F0;
-        }
+@section('verse')"I am the way, the truth, and the life."<small>John 14:6</small>@endsection
 
-        [data-theme="dark"] {
-            --bg-body: #13111C;
-            --card-bg: #1C1A27;
-            --primary: #8A7DFF;
-            --primary-hover: #9F94FF;
-            --primary-soft: rgba(138, 125, 255, 0.1);
-            --text-main: #FFFFFF;
-            --text-muted: #A09EB0;
-            --border: #2D2A3E;
-        }
+@php
+    $step1Err = $errors->has('church_name') || $errors->has('subdomain') || $errors->has('denomination');
+    $step2Err = $errors->has('name') || $errors->has('email') || $errors->has('password');
+    $startStep = ($step2Err && ! $step1Err) ? 2 : 1;
+@endphp
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            background: var(--bg-body);
-            background-image: radial-gradient(circle at top right, rgba(108, 93, 211, 0.08) 0%, transparent 40%);
-            font-family: 'Poppins', sans-serif;
-            color: var(--text-main);
-            transition: background 0.3s ease;
-        }
-
-        .auth-wrap {
-            width: 100%;
-            max-width: 1050px;
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            background: var(--card-bg);
-            border-radius: 32px;
-            overflow: hidden;
-            box-shadow: 0 24px 60px rgba(108, 93, 211, 0.15);
-            border: 1px solid var(--border);
-        }
-
-        /* FORM PANEL */
-        .left-panel {
-            padding: 2.5rem 3rem;
-            overflow-y: auto;
-            max-height: 90vh;
-        }
-        .left-panel::-webkit-scrollbar { width: 6px; }
-        .left-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-
-        .form-head h2 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem; color: var(--text-main); }
-        .form-head p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; }
-
-        .section-label {
-            font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 1px; color: var(--primary); margin-top: 1.5rem; margin-bottom: 1rem;
-            display: flex; align-items: center; gap: 8px;
-        }
-
-        .field { margin-bottom: 1rem; }
-        .field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text-main); }
-        .input-wrap { position: relative; }
-        .input-wrap i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.9rem; }
-        .input-wrap input {
-            width: 100%; padding: 0.75rem 2.5rem 0.75rem 2.75rem;
-            border: 1px solid var(--border); border-radius: 12px;
-            background: var(--bg-body); font-family: inherit; font-size: 0.9rem;
-            color: var(--text-main); transition: all 0.2s ease;
-        }
-        .input-wrap input:focus { outline: none; background: var(--card-bg); border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-soft); }
-
-        .btn-submit {
-            width: 100%; padding: 0.9rem; margin-top: 1.5rem;
-            border: none; border-radius: 12px; background: var(--primary);
-            color: #fff; font-weight: 600; font-size: 1rem; cursor: pointer;
-            transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px;
-            box-shadow: 0 8px 20px rgba(108, 93, 211, 0.3);
-        }
-        .btn-submit:hover { background: var(--primary-hover); transform: translateY(-2px); }
-
-        .form-footer { text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); }
-        .form-footer a { color: var(--primary); font-weight: 600; text-decoration: none; }
-
-        /* RIGHT PANEL (BRANDING) */
-        .right-panel {
-            background: linear-gradient(160deg, #6C5DD3 0%, #4B3BB3 100%);
-            padding: 3rem 2rem; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-            color: #fff; position: relative; overflow: hidden;
-        }
-        .right-panel::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, transparent 70%);
-        }
-
-        .logo-container { position: relative; margin-bottom: 2rem; z-index: 1; }
-        .logo-image {
-            width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
-            border: 4px solid rgba(255,255,255,0.3);
-            box-shadow: 0 0 40px rgba(255,255,255,0.2);
-        }
-        .logo-fallback {
-            width: 120px; height: 120px; border-radius: 50%;
-            background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;
-            font-size: 3rem; border: 4px solid rgba(255,255,255,0.3);
-        }
-
-        .church-name { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; z-index: 1; }
-        .church-name span { color: #FCD34D; }
-        .church-tagline { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; opacity: 0.8; margin-top: 0.5rem; z-index: 1; }
-
-        .divider-line { width: 60px; height: 3px; background: rgba(255,255,255,0.4); margin: 2rem auto; border-radius: 3px; z-index: 1; }
-
-        .panel-verse { max-width: 280px; z-index: 1; }
-        .verse-text { font-size: 0.95rem; font-style: italic; line-height: 1.6; margin-bottom: 0.5rem; }
-        .verse-ref { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
-
-        /* Alert */
-        .alert-box { padding: 0.8rem 1rem; border-radius: 12px; font-size: 0.85rem; margin-bottom: 1.5rem; font-weight: 500; }
-        .alert-box.error { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; }
-
-        @media (max-width: 860px) {
-            .auth-wrap { grid-template-columns: 1fr; max-width: 500px; }
-            .right-panel { display: none; }
-            .left-panel { padding: 2rem; }
-        }
-    </style>
-</head>
-<body>
-
-<div class="auth-wrap">
-    <!-- FORM -->
-    <div class="left-panel">
-        <div class="form-head">
-            <h2>Create an Account</h2>
-            <p>Register your church and start managing today.</p>
-        </div>
-
-        @if($errors->any())
-            <div class="alert-box error">
-                <i class="fas fa-exclamation-circle"></i> {{ $errors->first() }}
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('register') }}" id="registerForm">
-            @csrf
-
-            <!-- Church Info -->
-            <div class="section-label"><i class="fas fa-building"></i> Church Information</div>
-            
-            <div class="field">
-                <label>Church Name *</label>
-                <div class="input-wrap">
-                    <i class="fas fa-church"></i>
-                    <input type="text" name="church_name" value="{{ old('church_name') }}" required placeholder="Naluwas Church">
-                </div>
-            </div>
-
-            <div class="field">
-                <label>Subdomain *</label>
-                <div class="input-wrap">
-                    <i class="fas fa-globe"></i>
-                    <input type="text" name="subdomain" value="{{ old('subdomain') }}" required placeholder="yourchurch" id="subdomainInput">
-                </div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
-                    URL: <span id="subdomainPreview" style="color: var(--primary); font-weight: 600;">yourchurch</span>.churchsystem.com
-                </div>
-            </div>
-
-            <div class="field">
-                <label>Denomination</label>
-                <div class="input-wrap">
-                    <i class="fas fa-tag"></i>
-                    <input type="text" name="denomination" value="{{ old('denomination') }}" placeholder="e.g., Iglesia Ni Cristo">
-                </div>
-            </div>
-
-            <!-- Admin Info -->
-            <div class="section-label"><i class="fas fa-user-shield"></i> Admin Account</div>
-
-            <div class="field">
-                <label>Full Name *</label>
-                <div class="input-wrap">
-                    <i class="fas fa-user"></i>
-                    <input type="text" name="name" value="{{ old('name') }}" required placeholder="John Doe">
-                </div>
-            </div>
-
-            <div class="field">
-                <label>Email Address *</label>
-                <div class="input-wrap">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" name="email" value="{{ old('email') }}" required placeholder="admin@yourchurch.com">
-                </div>
-            </div>
-
-            <div class="field">
-                <label>Password *</label>
-                <div class="input-wrap">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" name="password" id="password" required placeholder="••••••••">
-                </div>
-            </div>
-
-            <div class="field">
-                <label>Confirm Password *</label>
-                <div class="input-wrap">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" name="password_confirmation" id="passwordConfirm" required placeholder="••••••••">
-                </div>
-            </div>
-
-            <button type="submit" class="btn-submit" id="registerBtn">
-                Create Account <i class="fas fa-arrow-right"></i>
-            </button>
-
-            <div class="form-footer">
-                Already have an account? <a href="{{ route('login') }}">Sign In</a>
-            </div>
-        </form>
-    </div>
-
-    <!-- BRANDING -->
-    <div class="right-panel">
-        <div class="logo-container">
-            @if(file_exists(public_path('images/logo1.png')))
-                <img src="{{ asset('images/logo1.png') }}" alt="Church Logo" class="logo-image">
-            @else
-                <div class="logo-fallback"><i class="fas fa-church"></i></div>
-            @endif
-        </div>
-
-        <div class="church-name">TINC <span>Church</span></div>
-        <div class="church-tagline">Management System</div>
-        
-        <div class="divider-line"></div>
-
-        <div class="panel-verse">
-            <div class="verse-text">"I am the way and the truth and the life."</div>
-            <div class="verse-ref">John 14:6</div>
-        </div>
-    </div>
+@section('content')
+<div class="au-head">
+    <span class="au-ico"><i class="fas fa-church"></i></span>
+    <h1>Create account</h1>
+    <p>Set up your church in two quick steps.</p>
 </div>
 
+<div class="progress" aria-hidden="true"><span class="seg on" id="seg1"></span><span class="seg" id="seg2"></span></div>
+<div class="step-note">Step <b id="stepNo">1</b> of 2: <span id="stepName">Your church</span></div>
+
+@if($errors->any())
+    <div class="au-alert" role="alert"><i class="fas fa-circle-exclamation"></i><span>{{ $errors->first() }}</span></div>
+@endif
+
+<form method="POST" action="{{ route('register') }}" id="registerForm" novalidate>
+    @csrf
+
+    <div class="step" id="step1">
+        <div class="fld">
+            <input type="text" name="church_name" id="church_name" value="{{ old('church_name') }}" placeholder=" " required autocomplete="organization">
+            <label for="church_name">Church name</label>
+            <i class="fas fa-church lead"></i>
+        </div>
+        <div class="fld" style="margin-bottom:6px">
+            <input type="text" name="subdomain" id="subdomainInput" value="{{ old('subdomain') }}" placeholder=" " required autocomplete="off" autocapitalize="off">
+            <label for="subdomainInput">Web address (e.g. yourchurch)</label>
+            <i class="fas fa-globe lead"></i>
+        </div>
+        <div class="hint" style="margin-bottom:16px">Your team signs in at <b><span id="subdomainPreview">yourchurch</span>.churchsystem.com</b></div>
+        <div class="fld">
+            <input type="text" name="denomination" id="denomination" value="{{ old('denomination') }}" placeholder=" ">
+            <label for="denomination">Denomination (optional)</label>
+            <i class="fas fa-cross lead"></i>
+        </div>
+        <div class="au-actions">
+            <button type="button" class="au-btn" id="nextBtn"><span>Continue</span> <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </div>
+
+    <div class="step" id="step2">
+        <div class="fld">
+            <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder=" " required autocomplete="name">
+            <label for="name">Full name</label>
+            <i class="fas fa-user lead"></i>
+        </div>
+        <div class="fld">
+            <input type="email" name="email" id="email" value="{{ old('email') }}" placeholder=" " required autocomplete="username">
+            <label for="email">Email</label>
+            <i class="fas fa-envelope lead"></i>
+        </div>
+        <div class="fld" style="margin-bottom:0">
+            <input type="password" name="password" id="password" placeholder=" " required minlength="8" autocomplete="new-password">
+            <label for="password">Password</label>
+            <i class="fas fa-lock lead"></i>
+            <button type="button" class="eye" data-eye aria-label="Show password"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="meter" id="pwMeter"><span></span><span></span><span></span><span></span></div>
+        <div class="meter-text"><span id="pwText"></span></div>
+        <div class="fld" style="margin-top:10px;margin-bottom:0">
+            <input type="password" name="password_confirmation" id="passwordConfirm" placeholder=" " required autocomplete="new-password">
+            <label for="passwordConfirm">Confirm password</label>
+            <i class="fas fa-lock lead"></i>
+            <button type="button" class="eye" data-eye aria-label="Show password"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="meter-text" style="margin-bottom:14px"><span class="match" id="pwMatch"></span></div>
+        <div class="au-actions">
+            <button type="button" class="au-btn ghost" id="backBtn" aria-label="Back"><i class="fas fa-arrow-left"></i></button>
+            <button type="submit" class="au-btn" id="registerBtn"><span>Sign up</span></button>
+        </div>
+    </div>
+
+    <p class="au-alt">Already have an account? <a class="au-link" href="{{ route('login') }}">Sign in</a></p>
+</form>
+@endsection
+
+@push('scripts')
 <script>
-    // Subdomain Preview
-    const subdomainInput = document.getElementById('subdomainInput');
-    const subdomainPreview = document.getElementById('subdomainPreview');
-    if (subdomainInput) {
-        subdomainInput.addEventListener('input', function() {
-            const val = this.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
-            this.value = val;
-            subdomainPreview.textContent = val || 'yourchurch';
-        });
+    var step = {{ $startStep }};
+    var s1 = document.getElementById('step1'), s2 = document.getElementById('step2');
+
+    function show(n, focus) {
+        step = n;
+        s1.classList.toggle('show', n === 1);
+        s2.classList.toggle('show', n === 2);
+        document.getElementById('seg2').className = 'seg' + (n === 2 ? ' on' : '');
+        document.getElementById('stepNo').textContent = n;
+        document.getElementById('stepName').textContent = n === 1 ? 'Your church' : 'Your account';
+        if (focus) {
+            var first = (n === 1 ? s1 : s2).querySelector('input');
+            if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, 50);
+        }
     }
-
-    // Submit Loader
-    document.getElementById('registerForm').addEventListener('submit', function() {
-        const btn = document.getElementById('registerBtn');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
-        btn.style.opacity = '0.7';
+    document.getElementById('nextBtn').addEventListener('click', function () {
+        var ok = true;
+        s1.querySelectorAll('input[required]').forEach(function (i) { if (ok && !i.reportValidity()) ok = false; });
+        if (ok) show(2, true);
     });
-</script>
+    document.getElementById('backBtn').addEventListener('click', function () { show(1, true); });
+    s1.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('nextBtn').click(); } });
 
-</body>
-</html>
+    var sub = document.getElementById('subdomainInput'), subPrev = document.getElementById('subdomainPreview');
+    function cleanSub() { var v = sub.value.toLowerCase().replace(/[^a-z0-9-]/g, ''); sub.value = v; subPrev.textContent = v || 'yourchurch'; }
+    sub.addEventListener('input', cleanSub); cleanSub();
+
+    var pw = document.getElementById('password'), cf = document.getElementById('passwordConfirm'),
+        bars = document.querySelectorAll('#pwMeter span'), txt = document.getElementById('pwText'), match = document.getElementById('pwMatch');
+    var labels = ['Too short', 'Weak', 'Fair', 'Good', 'Strong'], colors = ['#f43f5e', '#f43f5e', '#F5B544', '#84cc16', '#16A34A'];
+    function score(v) {
+        if (!v.length) return -1;
+        if (v.length < 8) return 0;
+        var s = 1;
+        if (/[a-z]/.test(v) && /[A-Z]/.test(v)) s++;
+        if (/\d/.test(v)) s++;
+        if (/[^A-Za-z0-9]/.test(v) || v.length >= 14) s++;
+        return Math.min(s, 4);
+    }
+    function paint() {
+        var s = score(pw.value);
+        bars.forEach(function (b, i) { b.style.background = (s >= 0 && i < Math.max(s, 1)) ? colors[s] : ''; });
+        txt.textContent = s < 0 ? '' : labels[s]; txt.style.color = s < 0 ? '' : colors[s];
+        if (cf.value) {
+            var ok = cf.value === pw.value;
+            match.textContent = ok ? 'Passwords match' : 'Passwords do not match yet';
+            match.className = 'match ' + (ok ? 'ok' : 'bad');
+        } else { match.textContent = ''; }
+    }
+    pw.addEventListener('input', paint); cf.addEventListener('input', paint);
+
+    document.getElementById('registerForm').addEventListener('submit', function (e) {
+        if (pw.value !== cf.value) { e.preventDefault(); cf.focus(); paint(); return; }
+        var b = document.getElementById('registerBtn');
+        b.disabled = true; b.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Creating...</span>';
+    });
+    show(step, false);
+</script>
+@endpush

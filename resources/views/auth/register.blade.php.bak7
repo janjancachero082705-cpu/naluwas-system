@@ -1,0 +1,257 @@
+@extends('layouts.auth3')
+@section('title', 'Create account')
+@section('modifier', 'rev')
+
+@section('verse')"I am the way, the truth, and the life."<small>John 14:6</small>@endsection
+@section('art')
+<svg class="scene" data-scene="church" viewBox="0 0 360 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="ch-w" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e3eafc"/></linearGradient>
+        <linearGradient id="ch-r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d94f5"/><stop offset="1" stop-color="#2f58c4"/></linearGradient>
+        <filter id="ch-s" x="-20%" y="-30%" width="140%" height="180%"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#2f58c4" flood-opacity=".25"/></filter>
+    </defs>
+    <circle cx="180" cy="230" r="150" fill="#fff" opacity=".65"/>
+    <ellipse cx="180" cy="392" rx="170" ry="30" fill="#cdeb94" opacity=".55"/>
+    <ellipse cx="180" cy="396" rx="120" ry="14" fill="#000" opacity=".06"/>
+    <circle cx="58" cy="352" r="22" fill="#9ed84a"/><rect x="55" y="362" width="6" height="26" rx="3" fill="#6c9a2d"/>
+    <circle cx="302" cy="356" r="18" fill="#9ed84a"/><rect x="299" y="364" width="6" height="22" rx="3" fill="#6c9a2d"/>
+    <g transform="translate(0 16)" filter="url(#ch-s)">
+        <polygon points="84,214 180,172 276,214" fill="url(#ch-r)"/>
+        <rect x="100" y="214" width="160" height="126" fill="url(#ch-w)"/>
+        <rect x="154" y="118" width="52" height="112" fill="url(#ch-w)"/>
+        <polygon points="146,122 180,80 214,122" fill="url(#ch-r)"/>
+        <circle cx="180" cy="58" r="24" fill="#8fd400" opacity=".22"/>
+        <path d="M180 44v34M168 57h24" stroke="#7ed321" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="180" cy="168" r="14" fill="#fff" stroke="#6d94f5" stroke-width="4"/>
+        <path d="M180 160v16M172 168h16" stroke="#6d94f5" stroke-width="3" stroke-linecap="round"/>
+        <rect x="114" y="250" width="22" height="42" rx="11" fill="#fff" stroke="#6d94f5" stroke-width="4"/>
+        <rect x="224" y="250" width="22" height="42" rx="11" fill="#fff" stroke="#6d94f5" stroke-width="4"/>
+        <path d="M158 340v-38a22 22 0 0 1 44 0v38z" fill="url(#ch-r)"/>
+        <rect x="144" y="340" width="72" height="9" rx="3" fill="#c5d2f3"/>
+    </g>
+    <g class="float">
+        <rect x="56" y="6" width="248" height="34" rx="17" fill="#fff"/>
+        <circle cx="78" cy="23" r="8" fill="#8fd400"/>
+        <text x="94" y="27.5" font-family="Poppins,sans-serif" font-size="12" font-weight="500" fill="#1c1d21">yourchurch.churchsystem.com</text>
+    </g>
+    <path transform="translate(58 130)" d="M0 -8L2 -2L8 0L2 2L0 8L-2 2L-8 0L-2 -2Z" fill="#3B6BE8" opacity=".7"/>
+    <path transform="translate(306 168)" d="M0 -9L2.5 -2.5L9 0L2.5 2.5L0 9L-2.5 2.5L-9 0L-2.5 -2.5Z" fill="#8fd400"/>
+</svg>
+
+<svg class="scene" data-scene="profile" viewBox="0 0 360 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="pf-b" gradientUnits="userSpaceOnUse" x1="66" y1="64" x2="294" y2="150"><stop offset="0" stop-color="#7aa0f8"/><stop offset="1" stop-color="#2f58c4"/></linearGradient>
+        <linearGradient id="pf-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b5ee3a"/><stop offset="1" stop-color="#5fb800"/></linearGradient>
+        <filter id="pf-s" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="9" flood-color="#2f58c4" flood-opacity=".25"/></filter>
+    </defs>
+    <circle cx="180" cy="214" r="150" fill="#fff" opacity=".65"/>
+    <ellipse cx="180" cy="396" rx="100" ry="11" fill="#000" opacity=".07"/>
+    <g filter="url(#pf-s)">
+        <rect x="66" y="54" width="228" height="302" rx="28" fill="#fff"/>
+    </g>
+    <path d="M66 82a28 28 0 0 1 28-28h172a28 28 0 0 1 28 28v66H66z" fill="url(#pf-b)"/>
+    <circle cx="180" cy="148" r="42" fill="#fff"/>
+    <circle cx="180" cy="148" r="35" fill="#dfe7fb"/>
+    <circle cx="180" cy="139" r="13" fill="#3B6BE8"/>
+    <path d="M153 176a27 23 0 0 1 54 0z" fill="#3B6BE8"/>
+    <g class="float2">
+        <circle cx="218" cy="122" r="16" fill="url(#pf-g)" stroke="#fff" stroke-width="6"/>
+        <path d="M211 122l5 5 10-11" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <rect x="128" y="208" width="104" height="12" rx="6" fill="#dfe7fb"/>
+    <rect x="148" y="228" width="64" height="8" rx="4" fill="#eceffb"/>
+    <rect x="92" y="254" width="176" height="34" rx="10" fill="#f6f8fe" stroke="#cbd2dc" stroke-width="2"/>
+    <circle cx="110" cy="271" r="6" fill="#8da2e0"/><rect x="124" y="267" width="84" height="8" rx="4" fill="#dfe7fb"/>
+    <rect x="92" y="300" width="176" height="34" rx="10" fill="#f6f8fe" stroke="#cbd2dc" stroke-width="2"/>
+    <rect x="104" y="311" width="14" height="12" rx="3" fill="#8da2e0"/><rect x="124" y="313" width="96" height="8" rx="4" fill="#dfe7fb"/>
+    <g class="float">
+        <g transform="translate(226 330)">
+            <rect width="88" height="58" rx="13" fill="#fff" stroke="#3B6BE8" stroke-width="4"/>
+            <path d="M6 14l38 26 38-26" stroke="#3B6BE8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="88" cy="2" r="10" fill="#F0575A" stroke="#fff" stroke-width="4"/>
+        </g>
+    </g>
+    <path transform="translate(50 112)" d="M0 -9L2.5 -2.5L9 0L2.5 2.5L0 9L-2.5 2.5L-9 0L-2.5 -2.5Z" fill="#8fd400"/>
+    <circle cx="312" cy="96" r="5" fill="#3B6BE8" opacity=".4"/>
+</svg>
+
+<svg class="scene" data-scene="password" viewBox="0 0 360 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="pw-b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7aa0f8"/><stop offset="1" stop-color="#2f58c4"/></linearGradient>
+        <linearGradient id="pw-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b5ee3a"/><stop offset="1" stop-color="#5fb800"/></linearGradient>
+        <filter id="pw-s" x="-30%" y="-20%" width="160%" height="160%"><feDropShadow dx="0" dy="10" stdDeviation="9" flood-color="#2f58c4" flood-opacity=".28"/></filter>
+    </defs>
+    <circle cx="180" cy="214" r="150" fill="#fff" opacity=".65"/>
+    <circle cx="180" cy="190" r="86" fill="#fff" opacity=".6"/>
+    <ellipse cx="180" cy="396" rx="100" ry="11" fill="#000" opacity=".07"/>
+    <g class="float2">
+        <path d="M142 150v-36a38 38 0 0 1 76 0v36" stroke="#9db0ea" stroke-width="16" stroke-linecap="round"/>
+        <rect x="116" y="140" width="128" height="106" rx="24" fill="url(#pw-b)"/>
+        <circle cx="180" cy="186" r="13" fill="#fff"/>
+        <rect x="175" y="192" width="10" height="28" rx="5" fill="#fff"/>
+    </g>
+    <g filter="url(#pw-s)">
+        <rect x="62" y="272" width="236" height="52" rx="14" fill="#fff" stroke="#6d94f5" stroke-width="3"/>
+    </g>
+    <g fill="#7ed321"><circle cx="98" cy="298" r="7"/><circle cx="126" cy="298" r="7"/><circle cx="154" cy="298" r="7"/><circle cx="182" cy="298" r="7"/><circle cx="210" cy="298" r="7"/></g>
+    <ellipse cx="268" cy="298" rx="13" ry="8" stroke="#8da2e0" stroke-width="3"/><circle cx="268" cy="298" r="3.5" fill="#8da2e0"/>
+    <rect x="62" y="342" width="52" height="8" rx="4" fill="url(#pw-g)"/>
+    <rect x="122" y="342" width="52" height="8" rx="4" fill="url(#pw-g)"/>
+    <rect x="182" y="342" width="52" height="8" rx="4" fill="url(#pw-g)"/>
+    <rect x="242" y="342" width="56" height="8" rx="4" fill="#dfe7fb"/>
+    <g class="float">
+        <g transform="translate(60 100) rotate(-24)">
+            <circle r="15" stroke="#F5B544" stroke-width="6"/>
+            <rect x="14" y="-3" width="46" height="6" rx="3" fill="#F5B544"/>
+            <rect x="42" y="2" width="6" height="12" rx="2" fill="#F5B544"/>
+            <rect x="52" y="2" width="6" height="9" rx="2" fill="#F5B544"/>
+        </g>
+    </g>
+    <g class="float">
+        <g transform="translate(296 108) scale(.5)">
+            <path d="M0 -46 L40 -32 V6 C40 32 22 50 0 60 C-22 50 -40 32 -40 6 V-32 Z" fill="url(#pw-g)" stroke="#fff" stroke-width="9" stroke-linejoin="round"/>
+            <path d="M-17 6 L-4 19 L19 -9" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+    </g>
+    <path transform="translate(66 220)" d="M0 -8L2 -2L8 0L2 2L0 8L-2 2L-8 0L-2 -2Z" fill="#8fd400"/>
+    <path transform="translate(300 230)" d="M0 -7L2 -2L7 0L2 2L0 7L-2 2L-7 0L-2 -2Z" fill="#3B6BE8" opacity=".7"/>
+</svg>
+@endsection
+
+@php
+    $step1Err = $errors->has('church_name') || $errors->has('subdomain') || $errors->has('denomination');
+    $step2Err = $errors->has('name') || $errors->has('email') || $errors->has('password');
+    $startStep = ($step2Err && ! $step1Err) ? 2 : 1;
+@endphp
+
+@section('content')
+<div class="au-head">
+    <h1>Create account</h1>
+    <p>Set up your church in two quick steps.</p>
+</div>
+
+<div class="progress" aria-hidden="true"><span class="seg on" id="seg1"></span><span class="seg" id="seg2"></span></div>
+<div class="step-note">Step <b id="stepNo">1</b> of 2: <span id="stepName">Your church</span></div>
+
+@if($errors->any())
+    <div class="au-alert" role="alert"><i class="fas fa-circle-exclamation"></i><span>{{ $errors->first() }}</span></div>
+@endif
+
+<form method="POST" action="{{ route('register') }}" id="registerForm" novalidate>
+    @csrf
+
+    <div class="step" id="step1">
+        <div class="fld">
+            <input type="text" name="church_name" id="church_name" value="{{ old('church_name') }}" placeholder=" " required autocomplete="organization">
+            <label for="church_name">Church name</label>
+        </div>
+        <div class="fld" style="margin-bottom:6px">
+            <input type="text" name="subdomain" id="subdomainInput" value="{{ old('subdomain') }}" placeholder=" " required autocomplete="off" autocapitalize="off">
+            <label for="subdomainInput">Web address (e.g. yourchurch)</label>
+        </div>
+        <div class="hint" style="margin-bottom:18px">Your team signs in at <b><span id="subdomainPreview">yourchurch</span>.churchsystem.com</b></div>
+        <div class="fld">
+            <input type="text" name="denomination" id="denomination" value="{{ old('denomination') }}" placeholder=" ">
+            <label for="denomination">Denomination (optional)</label>
+        </div>
+        <div class="au-actions">
+            <button type="button" class="au-btn" id="nextBtn"><span>Continue</span> <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </div>
+
+    <div class="step" id="step2">
+        <div class="fld">
+            <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder=" " required autocomplete="name">
+            <label for="name">Full name</label>
+        </div>
+        <div class="fld">
+            <input type="email" name="email" id="email" value="{{ old('email') }}" placeholder=" " required autocomplete="username">
+            <label for="email">Email</label>
+        </div>
+        <div class="fld" style="margin-bottom:0">
+            <input type="password" name="password" id="password" placeholder=" " required minlength="8" autocomplete="new-password">
+            <label for="password">Password</label>
+            <button type="button" class="eye" data-eye aria-label="Show password"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="meter" id="pwMeter"><span></span><span></span><span></span><span></span></div>
+        <div class="meter-text"><span id="pwText"></span></div>
+        <div class="fld" style="margin-top:10px;margin-bottom:0">
+            <input type="password" name="password_confirmation" id="passwordConfirm" placeholder=" " required autocomplete="new-password">
+            <label for="passwordConfirm">Confirm password</label>
+            <button type="button" class="eye" data-eye aria-label="Show password"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="meter-text" style="margin-bottom:6px"><span class="match" id="pwMatch"></span></div>
+        <div class="au-actions">
+            <button type="button" class="au-btn ghost" id="backBtn" aria-label="Back"><i class="fas fa-arrow-left"></i></button>
+            <button type="submit" class="au-btn" id="registerBtn"><span>Sign up</span></button>
+        </div>
+    </div>
+
+    <p class="au-alt">Already have an account? <a class="au-link" href="{{ route('login') }}" data-switch>Sign in</a></p>
+</form>
+@endsection
+
+@push('scripts')
+<script>
+    var step = {{ $startStep }};
+    var s1 = document.getElementById('step1'), s2 = document.getElementById('step2');
+
+    function show(n, focus) {
+        step = n;
+        s1.classList.toggle('show', n === 1);
+        s2.classList.toggle('show', n === 2);
+        document.getElementById('seg2').className = 'seg' + (n === 2 ? ' on' : '');
+        document.getElementById('stepNo').textContent = n;
+        document.getElementById('stepName').textContent = n === 1 ? 'Your church' : 'Your account';
+        if (window.auScene) auScene(n === 1 ? 'church' : 'profile');
+        if (focus) {
+            var first = (n === 1 ? s1 : s2).querySelector('input');
+            if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, 50);
+        }
+    }
+    document.getElementById('nextBtn').addEventListener('click', function () {
+        var ok = true;
+        s1.querySelectorAll('input[required]').forEach(function (i) { if (ok && !i.reportValidity()) ok = false; });
+        if (ok) show(2, true);
+    });
+    document.getElementById('backBtn').addEventListener('click', function () { show(1, true); });
+    s1.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('nextBtn').click(); } });
+
+    var sub = document.getElementById('subdomainInput'), subPrev = document.getElementById('subdomainPreview');
+    function cleanSub() { var v = sub.value.toLowerCase().replace(/[^a-z0-9-]/g, ''); sub.value = v; subPrev.textContent = v || 'yourchurch'; }
+    sub.addEventListener('input', cleanSub); cleanSub();
+
+    var pw = document.getElementById('password'), cf = document.getElementById('passwordConfirm'),
+        bars = document.querySelectorAll('#pwMeter span'), txt = document.getElementById('pwText'), match = document.getElementById('pwMatch');
+    var labels = ['Too short', 'Weak', 'Fair', 'Good', 'Strong'], colors = ['#f43f5e', '#f43f5e', '#F5B544', '#84cc16', '#16A34A'];
+    function score(v) {
+        if (!v.length) return -1;
+        if (v.length < 8) return 0;
+        var s = 1;
+        if (/[a-z]/.test(v) && /[A-Z]/.test(v)) s++;
+        if (/\d/.test(v)) s++;
+        if (/[^A-Za-z0-9]/.test(v) || v.length >= 14) s++;
+        return Math.min(s, 4);
+    }
+    function paint() {
+        var s = score(pw.value);
+        bars.forEach(function (b, i) { b.style.background = (s >= 0 && i < Math.max(s, 1)) ? colors[s] : ''; });
+        txt.textContent = s < 0 ? '' : labels[s]; txt.style.color = s < 0 ? '' : colors[s];
+        if (cf.value) {
+            var ok = cf.value === pw.value;
+            match.textContent = ok ? 'Passwords match' : 'Passwords do not match yet';
+            match.className = 'match ' + (ok ? 'ok' : 'bad');
+        } else { match.textContent = ''; }
+    }
+    pw.addEventListener('input', paint); cf.addEventListener('input', paint);
+
+    document.getElementById('registerForm').addEventListener('submit', function (e) {
+        if (pw.value !== cf.value) { e.preventDefault(); cf.focus(); paint(); return; }
+        var b = document.getElementById('registerBtn');
+        b.disabled = true; b.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Creating...</span>';
+    });
+    ['name', 'email'].forEach(function (id) { document.getElementById(id).addEventListener('focus', function () { auScene('profile'); }); });
+    ['password', 'passwordConfirm'].forEach(function (id) { document.getElementById(id).addEventListener('focus', function () { auScene('password'); }); });
+    show(step, false);
+</script>
+@endpush

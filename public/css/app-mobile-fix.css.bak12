@@ -1,0 +1,293 @@
+/* ===== MOBILE SIDEBAR FIX ===== */
+@media (max-width: 991.98px) {
+
+    /* Overlay: dili na grabi ka dark, ug naa sa ilalom sa sidebar */
+    .scrim {
+        background: rgba(15, 23, 42, 0.35) !important;
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        z-index: 1040 !important;
+    }
+
+    /* Sidebar: ibabaw sa scrim, fit sa tinuod nga screen height */
+    .sidebar, #sidebar, aside.sidebar {
+        z-index: 1050 !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+
+    /* Menu list ra ang mu-scroll */
+    .sidebar nav, .sidebar .sidebar-nav, .sidebar .nav-menu,
+    .sidebar .sidebar-menu, .sidebar ul.nav, .sidebar .menu {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Button sa ubos (username + logout): fixed sa ubos, clickable */
+    .sidebar .sidebar-footer, .sidebar .sidebar-user, .sidebar .sidebar-bottom,
+    .sidebar .user-box, .sidebar .user-card, .sidebar .sb-user, .sidebar .sb-foot {
+        flex: 0 0 auto !important;
+        position: relative !important;
+        z-index: 5 !important;
+        pointer-events: auto !important;
+        padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+        margin-top: auto !important;
+    }
+    .sidebar .sidebar-footer *, .sidebar .sidebar-user *, .sidebar .sidebar-bottom *,
+    .sidebar .user-box *, .sidebar .user-card *, .sidebar .sb-user *, .sidebar .sb-foot *,
+    .sidebar button, .sidebar form {
+        pointer-events: auto !important;
+        touch-action: manipulation;
+    }
+    .sidebar button, .sidebar a { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+    /* Mas hayag nga sidebar (light mode ra) */
+    html:not([data-theme="dark"]) .sidebar,
+    html:not([data-theme="dark"]) #sidebar {
+        background: linear-gradient(180deg, #2B3A9E 0%, #1F2C80 100%) !important;
+    }
+    /* Dark mode: gamay ra nga hayag kaysa kaniadto */
+    html[data-theme="dark"] .sidebar,
+    html[data-theme="dark"] #sidebar {
+        background: #151B4A !important;
+    }
+}
+/* ===== MOBILE: CHART + TABLE + NO HORIZONTAL SCROLL (v2) ===== */
+@media (max-width: 767.98px) {
+
+    html, body { overflow-x: hidden !important; max-width: 100% !important; }
+    .content-area, .main-content, .shell { max-width: 100vw !important; overflow-x: hidden !important; }
+    img, svg, canvas { max-width: 100%; }
+
+    /* Line chart: fixed box, dili mawala */
+    .income-chart {
+        position: relative !important;
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 260px !important;
+        min-height: 260px !important;
+        padding: 10px 8px 12px 4px !important;
+        overflow: hidden !important;
+    }
+    .income-chart canvas {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+    .donut-wrap { position: relative !important; height: 200px !important; width: 100% !important; max-width: 220px; margin: 0 auto; }
+    .donut-wrap canvas { display: block !important; width: 100% !important; height: 100% !important; }
+
+    /* Tables: walay swipe left/right */
+    .table-responsive { overflow-x: visible !important; }
+    .table { width: 100% !important; table-layout: fixed !important; }
+    .table th, .table td {
+        white-space: normal !important;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        padding: 10px 8px !important;
+        font-size: 0.78rem !important;
+    }
+    .table th.text-end, .table td.text-end { width: 36%; }
+
+    /* Walay element nga mu-gawas sa screen */
+    .row { margin-left: 0 !important; margin-right: 0 !important; }
+    .panel, .panel-head, .panel-body { max-width: 100%; }
+}
+/* ===== MOBILE: TIGHT SPACING, BIGGER CONTENT (v4) ===== */
+@media (max-width: 767.98px) {
+
+    /* Page area: gamay nga gilid, mas lapad ang content */
+    .content-area, #mainContent, main.content-area {
+        padding: 10px 10px calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+    .dash { max-width: 100% !important; }
+    .dash.container-fluid { padding-left: 0 !important; padding-right: 0 !important; }
+
+    /* Gutters ug margins taliwala sa mga seksyon */
+    .dash .row { --bs-gutter-x: 8px !important; --bs-gutter-y: 8px !important; margin-left: calc(var(--bs-gutter-x) * -.5) !important; margin-right: calc(var(--bs-gutter-x) * -.5) !important; }
+    .dash .row > * { padding-left: calc(var(--bs-gutter-x) * .5) !important; padding-right: calc(var(--bs-gutter-x) * .5) !important; margin-top: var(--bs-gutter-y) !important; }
+    .dash .row.mb-4, .dash .panel.mb-4, .dash .mb-4 { margin-bottom: 8px !important; }
+    .dash .row { margin-top: calc(var(--bs-gutter-y) * -1) !important; }
+
+    /* Stat cards: mas dako ang sulod, gamay ang padding */
+    .dash .stat-card {
+        padding: 10px !important;
+        border-radius: 14px !important;
+    }
+    .dash .stat-card .stat-icon { width: 38px !important; height: 38px !important; font-size: 1rem !important; }
+    .dash .stat-card .stat-label { font-size: 0.72rem !important; }
+    .dash .stat-card .stat-value { font-size: clamp(1.4rem, 7vw, 1.8rem) !important; }
+    .dash .stat-card .stat-trend { font-size: 0.72rem !important; }
+
+    /* Panels: gamay ang sulod nga padding */
+    .dash .panel { border-radius: 14px !important; }
+    .dash .panel-head { padding: 12px 14px !important; font-size: 0.92rem !important; }
+    .dash .panel-body { padding: 12px !important; }
+
+    /* Income panel: mas dako ang number ug chart */
+    .income-summary { padding: 14px !important; gap: 10px !important; }
+    .income-summary .lead-label { font-size: 0.85rem !important; }
+    .income-summary .big-number { font-size: 2.1rem !important; }
+    .income-chart-m { height: 280px !important; padding: 6px 8px 10px 4px !important; }
+
+    /* Transactions table */
+    .dash .table th, .dash .table td { padding: 9px 10px !important; font-size: 0.85rem !important; }
+    .dash .pill { font-size: 0.68rem !important; }
+
+    /* Demographics */
+    .donut-wrap { height: 210px !important; max-width: 240px !important; }
+    .donut-center .val { font-size: 1.7rem !important; }
+    .legend-row { font-size: 0.88rem !important; padding: 5px 0 !important; }
+
+    /* Birthdays */
+    .bday { padding: 10px !important; gap: 10px !important; }
+    .bday-avatar { width: 38px !important; height: 38px !important; }
+    .bday-name { font-size: 0.85rem !important; }
+    .bday-date { font-size: 0.76rem !important; }
+
+    /* Mobile header: mas compact */
+    .mbar { padding-top: max(6px, env(safe-area-inset-top, 0px)) !important; padding-bottom: 6px !important; }
+
+    /* Uban nga pages: forms, cards, tables */
+    .card, .card-body { margin-bottom: 8px; }
+    .card-body { padding: 12px !important; }
+    .mb-3 { margin-bottom: 0.6rem !important; }
+    .mb-4 { margin-bottom: 0.75rem !important; }
+    .my-4, .mt-4 { margin-top: 0.75rem !important; }
+    .py-4 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+    .p-4 { padding: 0.9rem !important; }
+}
+/* ===== MOBILE: MEMBERS PAGES (v5) ===== */
+@media (max-width: 767.98px) {
+
+    /* Gap sa tanang page */
+    .content-area .row { --bs-gutter-x: .5rem; --bs-gutter-y: .5rem; }
+    .content-area .mb-4 { margin-bottom: .6rem !important; }
+    .content-area .panel { border-radius: 14px; }
+    .m-narrow { max-width: 100% !important; }
+
+    /* Add Member button: full width */
+    .content-area > .d-flex.justify-content-end > .btn-cyan { width: 100%; justify-content: center; }
+
+    /* Stat cards sa members */
+    .content-area .row > [class*="col-6"] > .stat-card { padding: 10px !important; gap: 10px; }
+    .content-area .stat-card .stat-icon { width: 38px; height: 38px; font-size: .95rem; }
+    .content-area .stat-card .stat-label { font-size: .68rem; }
+    .content-area .stat-card .stat-value { font-size: 1.5rem; }
+
+    /* Panel toolbar: tabs + filter fit sa screen */
+    .panel-head.flex-wrap { padding: 10px !important; gap: 8px !important; }
+    .m-tabs { width: 100%; }
+    .m-tab { flex: 1; justify-content: center; padding: 8px 6px; font-size: .8rem; }
+    .panel-head .ms-auto { width: 100%; margin-left: 0 !important; }
+    .panel-head .ms-auto .form-select { width: 100% !important; }
+    .panel-head .ms-auto > * { flex: 1 1 100%; }
+
+    /* Members table -> cards */
+    .m-section .table-responsive { overflow: visible !important; }
+    .m-section .table, .m-section .table tbody { display: block; width: 100% !important; }
+    .m-section .table thead { display: none; }
+    .m-section .table tr[data-row] {
+        display: flex; flex-wrap: wrap; align-items: center;
+        gap: 6px 8px; padding: 12px 12px;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .m-section .table tr[data-row] td {
+        display: block; padding: 0 !important; border: 0 !important;
+        width: auto !important; font-size: .85rem !important;
+    }
+    .m-section .table tr[data-row] td:nth-child(1) { display: none; }                       /* # */
+    .m-section .table tr[data-row] td:nth-child(2) { flex: 1 1 100%; }                      /* member */
+    .m-section .table tr[data-row] td:nth-child(3) { flex: 0 0 auto; }                      /* gender */
+    .m-section .table tr[data-row] td:nth-child(4) { flex: 1 1 0; min-width: 0; }           /* roles */
+    .m-section .table tr[data-row] td:last-child {                                          /* actions */
+        flex: 1 1 100%; margin-top: 4px; padding-top: 8px !important;
+        border-top: 1px dashed var(--border-color) !important;
+    }
+    .m-section .table tr[data-row] .m-actions { justify-content: space-between !important; }
+    .m-act { width: 44px; height: 38px; border-radius: 10px; font-size: .9rem; background: var(--bg-hover); }
+    .m-section .table tr:not([data-row]),
+    .m-section .table tr:not([data-row]) td { display: block; width: 100%; }
+    .m-empty { padding: 32px 14px; }
+
+    /* Pagination */
+    .panel-body.d-flex.flex-wrap { padding: 10px !important; justify-content: center !important; text-align: center; }
+    .pagination { flex-wrap: wrap; justify-content: center; margin: 0; }
+
+    /* Forms (create / edit) */
+    .panel-body { padding: 12px !important; }
+    .form-control, .form-select { font-size: 16px !important; padding: 10px 12px; min-height: 44px; }
+    .form-label { font-size: .78rem; margin-bottom: 4px; }
+    .panel-head .text-muted.fw-normal.ms-auto { display: none; }
+    .m-section + .m-section { margin-top: 16px; padding-top: 14px; }
+    .m-role { padding: 10px 12px; font-size: .88rem; }
+    .m-note { padding: 10px 12px; font-size: .76rem; }
+    .m-foot { flex-direction: column-reverse; gap: 8px; margin-top: 16px; padding-top: 14px; }
+    .m-foot > .btn-cyan, .m-foot > .btn-ghost, .m-foot > button { width: 100%; justify-content: center; }
+
+    /* Edit page header: pill + View Profile */
+    .panel-head .ms-auto.d-flex { width: 100%; margin-left: 0 !important; flex-wrap: wrap; }
+    .panel-head .ms-auto.d-flex .btn-ghost { flex: 1; justify-content: center; }
+
+    /* Profile (show) */
+    .content-area > .d-flex.flex-wrap.gap-2 { gap: 8px !important; margin-bottom: .6rem !important; }
+    .content-area > .d-flex.flex-wrap.gap-2 > a,
+    .content-area > .d-flex.flex-wrap.gap-2 > button { flex: 1 1 calc(50% - 8px); justify-content: center; }
+    .m-avatar.lg { width: 72px; height: 72px; font-size: 1.5rem; }
+    .m-info { padding: 12px 0; gap: 12px; }
+    .m-info-value { font-size: .92rem; }
+}
+/* ===== MOBILE: MEMBERS ACTIONS KEBAB DROPDOWN (v6) ===== */
+.m-kebab { display: none; }
+
+@media (max-width: 767.98px) {
+
+    /* Card layout: member (wala) + kebab (tuo) sa usa ka linya */
+    .m-section .table tr[data-row] td:nth-child(2) { flex: 1 1 0 !important; min-width: 0; order: 0; }
+    .m-section .table tr[data-row] td:last-child {
+        flex: 0 0 auto !important; order: 1;
+        margin-top: 0 !important; padding-top: 0 !important;
+        border-top: 0 !important; position: relative;
+    }
+    .m-section .table tr[data-row] td:nth-child(3) { order: 2; }
+    .m-section .table tr[data-row] td:nth-child(4) { order: 3; }
+
+    /* Kebab button */
+    .m-kebab {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 40px; height: 40px; padding: 0; border: 1px solid var(--border-color);
+        border-radius: 12px; background: var(--bg-hover); color: var(--text-main);
+        font-size: 1rem; cursor: pointer;
+        -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+    }
+    .m-kebab:active, .m-kebab[aria-expanded="true"] { background: var(--primary-soft); color: var(--primary-hover); }
+
+    /* Dropdown menu (gi-hide ang original actions hangtod i-open) */
+    .m-section .table tr[data-row] .m-actions { display: none !important; }
+    .m-section .table tr[data-row] .m-actions.m-open {
+        display: flex !important; flex-direction: column; align-items: stretch;
+        position: fixed; z-index: 3000; justify-content: flex-start !important;
+        min-width: 210px; max-width: calc(100vw - 20px); padding: 6px; gap: 2px;
+        background: var(--bg-card); color: var(--text-main);
+        border: 1px solid var(--border-color); border-radius: 14px;
+        box-shadow: 0 18px 40px rgba(12, 20, 69, .25);
+    }
+    .m-actions.m-open .m-act {
+        width: 100%; height: 44px; padding: 0 12px; gap: 12px;
+        justify-content: flex-start; border-radius: 10px;
+        background: transparent; color: var(--text-main);
+        font-size: .9rem; font-weight: 600; text-align: left;
+    }
+    .m-actions.m-open .m-act i { width: 18px; text-align: center; font-size: .9rem; }
+    .m-actions.m-open .m-act::after { content: attr(title); }
+    .m-actions.m-open .m-act:active, .m-actions.m-open .m-act:hover { background: var(--primary-soft); color: var(--primary-hover); }
+    .m-actions.m-open .m-act.danger, .m-actions.m-open .m-act.danger i { color: var(--danger); }
+    .m-actions.m-open .m-act.success, .m-actions.m-open .m-act.success i { color: var(--success); }
+}

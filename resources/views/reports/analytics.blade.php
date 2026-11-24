@@ -67,6 +67,131 @@
     ];
 @endphp
 
+<style>
+    /* ===== REPORTS CLEAN (r2) ===== */
+    @@keyframes rpFadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+    /* ---------- ENTRANCE ---------- */
+    .content-area > .d-flex.no-print { animation: rpFadeUp .4s ease both; }
+    #stats-section > [class*="col-"] { animation: rpFadeUp .5s cubic-bezier(.2,.7,.2,1) both; }
+    #stats-section > [class*="col-"]:nth-child(1) { animation-delay: .04s; }
+    #stats-section > [class*="col-"]:nth-child(2) { animation-delay: .10s; }
+    #stats-section > [class*="col-"]:nth-child(3) { animation-delay: .16s; }
+    #stats-section > [class*="col-"]:nth-child(4) { animation-delay: .22s; }
+    #chart-section { animation: rpFadeUp .55s ease .28s both; }
+    #transactions-section, #members-section, #birthdays-section { animation: rpFadeUp .55s ease .36s both; }
+    #members-section { animation-delay: .42s; }
+    #birthdays-section { animation-delay: .48s; }
+
+    /* ---------- ACTION BAR ---------- */
+    .content-area > .d-flex.no-print { gap: 10px !important; margin-bottom: 18px !important; }
+    .content-area > .d-flex.no-print .btn-cyan,
+    .content-area > .d-flex.no-print .btn-ghost { transition: transform .18s ease, box-shadow .18s ease; }
+    .content-area > .d-flex.no-print .btn-cyan:hover,
+    .content-area > .d-flex.no-print .btn-ghost:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(12, 20, 69, .12); }
+
+    /* ---------- STAT CARDS ---------- */
+    #stats-section { margin-bottom: 24px !important; }
+    #stats-section .f-stat {
+        position: relative; overflow: hidden; padding: 18px !important;
+        transition: transform .22s ease, box-shadow .22s ease;
+    }
+    #stats-section .f-stat::after {
+        content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+        background: var(--primary); transform: scaleX(0); transform-origin: left; transition: transform .35s ease;
+    }
+    #stats-section .f-stat:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(12, 20, 69, .12); }
+    #stats-section .f-stat:hover::after { transform: scaleX(1); }
+    #stats-section .f-stat .stat-icon { transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
+    #stats-section .f-stat:hover .stat-icon { transform: scale(1.1) rotate(-6deg); }
+    #stats-section .stat-label { font-size: .7rem; letter-spacing: .5px; }
+    #stats-section .stat-trend { margin-top: 2px; font-size: .74rem; }
+
+    /* ---------- PANELS ---------- */
+    #chart-section, #transactions-section, #members-section, #birthdays-section { overflow: hidden; transition: box-shadow .25s ease; }
+    #chart-section:hover, #transactions-section:hover, #members-section:hover, #birthdays-section:hover { box-shadow: 0 10px 28px rgba(12, 20, 69, .07); }
+    #chart-section .panel-head, #transactions-section .panel-head,
+    #members-section .panel-head, #birthdays-section .panel-head { padding: 16px 22px; display: flex; align-items: center; gap: 10px; }
+    #chart-section .panel-body, #members-section .panel-body, #birthdays-section .panel-body { padding: 18px 22px; }
+    #chart-section { margin-bottom: 24px !important; }
+    #chart-section .f-chart { height: 300px; }
+    #chart-section .f-legend { margin-bottom: 12px; }
+
+    /* ---------- TRANSACTIONS TABLE ---------- */
+    #transactions-section .table thead th {
+        font-size: .68rem; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+        color: var(--text-muted); padding: 12px 22px; white-space: nowrap;
+    }
+    #transactions-section .table tbody td { padding: 14px 22px; vertical-align: middle; }
+    #transactions-section .table tbody td:nth-child(1),
+    #transactions-section .table tbody td:nth-child(3),
+    #transactions-section .table tbody td:nth-child(4) { white-space: nowrap; }
+    #transactions-section .table tbody td:nth-child(2) { min-width: 160px; }
+    #transactions-section .table tbody tr { transition: background .15s ease, box-shadow .15s ease; }
+    #transactions-section .table tbody tr:hover { box-shadow: inset 3px 0 0 var(--primary-btn, #0BA5C0); }
+    #transactions-section .table tbody td[colspan] { white-space: normal; }
+
+    /* ---------- MEMBERS + BIRTHDAYS ---------- */
+    #members-section { margin-bottom: 24px !important; }
+    #members-section .panel-body, #birthdays-section .panel-body { max-height: 300px; overflow-y: auto; padding-top: 6px; padding-bottom: 6px; }
+    #members-section .f-list-item, #birthdays-section .f-list-item {
+        gap: 12px; padding: 12px 6px; border-radius: 10px; transition: background .15s ease;
+    }
+    #members-section .f-list-item:last-child, #birthdays-section .f-list-item:last-child { border-bottom: 0; }
+    #members-section .f-list-item:hover, #birthdays-section .f-list-item:hover { background: var(--bg-hover); }
+    #members-section .f-list-item > span, #birthdays-section .f-list-item > span {
+        display: inline-flex; align-items: center; gap: 12px; min-width: 0;
+        font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    #members-section .f-list-item > span > i, #birthdays-section .f-list-item > span > i {
+        flex: 0 0 auto; display: grid; place-items: center; width: 32px; height: 32px; margin: 0 !important;
+        border-radius: 50%; background: var(--primary-soft); color: var(--primary-btn, #0BA5C0) !important; font-size: .78rem;
+    }
+    #members-section .f-list-item small, #birthdays-section .f-list-item small { flex: 0 0 auto; white-space: nowrap; font-size: .74rem; }
+    #members-section .f-empty, #birthdays-section .f-empty { padding: 28px 16px; }
+
+    /* ---------- EXPORT MODAL ---------- */
+    #exportModal .form-check { padding: 8px 12px 8px 2.1rem; border-radius: 10px; transition: background .15s ease; }
+    #exportModal .form-check:hover { background: var(--bg-hover); }
+    #exportModal .modal-footer { gap: 8px; }
+
+    /* ---------- MOBILE ---------- */
+    @@media (max-width: 767.98px) {
+        #stats-section { margin-bottom: 14px !important; }
+        #stats-section .f-stat { padding: 12px !important; }
+        #chart-section, #members-section { margin-bottom: 12px !important; }
+        #chart-section .panel-head, #transactions-section .panel-head,
+        #members-section .panel-head, #birthdays-section .panel-head { padding: 12px !important; }
+        #chart-section .panel-body, #members-section .panel-body, #birthdays-section .panel-body { padding: 10px 12px; }
+        #chart-section .f-chart { height: 230px; }
+
+        .content-area > .d-flex.no-print { display: grid !important; grid-template-columns: 1fr 1fr; }
+        .content-area > .d-flex.no-print > * { justify-content: center; width: 100%; }
+
+        /* Transactions -> cards (4 ka column: date, description, type, amount) */
+        #transactions-section .table tbody tr {
+            display: grid !important; grid-template-columns: 1fr auto; align-items: center; gap: 4px 10px;
+            padding: 12px !important;
+        }
+        #transactions-section .table tbody td { padding: 0 !important; white-space: normal !important; min-width: 0 !important; }
+        #transactions-section .table tbody td:nth-child(2) { grid-column: 1; grid-row: 1; font-weight: 600; font-size: .88rem !important; }
+        #transactions-section .table tbody td:nth-child(4) { grid-column: 2; grid-row: 1; text-align: right !important; font-size: .92rem !important; white-space: nowrap !important; }
+        #transactions-section .table tbody td:nth-child(1) { grid-column: 1; grid-row: 2; font-size: .72rem !important; color: var(--text-muted); }
+        #transactions-section .table tbody td:nth-child(3) { grid-column: 2; grid-row: 2; justify-self: end; }
+        #transactions-section .table tbody td[colspan] { grid-column: 1 / -1 !important; grid-row: auto !important; }
+
+        #members-section .panel-body, #birthdays-section .panel-body { max-height: 260px; }
+        #exportModal .modal-footer { flex-wrap: nowrap; }
+        #exportModal .modal-footer > * { flex: 1; margin: 0; justify-content: center; padding-left: 8px; padding-right: 8px; font-size: .8rem; }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .content-area *, #chart-section, #transactions-section, #members-section, #birthdays-section { animation: none !important; transition: none !important; }
+    }
+    @@media print {
+        * { animation: none !important; transition: none !important; opacity: 1 !important; }
+    }
+</style>
 {{-- ACTIONS --}}
 <div class="d-flex flex-wrap justify-content-end gap-2 mb-3 no-print">
     <a href="{{ route('dashboard') }}" class="btn-ghost">

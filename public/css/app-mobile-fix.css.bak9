@@ -1,0 +1,102 @@
+/* ===== MOBILE SIDEBAR FIX ===== */
+@media (max-width: 991.98px) {
+
+    /* Overlay: dili na grabi ka dark, ug naa sa ilalom sa sidebar */
+    .scrim {
+        background: rgba(15, 23, 42, 0.35) !important;
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        z-index: 1040 !important;
+    }
+
+    /* Sidebar: ibabaw sa scrim, fit sa tinuod nga screen height */
+    .sidebar, #sidebar, aside.sidebar {
+        z-index: 1050 !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        max-height: 100dvh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+
+    /* Menu list ra ang mu-scroll */
+    .sidebar nav, .sidebar .sidebar-nav, .sidebar .nav-menu,
+    .sidebar .sidebar-menu, .sidebar ul.nav, .sidebar .menu {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Button sa ubos (username + logout): fixed sa ubos, clickable */
+    .sidebar .sidebar-footer, .sidebar .sidebar-user, .sidebar .sidebar-bottom,
+    .sidebar .user-box, .sidebar .user-card, .sidebar .sb-user, .sidebar .sb-foot {
+        flex: 0 0 auto !important;
+        position: relative !important;
+        z-index: 5 !important;
+        pointer-events: auto !important;
+        padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+        margin-top: auto !important;
+    }
+    .sidebar .sidebar-footer *, .sidebar .sidebar-user *, .sidebar .sidebar-bottom *,
+    .sidebar .user-box *, .sidebar .user-card *, .sidebar .sb-user *, .sidebar .sb-foot *,
+    .sidebar button, .sidebar form {
+        pointer-events: auto !important;
+        touch-action: manipulation;
+    }
+    .sidebar button, .sidebar a { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+    /* Mas hayag nga sidebar (light mode ra) */
+    html:not([data-theme="dark"]) .sidebar,
+    html:not([data-theme="dark"]) #sidebar {
+        background: linear-gradient(180deg, #2B3A9E 0%, #1F2C80 100%) !important;
+    }
+    /* Dark mode: gamay ra nga hayag kaysa kaniadto */
+    html[data-theme="dark"] .sidebar,
+    html[data-theme="dark"] #sidebar {
+        background: #151B4A !important;
+    }
+}
+/* ===== MOBILE: CHART + TABLE + NO HORIZONTAL SCROLL (v2) ===== */
+@media (max-width: 767.98px) {
+
+    html, body { overflow-x: hidden !important; max-width: 100% !important; }
+    .content-area, .main-content, .shell { max-width: 100vw !important; overflow-x: hidden !important; }
+    img, svg, canvas { max-width: 100%; }
+
+    /* Line chart: fixed box, dili mawala */
+    .income-chart {
+        position: relative !important;
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        height: 260px !important;
+        min-height: 260px !important;
+        padding: 10px 8px 12px 4px !important;
+        overflow: hidden !important;
+    }
+    .income-chart canvas {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+    .donut-wrap { position: relative !important; height: 200px !important; width: 100% !important; max-width: 220px; margin: 0 auto; }
+    .donut-wrap canvas { display: block !important; width: 100% !important; height: 100% !important; }
+
+    /* Tables: walay swipe left/right */
+    .table-responsive { overflow-x: visible !important; }
+    .table { width: 100% !important; table-layout: fixed !important; }
+    .table th, .table td {
+        white-space: normal !important;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        padding: 10px 8px !important;
+        font-size: 0.78rem !important;
+    }
+    .table th.text-end, .table td.text-end { width: 36%; }
+
+    /* Walay element nga mu-gawas sa screen */
+    .row { margin-left: 0 !important; margin-right: 0 !important; }
+    .panel, .panel-head, .panel-body { max-width: 100%; }
+}

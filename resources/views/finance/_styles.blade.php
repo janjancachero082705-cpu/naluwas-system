@@ -1,4 +1,4 @@
-﻿<style>
+<style>
     /* ---- stat cards (extends .stat-card from app-shell) ---- */
     .f-stat { display: flex; align-items: center; gap: 14px; }
     .f-stat .stat-trend.trend-up   { color: #16a34a; }
@@ -54,4 +54,177 @@
     .f-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); }
 
     @@media print { .no-print { display: none !important; } }
+</style>
+
+
+<style>
+    /* ===== FINANCE MOBILE (f1) ===== */
+    @@media (max-width: 767.98px) {
+
+        /* Gap + panels */
+        .content-area .row { --bs-gutter-x: .5rem; --bs-gutter-y: .5rem; }
+        .content-area .mb-4 { margin-bottom: .6rem !important; }
+        .content-area > .d-flex.justify-content-end > .btn-cyan { width: 100%; justify-content: center; }
+        .panel { border-radius: 14px; max-width: 100%; }
+        .panel-head { padding: 12px !important; font-size: .9rem; gap: 6px; }
+        .panel-body { padding: 12px !important; }
+
+        /* Stat cards 2x2: icon sa ibabaw, amount sa ubos */
+        .f-stat { flex-direction: column; align-items: flex-start !important; gap: 8px !important; padding: 12px !important; }
+        .f-stat > div:last-child { width: 100%; }
+        .f-stat .stat-icon { width: 38px; height: 38px; font-size: .95rem; }
+        .f-stat .stat-label { font-size: .68rem; }
+        .f-stat .stat-value { font-size: clamp(1.05rem, 5vw, 1.35rem) !important; line-height: 1.15; overflow-wrap: anywhere; }
+        .f-stat .stat-trend { font-size: .7rem; }
+
+        /* Church filter */
+        .panel-body > div[style*="flex:1 1 260px"] { flex: 1 1 100% !important; }
+        .panel-body > .f-pill { width: 100%; justify-content: center; }
+
+        /* Reports filters: Month + Year magkatupad, Type full, buttons usa ka linya */
+        form.panel .panel-body > div[style*="flex:1 1 150px"] { flex: 1 1 calc(50% - 6px) !important; min-width: 0; }
+        form.panel .panel-body > div[style*="flex:1 1 150px"]:nth-child(3) { flex: 1 1 100% !important; }
+        form.panel .panel-body > .d-flex.gap-2 { width: 100%; }
+        form.panel .panel-body > .d-flex.gap-2 > * { flex: 1; justify-content: center; padding-left: 8px; padding-right: 8px; font-size: .8rem; }
+
+        /* Mini stats + church cards */
+        .f-mini { padding: 10px 12px; }
+        .f-mini-value { font-size: 1.25rem; }
+        .f-church-balance { font-size: 1.5rem; margin: 8px 0; }
+        .f-list-item { font-size: .82rem; }
+
+        /* Chart */
+        .f-chart { height: 240px; }
+        .f-chart canvas { width: 100% !important; }
+        .f-legend { margin-bottom: 6px; }
+
+        /* Tables -> cards (walay swipe) */
+        .table-responsive { overflow: visible !important; }
+        #transactions-section .table, #transactions-section .table tbody,
+        #all-transactions-section .table, #all-transactions-section .table tbody { display: block; width: 100% !important; }
+        #transactions-section .table thead, #all-transactions-section .table thead { display: none !important; }
+
+        #transactions-section .table tbody tr, #all-transactions-section .table tbody tr {
+            display: grid; align-items: center; gap: 2px 8px;
+            padding: 10px 12px; border-bottom: 1px solid var(--border-color);
+        }
+        #transactions-section .table tbody td, #all-transactions-section .table tbody td {
+            display: block; padding: 0 !important; border: 0 !important;
+            width: auto !important; min-width: 0; font-size: .82rem !important;
+            white-space: normal; overflow-wrap: anywhere;
+        }
+
+        /* Top 5: description + amount, date sa ubos */
+        #transactions-section .table tbody tr { grid-template-columns: 1fr auto; }
+        #transactions-section .table tbody td:nth-child(1) { grid-column: 1 / -1; grid-row: 2; color: var(--text-muted); font-size: .74rem !important; }
+        #transactions-section .table tbody td:nth-child(2) { grid-column: 1; grid-row: 1; font-weight: 600; }
+        #transactions-section .table tbody td:nth-child(3) { grid-column: 2; grid-row: 1; text-align: right; }
+
+        /* All transactions: description + amount, date + category + type sa ubos */
+        #all-transactions-section .table tbody tr { grid-template-columns: auto auto 1fr auto; }
+        #all-transactions-section .table tbody td:nth-child(2) { grid-column: 1 / 4; grid-row: 1; font-weight: 600; }
+        #all-transactions-section .table tbody td:nth-child(5) { grid-column: 4; grid-row: 1; text-align: right; }
+        #all-transactions-section .table tbody td:nth-child(1) { grid-column: 1; grid-row: 2; color: var(--text-muted); font-size: .74rem !important; }
+        #all-transactions-section .table tbody td:nth-child(3) { grid-column: 2 / 4; grid-row: 2; color: var(--text-muted); font-size: .74rem !important; }
+        #all-transactions-section .table tbody td:nth-child(3)::before { content: "\00B7"; margin-right: 6px; }
+        #all-transactions-section .table tbody td:nth-child(4) { grid-column: 4; grid-row: 2; justify-self: end; }
+
+        /* Empty row */
+        #transactions-section .table tbody td:only-child,
+        #all-transactions-section .table tbody td:only-child { grid-column: 1 / -1 !important; grid-row: auto !important; text-align: center; color: var(--text-muted); }
+
+        /* Forms */
+        .content-area .form-control, .content-area .form-select { font-size: 16px !important; min-height: 44px; }
+        .f-foot { flex-direction: column-reverse; gap: 8px; margin-top: 16px; padding-top: 14px; }
+        .f-foot > * { width: 100%; justify-content: center; }
+        .m-narrow { max-width: 100% !important; }
+
+        /* Export modal */
+        .modal-dialog { margin: .75rem; }
+    }
+</style>
+
+<script>
+/* Finance charts: mobile-friendly labels (f1) */
+(function () {
+    var mq = window.matchMedia('(max-width: 767.98px)');
+    var timer = null;
+
+    function compact(v) {
+        if (v >= 1000000) return '\u20B1' + (v / 1000000).toFixed(1).replace('.0', '') + 'M';
+        if (v >= 1000)    return '\u20B1' + (v / 1000).toFixed(1).replace('.0', '') + 'k';
+        return '\u20B1' + v;
+    }
+
+    function tune() {
+        if (!window.Chart || !Chart.instances) return;
+        var m = mq.matches;
+        Object.keys(Chart.instances).forEach(function (k) {
+            var c = Chart.instances[k];
+            var s = (c.options && c.options.scales) || {};
+            if (s.x) {
+                s.x.ticks = s.x.ticks || {};
+                s.x.ticks.maxRotation = 0;
+                s.x.ticks.autoSkip = true;
+                s.x.ticks.maxTicksLimit = m ? 6 : 12;
+            }
+            if (s.y) {
+                s.y.ticks = s.y.ticks || {};
+                s.y.ticks.maxTicksLimit = m ? 5 : 8;
+                s.y.ticks.callback = function (v) { return m ? compact(v) : '\u20B1' + v.toLocaleString(); };
+            }
+            c.update('none');
+            c.resize();
+        });
+    }
+
+    function later(ms) { clearTimeout(timer); timer = setTimeout(tune, ms); }
+
+    window.addEventListener('load', function () { later(150); });
+    window.addEventListener('themechanged', function () { later(100); });   // ang chart gi-rebuild sa page
+    window.addEventListener('resize', function () { later(200); });
+    window.addEventListener('orientationchange', function () { later(300); });
+    if (mq.addEventListener) mq.addEventListener('change', function () { later(50); });
+})();
+</script>
+
+<style>
+    /* ===== FINANCE NUMBER FIX (f2) ===== */
+
+    /* Stat cards: dili na mo-overflow ang amount */
+    .f-stat { container-type: inline-size; gap: 14px; }
+    .f-stat > div:last-child { flex: 1 1 auto; min-width: 0; }
+    .f-stat .stat-icon { flex: 0 0 auto; }
+    .f-stat .stat-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .f-stat .stat-value {
+        font-size: clamp(1.05rem, 1.6vw, 1.7rem);
+        font-size: clamp(1.05rem, 8cqw, 1.7rem);
+        line-height: 1.15; white-space: nowrap; letter-spacing: -.4px;
+    }
+    .f-stat .stat-trend { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Selected church mini stats */
+    .f-mini { container-type: inline-size; min-width: 0; }
+    .f-mini-value {
+        font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+        font-size: clamp(1.1rem, 9cqw, 1.5rem);
+        white-space: nowrap; letter-spacing: -.3px;
+    }
+
+    /* All-churches cards */
+    .f-church-card, .panel-body:has(> .f-church-balance), .panel-body:has(.f-church-balance) { container-type: inline-size; }
+    .f-church-balance {
+        font-size: clamp(1.2rem, 1.8vw, 1.7rem);
+        font-size: clamp(1.2rem, 9cqw, 1.8rem);
+        white-space: nowrap; letter-spacing: -.4px;
+    }
+    .f-church-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+
+    /* Category pills: dili mo-gawas */
+    .f-tags .f-pill { max-width: 100%; white-space: normal; line-height: 1.3; }
+
+    /* Medyo gamay nga screen: 2x2 stat cards */
+    @@media (min-width: 768px) and (max-width: 1199.98px) {
+        .f-stat { padding: 16px !important; }
+    }
 </style>

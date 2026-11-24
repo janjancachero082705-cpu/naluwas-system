@@ -15,14 +15,14 @@ class FinanceController extends Controller
      */
     public function index(Request $request)
     {
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // CHURCH CONTEXT
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         $churchId = session('current_church_id', auth()->user()->church_id ?? 0);
 
         $churches = Church::where('is_active', true)->get();
 
-        // Handle "all" as a special value — walang specific church na naka-select
+        // Handle "all" as a special value â€” walang specific church na naka-select
         $requestedChurch  = $request->get('church', $churchId);
         $selectedChurchId = ($requestedChurch === 'all' || $requestedChurch === '') ? null : $requestedChurch;
 
@@ -31,9 +31,9 @@ class FinanceController extends Controller
             $selectedChurch = Church::find($selectedChurchId);
         }
 
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // 1. CALCULATE BALANCES FOR ALL CHURCHES
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         $churchBalances = [];
         $totalIncome    = 0;
         $totalExpense   = 0;
@@ -63,9 +63,9 @@ class FinanceController extends Controller
 
         $overallBalance = $totalIncome - $totalExpense;
 
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // 2. SELECTED CHURCH DATA (Filtered by Church)
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         $churchIncome        = 0;
         $churchExpenses      = 0;
         $churchBalance       = 0;
@@ -109,10 +109,10 @@ class FinanceController extends Controller
                 ->count();
         }
 
-        // ─────────────────────────────────────────
-        // 3. MONTHLY CHART DATA — ⭐ ALWAYS POPULATED
-        //    Kung walang selected church → aggregate ALL churches
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // 3. MONTHLY CHART DATA â€” â­ ALWAYS POPULATED
+        //    Kung walang selected church â†’ aggregate ALL churches
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         $monthlyData = $this->getMonthlySummary($selectedChurch ? $selectedChurch->id : null);
 
         return view('finance.index', compact(
@@ -128,7 +128,7 @@ class FinanceController extends Controller
             'churchBalance',
             'incomeTypes',
             'expenseTypes',
-            'monthlyData',    // ⭐ Now always has data
+            'monthlyData',    // â­ Now always has data
             'recentTransactions',
             'unreadMessages'
         ));
@@ -136,7 +136,7 @@ class FinanceController extends Controller
 
     /**
      * Get monthly summary
-     * If $churchId is null → aggregate across ALL churches
+     * If $churchId is null â†’ aggregate across ALL churches
      */
     private function getMonthlySummary($churchId = null)
     {
@@ -220,9 +220,9 @@ class FinanceController extends Controller
     {
         $churchId = session('current_church_id', auth()->user()->church_id ?? 1);
 
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // FINANCIAL DATA
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         $totalIncome = MoneyTransaction::where('church_id', $churchId)
             ->where('type', 'income')
             ->sum('amount') ?? 0;
@@ -239,9 +239,9 @@ class FinanceController extends Controller
             ->limit(10)
             ->get();
 
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // MEMBER DATA
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         $totalMembers = DB::table('members')->where('church_id', $churchId)->count();
         $choirMembers = DB::table('members')->where('church_id', $churchId)->where('is_choir', 1)->count();
 
@@ -259,17 +259,14 @@ class FinanceController extends Controller
             ->limit(10)
             ->get();
 
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // ATTENDANCE DATA
-        // ─────────────────────────────────────────
-        $todaysAttendance = DB::table('attendances')
-            ->where('church_id', $churchId)
-            ->whereDate('service_date', Carbon::today())
-            ->count();
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        $todaysAttendance = 0; // Gi-remove kay wala nay attendance module
 
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // INVENTORY DATA
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         $totalInventoryItems = DB::table('inventories')
             ->where('church_id', $churchId)
             ->count();
@@ -311,9 +308,9 @@ class FinanceController extends Controller
             $lowStockItems = 0;
         }
 
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // CHART DATA (Last 6 Months)
-        // ─────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         $months      = [];
         $incomeData  = [];
         $expenseData = [];

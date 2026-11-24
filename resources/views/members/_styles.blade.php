@@ -151,3 +151,46 @@
         .m-foot > * { justify-content: center; }
     }
 </style>
+
+<style>
+    /* ===== MEMBERS ACTION MENU (v9) ===== */
+    .mk-btn { display: none; }
+
+    @media (max-width: 767.98px) {
+        /* Itago ang daan nga buttons/kebab (v6) */
+        .m-kebab { display: none !important; }
+        .m-section .table tr[data-row] .m-actions { display: none !important; }
+
+        /* Bag-ong kebab button */
+        .mk-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 40px; height: 40px; padding: 0;
+            border: 1px solid var(--border-color); border-radius: 12px;
+            background: var(--bg-hover); color: var(--text-main); font-size: 1rem;
+            cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+        }
+        .mk-btn:active, .mk-btn[aria-expanded="true"] { background: var(--primary-soft); color: var(--primary-hover); }
+    }
+
+    /* Menu (gi-append sa body, mao nga husto ang posisyon) */
+    .mk-menu {
+        position: fixed; z-index: 5000;
+        min-width: 210px; max-width: calc(100vw - 20px);
+        max-height: calc(100vh - 16px); overflow-y: auto;
+        padding: 6px; display: flex; flex-direction: column; gap: 2px;
+        background: var(--bg-card, #fff); color: var(--text-main, #0C1445);
+        border: 1px solid var(--border-color, #E3E8F5); border-radius: 14px;
+        box-shadow: 0 18px 40px rgba(12, 20, 69, .28);
+    }
+    .mk-item {
+        display: flex; align-items: center; gap: 12px;
+        width: 100%; height: 44px; padding: 0 12px; margin: 0;
+        border: 0; border-radius: 10px; background: transparent; color: inherit;
+        font: inherit; font-size: .9rem; font-weight: 600; text-align: left;
+        cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+    }
+    .mk-item i { width: 18px; text-align: center; font-size: .9rem; }
+    .mk-item:hover, .mk-item:active { background: var(--primary-soft, rgba(18,196,222,.12)); }
+    .mk-item.danger, .mk-item.danger i { color: var(--danger, #EF4444); }
+    .mk-item.success, .mk-item.success i { color: var(--success, #16A34A); }
+</style>

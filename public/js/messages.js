@@ -23,7 +23,7 @@ function showToast(title, message, icon = '📨') {
     clearTimeout(toastTimeout);
     toastTimeout = setTimeout(function() {
         toast.classList.remove('show');
-    }, 5000);
+    }, 2600);
 }
 
 function closeToast() {
@@ -336,6 +336,8 @@ function sendMessage(event) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
         },
         body: JSON.stringify({
@@ -556,11 +558,54 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTotalUnread();
     updateHeroBadge();
 
-    setTimeout(() => {
-        const readyMsg = window.t ? window.t('messenger_ready') : 'Messenger Ready';
-        const clickMsg = window.t ? window.t('click_chat') : 'Click a church to start chatting';
-        showToast(readyMsg, clickMsg, '💬');
-    }, 1000);
-
     console.log('💬 Aurora Messenger loaded successfully!');
 });
+
+/* ===== MESSAGES MOBILE (m2) ===== */
+(function () {
+    var mq = window.matchMedia('(max-width: 767.98px)');
+    function box() { return document.querySelector('.messenger-container'); }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var hdr = document.getElementById('chatHeader');
+        if (hdr && !document.getElementById('msgBackBtn')) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.id = 'msgBackBtn';
+            b.className = 'msg-back-btn';
+            b.setAttribute('aria-label', 'Back');
+            b.innerHTML = '<i class="fas fa-arrow-left"></i>';
+            b.addEventListener('click', function () {
+                var c = box(); if (c) c.classList.remove('chat-open');
+            });
+            hdr.insertBefore(b, hdr.firstChild);
+        }
+        document.querySelectorAll('.msg-church-item').forEach(function (it) {
+            it.addEventListener('click', function () {
+                var c = box();
+                if (mq.matches && c) c.classList.add('chat-open');
+            });
+        });
+    });
+})();
+
+/* ===== MESSAGES MOBILE (m3) ===== */
+(function () {
+    function fixSearch() {
+        var s = document.getElementById('searchChurches');
+        if (!s) return;
+        s.setAttribute('type', 'search');
+        s.setAttribute('name', 'church_filter_' + Date.now());
+        s.setAttribute('autocomplete', 'off');
+        s.setAttribute('autocorrect', 'off');
+        s.setAttribute('autocapitalize', 'off');
+        s.setAttribute('spellcheck', 'false');
+        s.value = '';
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        fixSearch();
+        setTimeout(fixSearch, 300);
+        setTimeout(fixSearch, 1000);
+    });
+    window.addEventListener('pageshow', fixSearch);
+})();

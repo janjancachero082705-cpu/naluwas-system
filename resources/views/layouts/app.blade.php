@@ -34,6 +34,7 @@
     <meta name="theme-color" content="#121C5A">
 
     <title>@yield('title', config('app.name', 'Church System'))</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/church-logo.png') }}">
 
     {{-- Apply saved theme before paint (prevents a light-mode flash) --}}
     <script>
@@ -64,10 +65,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     {{-- App --}}
-    <link rel="stylesheet" href="{{ $assetPath('css/app-shell.css') }}">
-    <link rel="stylesheet" href="{{ $assetPath('css/app-polish.css') }}">
-        <link rel="stylesheet" href="{{ $assetPath('css/app-motion.css') }}">
+    <link rel="stylesheet" href="{{ $assetPath('css/app-shell.css') . '?v=' . @filemtime(public_path('css/app-shell.css')) }}">
+    <link rel="stylesheet" href="{{ $assetPath('css/app-polish.css') . '?v=' . @filemtime(public_path('css/app-polish.css')) }}">
+        <link rel="stylesheet" href="{{ $assetPath('css/app-motion.css') . '?v=' . @filemtime(public_path('css/app-motion.css')) }}">
+    <link rel="stylesheet" href="{{ $assetPath('css/app-mobile-fix.css') . '?v=' . @filemtime(public_path('css/app-mobile-fix.css')) }}">
     @stack('styles')
+    <link rel="stylesheet" href="{{ asset('css/logo-anim.css') }}?v={{ filemtime(public_path('css/logo-anim.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/app-enhance.css') }}?v={{ filemtime(public_path('css/app-enhance.css')) }}">
 </head>
 
 <body>
@@ -154,6 +158,30 @@
                 <i class="fas fa-bars"></i>
             </button>
             <h1>@yield('header', 'Dashboard')</h1>
+            <div class="mb-notif">
+                <button type="button" class="icon-btn" id="mbNotifBtn" aria-label="Messages and notifications" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bell"></i>
+                    @if($unreadMsgCount > 0)
+                        <span class="mb-badge">{{ $unreadMsgCount > 99 ? '99+' : $unreadMsgCount }}</span>
+                    @endif
+                </button>
+                <div class="mb-notif-menu" id="mbNotifMenu" role="menu">
+                    <a href="{{ route('messages.index') }}" class="mb-item" role="menuitem">
+                        <span class="mb-ico"><i class="fas fa-envelope"></i></span>
+                        <span class="mb-txt">
+                            <strong>Messages</strong>
+                            <small>{{ $unreadMsgCount > 0 ? $unreadMsgCount . ' unread' : 'No unread messages' }}</small>
+                        </span>
+                        @if($unreadMsgCount > 0)<span class="mb-pill">{{ $unreadMsgCount }}</span>@endif
+                    </a>
+                    <div class="mb-sep"></div>
+                    <div class="mb-head">Notifications</div>
+                    <div class="mb-empty">
+                        <i class="fas fa-bell-slash"></i>
+                        <span>No new notifications</span>
+                    </div>
+                </div>
+            </div>
             <button type="button" class="icon-btn" data-theme-toggle aria-label="Toggle theme">
                 <i class="fas fa-moon theme-ico"></i>
             </button>
@@ -209,10 +237,151 @@
         })();
     </script>
 
+        {{-- Mobile header: messages + notifications dropdown --}}
+    <style>
+        .mb-notif { position: relative; flex-shrink: 0; margin-left: auto; margin-right: 6px; }
+        #mbNotifBtn { position: relative; }
+        .mb-badge {
+            position: absolute; top: 2px; right: 2px;
+            min-width: 17px; height: 17px; padding: 0 4px;
+            border-radius: 9px; background: #EF4444; color: #fff;
+            font-size: 10px; font-weight: 800; line-height: 17px; text-align: center;
+            pointer-events: none;
+        }
+        .mb-notif-menu {
+            position: fixed; top: 64px; right: 10px; left: auto;
+            width: min(320px, calc(100vw - 20px));
+            background: #fff; color: #0C1445;
+            border: 1px solid #E3E8F5; border-radius: 14px;
+            box-shadow: 0 18px 40px rgba(12, 20, 69, .22);
+            padding: 8px; z-index: 2000;
+            opacity: 0; visibility: hidden; transform: translateY(-6px);
+            transition: opacity .15s ease, transform .15s ease, visibility .15s;
+        }
+        .mb-notif-menu.open { opacity: 1; visibility: visible; transform: translateY(0); }
+        .mb-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px; border-radius: 10px;
+            color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent;
+        }
+        .mb-item:active, .mb-item:hover { background: rgba(49, 87, 213, .08); color: inherit; }
+        .mb-ico {
+            width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(18, 196, 222, .15); color: #0BA5BD;
+        }
+        .mb-txt { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+        .mb-txt strong { font-size: .88rem; font-weight: 700; }
+        .mb-txt small { font-size: .74rem; color: #6B7499; }
+        .mb-pill {
+            margin-left: auto; min-width: 22px; height: 22px; padding: 0 7px;
+            border-radius: 11px; background: #EF4444; color: #fff;
+            font-size: .72rem; font-weight: 800; line-height: 22px; text-align: center;
+        }
+        .mb-sep { height: 1px; background: #E3E8F5; margin: 6px 4px; }
+        .mb-head { padding: 6px 10px 2px; font-size: .7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #6B7499; }
+        .mb-empty { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 10px 14px; color: #6B7499; font-size: .8rem; font-weight: 600; }
+        .mb-empty i { font-size: 1.3rem; opacity: .6; }
+        html[data-theme="dark"] .mb-notif-menu { background: #151B4A; color: #EEF1FF; border-color: rgba(255,255,255,.1); box-shadow: 0 18px 40px rgba(0,0,0,.5); }
+        html[data-theme="dark"] .mb-txt small, html[data-theme="dark"] .mb-head, html[data-theme="dark"] .mb-empty { color: #A3ACD3; }
+        html[data-theme="dark"] .mb-sep { background: rgba(255,255,255,.1); }
+        @media (min-width: 992px) { .mb-notif { display: none !important; } }
+    </style>
+    <script>
+        (function () {
+            var btn = document.getElementById('mbNotifBtn');
+            var menu = document.getElementById('mbNotifMenu');
+            if (!btn || !menu) return;
+
+            function place() {
+                var r = btn.getBoundingClientRect();
+                menu.style.top = (r.bottom + 8) + 'px';
+            }
+            function set(open) {
+                if (open) place();
+                menu.classList.toggle('open', open);
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            }
+
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                set(!menu.classList.contains('open'));
+            });
+            menu.addEventListener('click', function (e) { e.stopPropagation(); });
+            document.addEventListener('click', function () { set(false); });
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+            window.addEventListener('resize', function () { if (menu.classList.contains('open')) place(); });
+            window.addEventListener('scroll', function () { if (menu.classList.contains('open')) place(); }, { passive: true });
+
+            // Isira ang dropdown kung ablihan ang sidebar o i-toggle ang theme
+            ['menuToggle'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) el.addEventListener('click', function () { set(false); });
+            });
+            document.querySelectorAll('[data-theme-toggle]').forEach(function (el) {
+                el.addEventListener('click', function () { set(false); });
+            });
+        })();
+    </script>
+        {{-- Mobile: theme toggle moves from header into the sidebar user menu --}}
+    <style>
+        @media (max-width: 991.98px) {
+            .mbar [data-theme-toggle] { display: none !important; }
+        }
+        #sbThemeItem {
+            display: flex; align-items: center; gap: 12px;
+            width: 100%; padding: 10px 12px; margin: 0;
+            background: transparent; border: 0; border-radius: 10px;
+            color: inherit; font: inherit; font-weight: 600; font-size: .9rem;
+            text-align: left; cursor: pointer;
+            -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+        }
+        #sbThemeItem:hover, #sbThemeItem:active { background: rgba(127, 140, 200, .15); }
+        #sbThemeItem i { width: 18px; text-align: center; }
+        @media (min-width: 992px) { #sbThemeItem { display: none !important; } }
+    </style>
+    <script>
+        (function () {
+            var side = document.querySelector('.sidebar, #sidebar, aside');
+            if (!side) return;
+
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.id = 'sbThemeItem';
+            btn.innerHTML = '<i class="fas fa-circle-half-stroke"></i><span></span>';
+
+            function label() {
+                var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+                btn.querySelector('span').textContent = dark ? 'Light mode' : 'Dark mode';
+                btn.querySelector('i').className = 'fas ' + (dark ? 'fa-sun' : 'fa-moon');
+            }
+            label();
+            new MutationObserver(label).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var t = document.getElementById('themeToggleBtn') || document.querySelector('[data-theme-toggle]');
+                if (t) t.click();
+            });
+
+            // Ibutang sa ibabaw sa Sign Out (sulod sa user menu); fallback: ubos sa sidebar
+            var logout = side.querySelector('form[action*="logout"]');
+            if (logout && logout.parentNode) {
+                logout.parentNode.insertBefore(btn, logout);
+            } else {
+                btn.style.margin = '8px 12px';
+                btn.style.width = 'calc(100% - 24px)';
+                side.appendChild(btn);
+            }
+        })();
+    </script>
     {{-- Scripts --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ $assetPath('js/app-shell.js') }}"></script>
-        <script src="{{ $assetPath('js/app-motion.js') }}"></script>
+    <script src="{{ $assetPath('js/app-shell.js') . '?v=' . @filemtime(public_path('js/app-shell.js')) }}"></script>
+        <script src="{{ $assetPath('js/app-motion.js') . '?v=' . @filemtime(public_path('js/app-motion.js')) }}"></script>
+    <script src="{{ $assetPath('js/app-mobile-fix.js') . '?v=' . @filemtime(public_path('js/app-mobile-fix.js')) }}"></script>
     @stack('scripts')
 
     {{-- Keep Chart.js text/grid readable in dark mode --}}

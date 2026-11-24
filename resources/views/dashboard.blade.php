@@ -69,13 +69,69 @@
     .bday-date { font-size: 0.75rem; color: var(--text-muted); margin: 0; }
 
     .empty-note { padding: 28px 0; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+    /* ========== MOBILE ========== */
+    @media (max-width: 767px) {
+        .dash .stat-card {
+            aspect-ratio: 1 / 1;
+            height: auto;
+            padding: 12px !important;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+        .dash .stat-card .stat-icon { width: 34px; height: 34px; font-size: 0.9rem; flex-shrink: 0; }
+        .dash .stat-card .stat-label { font-size: 0.68rem; line-height: 1.2; }
+        .dash .stat-card .stat-value { font-size: clamp(1.1rem, 6vw, 1.5rem); line-height: 1.1; word-break: break-all; }
+        .dash .stat-card .stat-trend { font-size: 0.65rem; }
+
+        .income-summary { padding: 18px; gap: 14px; }
+        .income-chart   { height: 240px; padding: 8px 10px 12px; }
+        .income-summary .big-number { font-size: 1.8rem; }
+
+        .panel-head { padding: 14px 16px; font-size: 0.85rem; }
+        .panel-body { padding: 16px; }
+
+        .table th, .table td { padding: 10px 8px; font-size: 0.75rem; white-space: nowrap; }
+        .pill { padding: 2px 8px; font-size: 0.62rem; }
+
+        .donut-wrap { height: 190px; }
+        .donut-center .val { font-size: 1.5rem; }
+
+        .bday { padding: 10px; gap: 8px; }
+        .bday-avatar { width: 34px; height: 34px; font-size: 0.8rem; }
+        .bday-name { font-size: 0.78rem; }
+        .bday-date { font-size: 0.7rem; }
+    }
+    @media (max-width: 767px) {
+        .dash [class*="col-"] { min-width: 0; }
+        .income-chart canvas, .donut-wrap canvas { width: 100% !important; }
+
+        .income-summary {
+            border-bottom: 1px solid var(--border-color);
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+        .income-summary .lead-label { width: 100%; }
+
+        .donut-wrap { max-width: 220px; margin: 0 auto; }
+        .legend-row { padding: 6px 0; font-size: 0.8rem; }
+
+        .table th, .table td { white-space: normal; }
+    }
+    @media (max-width: 380px) {
+        .dash .stat-card .stat-trend { display: none; }
+    }
 </style>
 
 <div class="dash container-fluid px-0">
 
     {{-- 1. STAT CARDS --}}
-    <div class="row g-4 mb-4">
-        <div class="col-md-6 col-xl-3">
+    <div class="row g-2 g-md-4 mb-4">
+        <div class="col-6 col-xl-3">
             <div class="stat-card">
                 <div class="stat-icon"><i class="fas fa-users"></i></div>
                 <div>
@@ -86,7 +142,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-xl-3">
+        <div class="col-6 col-xl-3">
             <div class="stat-card">
                 <div class="stat-icon"><i class="fas fa-wallet"></i></div>
                 <div>
@@ -101,7 +157,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-xl-3">
+        <div class="col-6 col-xl-3">
             <div class="stat-card">
                 <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
                 <div>
@@ -112,7 +168,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-xl-3">
+        <div class="col-6 col-xl-3">
             <div class="stat-card">
                 <div class="stat-icon"><i class="fas fa-music"></i></div>
                 <div>
@@ -148,7 +204,7 @@
     </div>
 
     {{-- 3. TRANSACTIONS + DEMOGRAPHICS --}}
-    <div class="row g-4 mb-4">
+    <div class="row g-3 g-md-4 mb-4">
         <div class="col-lg-7">
             <div class="panel h-100">
                 <div class="panel-head">
@@ -160,8 +216,8 @@
                         <thead>
                             <tr>
                                 <th>{{ __('Description') }}</th>
-                                <th>{{ __('Date') }}</th>
-                                <th>{{ __('Type') }}</th>
+                                <th class="d-none d-md-table-cell">{{ __('Date') }}</th>
+                                <th class="d-none d-md-table-cell">{{ __('Type') }}</th>
                                 <th class="text-end">{{ __('Amount') }}</th>
                             </tr>
                         </thead>
@@ -169,9 +225,15 @@
                             @forelse($recentActivities ?? [] as $item)
                                 @php $isIncome = ($item->type ?? 'expense') === 'income'; @endphp
                                 <tr>
-                                    <td class="fw-semibold">{{ $item->description ?? 'Transaction' }}</td>
-                                    <td class="text-muted">{{ \Carbon\Carbon::parse($item->date ?? $item->created_at)->format('M d, Y') }}</td>
-                                    <td><span class="pill {{ $isIncome ? 'pill-in' : 'pill-out' }}">{{ $isIncome ? __('Income') : __('Expense') }}</span></td>
+                                    <td class="fw-semibold">
+                                        {{ $item->description ?? 'Transaction' }}
+                                        <div class="d-md-none mt-1">
+                                            <span class="pill {{ $isIncome ? 'pill-in' : 'pill-out' }}">{{ $isIncome ? __('Income') : __('Expense') }}</span>
+                                            <span class="text-muted" style="font-size:.7rem; font-weight:500;">{{ \Carbon\Carbon::parse($item->date ?? $item->created_at)->format('M d, Y') }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted d-none d-md-table-cell">{{ \Carbon\Carbon::parse($item->date ?? $item->created_at)->format('M d, Y') }}</td>
+                                    <td class="d-none d-md-table-cell"><span class="pill {{ $isIncome ? 'pill-in' : 'pill-out' }}">{{ $isIncome ? __('Income') : __('Expense') }}</span></td>
                                     <td class="text-end {{ $isIncome ? 'amount-in' : 'amount-out' }}">
                                         {{ $isIncome ? '+' : '-' }}₱{{ number_format($item->amount ?? 0, 2) }}
                                     </td>
@@ -210,9 +272,9 @@
         <div class="panel-head"><i class="fas fa-cake-candles"></i> {{ __('Upcoming Birthdays') }}</div>
         <div class="panel-body">
             @if(!empty($upcomingBirthdays) && count($upcomingBirthdays))
-                <div class="row g-3">
+                <div class="row g-2 g-md-3">
                     @foreach($upcomingBirthdays as $bd)
-                        <div class="col-md-6 col-xl-3">
+                        <div class="col-6 col-xl-3">
                             <div class="bday">
                                 <div class="bday-avatar">{{ strtoupper(substr($bd->first_name ?? 'M', 0, 1)) }}</div>
                                 <div>
@@ -371,6 +433,56 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         }
+    });
+
+    // 4b. MOBILE ADJUSTMENTS
+    var mq = window.matchMedia('(max-width: 767px)');
+
+    function compact(v) {
+        if (v >= 1000000) return '₱' + (v / 1000000).toFixed(1).replace('.0', '') + 'M';
+        if (v >= 1000)    return '₱' + (v / 1000).toFixed(1).replace('.0', '') + 'k';
+        return '₱' + v;
+    }
+
+    function applyResponsive() {
+        var m = mq.matches;
+        var o = mainChart.options;
+
+        o.plugins.legend.align = m ? 'start' : 'end';
+        o.plugins.legend.labels.font.size = m ? 10 : 11;
+        o.plugins.tooltip.padding = m ? 10 : 14;
+        o.plugins.tooltip.titleFont = { size: m ? 11 : 13 };
+        o.plugins.tooltip.bodyFont  = { size: m ? 11 : 13 };
+
+        o.scales.x.ticks.font.size     = m ? 10 : 11;
+        o.scales.x.ticks.maxRotation   = 0;
+        o.scales.x.ticks.autoSkip      = true;
+        o.scales.x.ticks.maxTicksLimit = m ? 6 : 12;
+
+        o.scales.y.ticks.font.size     = m ? 10 : 11;
+        o.scales.y.ticks.maxTicksLimit = m ? 5 : 8;
+        o.scales.y.ticks.callback = function (v) { return m ? compact(v) : '₱' + v.toLocaleString(); };
+
+        o.layout = { padding: m ? { left: 0, right: 4, top: 0, bottom: 0 } : 0 };
+
+        mainChart.data.datasets.forEach(function (d) {
+            d.borderWidth = m ? 1.5 : 2;
+            d.pointHoverRadius = m ? 4 : 5;
+        });
+        mainChart.update('none');
+        mainChart.resize();
+
+        donut.options.cutout = m ? '68%' : '72%';
+        donut.update('none');
+        donut.resize();
+    }
+
+    applyResponsive();
+    if (mq.addEventListener) mq.addEventListener('change', applyResponsive);
+    else mq.addListener(applyResponsive);
+
+    window.addEventListener('orientationchange', function () {
+        setTimeout(function () { mainChart.resize(); donut.resize(); }, 250);
     });
 
     // 5. RE-COLOR WHEN THEME TOGGLES

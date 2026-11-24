@@ -1,0 +1,611 @@
+// ============================================
+// STATE
+// ============================================
+let currentChurchId = null;
+let currentChurchName = '';
+let toastTimeout = null;
+
+// ============================================
+// TOAST
+// ============================================
+function showToast(title, message, icon = '📨') {
+    const toast = document.getElementById('msgToast');
+    if (!toast) return;
+
+    document.getElementById('toastTitle').textContent = title;
+    document.getElementById('toastMessage').textContent = message;
+    document.getElementById('toastIcon').textContent = icon;
+
+    toast.classList.remove('show');
+    void toast.offsetWidth;
+    toast.classList.add('show');
+
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(function() {
+        toast.classList.remove('show');
+    }, 5000);
+}
+
+function closeToast() {
+    const toast = document.getElementById('msgToast');
+    if (toast) toast.classList.remove('show');
+}
+
+// ============================================
+// TOGGLE COMPOSE
+// ============================================
+function toggleCompose() {
+    const receiverId = document.getElementById('receiverId').value;
+    if (!receiverId) {
+        const msg = window.t ? window.t('select_church_first') : 'Please select a church first';
+        showToast(msg, window.t ? window.t('click_church_sidebar') : 'Click on a church from the sidebar', '💬');
+        return;
+    }
+
+    const input = document.getElementById('messageInput');
+    input.focus();
+    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    input.style.animation = 'none';
+    void input.offsetWidth;
+    input.style.animation = 'aFadeUp 0.4s ease';
+}
+
+// ============================================
+// SIDEBAR HELPERS
+// ============================================
+function scrollChurchIntoView(churchId) {
+    const item = document.querySelector(`.msg-church-item[data-church-id="${churchId}"]`);
+    if (!item) return;
+    item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function flashChurchItem(churchId) {
+    const item = document.querySelector(`.msg-church-item[data-church-id="${churchId}"]`);
+    if (!item) return;
+    item.classList.remove('flash');
+    void item.offsetWidth;
+    item.classList.add('flash');
+    setTimeout(() => item.classList.remove('flash'), 1300);
+}
+
+// ============================================
+// LOAD CONVERSATION
+// ============================================
+function loadConversation(churchId) {
+    currentChurchId = churchId;
+
+    document.querySelectorAll('.msg-church-item').forEach(el => {
+        el.classList.remove('active');
+        if (el.dataset.churchId == churchId) {
+            el.classList.add('active');
+            currentChurchName = el.querySelector('.msg-church-name').textContent;
+        }
+    });
+
+    const church = document.querySelector(`.msg-church-item[data-church-id="${churchId}"]`);
+    if (church) {
+        const avatar = church.querySelector('.msg-avatar');
+        const avatarBg = avatar.style.background;
+        const avatarText = avatar.textContent.trim();
+
+        document.getElementById('chatAvatar').style.background = avatarBg || 'var(--a-aurora)';
+        document.getElementById('chatAvatar').textContent = avatarText || '?';
+        document.getElementById('chatName').textContent = currentChurchName;
+        const loadingMsg = window.t ? window.t('loading_messages') : 'Loading messages...';
+        document.getElementById('chatStatus').innerHTML = `
+            <span class="status-dot"></span> ${loadingMsg}
+        `;
+        document.getElementById('chatStatus').className = 'msg-chat-status';
+    }
+
+    document.getElementById('receiverId').value = churchId;
+
+    const list = document.getElementById('messageList');
+    const loadingMsg = window.t ? window.t('loading_messages') : 'Loading messages...';
+    list.innerHTML = `
+        <div class="msg-empty-main">
+            <i class="fas fa-spinner" style="animation: aSpin 1s linear infinite; opacity: 0.35;"></i>
+            <h4>${loadingMsg}</h4>
+        </div>
+    `;
+
+    fetch(`/messages/conversation/${churchId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                renderMessages(data.messages);
+                const count = data.messages ? data.messages.length : 0;
+                const countMsg = count > 0 ? `${count} messages` : (window.t ? window.t('no_messages_yet') : 'No messages yet');
+                document.getElementById('chatStatus').innerHTML = `
+                    <span class="status-dot"></span> ${countMsg}
+                `;
+                document.getElementById('chatStatus').className = 'msg-chat-status online';
+
+                if (data.messages && data.messages.length > 0) {
+                    const lastMsg = data.messages[data.messages.length - 1];
+                    const lastMsgEl = document.getElementById(`lastMsg-${churchId}`);
+                    if (lastMsgEl) {
+                        const msgBody = lastMsg.body || '';
+                        lastMsgEl.textContent = msgBody.length > 50 ? msgBody.substring(0, 50) + '...' : msgBody;
+                    }
+                    const lastTimeEl = document.getElementById(`lastTime-${churchId}`);
+                    if (lastTimeEl && lastMsg.created_at) {
+                        const date = new Date(lastMsg.created_at);
+                        lastTimeEl.textContent = date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    }
+                }
+
+                const badge = document.getElementById(`unreadBadge-${churchId}`);
+                if (badge) {
+                    badge.style.animation = 'aBubbleIn 0.3s ease reverse';
+                    setTimeout(() => badge.remove(), 300);
+                }
+
+                updateTotalUnread();
+                updateHeroBadge();
+            }
+        })
+        .catch(error => {
+            console.error('Error loading messages:', error);
+            const failedMsg = window.t ? window.t('failed_load_messages') : 'Failed to load messages';
+            const retryMsg = window.t ? window.t('retry') : 'Retry';
+            document.getElementById('messageList').innerHTML = `
+                <div class="msg-empty-main">
+                    <i class="fas fa-triangle-exclamation" style="color:#f43f5e;opacity:0.5;"></i>
+                    <h4>${failedMsg}</h4>
+                    <p>${error.message}</p>
+                    <button class="btn-compose-empty" onclick="loadConversation(${churchId})">
+                        <i class="fas fa-arrows-rotate"></i> ${retryMsg}
+                    </button>
+                </div>
+            `;
+            const errorMsg = window.t ? window.t('error_loading_messages') : 'Error loading messages';
+            document.getElementById('chatStatus').innerHTML = `<span class="status-dot"></span> ${errorMsg}`;
+            document.getElementById('chatStatus').className = 'msg-chat-status';
+        });
+}
+
+// ============================================
+// RENDER MESSAGES — no subject
+// ============================================
+function renderMessages(messages, scrollToBottom = true) {
+    const list = document.getElementById('messageList');
+    const churchId = MSG.churchId;
+
+    if (!messages || messages.length === 0) {
+        const noMsg = window.t ? window.t('no_messages_yet') : 'No messages yet';
+        const startConvo = window.t ? window.t('start_conversation') : `Start a conversation with ${currentChurchName}`;
+        list.innerHTML = `
+            <div class="msg-empty-main">
+                <i class="fas fa-comment-dots"></i>
+                <h4>${noMsg}</h4>
+                <p>${startConvo}</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '';
+    let lastDate = '';
+
+    messages.forEach((msg, index) => {
+        const isSent = msg.sender_church_id == churchId;
+        const msgDate = new Date(msg.created_at);
+        const dateStr = msgDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+        if (dateStr !== lastDate) {
+            html += `<div class="msg-date-divider"><span>${dateStr}</span></div>`;
+            lastDate = dateStr;
+        }
+
+        const timeStr = msgDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const delay = Math.min(index * 30, 320);
+
+        // ⭐ Body only — no subject
+        html += `
+            <div class="msg-bubble ${isSent ? 'sent' : 'received'}" data-msg-id="${msg.id}" style="animation-delay: ${delay}ms;">
+                <div class="body">${escapeHtml(msg.body)}</div>
+                <div class="time">
+                    ${timeStr}
+                    ${isSent ? '<span class="status-icon"><i class="fas fa-check"></i></span>' : ''}
+                </div>
+            </div>
+        `;
+    });
+
+    list.innerHTML = html;
+
+    if (scrollToBottom) {
+        setTimeout(() => {
+            list.scrollTop = list.scrollHeight;
+        }, 100);
+    }
+}
+
+// ============================================
+// APPEND NEW MESSAGE — no subject
+// ============================================
+function appendNewMessage(msg) {
+    const list = document.getElementById('messageList');
+    const churchId = MSG.churchId;
+    const isSent = msg.sender_church_id == churchId;
+
+    const emptyState = list.querySelector('.msg-empty-main');
+    if (emptyState) list.innerHTML = '';
+
+    const lastDateEl = list.querySelector('.msg-date-divider:last-child');
+    const msgDate = new Date(msg.created_at || Date.now());
+    const dateStr = msgDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    let lastDate = '';
+    if (lastDateEl) lastDate = lastDateEl.textContent.trim();
+
+    if (lastDate !== dateStr) {
+        const divider = document.createElement('div');
+        divider.className = 'msg-date-divider';
+        divider.innerHTML = `<span>${dateStr}</span>`;
+        list.appendChild(divider);
+    }
+
+    const timeStr = msgDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    const bubble = document.createElement('div');
+    bubble.className = `msg-bubble ${isSent ? 'sent' : 'received'}`;
+    bubble.dataset.msgId = msg.id || Date.now();
+
+    // ⭐ Body only — no subject
+    bubble.innerHTML = `
+        <div class="body">${escapeHtml(msg.body)}</div>
+        <div class="time">
+            ${timeStr}
+            ${isSent ? '<span class="status-icon"><i class="fas fa-check"></i></span>' : ''}
+        </div>
+    `;
+
+    list.appendChild(bubble);
+
+    if (!isSent) {
+        try {
+            const audio = new Audio('/sounds/notification.mp3');
+            audio.play().catch(() => {});
+        } catch (e) {}
+    }
+
+    setTimeout(() => { list.scrollTop = list.scrollHeight; }, 100);
+
+    const senderId = msg.sender_church_id == churchId ? msg.receiver_church_id : msg.sender_church_id;
+    updateSidebarPreview(senderId, msg.body);
+}
+
+// ============================================
+// SIDEBAR PREVIEW UPDATER
+// ============================================
+function updateSidebarPreview(churchId, body) {
+    const lastMsgEl = document.getElementById(`lastMsg-${churchId}`);
+    if (lastMsgEl) {
+        const text = (body || '').trim();
+        lastMsgEl.textContent = text.length > 50 ? text.substring(0, 50) + '...' : text;
+        lastMsgEl.classList.add('has-unread');
+    }
+    const lastTimeEl = document.getElementById(`lastTime-${churchId}`);
+    if (lastTimeEl) {
+        lastTimeEl.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+}
+
+// ============================================
+// SEND MESSAGE — no subject
+// ============================================
+function sendMessage(event) {
+    event.preventDefault();
+
+    const receiverId = document.getElementById('receiverId').value;
+    const body = document.getElementById('messageInput').value.trim();
+
+    if (!body) {
+        const msg = window.t ? window.t('type_message') : 'Please type a message';
+        showToast(msg, window.t ? window.t('message_empty') : 'Your message cannot be empty', '⚠️');
+        const inputEl = document.getElementById('messageInput');
+        inputEl.style.animation = 'aShake 0.5s ease';
+        setTimeout(() => { inputEl.style.animation = ''; }, 500);
+        return;
+    }
+
+    if (!receiverId) {
+        const msg = window.t ? window.t('select_church_first') : 'Please select a church';
+        showToast(msg, window.t ? window.t('click_church_sidebar') : 'Click on a church from the sidebar', '💬');
+        return;
+    }
+
+    const sendBtn = document.getElementById('sendBtn');
+    const originalHtml = sendBtn.innerHTML;
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = '<i class="fas fa-spinner" style="animation: aSpin 1s linear infinite;"></i>';
+
+    document.getElementById('messageInput').value = '';
+
+    const optimisticMsg = {
+        id: 'temp_' + Date.now(),
+        sender_church_id: MSG.churchId,
+        receiver_church_id: receiverId,
+        body: body,
+        created_at: new Date().toISOString(),
+        is_new: true
+    };
+    appendNewMessage(optimisticMsg);
+
+    fetch(MSG.storeUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            receiver_church_id: receiverId,
+            body: body
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = originalHtml;
+
+        if (data.success) {
+            const sentMsg = window.t ? window.t('message_sent') : 'Message sent!';
+            showToast(sentMsg, window.t ? window.t('message_delivered') : 'Your message was delivered successfully', '✅');
+        } else {
+            const failedMsg = window.t ? window.t('failed_to_send') : 'Failed to send';
+            showToast(failedMsg, data.message || (window.t ? window.t('something_wrong') : 'Something went wrong'), '❌');
+            if (currentChurchId) loadConversation(currentChurchId);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = originalHtml;
+        const errMsg = window.t ? window.t('error_sending') : 'Error sending message';
+        showToast(errMsg, window.t ? window.t('check_connection') : 'Please check your connection', '❌');
+        if (currentChurchId) loadConversation(currentChurchId);
+    });
+}
+
+// ============================================
+// FILTER CHURCHES
+// ============================================
+function filterChurches(query) {
+    const items = document.querySelectorAll('.msg-church-item');
+    const q = query.toLowerCase().trim();
+
+    items.forEach((item, index) => {
+        const name = item.querySelector('.msg-church-name').textContent.toLowerCase();
+        const lastMsg = item.querySelector('.msg-church-last').textContent.toLowerCase();
+        const match = name.includes(q) || lastMsg.includes(q) || q === '';
+
+        if (match) {
+            item.style.display = 'flex';
+            item.style.animation = `aSlideIn 0.3s ease ${index * 20}ms both`;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+// ============================================
+// UNREAD TOTALS
+// ============================================
+function updateTotalUnread() {
+    const badges = document.querySelectorAll('.msg-church-unread');
+    let total = 0;
+    badges.forEach(b => { total += parseInt(b.textContent) || 0; });
+
+    const badge = document.getElementById('totalUnreadBadge');
+    if (badge) {
+        const oldValue = parseInt(badge.textContent) || 0;
+        badge.textContent = total;
+        if (total > oldValue) {
+            badge.style.animation = 'none';
+            void badge.offsetWidth;
+            badge.style.animation = 'aBubbleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        }
+        badge.style.display = total > 0 ? 'inline-flex' : 'none';
+    }
+}
+
+function updateHeroBadge() {
+    const badges = document.querySelectorAll('.msg-church-unread');
+    let total = 0;
+    badges.forEach(b => { total += parseInt(b.textContent) || 0; });
+
+    const heroBadge = document.getElementById('heroUnreadBadge');
+    if (heroBadge) {
+        const label = window.t ? window.t('unread_messages') : 'unread messages';
+        heroBadge.textContent = total + ' ' + label;
+    }
+}
+
+// ============================================
+// REFRESH
+// ============================================
+function refreshMessages() {
+    const btns = document.querySelectorAll('.msg-icon-btn');
+    btns.forEach(btn => {
+        btn.style.transform = 'rotate(360deg)';
+        setTimeout(() => { btn.style.transform = ''; }, 500);
+    });
+
+    if (currentChurchId) {
+        loadConversation(currentChurchId);
+        const refreshing = window.t ? window.t('refreshing') : 'Refreshing...';
+        showToast(refreshing, window.t ? window.t('getting_latest') : 'Getting latest messages', '🔄');
+    } else {
+        location.reload();
+    }
+}
+
+// ============================================
+// ESCAPE HTML
+// ============================================
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text || '';
+    return div.innerHTML;
+}
+
+// ============================================
+// AUTO-DISPLAY ON INCOMING MESSAGE — no subject
+// ============================================
+if (window.Echo) {
+    const churchId = MSG.churchId;
+
+    window.Echo.channel(`messages.${churchId}`)
+        .listen('message.new', (e) => {
+            console.log('📨 New message received:', e);
+
+            const fromLabel = window.t ? window.t('from') : 'From';
+            showToast(
+                `📨 ${fromLabel} ${e.sender_name}`,
+                e.body.substring(0, 60) + (e.body.length > 60 ? '...' : ''),
+                '📨'
+            );
+
+            updateSidebarPreview(e.sender_id, e.body);
+            scrollChurchIntoView(e.sender_id);
+            flashChurchItem(e.sender_id);
+
+            const isSameChurch = currentChurchId == e.sender_id;
+
+            if (isSameChurch) {
+                const msgData = {
+                    id: e.id,
+                    sender_church_id: e.sender_id,
+                    receiver_church_id: e.receiver_id,
+                    body: e.body,
+                    created_at: e.timestamp || new Date().toISOString(),
+                    is_new: true
+                };
+                appendNewMessage(msgData);
+            } else {
+                const draftInput = document.getElementById('messageInput');
+                const draft = draftInput.value.trim();
+
+                loadConversation(e.sender_id);
+
+                if (draft) {
+                    setTimeout(() => { draftInput.value = draft; }, 400);
+                }
+            }
+
+            updateTotalUnread();
+            updateHeroBadge();
+        });
+}
+
+// ============================================
+// KEYBOARD SHORTCUTS
+// ============================================
+document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+        e.preventDefault();
+        toggleCompose();
+        const composeMsg = window.t ? window.t('compose_new') : 'Compose New Message';
+        showToast(composeMsg, 'Ctrl+N pressed', '✏️');
+    }
+
+    if (e.key === 'Enter' && !e.shiftKey && document.activeElement?.id === 'messageInput') {
+        e.preventDefault();
+        document.getElementById('messageForm').dispatchEvent(new Event('submit'));
+    }
+
+    if (e.key === 'Escape') {
+        closeToast();
+        document.getElementById('messageInput').blur();
+    }
+
+    if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+        e.preventDefault();
+        refreshMessages();
+    }
+});
+
+// ============================================
+// INITIALIZE
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('💬 Aurora Messenger loading...');
+
+    const items = document.querySelectorAll('.msg-church-item');
+    let foundWithMessages = false;
+
+    for (const item of items) {
+        const lastMsg = item.querySelector('.msg-church-last');
+        const noMsgText = window.t ? window.t('no_messages_yet') : 'No messages yet';
+        if (lastMsg && lastMsg.textContent.trim() !== noMsgText) {
+            const churchId = item.dataset.churchId;
+            if (churchId) {
+                loadConversation(parseInt(churchId));
+                foundWithMessages = true;
+                break;
+            }
+        }
+    }
+
+    if (!foundWithMessages && items.length > 0) {
+        const firstItem = items[0];
+        const churchId = firstItem.dataset.churchId;
+        if (churchId) loadConversation(parseInt(churchId));
+    }
+
+    updateTotalUnread();
+    updateHeroBadge();
+
+    console.log('💬 Aurora Messenger loaded successfully!');
+});
+
+/* ===== MESSAGES MOBILE (m2) ===== */
+(function () {
+    var mq = window.matchMedia('(max-width: 767.98px)');
+    function box() { return document.querySelector('.messenger-container'); }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var hdr = document.getElementById('chatHeader');
+        if (hdr && !document.getElementById('msgBackBtn')) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.id = 'msgBackBtn';
+            b.className = 'msg-back-btn';
+            b.setAttribute('aria-label', 'Back');
+            b.innerHTML = '<i class="fas fa-arrow-left"></i>';
+            b.addEventListener('click', function () {
+                var c = box(); if (c) c.classList.remove('chat-open');
+            });
+            hdr.insertBefore(b, hdr.firstChild);
+        }
+        document.querySelectorAll('.msg-church-item').forEach(function (it) {
+            it.addEventListener('click', function () {
+                var c = box();
+                if (mq.matches && c) c.classList.add('chat-open');
+            });
+        });
+    });
+})();
+
+/* ===== MESSAGES MOBILE (m3) ===== */
+(function () {
+    function fixSearch() {
+        var s = document.getElementById('searchChurches');
+        if (!s) return;
+        s.setAttribute('type', 'search');
+        s.setAttribute('name', 'church_filter_' + Date.now());
+        s.setAttribute('autocomplete', 'off');
+        s.setAttribute('autocorrect', 'off');
+        s.setAttribute('autocapitalize', 'off');
+        s.setAttribute('spellcheck', 'false');
+        s.value = '';
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        fixSearch();
+        setTimeout(fixSearch, 300);
+        setTimeout(fixSearch, 1000);
+    });
+    window.addEventListener('pageshow', fixSearch);
+})();

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/church-logo.png') }}">
+    <title>@yield('title') | {{ config('app.name', 'Church System') }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        /* remember that we came from the other auth page so the form can fade in */
+        try { if (sessionStorage.getItem('auSwap')) { document.documentElement.classList.add('swap-in'); sessionStorage.removeItem('auSwap'); } } catch (e) {}
+    </script>
+    <style>
+        :root{
+            --blue:#3B6BE8; --blue-d:#2f58c4; --coral:#F0575A; --ink:#1c1d21; --mut:#6b7280;
+            --line:#cbd2dc; --bg:#eef2ff; --panel:#f1f1f3; --danger:#e11d48; --ok:#16A34A;
+        }
+        *{box-sizing:border-box}
+        html,body{margin:0;min-height:100%}
+        body{font-family:'Poppins',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+        .au-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+
+        /* ---------- card ---------- */
+        .au-card{width:100%;max-width:1040px;background:#fff;border-radius:28px;padding:28px;display:flex;gap:32px;
+            box-shadow:0 20px 60px rgba(59,107,232,.12);overflow:hidden}
+        .au-card.rev{flex-direction:row-reverse}
+        .au-formside{flex:1 1 0;min-width:0;display:flex;flex-direction:column;padding:4px 12px}
+        .au-art{flex:0 0 46%;position:relative;background:var(--panel);border-radius:24px;min-height:560px;
+            display:flex;align-items:center;justify-content:center;overflow:hidden}
+        .au-art svg{width:78%;height:auto;max-height:80%}
+        .au-verse{position:absolute;left:20px;right:20px;bottom:44px;text-align:center;font-size:13px;color:var(--mut);line-height:1.5}
+        .au-verse small{display:block;margin-top:2px;font-size:11px;color:#9ca3af}
+        .au-dots{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+        .au-dots i{width:6px;height:6px;border-radius:99px;background:#d4d7dd}
+        .au-dots i:first-child{width:22px;background:var(--blue)}
+
+        .au-logo{display:flex;align-items:center;gap:8px;font-weight:600;font-size:18px;letter-spacing:-.01em}
+        .au-logo b{width:28px;height:28px;border-radius:50% 50% 50% 8px;background:var(--blue);color:#fff;
+            display:grid;place-items:center;font-size:13px}
+        .au-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:28px 0 12px;max-width:420px;width:100%}
+
+        /* ---------- heading ---------- */
+        .au-ico{display:none}
+        .au-head h1{margin:0 0 6px;font-size:28px;font-weight:600;letter-spacing:-.02em}
+        .au-head p{margin:0 0 24px;font-size:13px;color:var(--mut)}
+
+        /* ---------- fields (outlined, label sits on the border) ---------- */
+        .fld{position:relative;margin-bottom:18px}
+        .fld input{width:100%;height:46px;padding:0 14px;font:inherit;font-size:14px;color:var(--ink);background:#fff;
+            border:1px solid var(--line);border-radius:4px;outline:0;transition:border-color .2s,box-shadow .2s}
+        .fld input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,107,232,.14)}
+        .fld label{position:absolute;left:10px;top:-8px;padding:0 5px;background:#fff;font-size:12px;color:#4b5563;
+            transition:color .2s;pointer-events:none}
+        .fld input:focus + label{color:var(--blue)}
+        .fld .lead{display:none}
+        .fld:has(.eye) input{padding-right:46px}
+        .eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:none;
+            color:#6b7280;cursor:pointer;border-radius:50%}
+        .eye:hover{color:var(--ink)}
+        .hint{font-size:12px;color:var(--mut)}
+        .hint b{color:var(--ink);font-weight:500}
+
+        .au-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;margin-bottom:20px}
+        .au-check{display:flex;align-items:center;gap:8px;cursor:pointer;color:#374151}
+        .au-check input{width:15px;height:15px;accent-color:var(--blue)}
+        .au-link{color:var(--coral);text-decoration:none;font-weight:500}
+        .au-link:hover{text-decoration:underline}
+
+        /* ---------- buttons ---------- */
+        .au-actions{display:flex;gap:10px;margin-top:20px}
+        .au-actions .au-btn{margin-top:0}
+        .au-btn{width:100%;height:46px;margin-top:4px;border:0;border-radius:4px;background:var(--blue);color:#fff;font:inherit;
+            font-size:14px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+            transition:background .2s,transform .15s}
+        .au-btn:hover{background:var(--blue-d)}
+        .au-btn:active{transform:scale(.985)}
+        .au-btn:disabled{opacity:.7;cursor:wait}
+        .au-btn.ghost{flex:0 0 52px;width:52px;background:#fff;color:var(--blue);border:1px solid var(--blue)}
+        .au-btn.ghost:hover{background:#f1f5ff}
+        .au-alt{margin:18px 0 0;text-align:center;font-size:12px;color:#374151}
+
+        /* ---------- alerts ---------- */
+        .au-alert{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;margin-bottom:16px;border-radius:6px;
+            font-size:13px;background:#fff1f2;color:#9f1239;border:1px solid #fecdd3}
+        .au-alert.ok{background:#f0fdf4;color:#166534;border-color:#bbf7d0}
+
+        /* ---------- register steps ---------- */
+        .progress{display:flex;gap:6px;margin-bottom:8px}
+        .seg{flex:1;height:4px;border-radius:99px;background:#e5e7eb;transition:background .3s}
+        .seg:first-child,.seg.on{background:var(--blue)}
+        .step-note{font-size:12px;color:var(--mut);margin-bottom:18px}
+        .step-note b{color:var(--ink)}
+        .step{display:none}
+        .step.show{display:block;animation:stepIn .35s cubic-bezier(.2,.7,.2,1)}
+        @keyframes stepIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+        .meter{display:flex;gap:4px;margin-top:8px}
+        .meter span{flex:1;height:4px;border-radius:99px;background:#e5e7eb;transition:background .25s}
+        .meter-text{font-size:12px;min-height:18px;margin-top:4px}
+        .match.ok{color:var(--ok)} .match.bad{color:var(--danger)}
+
+        /* ---------- login <-> register swap animation ---------- */
+        .au-art,.au-formside{will-change:transform}
+        .swapping .au-art,.swapping .au-formside{transition:transform .62s cubic-bezier(.65,0,.25,1),opacity .35s ease}
+        .swapping .au-formside{pointer-events:none}
+        .swap-in .au-formside{animation:formIn .5s .05s cubic-bezier(.2,.7,.2,1) both}
+        @keyframes formIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+        /* floating illustration */
+        .float{animation:float 5s ease-in-out infinite;transform-origin:center}
+        .float2{animation:float 6.5s ease-in-out -2s infinite}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+        @media (prefers-reduced-motion:reduce){
+            .float,.float2,.step.show,.swap-in .au-formside{animation:none}
+        }
+
+        @media (max-width:860px){
+            .au-art{display:none}
+            .au-card{max-width:480px;padding:20px;border-radius:22px}
+            .au-body{max-width:none}
+        }
+            /* ---- scenes: image depende sa buhaton sa user ---- */
+        .au-art .scenes{position:relative;width:78%;aspect-ratio:360/420;max-height:80%}
+        .au-art .scenes svg{position:absolute;inset:0;width:100%;height:100%;max-height:none;opacity:0;transform:scale(.9) translateY(14px);
+            transition:opacity .45s ease,transform .55s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+        .au-art .scenes svg.on{opacity:1;transform:none}
+        @media (prefers-reduced-motion:reduce){.au-art .scenes svg{transition:none}}
+            /* v3: mas gamay + mas limpyo */
+        .au-dots{display:none}
+        .au-card{max-width:880px;padding:20px;gap:24px;border-radius:24px}
+        .au-formside{padding:2px 8px}
+        .au-art{flex:0 0 42%;min-height:420px;border-radius:20px;background:linear-gradient(160deg,#f6f8fe,#e8edfb)}
+        .au-art .scenes{width:70%;max-height:none}
+        .au-verse{bottom:20px;font-size:12px}
+        .au-verse small{font-size:10.5px}
+        .au-logo{font-size:15px}
+        .au-logo b{width:24px;height:24px;font-size:12px}
+        .au-body{max-width:330px;padding:16px 0 6px}
+        .au-head h1{font-size:22px;margin-bottom:4px}
+        .au-head p{font-size:12px;margin-bottom:16px}
+        .fld{margin-bottom:14px}
+        .fld input{height:40px;font-size:13px;padding:0 12px}
+        .fld label{font-size:11px;top:-7px}
+        .eye{width:32px;height:32px}
+        .au-btn{height:40px;font-size:13px}
+        .au-btn.ghost{flex:0 0 44px;width:44px}
+        .au-row{font-size:11.5px;margin-bottom:16px}
+        .au-alt{font-size:11.5px;margin-top:14px}
+        .hint{font-size:11.5px}
+        .step-note{font-size:11.5px;margin-bottom:14px}
+        .au-actions{margin-top:16px}
+            /* v4 */
+        @view-transition{navigation:auto}
+        ::view-transition-old(root),::view-transition-new(root){animation-duration:.28s}
+
+        /* card + form spacing */
+        .au-card{max-width:900px;min-height:560px;padding:20px;gap:24px}
+        .au-formside{align-items:center;padding:4px 8px}
+        .au-logo,.au-body{width:100%;max-width:340px}
+        .au-body{flex:1;justify-content:center;padding:20px 0 8px}
+        .rev .au-body{justify-content:flex-start;padding-top:30px}
+        .au-head h1{font-size:22px;margin:0 0 4px}
+        .au-head p{font-size:12px;margin:0 0 20px}
+        .fld{margin-bottom:16px}
+        .au-row{margin-bottom:18px}
+        .au-alt{margin-top:16px}
+        .step-note{margin-bottom:18px}
+        .fld input:-webkit-autofill,.fld input:-webkit-autofill:hover,.fld input:-webkit-autofill:focus{
+            -webkit-box-shadow:0 0 0 40px #fff inset !important;-webkit-text-fill-color:#1c1d21 !important;caret-color:#1c1d21}
+
+        /* image panel: image sa taas, verse sa ubos (dili na mag-overlap) */
+        .au-art{flex:0 0 42%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px 20px;min-height:0}
+        .au-art .scenes{position:relative;flex:none;width:68%;max-width:250px;aspect-ratio:360/420;max-height:none}
+        .au-verse{position:static;padding:0 12px;max-width:290px}
+
+        /* smooth crossfade: mogawas dayon ang karaan, mosulod ang bag-o human sa gamay nga delay */
+        .au-art .scenes .scene{will-change:opacity,transform;visibility:hidden;opacity:0;transform:scale(.94) translateY(10px);
+            transition:opacity .25s ease,transform .35s ease,visibility 0s linear .35s}
+        .au-art .scenes .scene.on{visibility:visible;opacity:1;transform:none;
+            transition:opacity .5s ease .12s,transform .6s cubic-bezier(.2,.8,.2,1) .12s,visibility 0s}
+        .scenes.init .scene{transition:none !important}
+        .scene:not(.on) .float,.scene:not(.on) .float2{animation-play-state:paused}
+
+        /* will-change lang inig swap */
+        .au-art,.au-formside{will-change:auto}
+        .swapping .au-art,.swapping .au-formside{will-change:transform}
+
+        @media (prefers-reduced-motion:reduce){.au-art .scenes .scene,.au-art .scenes .scene.on{transition:none}}
+        @media (max-width:860px){
+            .au-art{display:none}
+            .au-card{max-width:480px;min-height:0;padding:18px;border-radius:22px}
+            .au-formside{padding:0}
+            .rev .au-body{padding-top:20px}
+        }
+            /* v5 */
+        :root{--green:#5fb800}
+        body{background:
+            radial-gradient(900px 520px at 8% -5%,rgba(59,107,232,.16),transparent 62%),
+            radial-gradient(760px 520px at 100% 105%,rgba(143,212,0,.18),transparent 62%),
+            #eef2ff;background-attachment:fixed}
+
+        /* card */
+        .au-card{border:1px solid rgba(255,255,255,.9);
+            box-shadow:0 34px 80px -24px rgba(47,88,196,.32),0 2px 8px rgba(47,88,196,.06)}
+
+        /* logo */
+        a.au-logo{display:flex;align-items:center;gap:12px;width:100%;max-width:340px;padding-bottom:14px;
+            border-bottom:1px solid #eef0f6;text-decoration:none;color:var(--ink);font-weight:600;font-size:17px;letter-spacing:-.01em}
+        .au-logo-img{display:block;width:48px;height:auto;filter:drop-shadow(0 4px 8px rgba(47,88,196,.18))}
+        .au-body{padding-top:22px}
+
+        /* image panel */
+        .au-art{background:
+            radial-gradient(rgba(59,107,232,.13) 1.2px,transparent 1.5px) 0 0/18px 18px,
+            radial-gradient(circle at 30% 12%,#ffffff 0,#eef3ff 55%,#e0e8fb 100%)}
+        .au-art::before{content:"";position:absolute;width:230px;height:230px;right:-80px;top:-80px;border-radius:50%;
+            background:radial-gradient(circle,rgba(143,212,0,.30),transparent 70%)}
+        .au-art::after{content:"";position:absolute;width:270px;height:270px;left:-100px;bottom:-100px;border-radius:50%;
+            background:radial-gradient(circle,rgba(59,107,232,.24),transparent 70%)}
+        .au-art .scenes,.au-verse{position:relative;z-index:1}
+        .au-verse{background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+            border:1px solid #fff;border-radius:14px;padding:10px 16px;
+            box-shadow:0 8px 20px -10px rgba(47,88,196,.25);color:#4b5563}
+
+        /* fields */
+        .fld input{border-color:#d3d9e6}
+        .fld input:hover{border-color:#a9b8e8}
+        .fld input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(59,107,232,.13)}
+
+        /* buttons */
+        .au-btn{position:relative;overflow:hidden;background:linear-gradient(135deg,#4f80f2,#2f58c4);
+            box-shadow:0 10px 20px -8px rgba(47,88,196,.6);
+            transition:transform .15s,box-shadow .25s,background .25s}
+        .au-btn::after{content:"";position:absolute;inset:0;pointer-events:none;
+            background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%);
+            transform:translateX(-120%);transition:transform .6s ease}
+        .au-btn:hover{background:linear-gradient(135deg,#5a89f5,#2f58c4);transform:translateY(-1px);
+            box-shadow:0 14px 24px -8px rgba(47,88,196,.65)}
+        .au-btn:hover::after{transform:translateX(120%)}
+        .au-btn:active{transform:translateY(0) scale(.985)}
+        .au-btn.ghost{background:#fff;box-shadow:none;color:var(--blue)}
+        .au-btn.ghost::after{display:none}
+        .au-btn.ghost:hover{background:#f1f5ff;transform:none;box-shadow:none}
+
+        /* progress (asul padung sa berde, parehas sa logo) */
+        .seg:first-child,.seg.on{background:linear-gradient(90deg,#3B6BE8,var(--green))}
+
+        @media (prefers-reduced-motion:reduce){.au-btn,.au-btn::after{transition:none}}
+        @media (max-width:860px){.au-logo-img{width:44px}}
+            /* v6: logo sa tunga + form arrangement */
+        .au-card .au-formside{justify-content:center;align-items:center;padding:8px 10px}
+
+        /* logo: dako, naa sa tunga, tangtang ang puti nga kahon */
+        a.au-logo{flex-direction:column;justify-content:center;gap:8px;width:100%;max-width:360px;
+            padding:0;margin:0 0 20px;border:0;text-align:center;font-size:15px;font-weight:600;color:var(--ink);letter-spacing:.01em}
+        .au-logo-img{width:92px;height:auto;filter:none;mix-blend-mode:multiply}
+        .au-logo span{line-height:1}
+
+        /* body: dili na mag-stretch, ang logo + form naay parehas nga posisyon sa login ug register */
+        .au-card .au-formside .au-body,
+        .au-card.rev .au-formside .au-body{flex:none;justify-content:flex-start;width:100%;max-width:360px;padding:0}
+
+        /* heading naa sa tunga */
+        .au-head{text-align:center}
+        .au-head h1{font-size:23px;margin:0 0 6px}
+        .au-head p{font-size:12.5px;margin:0 0 22px}
+        .step-note{text-align:center;margin:0 0 20px}
+        .progress{margin-bottom:10px}
+
+        /* inputs */
+        .fld{margin-bottom:16px}
+        .fld input{height:44px;font-size:13.5px;border-radius:10px;background:#fafbff;border-color:#dbe1ee}
+        .fld input:hover{background:#fff}
+        .fld input:focus{background:#fff}
+        .fld label{font-size:11.5px;font-weight:500;color:#5b6475;left:12px;border-radius:4px}
+        .eye{right:8px}
+
+        /* rows / hints */
+        .au-row{margin:4px 0 20px}
+        .hint{margin:-6px 0 18px;text-align:left}
+        .au-check{font-size:12px}
+
+        /* buttons */
+        .au-btn{height:44px;border-radius:10px;font-size:13.5px;margin-top:2px}
+        .au-btn.ghost{flex:0 0 48px;width:48px;border-radius:10px}
+        .au-actions{margin-top:20px}
+
+        /* link sa ubos */
+        .au-alt{margin:20px 0 0;padding-top:16px;border-top:1px solid #eef0f6;font-size:12px;color:#5b6475}
+
+        @media (max-width:860px){
+            .au-logo-img{width:80px}
+            a.au-logo{margin-bottom:16px}
+        }
+            /* v7 */
+        .fld label{background:linear-gradient(to bottom,#fff 50%,#fafbff 50%)}
+        .fld input:focus + label{background:linear-gradient(to bottom,#fff 50%,#fff 50%)}
+    </style>
+</head>
+<body>
+<main class="au-page">
+    <div class="au-card @yield('modifier')" id="auCard">
+        <section class="au-formside" id="auForm">
+            <a class="au-logo" href="{{ url('/') }}"><img class="au-logo-img" src="{{ asset('images/church-logo.png') }}" alt="" width="92" height="80"><span>{{ config('app.name', 'Church System') }}</span></a>
+            <div class="au-body">
+                @yield('content')
+            </div>
+        </section>
+
+        <aside class="au-art" id="auArt" aria-hidden="true">
+            <div class="scenes">@hasSection('art')@yield('art')@else<svg class="scene on" data-scene="signin" viewBox="0 0 360 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="si-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b5ee3a"/><stop offset="1" stop-color="#5fb800"/></linearGradient>
+        <linearGradient id="si-b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7aa0f8"/><stop offset="1" stop-color="#2f58c4"/></linearGradient>
+        <filter id="si-s" x="-30%" y="-20%" width="160%" height="160%"><feDropShadow dx="0" dy="10" stdDeviation="9" flood-color="#2f58c4" flood-opacity=".28"/></filter>
+    </defs>
+    <circle cx="180" cy="214" r="150" fill="#fff" opacity=".65"/>
+    <circle cx="180" cy="214" r="108" fill="#fff" opacity=".6"/>
+    <ellipse cx="180" cy="396" rx="92" ry="11" fill="#000" opacity=".07"/>
+    <g filter="url(#si-s)"><rect x="102" y="46" width="156" height="328" rx="32" fill="url(#si-b)"/></g>
+    <rect x="110" y="54" width="140" height="312" rx="25" fill="#f8f9fe"/>
+    <rect x="152" y="62" width="56" height="10" rx="5" fill="#2f58c4"/>
+    <rect x="134" y="98" width="92" height="10" rx="5" fill="#dfe7fb"/>
+    <rect x="150" y="116" width="60" height="8" rx="4" fill="#eceffb"/>
+    <g class="float2">
+        <path d="M156 196v-20a24 24 0 0 1 48 0v20" stroke="#8da2e0" stroke-width="12" stroke-linecap="round"/>
+        <rect x="142" y="190" width="76" height="62" rx="15" fill="url(#si-g)"/>
+        <circle cx="180" cy="215" r="8" fill="#2f5a00"/>
+        <rect x="177" y="217" width="6" height="18" rx="3" fill="#2f5a00"/>
+    </g>
+    <rect x="128" y="274" width="104" height="32" rx="10" fill="#fff" stroke="#3B6BE8" stroke-width="3"/>
+    <g fill="#7ed321"><circle cx="150" cy="290" r="4.5"/><circle cx="168" cy="290" r="4.5"/><circle cx="186" cy="290" r="4.5"/><circle cx="204" cy="290" r="4.5"/></g>
+    <rect x="128" y="322" width="104" height="26" rx="9" fill="url(#si-b)"/>
+    <g class="float">
+        <g transform="translate(100 122)">
+            <path d="M0 -46 L40 -32 V6 C40 32 22 50 0 60 C-22 50 -40 32 -40 6 V-32 Z" fill="url(#si-g)" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+            <path d="M-17 6 L-4 19 L19 -9" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+    </g>
+    <path transform="translate(292 96)" d="M0 -9L2.5 -2.5L9 0L2.5 2.5L0 9L-2.5 2.5L-9 0L-2.5 -2.5Z" fill="#8fd400"/>
+    <path transform="translate(62 262)" d="M0 -7L2 -2L7 0L2 2L0 7L-2 2L-7 0L-2 -2Z" fill="#3B6BE8" opacity=".7"/>
+    <circle cx="302" cy="300" r="5" fill="#3B6BE8" opacity=".35"/>
+</svg>@endif</div>
+            @hasSection('verse')
+                <div class="au-verse">@yield('verse')</div>
+            @endif
+            
+        </aside>
+    </div>
+</main>
+
+<script>
+(function () {
+    var card = document.getElementById('auCard'),
+        art  = document.getElementById('auArt'),
+        form = document.getElementById('auForm');
+
+    /* show / hide password */
+    document.querySelectorAll('[data-eye]').forEach(function (b) {
+        b.addEventListener('click', function () {
+            var i = b.parentNode.querySelector('input'), show = i.type === 'password';
+            i.type = show ? 'text' : 'password';
+            b.querySelector('i').className = 'fas ' + (show ? 'fa-eye-slash' : 'fa-eye');
+            b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+        });
+    });
+
+    /* login <-> register: the illustration and the form trade places, then we go to the other page */
+    document.querySelectorAll('[data-switch]').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+            e.preventDefault();
+            var href = a.href;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { location.href = href; return; }
+            try { sessionStorage.setItem('auSwap', '1'); } catch (x) {}
+
+            var fr = form.getBoundingClientRect(), ar = art.getBoundingClientRect(),
+                twoCol = getComputedStyle(art).display !== 'none';
+            card.classList.add('swapping');
+            if (twoCol) {
+                art.style.transform  = 'translateX(' + (fr.left - ar.left) + 'px)';
+                form.style.transform = 'translateX(' + (ar.right - fr.right) + 'px)';
+            }
+            form.style.opacity = 0;
+            setTimeout(function () { location.href = href; }, 640);
+        });
+    });
+
+    /* coming back with the browser Back button */
+    window.addEventListener('pageshow', function (e) {
+        if (!e.persisted) return;
+        card.classList.remove('swapping');
+        art.style.transform = form.style.transform = '';
+        form.style.opacity = '';
+    });
+})();
+</script>
+<script>
+window.auScene = function (n) {
+    var box = document.querySelector('.scenes'); if (!box) return;
+    var first = !box.dataset.ready;
+    if (first) box.classList.add('init');
+    box.querySelectorAll('.scene').forEach(function (s) { s.classList.toggle('on', s.getAttribute('data-scene') === n); });
+    if (first) { box.dataset.ready = '1'; void box.offsetWidth; requestAnimationFrame(function () { box.classList.remove('init'); }); }
+};
+</script>
+@stack('scripts')
+</body>
+</html>

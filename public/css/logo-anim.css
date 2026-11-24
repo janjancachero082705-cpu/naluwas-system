@@ -1,0 +1,60 @@
+/* ===== CHURCH LOGO + ANIMATION (lg1) ===== */
+@keyframes lgPop    { 0% { opacity: 0; transform: scale(.4) rotate(-14deg); } 60% { transform: scale(1.1) rotate(4deg); } 100% { opacity: 1; transform: none; } }
+@keyframes lgFloat  { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes lgGlow   { 0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,.45), 0 8px 20px rgba(12,20,69,.25); } 50% { box-shadow: 0 0 0 9px rgba(34,197,94,0), 0 8px 20px rgba(12,20,69,.25); } }
+@keyframes lgShine  { 0% { transform: translateX(-130%) skewX(-20deg); } 60%,100% { transform: translateX(230%) skewX(-20deg); } }
+
+/* ---------- SIDEBAR ---------- */
+.logo-icon-fallback {
+    position: relative; overflow: hidden; flex: 0 0 auto;
+    width: 46px; height: 46px; min-width: 46px;
+    border-radius: 14px; font-size: 0 !important; color: transparent !important;
+    background: #fff url('/images/church-logo.png') center / 78% no-repeat !important;
+    animation: lgPop .7s cubic-bezier(.2,.8,.2,1) both, lgFloat 4s ease-in-out .8s infinite, lgGlow 3s ease-out 1s infinite;
+    transition: transform .3s cubic-bezier(.3,1.6,.5,1);
+    cursor: pointer;
+}
+.logo-icon-fallback i { display: none !important; }
+.logo-icon-fallback::after {
+    content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 40%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.85), transparent);
+    animation: lgShine 5s ease-in-out 1.5s infinite; pointer-events: none;
+}
+.logo-icon-fallback:hover { transform: scale(1.12) rotate(-8deg); animation-play-state: paused, paused, running; }
+
+/* kung naay tinuod nga <img> sa sidebar brand */
+.sidebar-container [class*="logo"] img, .sidebar-container [class*="brand"] img {
+    background: #fff; border-radius: 14px; padding: 4px; object-fit: contain;
+    animation: lgPop .7s cubic-bezier(.2,.8,.2,1) both, lgFloat 4s ease-in-out .8s infinite;
+    transition: transform .3s cubic-bezier(.3,1.6,.5,1);
+}
+.sidebar-container [class*="logo"] img:hover, .sidebar-container [class*="brand"] img:hover { transform: scale(1.12) rotate(-8deg); }
+
+.sidebar-container .brand-name { animation: lgPop .6s ease .15s both; }
+
+/* ---------- LOGIN / REGISTER ---------- */
+.mini-brand .mark {
+    background: #fff !important; border-radius: 12px; overflow: hidden;
+    display: inline-grid; place-items: center;
+    animation: lgPop .7s cubic-bezier(.2,.8,.2,1) both, lgFloat 4s ease-in-out .8s infinite;
+}
+.mini-brand .mark img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
+
+.m-badge {
+    position: relative; overflow: hidden;
+    width: 84px !important; height: 84px !important; border-radius: 24px !important;
+    font-size: 0 !important; color: transparent !important;
+    background: #fff url('/images/church-logo.png') center / 78% no-repeat !important;
+    animation: lgPop .8s cubic-bezier(.2,.8,.2,1) both, lgFloat 4.5s ease-in-out .9s infinite, lgGlow 3s ease-out 1s infinite;
+}
+.m-badge i { display: none !important; }
+.m-badge::after {
+    content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 40%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.85), transparent);
+    animation: lgShine 5s ease-in-out 1.5s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logo-icon-fallback, .logo-icon-fallback::after, .mini-brand .mark, .m-badge, .m-badge::after,
+    .sidebar-container [class*="logo"] img, .sidebar-container [class*="brand"] img, .sidebar-container .brand-name { animation: none !important; }
+}

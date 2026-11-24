@@ -31,6 +31,27 @@
     .locked .meta { margin-left: auto; font-size: .78rem; color: var(--text-muted); font-weight: 600; }
 </style>
 
+<style>
+    /* ===== INVENTORY EDIT MOBILE (i2) ===== */
+    @@media (max-width: 767.98px) {
+        .edit-wrap .row { --bs-gutter-x: .5rem; --bs-gutter-y: .6rem; }
+        .edit-wrap .alert { padding: .6rem .75rem; font-size: .82rem; }
+        .edit-wrap .panel { border-radius: 14px; }
+        .edit-wrap .panel-head { flex-wrap: wrap; padding: 12px !important; gap: 6px; font-size: .9rem; }
+        .edit-wrap .panel-head .ms-auto { width: 100%; margin-left: 0 !important; }
+        .edit-wrap .panel-body { padding: 12px !important; }
+
+        .edit-wrap .locked { padding: 10px 12px; gap: 8px; margin-bottom: 14px; }
+        .edit-wrap .locked .meta { margin-left: 0; width: 100%; }
+
+        .edit-wrap .form-control, .edit-wrap .form-select { font-size: 16px !important; min-height: 44px; }
+        .edit-wrap textarea.form-control { min-height: 90px; }
+
+        .edit-wrap form > .d-flex:last-child { flex-direction: column-reverse; gap: 8px !important; margin-top: 16px !important; padding-top: 14px !important; }
+        .edit-wrap form > .d-flex:last-child > * { width: 100%; justify-content: center; }
+    }
+</style>
+
 <div class="edit-wrap">
     @if($errors->any())
         <div class="alert alert-danger" role="alert">

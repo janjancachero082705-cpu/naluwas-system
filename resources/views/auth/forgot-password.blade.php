@@ -1,25 +1,28 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+@extends('layouts.auth2')
+@section('title', 'Forgot password')
+
+@section('content')
+<div class="au-head">
+    <span class="au-ico"><i class="fas fa-envelope-open-text"></i></span>
+    <h1>Forgot password?</h1>
+    <p>No problem. Enter your email and we will send you a link to choose a new one.</p>
+</div>
+
+@if(session('status'))
+    <div class="au-alert ok"><i class="fas fa-circle-check"></i><span>{{ session('status') }}</span></div>
+@endif
+@if($errors->any())
+    <div class="au-alert"><i class="fas fa-circle-exclamation"></i><span>{{ $errors->first() }}</span></div>
+@endif
+
+<form method="POST" action="{{ route('password.email') }}" data-busy>
+    @csrf
+    <div class="fld">
+        <input type="email" name="email" id="email" value="{{ old('email') }}" placeholder=" " required autofocus autocomplete="username">
+        <label for="email">Email</label>
+        <i class="fas fa-envelope lead"></i>
     </div>
-
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    <button type="submit" class="au-btn"><i class="fas fa-paper-plane"></i> <span>Email reset link</span></button>
+    <a class="au-link au-back" href="{{ route('login') }}"><i class="fas fa-arrow-left"></i> Back to login</a>
+</form>
+@endsection
