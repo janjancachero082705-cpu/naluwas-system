@@ -29,7 +29,7 @@
     $chips = [];
     if ($hasRange)   $chips[] = ['icon' => 'fa-calendar',  'text' => $dateText,                                   'url' => $without(['from', 'to'])];
     if ($fundFilter) $chips[] = ['icon' => 'fa-layer-group','text' => __($funds[$fundFilter]['label'] ?? $fundFilter), 'url' => $without(['fund'])];
-    if ($typeFilter) $chips[] = ['icon' => 'fa-arrow-right-arrow-left', 'text' => $typeFilter === 'income' ? __('Collections only') : __('Deductions only'), 'url' => $without(['type'])];
+    if ($typeFilter) $chips[] = ['icon' => 'fa-arrow-right-arrow-left', 'text' => ($typeFilter === 'income' ? __('Collections only') : ($typeFilter === 'donation' ? __('Donations only') : __('Deductions only'))), 'url' => $without(['type'])];
     if (!empty($filters['q'])) $chips[] = ['icon' => 'fa-magnifying-glass', 'text' => '"' . $filters['q'] . '"', 'url' => $without(['q'])];
 
     $sort    = $filters['sort'] ?? 'newest';
@@ -693,7 +693,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <strong>{{ __('Fund report') }}</strong>
         · {{ $hasRange ? $dateText : __('All dates') }}
         · {{ $fundFilter ? __($funds[$fundFilter]['label']) : __('All funds') }}
-        · {{ $typeFilter ? ($typeFilter === 'income' ? __('Collections only') : __('Deductions only')) : __('Collections & deductions') }}
+        · {{ $typeFilter ? (($typeFilter === 'income' ? __('Collections only') : ($typeFilter === 'donation' ? __('Donations only') : __('Deductions only')))) : __('Collections & deductions') }}
         @if(!empty($filters['q'])) · "{{ $filters['q'] }}" @endif
     </div>
 
@@ -704,6 +704,9 @@ document.addEventListener('DOMContentLoaded', function () {
         </button>
         <button type="button" class="btn-ghost" data-bs-toggle="modal" data-bs-target="#deductionModal">
             <i class="fas fa-minus"></i> {{ __('Deduct from a fund') }}
+        </button>
+        <button type="button" class="btn-ghost" data-bs-toggle="modal" data-bs-target="#donationModal">
+            <i class="fas fa-hand-holding-heart"></i> {{ __('Record donation') }}
         </button>
         <a href="{{ route('inventory.export', $filters) }}" class="btn-ghost ms-lg-auto">
             <i class="fas fa-file-csv"></i> {{ __('Export CSV') }}
@@ -783,6 +786,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <option value="">{{ __('Collections & deductions') }}</option>
                         <option value="income"  @selected($typeFilter === 'income')>{{ __('Collections only') }}</option>
                         <option value="expense" @selected($typeFilter === 'expense')>{{ __('Deductions only') }}</option>
+                        <option value="donation" @selected($typeFilter === 'donation')>{{ __('Donations only') }}</option>
                     </select>
                 </div>
                 <div class="fg grow">
@@ -897,7 +901,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <tr>
                             <td class="text-nowrap">{{ $t->date->format('M d, Y') }}</td>
                             <td><span class="fund-pill fund-{{ $t->fund }}"><span class="fund-dot"></span>{{ $t->fundLabel() }}</span></td>
-                            <td><span class="type-tag {{ $isIn ? 'in' : 'out' }}">{{ $isIn ? __('Collection') : __('Deduction') }}</span></td>
+                            <td><span class="type-tag {{ $isIn ? 'in' : 'out' }}">{{ $isIn ? ($t->category === 'Donation' ? __('Donation') : __('Collection')) : __('Deduction') }}</span></td>
                             <td>
                                 @if($isIn)
                                     <div class="fw-semibold">{{ $t->description }}</div>
@@ -951,6 +955,9 @@ document.addEventListener('DOMContentLoaded', function () {
     </button>
     <button type="button" class="dk dk-main dk-ded" data-bs-toggle="modal" data-bs-target="#deductionModal">
         <i class="fas fa-minus"></i> {{ __('Deduct') }}
+    </button>
+    <button type="button" class="dk dk-ico" data-bs-toggle="modal" data-bs-target="#donationModal" title="{{ __('Record donation') }}" aria-label="{{ __('Record donation') }}">
+        <i class="fas fa-hand-holding-heart"></i>
     </button>
     <span class="dk-sep"></span>
     <a href="{{ route('inventory.export', $filters) }}" class="dk dk-ico" title="{{ __('Export CSV') }}" aria-label="{{ __('Export CSV') }}">
@@ -1023,6 +1030,76 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
 </div>
 
+{{-- ============ DONATION MODAL ============ --}}
+@php $donationBag = $errors->getBag('donation'); @endphp
+<div class="modal fade" id="donationModal" tabindex="-1" aria-labelledby="donationTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form method="POST" action="{{ route('inventory.donations.store') }}" class="modal-content" id="donationForm" autocomplete="off">
+            @csrf
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="donationTitle">{{ __('Record donation') }}</h5>
+                    <div class="cell-sub">{{ __('Special gift from a member or visitor. It is added to the fund you choose.') }}</div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if($donationBag->any())
+                    <div class="alert alert-danger py-2" style="font-size:.82rem;">
+                        @foreach($donationBag->all() as $msg)<div>{{ $msg }}</div>@endforeach
+                    </div>
+                @endif
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label class="form-label" for="n_fund">{{ __('Add to fund') }}</label>
+                        <select id="n_fund" name="fund" class="form-select" required>
+                            @foreach($funds as $key => $fund)
+                                <option value="{{ $key }}" @selected(old('fund', $fundFilter) === $key)>{{ __($fund['label']) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label" for="n_date">{{ __('Date') }}</label>
+                        <input type="date" id="n_date" name="date" class="form-control" required max="{{ $today }}" value="{{ old('date', $today) }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="n_amount">{{ __('Amount') }}</label>
+                        <div class="money-input">
+                            <span>₱</span>
+                            <input type="number" id="n_amount" name="amount" class="form-control" step="0.01" min="0.01" max="1000000"
+                                   inputmode="decimal" placeholder="0.00" required value="{{ old('amount') }}">
+                        </div>
+                        <div class="text-danger" id="n_amount_fb" style="font-size:.78rem;margin-top:4px;"></div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="n_donor">{{ __('Donor name') }} <span class="text-muted fw-normal text-lowercase">({{ __('blank = Anonymous') }})</span></label>
+                        <input type="text" id="n_donor" name="donor_name" class="form-control" maxlength="120" placeholder="{{ __('Full name of the donor') }}" value="{{ old('donor_name') }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="n_note">{{ __('Note') }} <span class="text-muted fw-normal text-lowercase">({{ __('optional') }})</span></label>
+                        <input type="text" id="n_note" name="note" class="form-control" maxlength="200" placeholder="{{ __('e.g. Thanksgiving gift, Building') }}" value="{{ old('note') }}">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-ghost" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                <button type="submit" class="btn-cyan"><i class="fas fa-check"></i> {{ __('Save donation') }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var a = document.getElementById('n_amount'), fb = document.getElementById('n_amount_fb');
+    if (a) a.addEventListener('input', function () {
+        var v = parseFloat(a.value), msg = (a.value !== '' && isFinite(v) && v > 1000000) ? 'Maximum is ₱1,000,000.00.' : '';
+        a.setCustomValidity(msg); a.classList.toggle('is-invalid', !!msg); fb.textContent = msg;
+    });
+    @if($donationBag->any())
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('donationModal')).show();
+    @endif
+});
+</script>
 {{-- ============ DEDUCTION MODAL ============ --}}
 <div class="modal fade" id="deductionModal" tabindex="-1" aria-labelledby="deductionTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -1123,7 +1200,7 @@ document.addEventListener('DOMContentLoaded', function () {
 <script>
 /* invModalFix: ibalhin ang modals sa <body> aron dili maipit sa transform/animation sa page */
 (function () {
-    ['collectionModal', 'deductionModal', 'deleteModal'].forEach(function (id) {
+    ['collectionModal', 'deductionModal', 'deleteModal', 'donationModal'].forEach(function (id) {
         var m = document.getElementById(id);
         if (m && m.parentNode !== document.body) document.body.appendChild(m);
     });
@@ -1146,7 +1223,7 @@ document.addEventListener('DOMContentLoaded', function () {
 <script>
 /* invModalFix: ibalhin ang modals sa <body> aron dili maipit sa transform/animation sa page */
 (function () {
-    ['collectionModal', 'deductionModal', 'deleteModal'].forEach(function (id) {
+    ['collectionModal', 'deductionModal', 'deleteModal', 'donationModal'].forEach(function (id) {
         var m = document.getElementById(id);
         if (m && m.parentNode !== document.body) document.body.appendChild(m);
     });

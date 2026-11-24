@@ -67,6 +67,7 @@ class InventoryController extends Controller
             ->where('type', MoneyTransaction::INCOME)
             ->tap(fn ($q) => $this->applyDateRange($q, $filters))
             ->when(!empty($filters['fund']), fn ($q) => $q->where('fund', $filters['fund']))
+            ->where(fn ($q) => $q->whereNull('category')->orWhere('category', '!=', 'Donation'))
             ->selectRaw('date, fund, SUM(amount) AS total')
             ->groupBy('date', 'fund')
             ->orderByDesc('date')
@@ -121,9 +122,9 @@ class InventoryController extends Controller
 
         $data = $request->validateWithBag('collection', [
             'date'                => ['required', 'date', 'before_or_equal:today'],
-            'amounts.fellowship'  => ['nullable', 'numeric', 'min:0', self::AMOUNT_RULE],
-            'amounts.missions'    => ['nullable', 'numeric', 'min:0', self::AMOUNT_RULE],
-            'amounts.offering'    => ['nullable', 'numeric', 'min:0', self::AMOUNT_RULE],
+            'amounts.fellowship'  => ['nullable', 'numeric', 'min:0', self::AMOUNT_RULE, 'max:1000000'],
+            'amounts.missions'    => ['nullable', 'numeric', 'min:0', self::AMOUNT_RULE, 'max:1000000'],
+            'amounts.offering'    => ['nullable', 'numeric', 'min:0', self::AMOUNT_RULE, 'max:1000000'],
             'note'                => ['nullable', 'string', 'max:200'],
         ]);
 
@@ -158,13 +159,43 @@ class InventoryController extends Controller
             ->with('success', 'Collection for ' . Carbon::parse($data['date'])->format('M d, Y') . ' saved.');
     }
 
+    public function storeDonation(Request $request)
+    {
+        $churchId = $this->churchId($request);
+
+        $data = $request->validateWithBag('donation', [
+            'fund'       => ['required', Rule::in(array_keys(MoneyTransaction::FUNDS))],
+            'amount'     => ['required', 'numeric', 'gt:0', self::AMOUNT_RULE, 'max:1000000'],
+            'date'       => ['required', 'date', 'before_or_equal:today'],
+            'donor_name' => ['nullable', 'string', 'max:120'],
+            'note'       => ['nullable', 'string', 'max:200'],
+        ]);
+
+        $label = MoneyTransaction::FUNDS[$data['fund']];
+        $donor = trim((string) ($data['donor_name'] ?? '')) ?: 'Anonymous';
+
+        MoneyTransaction::create([
+            'church_id'   => $churchId,
+            'type'        => MoneyTransaction::INCOME,
+            'fund'        => $data['fund'],
+            'category'    => 'Donation',
+            'description' => ($data['note'] ?? null) ?: "Donation - {$label}",
+            'amount'      => $data['amount'],
+            'date'        => $data['date'],
+            'donor_name'  => $donor,
+            'created_by'  => $request->user()->id,
+        ]);
+
+        return redirect()->route('inventory.index')
+            ->with('success', 'Donation from ' . $donor . ' recorded.');
+    }
     public function storeDeduction(Request $request)
     {
         $churchId = $this->churchId($request);
 
         $data = $request->validateWithBag('deduction', [
             'fund'      => ['required', Rule::in(array_keys(MoneyTransaction::FUNDS))],
-            'amount'    => ['required', 'numeric', 'gt:0', self::AMOUNT_RULE],
+            'amount'    => ['required', 'numeric', 'gt:0', self::AMOUNT_RULE, 'max:1000000'],
             'date'      => ['required', 'date', 'before_or_equal:today'],
             'recipient' => ['required', 'string', 'max:120'],
             'purpose'   => ['required', 'string', 'min:3', 'max:500'],
@@ -220,7 +251,7 @@ class InventoryController extends Controller
 
         $data = $request->validate([
             'date'      => ['required', 'date', 'before_or_equal:today'],
-            'amount'    => ['required', 'numeric', 'gt:0', self::AMOUNT_RULE],
+            'amount'    => ['required', 'numeric', 'gt:0', self::AMOUNT_RULE, 'max:1000000'],
             'note'      => [$isCollection ? 'nullable' : 'prohibited', 'string', 'max:200'],
             'recipient' => [$isCollection ? 'prohibited' : 'required', 'string', 'max:120'],
             'purpose'   => [$isCollection ? 'prohibited' : 'required', 'string', 'min:3', 'max:500'],
@@ -344,7 +375,7 @@ class InventoryController extends Controller
                 $request->filled('from') ? 'after_or_equal:from' : null,
             ])),
             'fund'     => ['nullable', Rule::in(array_keys(MoneyTransaction::FUNDS))],
-            'type'     => ['nullable', Rule::in([MoneyTransaction::INCOME, MoneyTransaction::EXPENSE])],
+            'type'     => ['nullable', Rule::in([MoneyTransaction::INCOME, MoneyTransaction::EXPENSE, 'donation'])],
             'q'        => ['nullable', 'string', 'max:100'],
             'sort'     => ['nullable', Rule::in(self::SORTS)],
             'per_page' => ['nullable', Rule::in(self::PER_PAGE)],
@@ -374,7 +405,7 @@ class InventoryController extends Controller
         $this->applyDateRange($query, $filters);
 
         if (!empty($filters['fund'])) $query->where('fund', $filters['fund']);
-        if (!empty($filters['type'])) $query->where('type', $filters['type']);
+        if (($filters['type'] ?? null) === 'donation') { $query->where('type', MoneyTransaction::INCOME)->where('category', 'Donation'); } elseif (!empty($filters['type'])) { $query->where('type', $filters['type']); }
 
         if (!empty($filters['q'])) {
             $like = '%' . addcslashes($filters['q'], '%_\\') . '%';

@@ -336,6 +336,7 @@ Route::middleware(['auth'])->prefix('inventory')->name('inventory.')->group(func
     Route::middleware('throttle:30,1')->group(function () {
         Route::post('/collections', [\App\Http\Controllers\InventoryController::class, 'storeCollection'])->name('collections.store');
         Route::post('/deductions',  [\App\Http\Controllers\InventoryController::class, 'storeDeduction'])->name('deductions.store');
+        Route::post('/donations', [\App\Http\Controllers\InventoryController::class, 'storeDonation'])->name('donations.store');
         Route::get('/{transaction}/edit', [\App\Http\Controllers\InventoryController::class, 'edit'])->whereNumber('transaction')->name('edit');
         Route::put('/{transaction}',      [\App\Http\Controllers\InventoryController::class, 'update'])->whereNumber('transaction')->name('update');
         Route::delete('/{transaction}',   [\App\Http\Controllers\InventoryController::class, 'destroy'])->whereNumber('transaction')->name('destroy');
