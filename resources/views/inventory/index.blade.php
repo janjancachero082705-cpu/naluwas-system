@@ -998,7 +998,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <span class="fund-pill fund-{{ $key }}"><i class="fas {{ $icons[$key] }}"></i> {{ __($fund['label']) }}</span>
                             <div class="money-input">
                                 <span>₱</span>
-                                <input type="number" name="amounts[{{ $key }}]" class="form-control collect-amt" step="0.01" min="0" max="99999999.99"
+                                <input type="number" name="amounts[{{ $key }}]" class="form-control collect-amt" step="0.01" min="0" max="1000000"
                                        inputmode="decimal" placeholder="0.00" aria-label="{{ $fund['label'] }} amount"
                                        value="{{ old('amounts.' . $key) }}">
                             </div>
@@ -1061,7 +1061,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <label class="form-label" for="d_amount">{{ __('Amount') }}</label>
                         <div class="money-input">
                             <span>₱</span>
-                            <input type="number" id="d_amount" name="amount" class="form-control" step="0.01" min="0.01" max="99999999.99"
+                            <input type="number" id="d_amount" name="amount" class="form-control" step="0.01" min="0.01" max="1000000"
                                    inputmode="decimal" placeholder="0.00" required value="{{ old('amount') }}">
                         </div>
                     </div>
@@ -1265,6 +1265,80 @@ document.addEventListener('DOMContentLoaded', function () {
     @elseif($deductionBag->any())
         bootstrap.Modal.getOrCreateInstance(document.getElementById('deductionModal')).show();
     @endif
+});
+</script>
+<script>
+/* invAmountLimit */
+document.addEventListener('DOMContentLoaded', function () {
+    var MAX = 1000000; // usba ni kung gusto nimo ug lahi nga limit
+    var peso = function (n) { return '₱' + Number(n || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+
+    function fb(input) {
+        var host = input.closest('.fund-field') || input.closest('.money-input') || input;
+        var key = input.id || input.name;
+        var n = host.parentNode.querySelector('.amt-fb[data-for="' + key + '"]');
+        if (!n) {
+            n = document.createElement('div');
+            n.className = 'text-danger amt-fb';
+            n.style.cssText = 'font-size:.78rem;margin-top:4px;';
+            n.setAttribute('data-for', key);
+            host.insertAdjacentElement('afterend', n);
+        }
+        return n;
+    }
+    function show(input, msg) {
+        input.setCustomValidity(msg || '');
+        input.classList.toggle('is-invalid', !!msg);
+        fb(input).textContent = msg || '';
+        return !msg;
+    }
+    function limit(input, cap, msg) {
+        var v = parseFloat(input.value);
+        var bad = input.value !== '' && isFinite(v) && v > cap + 0.004;
+        return show(input, bad ? msg : '');
+    }
+
+    /* ---- Collection ---- */
+    var cInputs = document.querySelectorAll('.collect-amt');
+    cInputs.forEach(function (i) {
+        i.max = MAX;
+        i.addEventListener('input', function () { limit(i, MAX, 'Maximum is ' + peso(MAX) + ' per fund.'); });
+    });
+    var cForm = document.querySelector('#collectionModal form');
+    if (cForm) cForm.addEventListener('submit', function (e) {
+        var sum = 0;
+        cInputs.forEach(function (i) { sum += parseFloat(i.value) || 0; });
+        if (sum <= 0 && cInputs.length) {
+            e.preventDefault();
+            show(cInputs[0], 'Enter an amount for at least one fund.');
+            cInputs[0].focus();
+        }
+    });
+    cInputs.forEach(function (i) {
+        i.addEventListener('input', function () {
+            if (cInputs[0].validationMessage === 'Enter an amount for at least one fund.') show(cInputs[0], '');
+        });
+    });
+
+    /* ---- Deduction ---- */
+    var fundSel = document.getElementById('d_fund');
+    var amt = document.getElementById('d_amount');
+    function syncDeduct() {
+        if (!fundSel || !amt) return;
+        var bal = parseFloat(fundSel.selectedOptions[0].dataset.balance) || 0;
+        var cap = Math.min(bal, MAX);
+        amt.max = cap > 0 ? cap.toFixed(2) : '0';
+        if (cap <= 0) { show(amt, 'This fund has no balance to deduct.'); return; }
+        var msg = bal <= MAX ? 'Not enough balance. Available: ' + peso(bal) : 'Maximum is ' + peso(MAX) + '.';
+        limit(amt, cap, msg);
+    }
+    if (fundSel && amt) {
+        fundSel.addEventListener('change', syncDeduct);
+        amt.addEventListener('input', syncDeduct);
+        var dm = document.getElementById('deductionModal');
+        if (dm) dm.addEventListener('shown.bs.modal', syncDeduct);
+        syncDeduct();
+    }
 });
 </script>
 @endpush

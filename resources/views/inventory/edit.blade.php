@@ -90,7 +90,7 @@
                     <div class="money-input">
                         <span>₱</span>
                         <input type="number" id="e_amount" name="amount" class="form-control @error('amount') is-invalid @enderror"
-                               step="0.01" min="0.01" max="99999999.99" inputmode="decimal" required
+                               step="0.01" min="0.01" max="1000000" inputmode="decimal" required
                                value="{{ old('amount', $transaction->amount) }}">
                     </div>
                     @error('amount')<div class="text-danger mt-1" style="font-size:.8rem;">{{ $message }}</div>@enderror
@@ -127,3 +127,42 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+/* invAmountLimit */
+document.addEventListener('DOMContentLoaded', function () {
+    var MAX = 1000000;
+    var bal = @json((float) $balance);
+    var old = @json((float) $transaction->amount);
+    var isIn = @json($isIn);
+    var inp = document.getElementById('e_amount');
+    if (!inp) return;
+    var peso = function (n) { return '₱' + Number(n || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+
+    var hi = isIn ? MAX : Math.min(MAX, bal + old);
+    var lo = isIn ? Math.max(0.01, old - bal) : 0.01;
+    inp.max = hi.toFixed(2);
+    inp.min = lo.toFixed(2);
+
+    var host = inp.closest('.money-input');
+    var note = document.createElement('div');
+    note.style.cssText = 'font-size:.78rem;margin-top:4px;';
+    host.insertAdjacentElement('afterend', note);
+
+    function check() {
+        var v = parseFloat(inp.value), msg = '';
+        if (inp.value !== '' && isFinite(v)) {
+            if (v > hi + 0.004) msg = isIn ? 'Maximum is ' + peso(MAX) + '.' : 'Not enough balance. Maximum allowed: ' + peso(hi);
+            else if (v < lo - 0.004) msg = 'Too low: the fund balance would go negative. Minimum: ' + peso(lo);
+        }
+        inp.setCustomValidity(msg);
+        inp.classList.toggle('is-invalid', !!msg);
+        note.className = msg ? 'text-danger' : 'text-muted';
+        note.textContent = msg || ('Allowed: ' + peso(lo) + ' – ' + peso(hi));
+    }
+    inp.addEventListener('input', check);
+    check();
+});
+</script>
+@endpush
