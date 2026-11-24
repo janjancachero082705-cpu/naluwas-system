@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'TINC Church System') }} - Login</title>
+    <title>{{ config('app.name', 'Church System') }} - Login</title>
     <link rel="icon" type="image/png" href="{{ asset('images/church-logo.png') }}">
 
     <!-- Bootstrap 5 CSS -->
@@ -366,7 +366,7 @@
         <!-- Left Side - Welcome Section -->
         <div class="welcome-side">
             <div class="logo">
-                <h2>TINC</h2>
+                <h2></h2>
                 <p style="color: #64748b; font-size: 0.8rem;">Church Management System</p>
             </div>
             
@@ -427,7 +427,7 @@
                     <label for="password">Password</label>
                     <div class="input-group-custom">
                         <i class="fas fa-lock"></i>
-                        <input type="password" name="password" id="password" class="form-control-custom" required placeholder="••••••••">
+                        <input type="password" name="password" id="password" class="form-control-custom" required placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢">
                     </div>
                 </div>
 
@@ -446,7 +446,7 @@
                 </button>
 
                 <div style="text-align: center; font-size: 0.8rem; color: #94a3b8;">
-                    <i class="fas fa-shield-alt"></i> Secured by TINC System
+                    <i class="fas fa-shield-alt"></i> Secured by  System
                 </div>
             </form>
         </div>

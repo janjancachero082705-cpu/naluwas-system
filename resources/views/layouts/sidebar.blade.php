@@ -95,6 +95,6 @@
                 </button>
             </form>
         </div>
-        <div class="sidebar-foot">{{ config('app.name', 'TINC Church System') }}</div>
+        <div class="sidebar-foot">{{ config('app.name', 'Church System') }}</div>
     </div>
 </aside>

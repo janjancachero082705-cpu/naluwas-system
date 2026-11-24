@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Welcome') - {{ config('app.name', 'TINC Church System') }}</title>
+    <title>@yield('title', 'Welcome') - {{ config('app.name', 'Church System') }}</title>
     <link rel="icon" type="image/png" href="{{ asset('images/church-logo.png') }}">
     <script>(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -21,7 +21,7 @@
         <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
         <a class="au-logo" href="{{ url('/') }}">
             <span class="tile"><img src="{{ asset('images/church-logo.png') }}" alt=""></span>
-            <span><b>TINC Church</b><small>Church Management System</small></span>
+            <span><b> Church</b><small>Church Management System</small></span>
         </a>
         <div class="au-scene">@include('auth.partials.church-scene')</div>
         <blockquote class="au-verse">
@@ -37,7 +37,7 @@
         <div class="au-card">
             @yield('content')
         </div>
-        <p class="au-foot">&copy; {{ date('Y') }} TINC Church System</p>
+        <p class="au-foot">&copy; {{ date('Y') }} Church System</p>
     </section>
 </main>
 

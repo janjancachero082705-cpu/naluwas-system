@@ -9,13 +9,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TINC Church System - Church Management Software</title>
+    <title>Church System - Church Management Software</title>
     <link rel="icon" type="image/png" href="{{ asset('images/church-logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('tinc-theme')||'light');}catch(e){}</script>
+    <script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('-theme')||'light');}catch(e){}</script>
     <style>
         :root{--blue:#3B6BE8;--green:#5fb800;--ink:#1c1d21;--mut:#6b7280;--card:#fff;--chip:#fff;--chip-b:#dbe3f6;--line:#e6eaf5;--bg:#eef2ff;--g1:rgba(59,107,232,.16);--g2:rgba(143,212,0,.18)}
         [data-theme="dark"]{--ink:#eef1fb;--mut:#a3adc7;--card:#161d3b;--chip:#1d2548;--chip-b:#2c3763;--line:#2a345c;--bg:#0d1230;--g1:rgba(59,107,232,.28);--g2:rgba(95,184,0,.16)}
@@ -76,13 +76,13 @@
 <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
 <div class="wrap">
     <header class="nav">
-        <a class="brand" href="{{ url('/') }}"><img src="{{ asset('images/church-logo.png') }}" alt="" width="44" height="38"><span>TINC Church System</span></a>
+        <a class="brand" href="{{ url('/') }}"><img src="{{ asset('images/church-logo.png') }}" alt="" width="44" height="38"><span>Church System</span></a>
         @if (Route::has('login'))<a class="btn alt sm" href="{{ route('login') }}" data-go>Sign In</a>@endif
     </header>
 
     <main class="hero">
         <div class="txt">
-            <h1>TINC Church System</h1>
+            <h1>Church System</h1>
             <p class="lead">A complete church management solution for every iglesia. Manage members, inventory, finances, and messages in one sacred space.</p>
             <div class="chips">
                 <span class="chip"><i class="fas fa-users"></i> Member Management</span>
@@ -137,7 +137,7 @@
         <div class="stat"><b>100%</b><span>Faith-First</span></div>
         <div class="stat"><b>24/7</b><span>Available</span></div>
     </section>
-    <footer class="foot">&copy; {{ date('Y') }} TINC Church System</footer>
+    <footer class="foot">&copy; {{ date('Y') }} Church System</footer>
 </div>
 
 <script>
@@ -148,7 +148,7 @@
     btn.addEventListener('click', function () {
         var n = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         html.setAttribute('data-theme', n);
-        try { localStorage.setItem('tinc-theme', n); } catch (e) {}
+        try { localStorage.setItem('-theme', n); } catch (e) {}
         icon(n);
     });
     document.querySelectorAll('[data-go]').forEach(function (a) {

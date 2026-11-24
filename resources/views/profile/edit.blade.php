@@ -178,7 +178,7 @@
                         <div class="pf2-field full {{ $errors->has('church_name') ? 'bad' : '' }}">
                             <label for="church_name">Church / congregation</label>
                             <div class="pf2-input"><i class="fas fa-church lead"></i>
-                                <input type="text" id="church_name" name="church_name" value="{{ old('church_name', $u->church->name ?? '') }}" placeholder="e.g. TINC - Manila">
+                                <input type="text" id="church_name" name="church_name" value="{{ old('church_name', $u->church->name ?? '') }}" placeholder="e.g.  - Manila">
                             </div>
                             @if($errors->has('church_name'))<p class="pf2-msg bad">{{ $errors->first('church_name') }}</p>@endif
                         </div>

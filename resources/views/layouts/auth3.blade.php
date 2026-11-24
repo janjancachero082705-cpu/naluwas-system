@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" href="{{ asset('images/church-logo.png') }}">
-    <title>@yield('title') | {{ config('app.name', 'Church System') }}</title>
+    <title>@yield('title') | Church System</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -304,7 +304,7 @@
 <main class="au-page">
     <div class="au-card @yield('modifier')" id="auCard">
         <section class="au-formside" id="auForm">
-            <a class="au-logo" href="{{ url('/') }}"><img class="au-logo-img" src="{{ asset('images/church-logo.png') }}" alt="" width="92" height="80"><span>{{ config('app.name', 'Church System') }}</span></a>
+            <a class="au-logo" href="{{ url('/') }}"><img class="au-logo-img" src="{{ asset('images/church-logo.png') }}" alt="" width="92" height="80"><span>Church System</span></a>
             <div class="au-body">
                 @yield('content')
             </div>

@@ -1115,6 +1115,52 @@ document.addEventListener('DOMContentLoaded', function () {
         </form>
     </div>
 </div>
+<style>
+    /* invModalFix: modals kinahanglan naa sa ibabaw sa backdrop */
+    .modal { z-index: 2100 !important; }
+    .modal-backdrop { z-index: 2090 !important; }
+</style>
+<script>
+/* invModalFix: ibalhin ang modals sa <body> aron dili maipit sa transform/animation sa page */
+(function () {
+    ['collectionModal', 'deductionModal', 'deleteModal'].forEach(function (id) {
+        var m = document.getElementById(id);
+        if (m && m.parentNode !== document.body) document.body.appendChild(m);
+    });
+
+    /* fallback: kung dili mo-open ang data-bs-toggle, i-open nato direkta */
+    document.addEventListener('click', function (e) {
+        var t = e.target.closest ? e.target.closest('[data-bs-toggle="modal"]') : null;
+        if (!t || !window.bootstrap) return;
+        var sel = t.getAttribute('data-bs-target');
+        var el = sel ? document.querySelector(sel) : null;
+        if (el) window.bootstrap.Modal.getOrCreateInstance(el).show(t);
+    });
+})();
+</script>
+<style>
+    /* invModalFix: modals kinahanglan naa sa ibabaw sa backdrop */
+    .modal { z-index: 2100 !important; }
+    .modal-backdrop { z-index: 2090 !important; }
+</style>
+<script>
+/* invModalFix: ibalhin ang modals sa <body> aron dili maipit sa transform/animation sa page */
+(function () {
+    ['collectionModal', 'deductionModal', 'deleteModal'].forEach(function (id) {
+        var m = document.getElementById(id);
+        if (m && m.parentNode !== document.body) document.body.appendChild(m);
+    });
+
+    /* fallback: kung dili mo-open ang data-bs-toggle, i-open nato direkta */
+    document.addEventListener('click', function (e) {
+        var t = e.target.closest ? e.target.closest('[data-bs-toggle="modal"]') : null;
+        if (!t || !window.bootstrap) return;
+        var sel = t.getAttribute('data-bs-target');
+        var el = sel ? document.querySelector(sel) : null;
+        if (el) window.bootstrap.Modal.getOrCreateInstance(el).show(t);
+    });
+})();
+</script>
 @endsection
 
 @push('scripts')

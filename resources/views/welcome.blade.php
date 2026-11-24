@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TINC Church System - Church Management Software</title>
+    <title>Church System - Church Management Software</title>
     <link rel="icon" type="image/png" href="{{ asset('images/church-logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="{{ asset('css/logo-anim.css') }}?v={{ filemtime(public_path('css/logo-anim.css')) }}">
     @endif
     <script>
-        try { document.documentElement.setAttribute('data-theme', localStorage.getItem('tinc-theme') || 'light'); } catch (e) {}
+        try { document.documentElement.setAttribute('data-theme', localStorage.getItem('-theme') || 'light'); } catch (e) {}
     </script>
     <style>
         :root{--blue:#3B6BE8;--blue-d:#2f58c4;--green:#5fb800;--ink:#1c1d21;--mut:#6b7280;--card:#fff;--chip:#fff;--chip-b:#dbe3f6;--line:#e6eaf5;
@@ -96,13 +96,13 @@
 
 <div class="wrap">
     <header class="nav">
-        <a class="brand" href="{{ url('/') }}"><img src="{{ asset('images/church-logo.png') }}" alt="" width="44" height="38"><span>TINC Church System</span></a>
+        <a class="brand" href="{{ url('/') }}"><img src="{{ asset('images/church-logo.png') }}" alt="" width="44" height="38"><span>Church System</span></a>
         <a class="btn alt sm" href="{{ route('login') }}" data-go>Sign In</a>
     </header>
 
     <main class="hero">
         <div class="txt">
-            <h1>TINC Church System</h1>
+            <h1>Church System</h1>
             <p class="lead">A complete church management solution for every iglesia. Manage members, inventory, finances, and messages in one sacred space.</p>
             <div class="chips">
                 <span class="chip"><i class="fas fa-users"></i> Member Management</span>
@@ -157,7 +157,7 @@
         <div class="stat"><b>24/7</b><span>Available</span></div>
     </section>
 
-    <footer class="foot">&copy; {{ date('Y') }} TINC Church System</footer>
+    <footer class="foot">&copy; {{ date('Y') }} Church System</footer>
 </div>
 
 <script>
@@ -168,7 +168,7 @@
     btn.addEventListener('click', function () {
         var n = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         html.setAttribute('data-theme', n);
-        try { localStorage.setItem('tinc-theme', n); } catch (e) {}
+        try { localStorage.setItem('-theme', n); } catch (e) {}
         icon(n);
     });
 
