@@ -103,11 +103,9 @@
     <main class="hero">
         <div class="txt">
             <h1>TINC Church System</h1>
-            <p class="lead">A complete church management solution for every iglesia. Manage members, attendance, choir schedules, inventory, and finances in one sacred space.</p>
+            <p class="lead">A complete church management solution for every iglesia. Manage members, inventory, finances, and messages in one sacred space.</p>
             <div class="chips">
                 <span class="chip"><i class="fas fa-users"></i> Member Management</span>
-                <span class="chip"><i class="fas fa-calendar-check"></i> Attendance Tracking</span>
-                <span class="chip"><i class="fas fa-music"></i> Choir Ministry</span>
                 <span class="chip"><i class="fas fa-boxes-stacked"></i> Inventory Control</span>
                 <span class="chip"><i class="fas fa-chart-line"></i> Financial Reports</span>
             </div>

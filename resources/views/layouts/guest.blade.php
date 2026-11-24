@@ -374,7 +374,7 @@
                 Welcome Back!
             </div>
             <div class="welcome-text">
-                Manage your church members, track attendance, handle finances, and organize choir ministry all in one place.
+                Manage your church members, handle finances, track inventory, and stay connected with other churches, all in one place.
             </div>
             
             <div class="features">
@@ -383,16 +383,8 @@
                     <span>Member Management</span>
                 </div>
                 <div class="feature-item">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>Attendance Tracking</span>
-                </div>
-                <div class="feature-item">
                     <i class="fas fa-chart-line"></i>
                     <span>Financial Reports</span>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-music"></i>
-                    <span>Choir Ministry</span>
                 </div>
             </div>
         </div>
