@@ -12,12 +12,8 @@
 @section('content')
 @php
     $monthlyData = $monthlyData ?? [];
-    $totalIncome = collect($monthlyData)->sum(function ($m) {
-        return (float) (is_array($m) ? ($m['income'] ?? 0) : ($m->income ?? 0));
-    });
-    $totalExpense = collect($monthlyData)->sum(function ($m) {
-        return (float) (is_array($m) ? ($m['expense'] ?? 0) : ($m->expense ?? 0));
-    });
+    $totalIncome = collect($monthlyData)->sum(fn ($m) => (float) (is_array($m) ? ($m['income'] ?? 0) : ($m->income ?? 0)));
+    $totalExpense = collect($monthlyData)->sum(fn ($m) => (float) (is_array($m) ? ($m['expense'] ?? 0) : ($m->expense ?? 0)));
 
     $male        = (int) ($maleCount ?? 0);
     $female      = (int) ($femaleCount ?? 0);
@@ -25,349 +21,245 @@
     $malePerc    = $totalGender > 0 ? round(($male / $totalGender) * 100) : 0;
     $femalePerc  = $totalGender > 0 ? 100 - $malePerc : 0;
 
-    $balance = $monthlyBalance ?? 0;
+    $balance = (float) ($monthlyBalance ?? 0);
+    $mi = (float) ($monthIncome ?? 0);
+    $me = (float) ($monthExpense ?? 0);
+    $mt = max($mi + $me, 1);
+    $incPct = round($mi / $mt * 100);
+    $expPct = 100 - $incPct;
+
+    $kpis = [
+        ['fa-users',            'k1', __('Total Members'),        $totalMembers ?? 0,   route('members.index'),   false],
+        ['fa-wallet',           'k2', $balance >= 0 ? __('Balance · Surplus') : __('Balance · Deficit'), abs($balance), route('finance.index'), true],
+        ['fa-user-plus',        'k3', __('New this month'),       $newMembers ?? 0,     route('members.index'),   false],
+        ['fa-envelope',         'k4', __('Unread messages'),      $unreadMessages ?? 0, route('messages.index'),  false],
+        ['fa-boxes-stacked',    'k5', __('Inventory items'),      $inventoryCount ?? 0, route('inventory.index'), false],
+        ['fa-triangle-exclamation','k6', __('Low stock'),         $lowStock ?? 0,       route('inventory.index'), false],
+        ['fa-cake-candles',     'k7', __('Birthdays this month'), $birthdaysMonth ?? 0, route('members.index'),   false],
+        ['fa-shield-halved',    'k8', __('Ministries / roles'),   $rolesCount ?? 0,     route('members.index'),   false],
+    ];
 @endphp
 
 <style>
-    .dash { max-width: 1600px; margin: 0 auto; }
+    .dz { max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+    .dz *, .dz *::before, .dz *::after { box-sizing: border-box; }
 
-    .dash .stat-card { height: 100%; }
-    .dash .stat-link { color: var(--text-light); font-size: 0.9rem; letter-spacing: 2px; }
+    /* HERO */
+    .dz-hero { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 26px; border-radius: 20px; color: #fff; background: linear-gradient(120deg, #121C5A 0%, #3157D5 70%, #12C4DE 140%); box-shadow: 0 14px 34px rgba(18,28,90,.22); }
+    .dz-hero h3 { margin: 0; font-size: 1.25rem; font-weight: 800; }
+    .dz-hero p { margin: 4px 0 0; font-size: .82rem; opacity: .8; }
+    .dz-hero-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .dz-hero-actions a { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px; font-size: .8rem; font-weight: 700; color: #fff; text-decoration: none; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); transition: background .15s ease, transform .15s ease; }
+    .dz-hero-actions a:hover { background: rgba(255,255,255,.26); transform: translateY(-2px); color: #fff; }
 
-    /* Income panel: summary on the left, chart on the right */
-    .income-summary { display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 28px 28px 28px 32px; }
-    .income-summary .lead-label { font-size: 0.8rem; font-weight: 700; color: var(--text-main); }
-    .income-chart { position: relative; height: 320px; padding: 22px 24px 14px 8px; }
-    @media (min-width: 992px) {
-        .income-summary { border-right: 1px solid var(--border-color); }
-    }
-    @media (max-width: 991px) {
-        .income-summary { gap: 18px; padding: 24px; }
-        .income-chart { padding: 8px 16px 16px; }
-    }
+    /* KPI */
+    .dz-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .dz-kpi { display: flex; align-items: center; gap: 14px; padding: 18px; border-radius: 18px; text-decoration: none; color: inherit; background: var(--card-bg, #fff); border: 1px solid var(--border-color, #E3E8F5); transition: transform .18s ease, box-shadow .18s ease; min-width: 0; }
+    .dz-kpi:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(18,28,90,.12); color: inherit; }
+    .dz-ico { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .k1 { background: rgba(49,87,213,.12); color: #3157D5; }
+    .k2 { background: rgba(16,185,129,.14); color: #059669; }
+    .k3 { background: rgba(14,165,233,.14); color: #0284C7; }
+    .k4 { background: rgba(239,68,68,.12); color: #EF4444; }
+    .k5 { background: rgba(18,196,222,.15); color: #0BA5BD; }
+    .k6 { background: rgba(245,158,11,.15); color: #D97706; }
+    .k7 { background: rgba(236,72,153,.12); color: #DB2777; }
+    .k8 { background: rgba(124,58,237,.12); color: #7C3AED; }
+    .dz-num { font-size: 1.55rem; font-weight: 800; line-height: 1.1; white-space: nowrap; }
+    .dz-lbl { font-size: .7rem; font-weight: 700; opacity: .65; text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
 
-    /* Demographics */
-    .donut-wrap { position: relative; height: 230px; }
+    /* GRID */
+    .dz-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; align-items: stretch; }
+    .dz-card { display: flex; flex-direction: column; border-radius: 18px; background: var(--card-bg, #fff); border: 1px solid var(--border-color, #E3E8F5); overflow: hidden; min-width: 0; }
+    .dz-head { display: flex; align-items: center; gap: 10px; padding: 16px 20px; font-size: .9rem; font-weight: 800; border-bottom: 1px solid var(--border-color, #E3E8F5); }
+    .dz-head i { color: #3157D5; }
+    .dz-head a { margin-left: auto; font-size: .75rem; font-weight: 700; text-decoration: none; }
+    .dz-body { padding: 18px 20px; flex: 1; }
+    .dz-stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+    .dz-chart { position: relative; height: 300px; }
+    .dz-chart-meta { display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 8px; }
+    .dz-chart-meta b { display: block; font-size: 1.3rem; font-weight: 800; }
+    .dz-chart-meta span { font-size: .72rem; font-weight: 700; opacity: .6; text-transform: uppercase; letter-spacing: .5px; }
+
+    .donut-wrap { position: relative; height: 210px; }
     .donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
-    .donut-center .val { font-size: 1.9rem; font-weight: 800; letter-spacing: -1px; line-height: 1; color: var(--text-main); }
-    .donut-center .lbl { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-top: 4px; }
-    .legend-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-size: 0.85rem; font-weight: 600; }
-    .legend-row .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .legend-row .pct { margin-left: auto; color: var(--text-muted); font-weight: 600; }
+    .donut-center .val { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+    .donut-center .lbl { font-size: .72rem; font-weight: 600; opacity: .6; margin-top: 4px; }
+    .legend-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: .84rem; font-weight: 600; }
+    .legend-row .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .legend-row .pct { margin-left: auto; opacity: .6; }
 
-    /* Table pills */
-    .pill { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
-    .pill-in  { background: rgba(34, 197, 94, 0.12); color: #16A34A; }
-    .pill-out { background: rgba(239, 68, 68, 0.1);  color: #DC2626; }
-    .amount-in  { color: #16A34A; font-weight: 700; }
+    .dz-bar { height: 9px; border-radius: 6px; background: rgba(127,140,200,.18); overflow: hidden; }
+    .dz-bar > span { display: block; height: 100%; border-radius: 6px; }
+    .dz-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: .84rem; font-weight: 700; }
+
+    .pill { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: .68rem; font-weight: 700; }
+    .pill-in { background: rgba(34,197,94,.12); color: #16A34A; }
+    .pill-out { background: rgba(239,68,68,.1); color: #DC2626; }
+    .amount-in { color: #16A34A; font-weight: 700; }
     .amount-out { color: #DC2626; font-weight: 700; }
 
-    /* Birthdays */
-    .bday { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid var(--border-color); border-radius: var(--radius); height: 100%; }
-    .bday-avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: var(--primary-soft); color: var(--primary-btn); font-weight: 800; font-size: 0.9rem; }
-    .bday-name { font-size: 0.85rem; font-weight: 700; margin: 0; line-height: 1.3; }
-    .bday-date { font-size: 0.75rem; color: var(--text-muted); margin: 0; }
+    .bday { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
+    .bday + .bday { border-top: 1px dashed var(--border-color, #E3E8F5); }
+    .bday-avatar { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(49,87,213,.12); color: #3157D5; font-weight: 800; font-size: .85rem; }
+    .bday-name { margin: 0; font-size: .84rem; font-weight: 700; line-height: 1.3; }
+    .bday-date { margin: 0; font-size: .74rem; opacity: .6; }
+    .empty-note { padding: 26px 0; text-align: center; opacity: .6; font-size: .85rem; }
 
-    .empty-note { padding: 28px 0; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
-    /* ========== MOBILE ========== */
-    @media (max-width: 767px) {
-        .dash .stat-card {
-            aspect-ratio: 1 / 1;
-            height: auto;
-            padding: 12px !important;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: space-between;
-            overflow: hidden;
-        }
-        .dash .stat-card .stat-icon { width: 34px; height: 34px; font-size: 0.9rem; flex-shrink: 0; }
-        .dash .stat-card .stat-label { font-size: 0.68rem; line-height: 1.2; }
-        .dash .stat-card .stat-value { font-size: clamp(1.1rem, 6vw, 1.5rem); line-height: 1.1; word-break: break-all; }
-        .dash .stat-card .stat-trend { font-size: 0.65rem; }
-
-        .income-summary { padding: 18px; gap: 14px; }
-        .income-chart   { height: 240px; padding: 8px 10px 12px; }
-        .income-summary .big-number { font-size: 1.8rem; }
-
-        .panel-head { padding: 14px 16px; font-size: 0.85rem; }
-        .panel-body { padding: 16px; }
-
-        .table th, .table td { padding: 10px 8px; font-size: 0.75rem; white-space: nowrap; }
-        .pill { padding: 2px 8px; font-size: 0.62rem; }
-
-        .donut-wrap { height: 190px; }
-        .donut-center .val { font-size: 1.5rem; }
-
-        .bday { padding: 10px; gap: 8px; }
-        .bday-avatar { width: 34px; height: 34px; font-size: 0.8rem; }
-        .bday-name { font-size: 0.78rem; }
-        .bday-date { font-size: 0.7rem; }
+    @media (max-width: 991px) {
+        .dz-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .dz-grid { grid-template-columns: minmax(0, 1fr); }
     }
-    @media (max-width: 767px) {
-        .dash [class*="col-"] { min-width: 0; }
-        .income-chart canvas, .donut-wrap canvas { width: 100% !important; }
-
-        .income-summary {
-            border-bottom: 1px solid var(--border-color);
-            flex-direction: row;
-            flex-wrap: wrap;
-            align-items: flex-end;
-            justify-content: space-between;
-        }
-        .income-summary .lead-label { width: 100%; }
-
-        .donut-wrap { max-width: 220px; margin: 0 auto; }
-        .legend-row { padding: 6px 0; font-size: 0.8rem; }
-
-        .table th, .table td { white-space: normal; }
-    }
-    @media (max-width: 380px) {
-        .dash .stat-card .stat-trend { display: none; }
+    @media (max-width: 575px) {
+        .dz { gap: 14px; }
+        .dz-hero { padding: 18px; border-radius: 16px; }
+        .dz-hero-actions a span { display: none; }
+        .dz-hero-actions a { padding: 10px 13px; }
+        .dz-kpis { gap: 10px; }
+        .dz-kpi { padding: 12px; gap: 10px; border-radius: 14px; }
+        .dz-ico { width: 38px; height: 38px; font-size: .95rem; border-radius: 11px; }
+        .dz-num { font-size: 1.2rem; }
+        .dz-lbl { font-size: .6rem; }
+        .dz-chart { height: 240px; }
+        .dz-body { padding: 14px; }
+        .dz-head { padding: 14px; }
     }
 </style>
 
-<div class="dash container-fluid px-0">
+<div class="dz">
 
-    {{-- 1. STAT CARDS --}}
-    <div class="row g-2 g-md-4 mb-4">
-        <div class="col-6 col-xl-3">
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-users"></i></div>
-                <div>
-                    <div class="stat-label">{{ __('Total Members') }}</div>
-                    <div class="stat-value count-up" data-target="{{ $totalMembers ?? 0 }}">0</div>
-                    <div class="stat-trend"><span class="trend-up"><i class="fas fa-arrow-up"></i> {{ __('Active') }}</span></div>
-                </div>
-            </div>
+    {{-- HERO + QUICK ACTIONS --}}
+    <div class="dz-hero">
+        <div>
+            <h3>{{ __('Welcome back') }}, {{ \Illuminate\Support\Str::of(Auth::user()->name ?? '')->before(' ') }}</h3>
+            <p><i class="fas fa-calendar-day me-1"></i> {{ now()->format('l, F j, Y') }}</p>
         </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-wallet"></i></div>
-                <div>
-                    <div class="stat-label">{{ __('Monthly Balance') }}</div>
-                    <div class="stat-value count-up" data-target="{{ abs($balance) }}" data-currency="true" style="color: {{ $balance >= 0 ? 'var(--text-main)' : 'var(--danger)' }};">₱0</div>
-                    <div class="stat-trend">
-                        <span class="{{ $balance >= 0 ? 'trend-up' : 'trend-down' }}">
-                            <i class="fas fa-arrow-{{ $balance >= 0 ? 'up' : 'down' }}"></i> {{ $balance >= 0 ? __('Surplus') : __('Deficit') }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div></div>
-
-    {{-- 1B. MORE STATS --}}
-    <style>
-        .dx-card { display:flex; align-items:center; gap:14px; padding:16px; border-radius:16px; background:var(--card-bg, #fff); border:1px solid var(--border-color, #E3E8F5); text-decoration:none; color:inherit; transition:transform .18s ease, box-shadow .18s ease; height:100%; }
-        .dx-card:hover { transform:translateY(-3px); box-shadow:0 12px 28px rgba(18,28,90,.12); color:inherit; }
-        .dx-ico { width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
-        .dx-ico.c1 { background:rgba(49,87,213,.12); color:#3157D5; }
-        .dx-ico.c2 { background:rgba(239,68,68,.12); color:#EF4444; }
-        .dx-ico.c3 { background:rgba(18,196,222,.15); color:#0BA5BD; }
-        .dx-ico.c4 { background:rgba(245,158,11,.15); color:#D97706; }
-        .dx-ico.c5 { background:rgba(236,72,153,.12); color:#DB2777; }
-        .dx-ico.c6 { background:rgba(16,185,129,.14); color:#059669; }
-        .dx-num { font-size:1.5rem; font-weight:800; line-height:1.1; }
-        .dx-lbl { font-size:.74rem; font-weight:600; opacity:.7; text-transform:uppercase; letter-spacing:.5px; }
-        .dx-quick { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; }
-        .dx-quick a { display:flex; flex-direction:column; align-items:center; gap:8px; padding:16px 10px; border-radius:14px; border:1px dashed var(--border-color, #E3E8F5); text-decoration:none; color:inherit; font-weight:600; font-size:.84rem; transition:all .18s ease; }
-        .dx-quick a i { font-size:1.2rem; color:#3157D5; }
-        .dx-quick a:hover { background:rgba(49,87,213,.08); border-style:solid; transform:translateY(-2px); color:inherit; }
-        .dx-bar { height:10px; border-radius:6px; background:rgba(127,140,200,.18); overflow:hidden; }
-        .dx-bar > span { display:block; height:100%; border-radius:6px; }
-    </style>
-    <div class="row g-2 g-md-3 mb-4">
-        <div class="col-6 col-md-4 col-xl-2">
-            <a href="{{ route('members.index') }}" class="dx-card">
-                <div class="dx-ico c1"><i class="fas fa-user-plus"></i></div>
-                <div><div class="dx-num">{{ $newMembers ?? 0 }}</div><div class="dx-lbl">{{ __('New this month') }}</div></div>
-            </a>
-        </div>
-        <div class="col-6 col-md-4 col-xl-2">
-            <a href="{{ route('messages.index') }}" class="dx-card">
-                <div class="dx-ico c2"><i class="fas fa-envelope"></i></div>
-                <div><div class="dx-num">{{ $unreadMessages ?? 0 }}</div><div class="dx-lbl">{{ __('Unread messages') }}</div></div>
-            </a>
-        </div>
-        <div class="col-6 col-md-4 col-xl-2">
-            <a href="{{ route('inventory.index') }}" class="dx-card">
-                <div class="dx-ico c3"><i class="fas fa-boxes-stacked"></i></div>
-                <div><div class="dx-num">{{ $inventoryCount ?? 0 }}</div><div class="dx-lbl">{{ __('Inventory items') }}</div></div>
-            </a>
-        </div>
-        <div class="col-6 col-md-4 col-xl-2">
-            <a href="{{ route('inventory.index') }}" class="dx-card">
-                <div class="dx-ico c4"><i class="fas fa-triangle-exclamation"></i></div>
-                <div><div class="dx-num">{{ $lowStock ?? 0 }}</div><div class="dx-lbl">{{ __('Low stock') }}</div></div>
-            </a>
-        </div>
-        <div class="col-6 col-md-4 col-xl-2">
-            <a href="{{ route('members.index') }}" class="dx-card">
-                <div class="dx-ico c5"><i class="fas fa-cake-candles"></i></div>
-                <div><div class="dx-num">{{ $birthdaysMonth ?? 0 }}</div><div class="dx-lbl">{{ __('Birthdays this month') }}</div></div>
-            </a>
-        </div>
-        <div class="col-6 col-md-4 col-xl-2">
-            <a href="{{ route('members.index') }}" class="dx-card">
-                <div class="dx-ico c6"><i class="fas fa-shield-halved"></i></div>
-                <div><div class="dx-num">{{ $rolesCount ?? 0 }}</div><div class="dx-lbl">{{ __('Ministries / roles') }}</div></div>
-            </a>
+        <div class="dz-hero-actions">
+            <a href="{{ route('members.create') }}"><i class="fas fa-user-plus"></i><span>{{ __('Add Member') }}</span></a>
+            <a href="{{ route('finance.index') }}"><i class="fas fa-money-bill-wave"></i><span>{{ __('Finance') }}</span></a>
+            <a href="{{ route('inventory.index') }}"><i class="fas fa-boxes-stacked"></i><span>{{ __('Inventory') }}</span></a>
+            <a href="{{ route('messages.index') }}"><i class="fas fa-envelope"></i><span>{{ __('Messages') }}</span></a>
+            <a href="{{ route('reports.analytics') }}"><i class="fas fa-chart-line"></i><span>{{ __('Reports') }}</span></a>
         </div>
     </div>
 
-    {{-- 1C. QUICK ACTIONS + THIS MONTH --}}
-    @php
-        $mi = (float) ($monthIncome ?? 0);
-        $me = (float) ($monthExpense ?? 0);
-        $mt = max($mi + $me, 1);
-        $incPct = round($mi / $mt * 100);
-        $expPct = 100 - $incPct;
-    @endphp
-    <div class="row g-3 mb-4">
-        <div class="col-lg-7">
-            <div class="panel h-100">
-                <div class="panel-head"><i class="fas fa-bolt"></i> <span>{{ __('Quick Actions') }}</span></div>
-                <div class="panel-body">
-                    <div class="dx-quick">
-                        <a href="{{ route('members.create') }}"><i class="fas fa-user-plus"></i>{{ __('Add Member') }}</a>
-                        <a href="{{ route('finance.index') }}"><i class="fas fa-money-bill-wave"></i>{{ __('Finance') }}</a>
-                        <a href="{{ route('inventory.index') }}"><i class="fas fa-boxes-stacked"></i>{{ __('Inventory') }}</a>
-                        <a href="{{ route('messages.index') }}"><i class="fas fa-envelope"></i>{{ __('Messages') }}</a>
-                        <a href="{{ route('reports.analytics') }}"><i class="fas fa-chart-line"></i>{{ __('Reports') }}</a>
+    {{-- STAT CARDS --}}
+    <div class="dz-kpis">
+        @foreach($kpis as [$icon, $cls, $label, $value, $url, $cur])
+            <a href="{{ $url }}" class="dz-kpi">
+                <div class="dz-ico {{ $cls }}"><i class="fas {{ $icon }}"></i></div>
+                <div style="min-width:0;">
+                    <div class="dz-num count-up" data-target="{{ $value }}" @if($cur) data-currency="true" @endif @if($cur && $balance < 0) style="color:#EF4444;" @endif>{{ $cur ? '₱0' : '0' }}</div>
+                    <div class="dz-lbl">{{ $label }}</div>
+                </div>
+            </a>
+        @endforeach
+    </div>
+
+    {{-- INCOME CHART + DEMOGRAPHICS --}}
+    <div class="dz-grid">
+        <div class="dz-card">
+            <div class="dz-head"><i class="fas fa-chart-area"></i> {{ __('Income, last 6 months') }}
+                <a href="{{ route('finance.index') }}">{{ __('Open finance') }}</a>
+            </div>
+            <div class="dz-body">
+                <div class="dz-chart-meta">
+                    <div><b>₱{{ number_format($totalIncome) }}</b><span>{{ __('Income') }}</span></div>
+                    <div><b>₱{{ number_format($totalExpense) }}</b><span>{{ __('Expenses') }}</span></div>
+                </div>
+                <div class="dz-chart"><canvas id="mainChart"></canvas></div>
+            </div>
+        </div>
+
+        <div class="dz-card">
+            <div class="dz-head"><i class="fas fa-chart-pie"></i> {{ __('Demographics') }}</div>
+            <div class="dz-body">
+                <div class="donut-wrap">
+                    <canvas id="doughnutChart"></canvas>
+                    <div class="donut-center">
+                        <div class="val">{{ $totalGender }}</div>
+                        <div class="lbl">{{ __('Members') }}</div>
                     </div>
+                </div>
+                <div class="mt-3">
+                    <div class="legend-row"><span class="dot" style="background:#3157D5;"></span> {{ __('Male') }} <span class="pct">{{ $malePerc }}% · {{ $male }}</span></div>
+                    <div class="legend-row"><span class="dot" style="background:#12C4DE;"></span> {{ __('Female') }} <span class="pct">{{ $femalePerc }}% · {{ $female }}</span></div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-5">
-            <div class="panel h-100">
-                <div class="panel-head"><i class="fas fa-calendar-day"></i> <span>{{ __('This Month') }} · {{ now()->format('F') }}</span></div>
-                <div class="panel-body">
-                    <div class="d-flex justify-content-between mb-1" style="font-size:.85rem;font-weight:600;">
-                        <span>{{ __('Income') }}</span><span>₱{{ number_format($mi) }}</span>
-                    </div>
-                    <div class="dx-bar mb-3"><span style="width:{{ $incPct }}%;background:#10B981;"></span></div>
-                    <div class="d-flex justify-content-between mb-1" style="font-size:.85rem;font-weight:600;">
-                        <span>{{ __('Expenses') }}</span><span>₱{{ number_format($me) }}</span>
-                    </div>
-                    <div class="dx-bar mb-3"><span style="width:{{ $expPct }}%;background:#EF4444;"></span></div>
-                    <div class="d-flex justify-content-between pt-2" style="border-top:1px solid var(--border-color,#E3E8F5);font-weight:800;">
+    </div>
+
+    {{-- TRANSACTIONS + THIS MONTH / BIRTHDAYS --}}
+    <div class="dz-grid">
+        <div class="dz-card">
+            <div class="dz-head"><i class="fas fa-receipt"></i> {{ __('Recent Transactions') }}
+                <a href="{{ route('finance.index') }}">{{ __('View all') }}</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>{{ __('Description') }}</th>
+                            <th class="d-none d-md-table-cell">{{ __('Date') }}</th>
+                            <th class="d-none d-md-table-cell">{{ __('Type') }}</th>
+                            <th class="text-end">{{ __('Amount') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($recentActivities ?? [] as $item)
+                            @php $isIncome = ($item->type ?? 'expense') === 'income'; @endphp
+                            <tr>
+                                <td class="fw-semibold">
+                                    {{ $item->description ?? 'Transaction' }}
+                                    <div class="d-md-none mt-1">
+                                        <span class="pill {{ $isIncome ? 'pill-in' : 'pill-out' }}">{{ $isIncome ? __('Income') : __('Expense') }}</span>
+                                        <span style="font-size:.7rem;opacity:.6;">{{ \Carbon\Carbon::parse($item->date ?? $item->created_at)->format('M d, Y') }}</span>
+                                    </div>
+                                </td>
+                                <td class="d-none d-md-table-cell" style="opacity:.7;">{{ \Carbon\Carbon::parse($item->date ?? $item->created_at)->format('M d, Y') }}</td>
+                                <td class="d-none d-md-table-cell"><span class="pill {{ $isIncome ? 'pill-in' : 'pill-out' }}">{{ $isIncome ? __('Income') : __('Expense') }}</span></td>
+                                <td class="text-end {{ $isIncome ? 'amount-in' : 'amount-out' }}">{{ $isIncome ? '+' : '-' }}₱{{ number_format($item->amount ?? 0, 2) }}</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="4" class="empty-note">{{ __('No transactions found.') }}</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="dz-stack">
+            <div class="dz-card">
+                <div class="dz-head"><i class="fas fa-calendar-day"></i> {{ __('This Month') }} · {{ now()->format('F') }}</div>
+                <div class="dz-body">
+                    <div class="dz-row"><span>{{ __('Income') }}</span><span>₱{{ number_format($mi) }}</span></div>
+                    <div class="dz-bar mb-3"><span style="width:{{ $incPct }}%;background:#10B981;"></span></div>
+                    <div class="dz-row"><span>{{ __('Expenses') }}</span><span>₱{{ number_format($me) }}</span></div>
+                    <div class="dz-bar mb-3"><span style="width:{{ $expPct }}%;background:#EF4444;"></span></div>
+                    <div class="dz-row pt-2" style="border-top:1px solid var(--border-color,#E3E8F5);font-weight:800;margin:0;">
                         <span>{{ __('Net') }}</span>
                         <span style="color:{{ ($mi - $me) >= 0 ? '#059669' : '#EF4444' }};">₱{{ number_format($mi - $me) }}</span>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    {{-- 2. INCOME PANEL --}}
-    <div class="panel mb-4">
-        <div class="row g-0 align-items-stretch">
-            <div class="col-lg-3">
-                <div class="income-summary">
-                    <div class="lead-label">{{ __('Income, last 6 months') }}</div>
-                    <div>
-                        <div class="big-number"><span class="cur">₱</span>{{ number_format($totalIncome) }}</div>
-                        <div class="stat-trend mt-1">{{ __('Expenses') }}: ₱{{ number_format($totalExpense) }}</div>
-                    </div>
-                    <div>
-                        <a href="{{ route('finance.index') }}" class="btn-ghost">{{ __('Open finance') }}</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-9">
-                <div class="income-chart">
-                    <canvas id="mainChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- 3. TRANSACTIONS + DEMOGRAPHICS --}}
-    <div class="row g-3 g-md-4 mb-4">
-        <div class="col-lg-7">
-            <div class="panel h-100">
-                <div class="panel-head">
-                    <i class="fas fa-receipt"></i> {{ __('Recent Transactions') }}
-                    <a href="{{ route('finance.index') }}" class="ms-auto" style="font-size: 0.78rem; font-weight: 700;">{{ __('View all') }}</a>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>{{ __('Description') }}</th>
-                                <th class="d-none d-md-table-cell">{{ __('Date') }}</th>
-                                <th class="d-none d-md-table-cell">{{ __('Type') }}</th>
-                                <th class="text-end">{{ __('Amount') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($recentActivities ?? [] as $item)
-                                @php $isIncome = ($item->type ?? 'expense') === 'income'; @endphp
-                                <tr>
-                                    <td class="fw-semibold">
-                                        {{ $item->description ?? 'Transaction' }}
-                                        <div class="d-md-none mt-1">
-                                            <span class="pill {{ $isIncome ? 'pill-in' : 'pill-out' }}">{{ $isIncome ? __('Income') : __('Expense') }}</span>
-                                            <span class="text-muted" style="font-size:.7rem; font-weight:500;">{{ \Carbon\Carbon::parse($item->date ?? $item->created_at)->format('M d, Y') }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-muted d-none d-md-table-cell">{{ \Carbon\Carbon::parse($item->date ?? $item->created_at)->format('M d, Y') }}</td>
-                                    <td class="d-none d-md-table-cell"><span class="pill {{ $isIncome ? 'pill-in' : 'pill-out' }}">{{ $isIncome ? __('Income') : __('Expense') }}</span></td>
-                                    <td class="text-end {{ $isIncome ? 'amount-in' : 'amount-out' }}">
-                                        {{ $isIncome ? '+' : '-' }}₱{{ number_format($item->amount ?? 0, 2) }}
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr><td colspan="4" class="empty-note">{{ __('No transactions found.') }}</td></tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-5">
-            <div class="panel h-100">
-                <div class="panel-head"><i class="fas fa-chart-pie"></i> {{ __('Demographics') }}</div>
-                <div class="panel-body">
-                    <div class="donut-wrap">
-                        <canvas id="doughnutChart"></canvas>
-                        <div class="donut-center">
-                            <div class="val">{{ $totalGender }}</div>
-                            <div class="lbl">{{ __('Members') }}</div>
-                        </div>
-                    </div>
-                    <div class="mt-3">
-                        <div class="legend-row"><span class="dot" style="background: var(--navy-chart, #3157D5);"></span> {{ __('Male') }} <span class="pct">{{ $malePerc }}% · {{ $male }}</span></div>
-                        <div class="legend-row"><span class="dot" style="background: var(--primary);"></span> {{ __('Female') }} <span class="pct">{{ $femalePerc }}% · {{ $female }}</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- 4. BIRTHDAYS --}}
-    <div class="panel">
-        <div class="panel-head"><i class="fas fa-cake-candles"></i> {{ __('Upcoming Birthdays') }}</div>
-        <div class="panel-body">
-            @if(!empty($upcomingBirthdays) && count($upcomingBirthdays))
-                <div class="row g-2 g-md-3">
-                    @foreach($upcomingBirthdays as $bd)
-                        <div class="col-6 col-xl-3">
-                            <div class="bday">
-                                <div class="bday-avatar">{{ strtoupper(substr($bd->first_name ?? 'M', 0, 1)) }}</div>
-                                <div>
-                                    <p class="bday-name">{{ $bd->first_name }} {{ $bd->last_name }}</p>
-                                    <p class="bday-date">{{ \Carbon\Carbon::parse($bd->birthday)->format('F d') }}</p>
-                                </div>
+            <div class="dz-card" style="flex:1;">
+                <div class="dz-head"><i class="fas fa-cake-candles"></i> {{ __('Upcoming Birthdays') }}</div>
+                <div class="dz-body">
+                    @forelse($upcomingBirthdays ?? [] as $bd)
+                        <div class="bday">
+                            <div class="bday-avatar">{{ strtoupper(substr($bd->first_name ?? 'M', 0, 1)) }}</div>
+                            <div>
+                                <p class="bday-name">{{ $bd->first_name }} {{ $bd->last_name }}</p>
+                                <p class="bday-date">{{ \Carbon\Carbon::parse($bd->birthday)->format('F d') }}</p>
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                        <div class="empty-note">{{ __('No upcoming birthdays.') }}</div>
+                    @endforelse
                 </div>
-            @else
-                <div class="empty-note">{{ __('No upcoming birthdays.') }}</div>
-            @endif
+            </div>
         </div>
     </div>
 </div>
