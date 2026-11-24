@@ -33,9 +33,6 @@
                 ['label' => 'Communication', 'items' => [
                     ['Messages', 'messages.index', 'messages.*', 'fa-envelope'],
                 ]],
-                ['label' => 'Choir Ministry', 'items' => [
-                    ['Schedules', 'schedules.index', 'schedules.*', 'fa-calendar-alt'],
-                ]],
                 ['label' => 'Reports', 'items' => [
                     ['Reports & Analytics', 'reports.analytics', 'reports.*', 'fa-chart-line'],
                 ]],

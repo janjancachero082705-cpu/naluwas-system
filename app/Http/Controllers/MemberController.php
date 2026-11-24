@@ -4,90 +4,72 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use App\Models\Role;
-use App\Models\ChoirGroup;
-use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 
 class MemberController extends Controller
 {
+    private function churchId()
+    {
+        return session('current_church_id', auth()->user()->church_id);
+    }
+
     public function index(Request $request)
     {
-        $churchId = session('current_church_id', auth()->user()->church_id);
-        
+        $churchId = $this->churchId();
         $query = Member::where('church_id', $churchId);
 
-        // FIX: Handle the "Deceased" filter from the profile button
         $isDeceasedFilter = $request->query('filter') === 'deceased';
+        $query->where('is_deceased', $isDeceasedFilter);
 
-        if ($isDeceasedFilter) {
-            $query->where('is_deceased', true);
-        } else {
-            $query->where('is_deceased', false);
-        }
-        
         if ($request->role && $request->role != 'all') {
-            $query->whereHas('roles', function($q) use ($request) {
+            $query->whereHas('roles', function ($q) use ($request) {
                 $q->where('slug', $request->role);
             });
         }
-        
-        if ($request->has('choir_filter') && $request->choir_filter != 'all') {
-            $query->where('is_choir', $request->choir_filter == 'yes');
-        }
-        
+
         $members = $query->orderBy('created_at', 'desc')->paginate(10);
-        
-        // Fetch deceased members separately for the tab
+
         $deceasedMembers = Member::where('church_id', $churchId)
             ->where('is_deceased', true)
             ->orderBy('date_deceased', 'desc')
             ->paginate(10);
-        
+
         $currentFilter = $request->role ?? 'all';
-        $choirFilter = $request->choir_filter ?? 'all';
         $allRoles = Role::all();
-        
+
         $totalMembers = Member::where('church_id', $churchId)->where('is_deceased', false)->count();
-        $choirCount = Member::where('church_id', $churchId)->where('is_choir', true)->where('is_deceased', false)->count();
         $birthdaysThisMonth = Member::where('church_id', $churchId)
             ->where('is_deceased', false)
             ->whereMonth('birthday', now()->month)
             ->count();
         $deceasedCount = Member::where('church_id', $churchId)->where('is_deceased', true)->count();
         $activeMinistries = Role::count();
-        
+
         return view('members.index', compact(
-            'members', 
-            'deceasedMembers', 
-            'currentFilter', 
-            'choirFilter', 
-            'allRoles', 
-            'totalMembers', 
-            'choirCount', 
-            'birthdaysThisMonth', 
-            'activeMinistries', 
+            'members',
+            'deceasedMembers',
+            'currentFilter',
+            'allRoles',
+            'totalMembers',
+            'birthdaysThisMonth',
+            'activeMinistries',
             'deceasedCount',
-            'isDeceasedFilter' // Pass this to the view for tab activation
+            'isDeceasedFilter'
         ));
     }
 
     public function create()
     {
         $roles = Role::all();
-        
+
         if ($roles->isEmpty()) {
             $this->createDefaultRoles();
             $roles = Role::all();
         }
-        
-        $choirGroups = ChoirGroup::where('church_id', session('current_church_id', auth()->user()->church_id))
-            ->where('is_active', true)
-            ->orderBy('rotation_order')
-            ->get();
-        
-        return view('members.create', compact('roles', 'choirGroups'));
+
+        return view('members.create', compact('roles'));
     }
 
     private function createDefaultRoles()
@@ -104,41 +86,31 @@ class MemberController extends Controller
             ['name' => 'Gahawid sa Computer', 'slug' => 'computer', 'icon' => 'fa-laptop', 'color' => 'info'],
             ['name' => 'Palagdasig', 'slug' => 'palagdasig', 'icon' => 'fa-heart', 'color' => 'danger'],
         ];
-        
+
         foreach ($defaultRoles as $role) {
             Role::create($role);
         }
     }
 
+    private function rules(): array
+    {
+        return [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'birthday' => 'nullable|date',
+            'address' => 'nullable|string',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'gender' => 'nullable|string|in:male,female',
+            'roles' => 'nullable|array',
+            'roles.*' => 'exists:roles,id',
+        ];
+    }
+
     public function store(Request $request)
     {
         try {
-            \Log::info('=== FORM DATA ===');
-            \Log::info(json_encode($request->all()));
-            
-            $validated = $request->validate([
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
-                'birthday' => 'nullable|date',
-                'address' => 'nullable|string',
-                'phone' => 'nullable|string|max:20',
-                'email' => 'nullable|email|max:255',
-                'gender' => 'nullable|string|in:male,female',
-                'roles' => 'nullable|array',
-                'roles.*' => 'exists:roles,id',
-                'choir_group_id' => 'nullable|exists:choir_groups,id',
-                'choir_role' => 'nullable|string|in:Singer,Guitarist,Bassist,Drummer',
-            ]);
-
-            \Log::info('GENDER FROM FORM: ' . ($validated['gender'] ?? 'NOT SET'));
-
-            $churchId = session('current_church_id', auth()->user()->church_id);
-
-            $isChoirMember = $request->has('is_choir') ||
-                             (isset($validated['choir_role']) && $validated['choir_role']) ||
-                             (isset($validated['choir_group_id']) && $validated['choir_group_id']);
-
-            $choirRole = $validated['choir_role'] ?? null;
+            $validated = $request->validate($this->rules());
 
             $member = new Member();
             $member->first_name = $validated['first_name'];
@@ -148,37 +120,25 @@ class MemberController extends Controller
             $member->phone = $validated['phone'] ?? null;
             $member->email = $validated['email'] ?? null;
             $member->gender = $validated['gender'] ?? null;
-            $member->church_id = $churchId;
-            $member->is_choir = $isChoirMember;
-            $member->choir_role = $choirRole;
-            $member->choir_group_id = $validated['choir_group_id'] ?? null;
+            $member->church_id = $this->churchId();
             $member->is_deceased = false;
             $member->date_deceased = null;
             $member->save();
 
-            \Log::info('SAVED MEMBER ID: ' . $member->id);
-            \Log::info('SAVED GENDER: ' . ($member->gender ?? 'NULL'));
-
-            if (isset($validated['roles']) && !empty($validated['roles'])) {
+            if (!empty($validated['roles'])) {
                 $member->roles()->attach($validated['roles']);
             }
 
-            $message = $isChoirMember 
-                ? 'Member added successfully! 🎵 Added to Choir Ministry.'
-                : 'Member added successfully!';
-
             return redirect()->route('members.index')
-                ->with('success', $message);
+                ->with('success', 'Member added successfully!');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('Validation Error: ' . json_encode($e->errors()));
             return redirect()->route('members.create')
                 ->withErrors($e->errors())
                 ->withInput();
         } catch (\Exception $e) {
-            \Log::error('Store Error: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+            Log::error('Store Error: ' . $e->getMessage());
+
             return redirect()->route('members.create')
                 ->with('error', 'Error adding member: ' . $e->getMessage());
         }
@@ -186,47 +146,24 @@ class MemberController extends Controller
 
     public function edit($id)
     {
-        $churchId = session('current_church_id', auth()->user()->church_id);
-        
         $member = Member::where('id', $id)
-            ->where('church_id', $churchId)
+            ->where('church_id', $this->churchId())
             ->firstOrFail();
 
         $roles = Role::all();
         $memberRoles = $member->roles->pluck('id')->toArray();
-        
-        $choirGroups = ChoirGroup::where('church_id', $churchId)
-            ->where('is_active', true)
-            ->orderBy('rotation_order')
-            ->get();
 
-        return view('members.edit', compact('member', 'roles', 'memberRoles', 'choirGroups'));
+        return view('members.edit', compact('member', 'roles', 'memberRoles'));
     }
 
     public function update(Request $request, $id)
     {
         try {
-            $churchId = session('current_church_id', auth()->user()->church_id);
-            
             $member = Member::where('id', $id)
-                ->where('church_id', $churchId)
+                ->where('church_id', $this->churchId())
                 ->firstOrFail();
 
-            \Log::info('UPDATE - Gender: ' . ($request->gender ?? 'null'));
-
-            $validated = $request->validate([
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
-                'birthday' => 'nullable|date',
-                'address' => 'nullable|string',
-                'phone' => 'nullable|string|max:20',
-                'email' => 'nullable|email|max:255',
-                'gender' => 'nullable|string|in:male,female',
-                'roles' => 'nullable|array',
-                'roles.*' => 'exists:roles,id',
-                'choir_group_id' => 'nullable|exists:choir_groups,id',
-                'choir_role' => 'nullable|string|in:Singer,Guitarist,Bassist,Drummer',
-            ]);
+            $validated = $request->validate($this->rules());
 
             $member->first_name = $validated['first_name'];
             $member->last_name = $validated['last_name'];
@@ -235,11 +172,7 @@ class MemberController extends Controller
             $member->phone = $validated['phone'] ?? null;
             $member->email = $validated['email'] ?? null;
             $member->gender = $validated['gender'] ?? null;
-            $member->choir_group_id = $validated['choir_group_id'] ?? null;
-            $member->choir_role = $validated['choir_role'] ?? null;
             $member->save();
-
-            \Log::info('UPDATED - Gender: ' . ($member->gender ?? 'null'));
 
             if (isset($validated['roles'])) {
                 $member->roles()->sync($validated['roles']);
@@ -251,8 +184,8 @@ class MemberController extends Controller
                 ->with('success', 'Member updated successfully!');
 
         } catch (\Exception $e) {
-            \Log::error('Update error: ' . $e->getMessage());
-            
+            Log::error('Update error: ' . $e->getMessage());
+
             return redirect()->route('members.edit', $id)
                 ->with('error', 'Error updating member: ' . $e->getMessage());
         }
@@ -260,295 +193,136 @@ class MemberController extends Controller
 
     public function destroy($id)
     {
-        $churchId = session('current_church_id', auth()->user()->church_id);
-        
         $member = Member::where('id', $id)
-            ->where('church_id', $churchId)
+            ->where('church_id', $this->churchId())
             ->firstOrFail();
-        
+
         $member->roles()->detach();
-        $member->choirSchedules()->delete();
         $member->delete();
-        
+
         if (request()->wantsJson()) {
             return response()->json(['success' => true, 'message' => 'Member deleted successfully!']);
         }
-        
+
         return redirect()->route('members.index')
             ->with('success', 'Member deleted successfully!');
     }
-    
+
     public function show($id)
     {
         try {
-            $churchId = session('current_church_id', auth()->user()->church_id);
-            
+            $churchId = $this->churchId();
+
             $member = Member::where('id', $id)
                 ->where('church_id', $churchId)
                 ->with('roles')
                 ->firstOrFail();
-            
-            \Log::info('SHOW - Gender: ' . ($member->gender ?? 'null'));
-            
-            $attendanceCount = Attendance::where('member_id', $id)
-                ->where('church_id', $churchId)
-                ->count();
-            
+
+            $attendanceCount = 0; // temporary, tangtangon sa view
             $contributionCount = 0;
             $recentActivities = collect();
-            
+
             $transactionModel = $this->getTransactionModel();
-            
+
             if ($transactionModel) {
                 try {
                     $contributionCount = $transactionModel::where('member_id', $id)
                         ->where('church_id', $churchId)
                         ->where('type', 'income')
                         ->count();
-                    
-                    $recentTransactions = $transactionModel::where('member_id', $id)
+
+                    $recentActivities = $transactionModel::where('member_id', $id)
                         ->where('church_id', $churchId)
                         ->orderBy('created_at', 'desc')
                         ->limit(5)
                         ->get()
-                        ->map(function($item) {
+                        ->map(function ($item) {
                             return (object) [
-                                'description' => $item->description ?? 'Contribution of ₱' . number_format($item->amount ?? 0, 2),
+                                'description' => $item->description ?? 'Contribution of PHP ' . number_format($item->amount ?? 0, 2),
                                 'created_at' => $item->created_at ?? now(),
-                                'type' => 'contribution'
+                                'type' => 'contribution',
                             ];
                         });
                 } catch (\Exception $e) {
-                    \Log::warning('Transaction data error: ' . $e->getMessage());
-                    $recentTransactions = collect();
+                    Log::warning('Transaction data error: ' . $e->getMessage());
+                    $recentActivities = collect();
                     $contributionCount = 0;
                 }
-            } else {
-                $recentTransactions = collect();
             }
-            
-            $recentAttendance = Attendance::where('member_id', $id)
-                ->where('church_id', $churchId)
-                ->orderBy('created_at', 'desc')
-                ->limit(5)
-                ->get()
-                ->map(function($item) {
-                    return (object) [
-                        'description' => 'Attended service on ' . ($item->service_date ? \Carbon\Carbon::parse($item->service_date)->format('M d, Y') : $item->created_at->format('M d, Y')),
-                        'created_at' => $item->created_at,
-                        'type' => 'attendance'
-                    ];
-                });
-            
-            if (isset($recentTransactions) && $recentTransactions->count() > 0) {
-                $recentActivities = $recentAttendance->merge($recentTransactions)
-                    ->sortByDesc('created_at')
-                    ->take(5);
-            } else {
-                $recentActivities = $recentAttendance;
-            }
-            
+
             return view('members.show', compact(
-                'member', 
-                'attendanceCount', 
-                'contributionCount', 
+                'member',
+                'attendanceCount',
+                'contributionCount',
                 'recentActivities'
             ));
-            
+
         } catch (\Exception $e) {
-            \Log::error('Error in MemberController@show: ' . $e->getMessage());
-            
+            Log::error('Error in MemberController@show: ' . $e->getMessage());
+
             return redirect()->route('members.index')
                 ->with('error', 'Unable to load member profile. Please try again.');
         }
     }
-    
+
     private function getTransactionModel()
     {
-        if (class_exists('App\Models\MoneyTransaction')) {
-            return 'App\Models\MoneyTransaction';
+        foreach (['App\Models\MoneyTransaction', 'App\Models\Transaction', 'App\Models\Finance'] as $m) {
+            if (class_exists($m)) {
+                return $m;
+            }
         }
-        
-        if (class_exists('App\Models\Transaction')) {
-            return 'App\Models\Transaction';
-        }
-        
-        if (class_exists('App\Models\Finance')) {
-            return 'App\Models\Finance';
-        }
-        
         return null;
     }
-    
+
     public function markAsDeceased(Request $request, $id)
     {
-        try {
-            $churchId = session('current_church_id', auth()->user()->church_id);
-            
-            $member = Member::where('id', $id)
-                ->where('church_id', $churchId)
-                ->firstOrFail();
-            
-            if ($request->has('date_deceased')) {
-                $request->validate([
-                    'date_deceased' => 'required|date|before_or_equal:today',
-                ]);
-                $dateDeceased = $request->date_deceased;
-            } else {
-                $dateDeceased = now()->toDateString();
-            }
-            
-            $member->update([
-                'is_deceased' => true,
-                'date_deceased' => $dateDeceased,
-            ]);
-            
-            if ($request->wantsJson() || $request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => "{$member->first_name} {$member->last_name} has been marked as deceased."
-                ]);
-            }
-            
-            return redirect()->route('members.show', $id)
-                ->with('success', "{$member->first_name} {$member->last_name} has been marked as deceased.");
-            
-        } catch (\Exception $e) {
-            \Log::error('Error in markAsDeceased: ' . $e->getMessage());
-            
-            if ($request->wantsJson() || $request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $e->getMessage()
-                ], 500);
-            }
-            
-            return redirect()->route('members.show', $id)
-                ->with('error', 'Error: ' . $e->getMessage());
-        }
+        return $this->setDeceased($request, $id, true);
     }
-    
+
     public function restoreFromDeceased(Request $request, $id)
     {
-        try {
-            $churchId = session('current_church_id', auth()->user()->church_id);
-            
-            $member = Member::where('id', $id)
-                ->where('church_id', $churchId)
-                ->firstOrFail();
-            
-            $member->update([
-                'is_deceased' => false,
-                'date_deceased' => null,
-            ]);
-            
-            if ($request->wantsJson() || $request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => "{$member->first_name} {$member->last_name} has been restored to active members."
-                ]);
-            }
-            
-            return redirect()->route('members.show', $id)
-                ->with('success', "{$member->first_name} {$member->last_name} has been restored to active members.");
-            
-        } catch (\Exception $e) {
-            \Log::error('Error in restoreFromDeceased: ' . $e->getMessage());
-            
-            if ($request->wantsJson() || $request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $e->getMessage()
-                ], 500);
-            }
-            
-            return redirect()->route('members.show', $id)
-                ->with('error', 'Error: ' . $e->getMessage());
-        }
+        return $this->setDeceased($request, $id, false);
     }
-    
-    public function assignToGroup(Request $request, $id)
+
+    private function setDeceased(Request $request, $id, bool $deceased)
     {
         try {
-            $request->validate([
-                'choir_group_id' => 'required|exists:choir_groups,id',
-                'choir_role' => 'required|string|in:Singer,Guitarist,Bassist,Drummer',
-            ]);
-            
-            $churchId = session('current_church_id', auth()->user()->church_id);
-            
             $member = Member::where('id', $id)
-                ->where('church_id', $churchId)
+                ->where('church_id', $this->churchId())
                 ->firstOrFail();
-            
-            $member->update([
-                'choir_group_id' => $request->choir_group_id,
-                'choir_role' => $request->choir_role,
-                'is_choir' => true,
-            ]);
-            
-            if ($request->wantsJson() || $request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Member assigned to choir group successfully!'
-                ]);
+
+            $dateDeceased = null;
+            if ($deceased) {
+                if ($request->has('date_deceased')) {
+                    $request->validate(['date_deceased' => 'required|date|before_or_equal:today']);
+                    $dateDeceased = $request->date_deceased;
+                } else {
+                    $dateDeceased = now()->toDateString();
+                }
             }
-            
-            return redirect()->route('members.show', $id)
-                ->with('success', 'Member assigned to choir group successfully!');
-                
+
+            $member->update(['is_deceased' => $deceased, 'date_deceased' => $dateDeceased]);
+
+            $name = "{$member->first_name} {$member->last_name}";
+            $message = $deceased
+                ? "{$name} has been marked as deceased."
+                : "{$name} has been restored to active members.";
+
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => true, 'message' => $message]);
+            }
+
+            return redirect()->route('members.show', $id)->with('success', $message);
+
         } catch (\Exception $e) {
-            \Log::error('Error in assignToGroup: ' . $e->getMessage());
-            
+            Log::error('Deceased status error: ' . $e->getMessage());
+
             if ($request->wantsJson() || $request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $e->getMessage()
-                ], 500);
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
             }
-            
-            return redirect()->route('members.show', $id)
-                ->with('error', 'Error: ' . $e->getMessage());
-        }
-    }
-    
-    public function removeFromGroup(Request $request, $id)
-    {
-        try {
-            $churchId = session('current_church_id', auth()->user()->church_id);
-            
-            $member = Member::where('id', $id)
-                ->where('church_id', $churchId)
-                ->firstOrFail();
-            
-            $member->update([
-                'choir_group_id' => null,
-                'choir_role' => null,
-                'is_choir' => false,
-            ]);
-            
-            if ($request->wantsJson() || $request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Member removed from choir group.'
-                ]);
-            }
-            
-            return redirect()->route('members.show', $id)
-                ->with('success', 'Member removed from choir group.');
-                
-        } catch (\Exception $e) {
-            \Log::error('Error in removeFromGroup: ' . $e->getMessage());
-            
-            if ($request->wantsJson() || $request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $e->getMessage()
-                ], 500);
-            }
-            
-            return redirect()->route('members.show', $id)
-                ->with('error', 'Error: ' . $e->getMessage());
+
+            return redirect()->route('members.show', $id)->with('error', 'Error: ' . $e->getMessage());
         }
     }
 }

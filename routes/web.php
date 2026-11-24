@@ -153,8 +153,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('members', MemberController::class);
     Route::put('/members/{member}/deceased', [MemberController::class, 'markAsDeceased'])->name('members.deceased');
     Route::put('/members/{member}/restore', [MemberController::class, 'restoreFromDeceased'])->name('members.restore');
-    Route::post('/members/{member}/assign-group', [MemberController::class, 'assignToGroup'])->name('members.assign-group');
-    Route::delete('/members/{member}/remove-group', [MemberController::class, 'removeFromGroup'])->name('members.remove-group');
 
     // ============================================
     // ============================================
