@@ -58,3 +58,7 @@ storage/
 .vscode/ 
 *.log 
 .DS_Store 
+
+*.bak
+*.bak[0-9]*
+*.auth.bak
