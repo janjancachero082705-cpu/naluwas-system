@@ -243,7 +243,6 @@ class FinanceController extends Controller
         // MEMBER DATA
         // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         $totalMembers = DB::table('members')->where('church_id', $churchId)->count();
-        $choirMembers = DB::table('members')->where('church_id', $churchId)->where('is_choir', 1)->count();
 
         $recentMembers = DB::table('members')
             ->where('church_id', $churchId)
@@ -260,9 +259,7 @@ class FinanceController extends Controller
             ->get();
 
         // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // ATTENDANCE DATA
         // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        $todaysAttendance = 0; // Gi-remove kay wala nay attendance module
 
         // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // INVENTORY DATA
@@ -334,7 +331,7 @@ class FinanceController extends Controller
 
         return view('reports.analytics', compact(
             'totalIncome', 'totalExpense', 'balance', 'recentTransactions',
-            'totalMembers', 'choirMembers', 'recentMembers', 'todaysAttendance',
+            'totalMembers', 'recentMembers', 
             'totalInventoryItems', 'totalInventoryValue', 'lowStockItems',
             'upcomingBirthdays', 'months', 'incomeData', 'expenseData'
         ));
