@@ -116,13 +116,6 @@
                         </div>
                     @endif
 
-                    <div class="m-note">
-                        <i class="fas fa-circle-info"></i>
-                        <span data-i18n="choir_note_text">
-                            {{ __("Note: Members with Training Pastor, Palagkanta, Instruments, Singer, Musician, Guitarist, Pianist, Drummer, Bassist, or Choir roles will automatically be added to the Choir Ministry.") }}
-                        </span>
-                    </div>
-
                     @error('roles') <div class="text-danger mt-2" style="font-size:.8rem;">{{ $message }}</div> @enderror
                 </div>
 

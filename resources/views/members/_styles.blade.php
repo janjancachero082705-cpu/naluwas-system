@@ -34,10 +34,8 @@
     .m-pill i { font-size: .6rem; }
     .m-pill.male     { background: rgba(59, 130, 246, .1);  color: #3B82F6; border-color: transparent; }
     .m-pill.female   { background: rgba(236, 72, 153, .1);  color: #EC4899; border-color: transparent; }
-    .m-pill.choir    { background: var(--primary-soft);     color: var(--primary-hover); border-color: transparent; }
     .m-pill.success  { background: rgba(34, 197, 94, .12);  color: var(--success); border-color: transparent; }
     .m-pill.danger   { background: rgba(239, 68, 68, .12);  color: var(--danger);  border-color: transparent; }
-    [data-theme="dark"] .m-pill.choir { color: var(--primary); }
 
     /* ---- tabs + search (panel toolbar) ---- */
     .m-tabs { display: flex; gap: 4px; }

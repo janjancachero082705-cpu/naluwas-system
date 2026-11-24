@@ -10,7 +10,6 @@
 @section('content')
 @php
     $selectedRoles = old('roles', $memberRoles ?? []);
-    $choirRoles    = ['Singer', 'Guitarist', 'Bassist', 'Drummer'];
 @endphp
 
 <div class="panel m-narrow mx-auto">
@@ -139,48 +138,7 @@
                 @error('roles') <div class="text-danger mt-2" style="font-size:.8rem;">{{ $message }}</div> @enderror
             </section>
 
-            {{-- CHOIR --}}
-            <section class="m-section">
-                <h3 class="m-section-title">
-                    <i class="fas fa-music"></i>
-                    <span data-i18n="choir_information">{{ __("Choir Information") }}</span>
-                    <span class="text-muted fw-normal" style="font-size:.72rem;">(<span data-i18n="optional">{{ __("Optional") }}</span>)</span>
-                </h3>
-
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label for="choir_group_id" class="form-label" data-i18n="choir_group">{{ __("Choir Group") }}</label>
-                        <select id="choir_group_id" name="choir_group_id"
-                                class="form-select @error('choir_group_id') is-invalid @enderror">
-                            <option value="">{{ __("No Choir Group") }}</option>
-                            @foreach($choirGroups ?? [] as $group)
-                                <option value="{{ $group->id }}"
-                                    {{ old('choir_group_id', $member->choir_group_id) == $group->id ? 'selected' : '' }}>
-                                    {{ $group->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('choir_group_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="choir_role" class="form-label" data-i18n="choir_role">{{ __("Choir Role") }}</label>
-                        <select id="choir_role" name="choir_role"
-                                class="form-select @error('choir_role') is-invalid @enderror">
-                            <option value="">{{ __("No Choir Role") }}</option>
-                            @foreach($choirRoles as $choirRole)
-                                <option value="{{ $choirRole }}"
-                                    {{ old('choir_role', $member->choir_role) == $choirRole ? 'selected' : '' }}>
-                                    {{ __($choirRole) }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('choir_role') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    </div>
-                </div>
-            </section>
-
-            <div class="m-foot">
+<div class="m-foot">
                 <a href="{{ route('members.index') }}" class="btn-ghost">
                     <i class="fas fa-times"></i>
                     <span data-i18n="cancel">{{ __("Cancel") }}</span>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header', 'Members')
-@section('subheader', __('Manage your church members, roles, and choir assignments'))
+@section('subheader', __('Manage your church members and roles'))
 
 @push('styles')
     @include('members._styles')
@@ -14,7 +14,6 @@
 
     $stats = [
         ['fa-users',        'active_members_label',  __('Active Members'),        $totalMembers ?? 0],
-        ['fa-music',        'choir_members_label',   __('Choir Members'),         $choirCount ?? 0],
         ['fa-cake-candles', 'birthdays_this_month',  __('Birthdays This Month'),  $birthdaysThisMonth ?? 0],
         ['fa-cross',        'deceased_label',        __('Deceased'),              $deceasedCount ?? 0],
     ];
@@ -148,9 +147,6 @@
                                     @empty
                                         <span class="m-pill"><i class="fas fa-user"></i> <span data-i18n="regular">{{ __("Regular") }}</span></span>
                                     @endforelse
-                                    @if($member->is_choir)
-                                        <span class="m-pill choir"><i class="fas fa-music"></i> <span data-i18n="choir">{{ __("Choir") }}</span></span>
-                                    @endif
                                 </div>
                             </td>
 
@@ -268,9 +264,6 @@
                                     @empty
                                         <span class="m-pill"><i class="fas fa-user"></i> <span data-i18n="regular">{{ __("Regular") }}</span></span>
                                     @endforelse
-                                    @if($member->is_choir)
-                                        <span class="m-pill choir"><i class="fas fa-music"></i> <span data-i18n="choir">{{ __("Choir") }}</span></span>
-                                    @endif
                                     <span class="m-pill danger"><i class="fas fa-cross"></i> <span data-i18n="deceased">{{ __("Deceased") }}</span></span>
                                 </div>
                             </td>
