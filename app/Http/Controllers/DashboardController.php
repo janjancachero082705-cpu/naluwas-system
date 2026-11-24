@@ -57,10 +57,28 @@ class DashboardController extends Controller
             ->whereRaw("DATE_FORMAT(birthday, '%m-%d') >= DATE_FORMAT(NOW(), '%m-%d')")
             ->orderByRaw("DATE_FORMAT(birthday, '%m-%d')")->limit(4)->get();
 
+        // 8. EXTRA DASHBOARD STATS
+        $newMembers = Member::where('church_id', $churchId)->where('is_deceased', false)
+            ->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
+        $birthdaysMonth = Member::where('church_id', $churchId)->where('is_deceased', false)
+            ->whereMonth('birthday', now()->month)->count();
+        $rolesCount = \App\Models\Role::count();
+        $inventoryCount = InventoryItem::where('church_id', $churchId)->count();
+        $lowStock = InventoryItem::where('church_id', $churchId)->where('quantity', '<=', 5)->count();
+        try {
+            $unreadMessages = \App\Models\Message::where('receiver_church_id', $churchId)->where('is_read', false)->count();
+        } catch (\Throwable $e) {
+            $unreadMessages = 0;
+        }
+        $monthIncome = MoneyTransaction::where('church_id', $churchId)->where('type', 'income')
+            ->whereMonth($txDateColumn, now()->month)->whereYear($txDateColumn, now()->year)->sum('amount');
+        $monthExpense = MoneyTransaction::where('church_id', $churchId)->where('type', 'expense')
+            ->whereMonth($txDateColumn, now()->month)->whereYear($txDateColumn, now()->year)->sum('amount');
         return view('dashboard', compact(
             'totalIncome', 'totalExpense', 'monthlyBalance', 'totalMembers', 
             'recentActivities', 'monthlyData', 
-            'maleCount', 'femaleCount', 'fundBalances', 'upcomingBirthdays', 'inventoryValue'
+            'maleCount', 'femaleCount', 'fundBalances', 'upcomingBirthdays', 'inventoryValue',
+            'newMembers', 'birthdaysMonth', 'rolesCount', 'inventoryCount', 'lowStock', 'unreadMessages', 'monthIncome', 'monthExpense'
         ));
     }
 }

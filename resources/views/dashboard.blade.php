@@ -157,6 +157,109 @@
             </div>
         </div></div>
 
+    {{-- 1B. MORE STATS --}}
+    <style>
+        .dx-card { display:flex; align-items:center; gap:14px; padding:16px; border-radius:16px; background:var(--card-bg, #fff); border:1px solid var(--border-color, #E3E8F5); text-decoration:none; color:inherit; transition:transform .18s ease, box-shadow .18s ease; height:100%; }
+        .dx-card:hover { transform:translateY(-3px); box-shadow:0 12px 28px rgba(18,28,90,.12); color:inherit; }
+        .dx-ico { width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+        .dx-ico.c1 { background:rgba(49,87,213,.12); color:#3157D5; }
+        .dx-ico.c2 { background:rgba(239,68,68,.12); color:#EF4444; }
+        .dx-ico.c3 { background:rgba(18,196,222,.15); color:#0BA5BD; }
+        .dx-ico.c4 { background:rgba(245,158,11,.15); color:#D97706; }
+        .dx-ico.c5 { background:rgba(236,72,153,.12); color:#DB2777; }
+        .dx-ico.c6 { background:rgba(16,185,129,.14); color:#059669; }
+        .dx-num { font-size:1.5rem; font-weight:800; line-height:1.1; }
+        .dx-lbl { font-size:.74rem; font-weight:600; opacity:.7; text-transform:uppercase; letter-spacing:.5px; }
+        .dx-quick { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:10px; }
+        .dx-quick a { display:flex; flex-direction:column; align-items:center; gap:8px; padding:16px 10px; border-radius:14px; border:1px dashed var(--border-color, #E3E8F5); text-decoration:none; color:inherit; font-weight:600; font-size:.84rem; transition:all .18s ease; }
+        .dx-quick a i { font-size:1.2rem; color:#3157D5; }
+        .dx-quick a:hover { background:rgba(49,87,213,.08); border-style:solid; transform:translateY(-2px); color:inherit; }
+        .dx-bar { height:10px; border-radius:6px; background:rgba(127,140,200,.18); overflow:hidden; }
+        .dx-bar > span { display:block; height:100%; border-radius:6px; }
+    </style>
+    <div class="row g-2 g-md-3 mb-4">
+        <div class="col-6 col-md-4 col-xl-2">
+            <a href="{{ route('members.index') }}" class="dx-card">
+                <div class="dx-ico c1"><i class="fas fa-user-plus"></i></div>
+                <div><div class="dx-num">{{ $newMembers ?? 0 }}</div><div class="dx-lbl">{{ __('New this month') }}</div></div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <a href="{{ route('messages.index') }}" class="dx-card">
+                <div class="dx-ico c2"><i class="fas fa-envelope"></i></div>
+                <div><div class="dx-num">{{ $unreadMessages ?? 0 }}</div><div class="dx-lbl">{{ __('Unread messages') }}</div></div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <a href="{{ route('inventory.index') }}" class="dx-card">
+                <div class="dx-ico c3"><i class="fas fa-boxes-stacked"></i></div>
+                <div><div class="dx-num">{{ $inventoryCount ?? 0 }}</div><div class="dx-lbl">{{ __('Inventory items') }}</div></div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <a href="{{ route('inventory.index') }}" class="dx-card">
+                <div class="dx-ico c4"><i class="fas fa-triangle-exclamation"></i></div>
+                <div><div class="dx-num">{{ $lowStock ?? 0 }}</div><div class="dx-lbl">{{ __('Low stock') }}</div></div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <a href="{{ route('members.index') }}" class="dx-card">
+                <div class="dx-ico c5"><i class="fas fa-cake-candles"></i></div>
+                <div><div class="dx-num">{{ $birthdaysMonth ?? 0 }}</div><div class="dx-lbl">{{ __('Birthdays this month') }}</div></div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <a href="{{ route('members.index') }}" class="dx-card">
+                <div class="dx-ico c6"><i class="fas fa-shield-halved"></i></div>
+                <div><div class="dx-num">{{ $rolesCount ?? 0 }}</div><div class="dx-lbl">{{ __('Ministries / roles') }}</div></div>
+            </a>
+        </div>
+    </div>
+
+    {{-- 1C. QUICK ACTIONS + THIS MONTH --}}
+    @php
+        $mi = (float) ($monthIncome ?? 0);
+        $me = (float) ($monthExpense ?? 0);
+        $mt = max($mi + $me, 1);
+        $incPct = round($mi / $mt * 100);
+        $expPct = 100 - $incPct;
+    @endphp
+    <div class="row g-3 mb-4">
+        <div class="col-lg-7">
+            <div class="panel h-100">
+                <div class="panel-head"><i class="fas fa-bolt"></i> <span>{{ __('Quick Actions') }}</span></div>
+                <div class="panel-body">
+                    <div class="dx-quick">
+                        <a href="{{ route('members.create') }}"><i class="fas fa-user-plus"></i>{{ __('Add Member') }}</a>
+                        <a href="{{ route('finance.index') }}"><i class="fas fa-money-bill-wave"></i>{{ __('Finance') }}</a>
+                        <a href="{{ route('inventory.index') }}"><i class="fas fa-boxes-stacked"></i>{{ __('Inventory') }}</a>
+                        <a href="{{ route('messages.index') }}"><i class="fas fa-envelope"></i>{{ __('Messages') }}</a>
+                        <a href="{{ route('reports.analytics') }}"><i class="fas fa-chart-line"></i>{{ __('Reports') }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="panel h-100">
+                <div class="panel-head"><i class="fas fa-calendar-day"></i> <span>{{ __('This Month') }} · {{ now()->format('F') }}</span></div>
+                <div class="panel-body">
+                    <div class="d-flex justify-content-between mb-1" style="font-size:.85rem;font-weight:600;">
+                        <span>{{ __('Income') }}</span><span>₱{{ number_format($mi) }}</span>
+                    </div>
+                    <div class="dx-bar mb-3"><span style="width:{{ $incPct }}%;background:#10B981;"></span></div>
+                    <div class="d-flex justify-content-between mb-1" style="font-size:.85rem;font-weight:600;">
+                        <span>{{ __('Expenses') }}</span><span>₱{{ number_format($me) }}</span>
+                    </div>
+                    <div class="dx-bar mb-3"><span style="width:{{ $expPct }}%;background:#EF4444;"></span></div>
+                    <div class="d-flex justify-content-between pt-2" style="border-top:1px solid var(--border-color,#E3E8F5);font-weight:800;">
+                        <span>{{ __('Net') }}</span>
+                        <span style="color:{{ ($mi - $me) >= 0 ? '#059669' : '#EF4444' }};">₱{{ number_format($mi - $me) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- 2. INCOME PANEL --}}
     <div class="panel mb-4">
         <div class="row g-0 align-items-stretch">
