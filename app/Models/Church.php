@@ -117,54 +117,6 @@ class Church extends Model
     }
 
     // ============================================
-    // ATTENDANCE RELATIONSHIPS
-    // ============================================
-    
-    /**
-     * Attendances for this church
-     */
-    public function attendances()
-    {
-        return $this->hasMany(Attendance::class);
-    }
-
-    /**
-     * Sunday attendances for this church
-     */
-    public function sundayAttendances()
-    {
-        return $this->hasMany(SundayAttendance::class);
-    }
-
-    // ============================================
-    // CHOIR RELATIONSHIPS
-    // ============================================
-    
-    /**
-     * Choir members for this church
-     */
-    public function choirMembers()
-    {
-        return $this->hasMany(ChoirMember::class);
-    }
-
-    /**
-     * Choir schedules for this church
-     */
-    public function choirSchedules()
-    {
-        return $this->hasMany(ChoirSchedule::class);
-    }
-
-    /**
-     * Choir groups for this church
-     */
-    public function choirGroups()
-    {
-        return $this->hasMany(ChoirGroup::class);
-    }
-
-    // ============================================
     // INVENTORY RELATIONSHIPS
     // ============================================
     

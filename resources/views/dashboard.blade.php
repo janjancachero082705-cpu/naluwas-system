@@ -155,30 +155,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
-                <div>
-                    <div class="stat-label">{{ __('Attendance Today') }}</div>
-                    <div class="stat-value count-up" data-target="{{ $todayAttendance ?? 0 }}">0</div>
-                    <div class="stat-trend"><span class="trend-up"><i class="fas fa-check"></i> {{ __('Present') }}</span></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-xl-3">
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-music"></i></div>
-                <div>
-                    <div class="stat-label">{{ __('Choir Members') }}</div>
-                    <div class="stat-value count-up" data-target="{{ $choirMembers ?? 0 }}">0</div>
-                    <div class="stat-trend"><span class="trend-up"><i class="fas fa-arrow-up"></i> {{ __('Registered') }}</span></div>
-                </div>
-            </div>
-        </div>
-    </div>
+        </div></div>
 
     {{-- 2. INCOME PANEL --}}
     <div class="panel mb-4">

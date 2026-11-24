@@ -126,9 +126,6 @@
                                     @foreach($member->roles as $role)
                                         <span class="m-pill"><i class="fas fa-shield-alt"></i> {{ $role->name }}</span>
                                     @endforeach
-                                    @if($member->is_choir)
-                                        <span class="m-pill choir"><i class="fas fa-music"></i> <span data-i18n="choir_label">{{ __("Choir") }}</span></span>
-                                    @endif
                                 </div>
                             @else
                                 <span class="text-muted fw-normal" style="font-size:.82rem;">

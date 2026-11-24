@@ -19,22 +19,10 @@ class DashboardController extends Controller
 
         // 1. MEMBERS STATS
         $totalMembers = Member::where('church_id', $churchId)->where('is_deceased', false)->count();
-        $choirMembers = Member::where('church_id', $churchId)->where('is_deceased', false)->where('is_choir', true)->count();
         
         // Gender Demographics
         $maleCount = Member::where('church_id', $churchId)->where('is_deceased', false)->where('gender', 'male')->count();
         $femaleCount = Member::where('church_id', $churchId)->where('is_deceased', false)->where('gender', 'female')->count();
-
-        // 2. ATTENDANCE STATS
-        $dateColumn = 'created_at';
-        if (Schema::hasColumn('attendances', 'date')) {
-            $dateColumn = 'date';
-        } elseif (Schema::hasColumn('attendances', 'attendance_date')) {
-            $dateColumn = 'attendance_date';
-        } elseif (Schema::hasColumn('attendances', 'service_date')) {
-            $dateColumn = 'service_date';
-        }
-        $todayAttendance = 0; // attendance removed
 
         // 3. FINANCE STATS
         $totalIncome = MoneyTransaction::where('church_id', $churchId)->where('type', 'income')->sum('amount');
@@ -71,7 +59,7 @@ class DashboardController extends Controller
 
         return view('dashboard', compact(
             'totalIncome', 'totalExpense', 'monthlyBalance', 'totalMembers', 
-            'choirMembers', 'todayAttendance', 'recentActivities', 'monthlyData', 
+            'recentActivities', 'monthlyData', 
             'maleCount', 'femaleCount', 'fundBalances', 'upcomingBirthdays', 'inventoryValue'
         ));
     }
